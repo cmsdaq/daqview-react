@@ -114,6 +114,9 @@ function scanAndReplace(obj) {
                 obj[key] = big_map[elem];
 
             }
+
+            obj[key.substring(4)] = obj[key];
+            delete(obj[key]);
         }
     }
 }
