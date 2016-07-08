@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/js/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "react"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "files": [
+    "src/typings/index.d.ts",
+    "src/js/daqview-react/structures/daq-aggregator/da-snapshot.ts",
+    "src/js/daqview-react/structures/daq-aggregator/da-snapshot-source.d.ts",
+    "src/js/daqview-react/components/daq-snapshot-view/daq-snapshot-view.d.ts",
+    "src/js/daqview-react/components/fed-builder/fb-table.tsx",
+    "src/js/daqview-react/components/filter-farm/fff-table.tsx",
+    "src/js/daqview-react/utilities/daqview-util.ts",
+    "src/js/daqview-react/utilities/format-util.ts",
+    "src/js/daqview-react/utilities/parser.ts",
+    "src/js/daqview-react/utilities/snapshot-provider.ts",
+    "src/js/daqview-react/daqview.ts"
+  ]
+}

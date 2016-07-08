@@ -1,0 +1,132 @@
+.fb-table {
+    width: 100%;
+    border-width: 0;
+    border-collapse: collapse;
+}
+
+.fb-table-help {
+    text-align: left;
+}
+
+.fb-table-colgroup-fedbuilder,
+.fb-table-colgroup-evb,
+.fb-table-colgroup-unknown {
+    border-color: black;
+    border-style: solid;
+    border-width: 0px 1px;
+    border-collapse: collapse;
+}
+
+.fb-table-colgroup-fedbuilder {
+
+}
+
+.fb-table-colgroup-evb {
+
+}
+
+.fb-table-colgroup-unknown {
+
+}
+
+.fb-table-head {
+
+}
+
+.fb-table-top-header-row {
+    text-align: center;
+}
+
+.fb-table-header-row {
+    text-align: left;
+}
+
+.fb-table-header {
+    background-color: #DDDDAA;
+}
+
+.fb-table-body {
+
+}
+
+.fb-table-ru-messages {
+
+}
+
+.fb-table-ru-error-message {
+
+}
+
+.fb-table-ru-warn-message {
+
+}
+
+.fb-table-ru-info-message {
+
+}
+
+.fb-table-subfb-row {
+
+}
+
+.fb-table-subfb-row-even {
+    background-color: #DDDDAA;
+}
+
+.fb-table-subfb-row-odd {
+
+}
+
+.fb-table-fb-summary-row {
+    background-color: #DDDDAA;
+}
+
+.fb-table-subfb-tts-state,
+.fb-table-subfb-tts-state a,
+.fb-table-subfb-tts-state a:hover,
+.fb-table-subfb-tts-state a:visited {
+    color: black;
+    font-weight: bold;
+}
+
+.fb-table-subfb-tts-state-none {
+
+}
+
+.fb-table-subfb-tts-state-R {
+    background-color: #33FF33;
+}
+
+.fb-table-fed-tts-state {
+    font-weight: bold;
+}
+
+.fb-table-fed-tts-state-W {
+    background-color: #FFCC00;
+}
+
+.fb-table-fed-tts-state-B {
+    background-color: #FF6600;
+}
+
+.fb-table-fed-tts-state-E,
+.fb-table-fed-tts-state-S,
+.fb-table-fed-tts-state-I {
+    background-color: #CC0033;
+}
+
+.fb-table-fed-tts-state-ffm-masked {
+    background-color: gray;
+}
+
+.fb-table-fed-tts-state-D {
+    background-color: #3399FF;
+}
+
+.fb-table-fed-percent-warning {
+    background-color: #FFCC88;
+}
+
+.fb-table-fed-percent-busy {
+    background-color: #FF6688;
+}

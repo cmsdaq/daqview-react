@@ -1,0 +1,106 @@
+.fff-table {
+    width: 100%;
+    border-width: 0;
+    border-collapse: collapse;
+}
+
+.fff-table-help {
+    text-align: left;
+}
+
+.fb-table-head {
+
+}
+
+.fb-table-body {
+
+}
+
+.fff-table-top-header-row {
+    text-align: center;
+}
+
+.fff-table-header-row {
+    text-align: left;
+}
+
+.fff-table-header {
+    background-color: #DDDDAA;
+}
+
+.fff-table-bu-row {
+
+}
+
+.fff-table-bu-row:nth-of-type(even) {
+    background-color: #DDDDAA;
+}
+
+.fff-table-bu-row:nth-of-type(odd) {
+
+}
+
+.fff-table-bu-summary-row {
+    background-color: #DDDDAA;
+}
+
+.fff-table-rate {
+    font-weight: bold;
+}
+
+.fff-table-rate-zero {
+    color: #880000;
+}
+
+.fff-table-rate-nonzero {
+    color: #666600;
+}
+
+.fff-table-throughput {
+    font-weight: bold;
+}
+
+.fff-table-throughput-zero {
+    color: #880000;
+}
+
+.fff-table-throughput-nonzero {
+    color: #008800;
+}
+
+.fff-table-size {
+    font-weight: bold;
+}
+
+.fff-table-size-zero {
+    color: #000000;
+}
+
+.fff-table-size-nonzero {
+    color: #0000FF;
+}
+
+.fff-table-events {
+    color: #008800;
+}
+
+.fff-table-events-in-bu {
+    color: #FF0000;
+}
+
+.fff-table-requests-sent {
+    color: #FF0000;
+}
+
+.fff-table-requests-used {
+    color: #FF0000;
+}
+
+.fff-table-requests-blocked {
+    color: #FF0000;
+}
+
+.fff-table-sort-image {
+    width: 12px;
+    height: 12px;
+}

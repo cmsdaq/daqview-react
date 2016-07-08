@@ -1,0 +1,18 @@
+html, body {
+    width: auto;
+    height: auto;
+    font-size: 0.95em;
+    font-family: arial,sans-serif;
+}
+
+#daqview-react {
+    width: 100%;
+}
+
+#daqview-react-fb-table {
+    width: 100%;
+}
+
+#daqview-react-fff-table {
+    width: 100%;
+}
