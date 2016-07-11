@@ -227,18 +227,24 @@ namespace DAQView {
             let pseudoFEDs: DAQAggregatorSnapshot.FED[] = [];
 
             let fedData: any[] = [];
+            let firstFrl: boolean = true;
             frls.forEach(function (frl: DAQAggregatorSnapshot.FRL) {
-                fedData.push(<FRL frl={frl}/>);
+                fedData.push(<FRL frl={frl} firstFrl={firstFrl}/>);
+                firstFrl = false;
                 console.log(frl.feds);
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot: number) {
                     let fed: DAQAggregatorSnapshot.FED = frl.feds[slot];
                     if (fed) {
-                        pseudoFEDs.concat(fed.mainFeds)
+                        console.log(fed.mainFeds);
+                        pseudoFEDs = pseudoFEDs.concat(fed.mainFeds)
                     }
                 });
             });
 
-            pseudoFEDs.forEach((fed: DAQAggregatorSnapshot.FED) => fedData.push(<FEDData fed={fed}/>));
+            pseudoFEDs.forEach(function (fed: DAQAggregatorSnapshot.FED) {
+                fedData.push(' ');
+                fedData.push(<FEDData fed={fed}/>);
+            });
 
             return (
                 <td>{fedData}</td>
@@ -247,6 +253,7 @@ namespace DAQView {
     }
 
     interface FRLProperties {
+        firstFrl: boolean;
         frl: DAQAggregatorSnapshot.FRL;
     }
 
@@ -258,11 +265,13 @@ namespace DAQView {
             let firstFed: DAQAggregatorSnapshot.FED = feds[0];
             let firstFedDisplay: any = firstFed ? <FEDData fed={firstFed}/> : '-';
             let secondFed: DAQAggregatorSnapshot.FED = feds[1];
-            let secondFedDisplay: any = secondFed ? <FEDData fed={secondFed}/> : '-';
+            let secondFedDisplay: any = secondFed ? <FEDData fed={secondFed}/> : '';
+
+            let firstFrl: boolean = this.props.firstFrl;
 
             return (
                 <span>
-                    {frl.geoSlot}:{firstFedDisplay},{secondFedDisplay}
+                    {firstFrl ? '' : ', '}{frl.geoSlot}:{firstFedDisplay}{secondFed ? ',' : ''}{secondFedDisplay}
                 </span>
             );
         }
@@ -275,6 +284,8 @@ namespace DAQView {
     class FEDData extends React.Component<FEDDataProperties,{}> {
         render() {
             let fed: DAQAggregatorSnapshot.FED = this.props.fed;
+
+            console.log(fed);
 
             let percentWarning: number = fed.percentWarning;
             let percentBusy: number = fed.percentBusy;
@@ -305,6 +316,21 @@ namespace DAQView {
 
             let ttsStateClasses: string = classNames('fb-table-fed-tts-state', ttsStateClass);
 
+            let percentBackpressureDisplay: any = percentBackpressure > 0 ?
+                <span className="fb-table-fed-percent-backpressure">{'<'}{percentWarning.toFixed(1)}%</span> : '';
+
+            let unexpectedSourceIdDisplay: any = '';
+            if (receivedSourceId != expectedSourceId) {
+                unexpectedSourceIdDisplay =
+                    <span className="fb-table-fed-received-source-id">rcvSrcId:{receivedSourceId}</span>;
+            }
+
+            let fedCRCErrorDisplay: any = fedCRCErrors > 0 ?
+                <span className="fb-table-fed-crc-errors">#FCRC={fedCRCErrors}</span> : '';
+
+            let slinkCRCErrorDisplay: any = slinkCRCErrors > 0 ?
+                <span className="fb-table-slink-crc-errors">#SCRC={slinkCRCErrors}</span> : '';
+
             return (
                 <span className="fb-table-fed">
                     {percentWarningDisplay}
@@ -313,6 +339,10 @@ namespace DAQView {
                         {ttsStateDisplay}
                         {expectedSourceId}
                     </span>
+                    {percentBackpressureDisplay}
+                    {unexpectedSourceIdDisplay}
+                    {fedCRCErrorDisplay}
+                    {slinkCRCErrorDisplay}
                 </span>
             );
         }

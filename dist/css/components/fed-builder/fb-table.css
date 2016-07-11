@@ -115,12 +115,12 @@
     background-color: #CC0033;
 }
 
-.fb-table-fed-tts-state-ffm-masked {
-    background-color: gray;
-}
-
 .fb-table-fed-tts-state-D {
     background-color: #3399FF;
+}
+
+.fb-table-fed-tts-state-ffm-masked {
+    background-color: gray;
 }
 
 .fb-table-fed-percent-warning {
@@ -129,4 +129,22 @@
 
 .fb-table-fed-percent-busy {
     background-color: #FF6688;
+}
+
+.fb-table-fed-percent-backpressure {
+    background-color: #FF9900;
+}
+
+.fb-table-fed-received-source-id {
+    background-color: #FF3333;
+    color: white;
+}
+
+.fb-table-fed-crc-errors {
+    background-color: #CC33FF;
+}
+
+.fb-table-slink-crc-errors {
+    background-color: #FF3333;
+    color: white;
 }

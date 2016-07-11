@@ -148,17 +148,23 @@ var DAQView;
             var frls = this.props.frls;
             var pseudoFEDs = [];
             var fedData = [];
+            var firstFrl = true;
             frls.forEach(function (frl) {
-                fedData.push(React.createElement(FRL, {frl: frl}));
+                fedData.push(React.createElement(FRL, {frl: frl, firstFrl: firstFrl}));
+                firstFrl = false;
                 console.log(frl.feds);
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot) {
                     var fed = frl.feds[slot];
                     if (fed) {
-                        pseudoFEDs.concat(fed.mainFeds);
+                        console.log(fed.mainFeds);
+                        pseudoFEDs = pseudoFEDs.concat(fed.mainFeds);
                     }
                 });
             });
-            pseudoFEDs.forEach(function (fed) { return fedData.push(React.createElement(FEDData, {fed: fed})); });
+            pseudoFEDs.forEach(function (fed) {
+                fedData.push(' ');
+                fedData.push(React.createElement(FEDData, {fed: fed}));
+            });
             return (React.createElement("td", null, fedData));
         };
         return FRLs;
@@ -174,8 +180,9 @@ var DAQView;
             var firstFed = feds[0];
             var firstFedDisplay = firstFed ? React.createElement(FEDData, {fed: firstFed}) : '-';
             var secondFed = feds[1];
-            var secondFedDisplay = secondFed ? React.createElement(FEDData, {fed: secondFed}) : '-';
-            return (React.createElement("span", null, frl.geoSlot, ":", firstFedDisplay, ",", secondFedDisplay));
+            var secondFedDisplay = secondFed ? React.createElement(FEDData, {fed: secondFed}) : '';
+            var firstFrl = this.props.firstFrl;
+            return (React.createElement("span", null, firstFrl ? '' : ', ', frl.geoSlot, ":", firstFedDisplay, secondFed ? ',' : '', secondFedDisplay));
         };
         return FRL;
     }(React.Component));
@@ -186,6 +193,7 @@ var DAQView;
         }
         FEDData.prototype.render = function () {
             var fed = this.props.fed;
+            console.log(fed);
             var percentWarning = fed.percentWarning;
             var percentBusy = fed.percentBusy;
             var ttsState = fed.ttsState ? fed.ttsState.substring(0, 1) : '';
@@ -207,7 +215,18 @@ var DAQView;
                 ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
             }
             var ttsStateClasses = classNames('fb-table-fed-tts-state', ttsStateClass);
-            return (React.createElement("span", {className: "fb-table-fed"}, percentWarningDisplay, percentBusyDisplay, React.createElement("span", {className: ttsStateClasses}, ttsStateDisplay, expectedSourceId)));
+            var percentBackpressureDisplay = percentBackpressure > 0 ?
+                React.createElement("span", {className: "fb-table-fed-percent-backpressure"}, '<', percentWarning.toFixed(1), "%") : '';
+            var unexpectedSourceIdDisplay = '';
+            if (receivedSourceId != expectedSourceId) {
+                unexpectedSourceIdDisplay =
+                    React.createElement("span", {className: "fb-table-fed-received-source-id"}, "rcvSrcId:", receivedSourceId);
+            }
+            var fedCRCErrorDisplay = fedCRCErrors > 0 ?
+                React.createElement("span", {className: "fb-table-fed-crc-errors"}, "#FCRC=", fedCRCErrors) : '';
+            var slinkCRCErrorDisplay = slinkCRCErrors > 0 ?
+                React.createElement("span", {className: "fb-table-slink-crc-errors"}, "#SCRC=", slinkCRCErrors) : '';
+            return (React.createElement("span", {className: "fb-table-fed"}, percentWarningDisplay, percentBusyDisplay, React.createElement("span", {className: ttsStateClasses}, ttsStateDisplay, expectedSourceId), percentBackpressureDisplay, unexpectedSourceIdDisplay, fedCRCErrorDisplay, slinkCRCErrorDisplay));
         };
         return FEDData;
     }(React.Component));
