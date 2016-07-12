@@ -98,6 +98,7 @@ namespace DAQAggregator {
         }
 
         export interface BU {
+            [key: string]: any;
             hostname: string;
 
             rate: number;
