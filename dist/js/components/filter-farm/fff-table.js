@@ -83,16 +83,16 @@ var DAQView;
             return snapshot;
         }
         FFFTableSortFunctions.NONE = NONE;
-        function BU_HOSTNAME(snapshot, descending) {
+        function BU_SORT(snapshot, attribute, descending) {
             var daq = snapshot.getDAQ();
-            var bus = daq.bus.slice();
+            var bus = daq.bus;
             bus.sort(function (firstBU, secondBU) {
-                var firstBUHostname = firstBU.hostname;
-                var secondBUHostname = secondBU.hostname;
-                if (firstBUHostname > secondBUHostname) {
+                var firstBUValue = firstBU[attribute];
+                var secondBUValue = secondBU[attribute];
+                if (firstBUValue > secondBUValue) {
                     return (descending ? -1 : 1);
                 }
-                else if (firstBUHostname < secondBUHostname) {
+                else if (firstBUValue < secondBUValue) {
                     return (descending ? 1 : -1);
                 }
                 else {
@@ -103,13 +103,21 @@ var DAQView;
             return snapshot;
         }
         function BU_HOSTNAME_ASC(snapshot) {
-            return BU_HOSTNAME(snapshot, false);
+            return BU_SORT(snapshot, 'hostname', false);
         }
         FFFTableSortFunctions.BU_HOSTNAME_ASC = BU_HOSTNAME_ASC;
         function BU_HOSTNAME_DESC(snapshot) {
-            return BU_HOSTNAME(snapshot, true);
+            return BU_SORT(snapshot, 'hostname', true);
         }
         FFFTableSortFunctions.BU_HOSTNAME_DESC = BU_HOSTNAME_DESC;
+        function BU_RATE_ASC(snapshot) {
+            return BU_SORT(snapshot, 'rate', false);
+        }
+        FFFTableSortFunctions.BU_RATE_ASC = BU_RATE_ASC;
+        function BU_RATE_DESC(snapshot) {
+            return BU_SORT(snapshot, 'rate', true);
+        }
+        FFFTableSortFunctions.BU_RATE_DESC = BU_RATE_DESC;
     })(FFFTableSortFunctions = DAQView.FFFTableSortFunctions || (DAQView.FFFTableSortFunctions = {}));
     var FFFTableNumberFormats;
     (function (FFFTableNumberFormats) {
@@ -149,7 +157,14 @@ var DAQView;
         FileBasedFilterFarmTableElement.prototype.render = function () {
             var tableObject = this.props.tableObject;
             var baseHeaders = [
-                { content: 'rate (kHz)' },
+                {
+                    content: 'rate (kHz)',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_RATE_ASC,
+                        Descending: FFFTableSortFunctions.BU_RATE_DESC
+                    }
+                },
                 { content: 'thru (MB/s)' },
                 { content: 'size (kB)' },
                 { content: '#events' },
