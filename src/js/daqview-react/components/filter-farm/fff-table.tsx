@@ -92,20 +92,20 @@ namespace DAQView {
     }
 
     export namespace FFFTableSortFunctions {
-        export function NONE(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+         export function NONE(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
             return snapshot;
         }
-
-        function BU_HOSTNAME(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+        
+        function BU_SORT(snapshot: DAQAggregatorSnapshot, attribute: string, descending: boolean): DAQAggregatorSnapshot {
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
-            let bus: DAQAggregatorSnapshot.BU[] = daq.bus.slice();
+            let bus: DAQAggregatorSnapshot.BU[] = daq.bus;
             bus.sort(function (firstBU: DAQAggregatorSnapshot.BU, secondBU: DAQAggregatorSnapshot.BU) {
-                let firstBUHostname: string = firstBU.hostname;
-                let secondBUHostname: string = secondBU.hostname;
+                let firstBUValue = firstBU[attribute];
+                let secondBUValue = secondBU[attribute];
 
-                if (firstBUHostname > secondBUHostname) {
+                if (firstBUValue > secondBUValue) {
                     return (descending ? -1 : 1);
-                } else if (firstBUHostname < secondBUHostname) {
+                } else if (firstBUValue < secondBUValue) {
                     return (descending ? 1 : -1);
                 } else {
                     return 0;
@@ -116,11 +116,19 @@ namespace DAQView {
         }
 
         export function BU_HOSTNAME_ASC(snapshot: DAQAggregatorSnapshot) {
-            return BU_HOSTNAME(snapshot, false);
+            return BU_SORT(snapshot, 'hostname', false);
         }
 
         export function BU_HOSTNAME_DESC(snapshot: DAQAggregatorSnapshot) {
-            return BU_HOSTNAME(snapshot, true);
+            return BU_SORT(snapshot, 'hostname', true);
+        }
+
+        export function BU_RATE_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'rate', false);
+        }
+
+        export function BU_RATE_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'rate', true);
         }
     }
 
@@ -172,7 +180,14 @@ namespace DAQView {
         render() {
             let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
             let baseHeaders: FileBasedFilterFarmTableHeaderProperties[] = [
-                {content: 'rate (kHz)'},
+                {
+                    content: 'rate (kHz)', 
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_RATE_ASC,
+                        Descending: FFFTableSortFunctions.BU_RATE_DESC
+                    }
+                },
                 {content: 'thru (MB/s)'},
                 {content: 'size (kB)'},
                 {content: '#events'},
@@ -195,14 +210,16 @@ namespace DAQView {
             ];
 
             let topHeaders: FileBasedFilterFarmTableHeaderProperties[] = baseHeaders.slice();
-            topHeaders.unshift({
+            topHeaders.unshift(
+            {
                 content: 'BU',
                 tableObject: tableObject,
                 sortFunctions: {
                     Ascending: FFFTableSortFunctions.BU_HOSTNAME_ASC,
                     Descending: FFFTableSortFunctions.BU_HOSTNAME_DESC
+                     }
                 }
-            });
+            );
 
             let summaryHeaders: FileBasedFilterFarmTableHeaderProperties[] = baseHeaders.slice();
             summaryHeaders.unshift({content: 'Summary'});
