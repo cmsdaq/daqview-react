@@ -17,6 +17,7 @@
     <script type="text/javascript" src="dist/js/utilities/snapshot-provider.js"></script>
     <script type="text/javascript" src="dist/js/utilities/daqview-util.js"></script>
     <script type="text/javascript" src="dist/js/utilities/format-util.js"></script>
+    <script type="text/javascript" src="dist/js/utilities/snapshot-randomizer.js"></script>
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
 
@@ -51,7 +52,13 @@
 
                         return baseURL + '"' + currentTime + '"';
                     },
-                    parseSnapshot: parseSnapshot.bind(window)
+                    parseSnapshot: (function (snapshot) {
+                        console.log(snapshot);
+                        snapshot = parseSnapshot(snapshot);
+                        DAQAggregator.randomizeSnapshot(snapshot, 20);
+                        console.log(snapshot);
+                        return snapshot;
+                    }).bind(window)
                 };
 
                 var snapshotProvider = new DAQAggregator.SnapshotProvider(snapshotSource);
