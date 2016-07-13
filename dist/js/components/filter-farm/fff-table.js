@@ -28,7 +28,11 @@ var DAQView;
                 '#FUs cloud': Sorting.None,
                 'RAM disk usage': Sorting.None,
                 '#files': Sorting.None,
-                'b/w out (MB/s)': Sorting.None
+                'b/w out (MB/s)': Sorting.None,
+                '#LS w/ files': Sorting.None,
+                'current LS': Sorting.None,
+                '#LS for HLT': Sorting.None,
+                '#LS out HLT': Sorting.None
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
@@ -118,6 +122,158 @@ var DAQView;
             return BU_SORT(snapshot, 'rate', true);
         }
         FFFTableSortFunctions.BU_RATE_DESC = BU_RATE_DESC;
+        function BU_THROUGHPUT_ASC(snapshot) {
+            return BU_SORT(snapshot, 'throughput', false);
+        }
+        FFFTableSortFunctions.BU_THROUGHPUT_ASC = BU_THROUGHPUT_ASC;
+        function BU_THROUGHPUT_DESC(snapshot) {
+            return BU_SORT(snapshot, 'throughput', true);
+        }
+        FFFTableSortFunctions.BU_THROUGHPUT_DESC = BU_THROUGHPUT_DESC;
+        function BU_EVENTSIZEMEAN_ASC(snapshot) {
+            return BU_SORT(snapshot, 'eventSizeMean', false);
+        }
+        FFFTableSortFunctions.BU_EVENTSIZEMEAN_ASC = BU_EVENTSIZEMEAN_ASC;
+        function BU_EVENTSIZEMEAN_DESC(snapshot) {
+            return BU_SORT(snapshot, 'eventSizeMean', true);
+        }
+        FFFTableSortFunctions.BU_EVENTSIZEMEAN_DESC = BU_EVENTSIZEMEAN_DESC;
+        function BU_NUMEVENTS_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numEvents', false);
+        }
+        FFFTableSortFunctions.BU_NUMEVENTS_ASC = BU_NUMEVENTS_ASC;
+        function BU_NUMEVENTS_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numEvents', true);
+        }
+        FFFTableSortFunctions.BU_NUMEVENTS_DESC = BU_NUMEVENTS_DESC;
+        function BU_NUMEVENTSINBU_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numEventsInBU', false);
+        }
+        FFFTableSortFunctions.BU_NUMEVENTSINBU_ASC = BU_NUMEVENTSINBU_ASC;
+        function BU_NUMEVENTSINBU_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numEventsInBU', true);
+        }
+        FFFTableSortFunctions.BU_NUMEVENTSINBU_DESC = BU_NUMEVENTSINBU_DESC;
+        function BU_PRIORITY_ASC(snapshot) {
+            return BU_SORT(snapshot, 'priority', false);
+        }
+        FFFTableSortFunctions.BU_PRIORITY_ASC = BU_PRIORITY_ASC;
+        function BU_PRIORITY_DESC(snapshot) {
+            return BU_SORT(snapshot, 'priority', true);
+        }
+        FFFTableSortFunctions.BU_PRIORITY_DESC = BU_PRIORITY_DESC;
+        function BU_NUMREQUESTSSENT_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numRequestsSent', false);
+        }
+        FFFTableSortFunctions.BU_NUMREQUESTSSENT_ASC = BU_NUMREQUESTSSENT_ASC;
+        function BU_NUMREQUESTSSENT_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numRequestsSent', true);
+        }
+        FFFTableSortFunctions.BU_NUMREQUESTSSENT_DESC = BU_NUMREQUESTSSENT_DESC;
+        function BU_NUMREQUESTSUSED_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numRequestsUsed', false);
+        }
+        FFFTableSortFunctions.BU_NUMREQUESTSUSED_ASC = BU_NUMREQUESTSUSED_ASC;
+        function BU_NUMREQUESTSUSED_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numRequestsUsed', true);
+        }
+        FFFTableSortFunctions.BU_NUMREQUESTSUSED_DESC = BU_NUMREQUESTSUSED_DESC;
+        function BU_NUMREQUESTSBLOCKED_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numRequestsBlocked', false);
+        }
+        FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_ASC = BU_NUMREQUESTSBLOCKED_ASC;
+        function BU_NUMREQUESTSBLOCKED_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numRequestsBlocked', true);
+        }
+        FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_DESC = BU_NUMREQUESTSBLOCKED_DESC;
+        function BU_NUMFUSHLT_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numFUsHlt', false);
+        }
+        FFFTableSortFunctions.BU_NUMFUSHLT_ASC = BU_NUMFUSHLT_ASC;
+        function BU_NUMFUSHLT_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numFUsHlt', true);
+        }
+        FFFTableSortFunctions.BU_NUMFUSHLT_DESC = BU_NUMFUSHLT_DESC;
+        function BU_NUMFUSCRASHED_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numFUsCrashed', false);
+        }
+        FFFTableSortFunctions.BU_NUMFUSCRASHED_ASC = BU_NUMFUSCRASHED_ASC;
+        function BU_NUMFUSCRASHED_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numFUsCrashed', true);
+        }
+        FFFTableSortFunctions.BU_NUMFUSCRASHED_DESC = BU_NUMFUSCRASHED_DESC;
+        function BU_NUMFUSSTALE_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numFUsStale', false);
+        }
+        FFFTableSortFunctions.BU_NUMFUSSTALE_ASC = BU_NUMFUSSTALE_ASC;
+        function BU_NUMFUSSTALE_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numFUsStale', true);
+        }
+        FFFTableSortFunctions.BU_NUMFUSSTALE_DESC = BU_NUMFUSSTALE_DESC;
+        function BU_NUMFUSCLOUD_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numFUsCloud', false);
+        }
+        FFFTableSortFunctions.BU_NUMFUSCLOUD_ASC = BU_NUMFUSCLOUD_ASC;
+        function BU_NUMFUSCLOUD_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numFUsCloud', true);
+        }
+        FFFTableSortFunctions.BU_NUMFUSCLOUD_DESC = BU_NUMFUSCLOUD_DESC;
+        function BU_RAMDISKUSAGE_ASC(snapshot) {
+            return BU_SORT(snapshot, 'ramDiskUsage', false);
+        }
+        FFFTableSortFunctions.BU_RAMDISKUSAGE_ASC = BU_RAMDISKUSAGE_ASC;
+        function BU_RAMDISKUSAGE_DESC(snapshot) {
+            return BU_SORT(snapshot, 'ramDiskUsage', true);
+        }
+        FFFTableSortFunctions.BU_RAMDISKUSAGE_DESC = BU_RAMDISKUSAGE_DESC;
+        function BU_NUMFILES_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numFiles', false);
+        }
+        FFFTableSortFunctions.BU_NUMFILES_ASC = BU_NUMFILES_ASC;
+        function BU_NUMFILES_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numFiles', true);
+        }
+        FFFTableSortFunctions.BU_NUMFILES_DESC = BU_NUMFILES_DESC;
+        function BU_CURRENTLUMISECTION_ASC(snapshot) {
+            return BU_SORT(snapshot, 'currentLumisection', false);
+        }
+        FFFTableSortFunctions.BU_CURRENTLUMISECTION_ASC = BU_CURRENTLUMISECTION_ASC;
+        function BU_CURRENTLUMISECTION_DESC(snapshot) {
+            return BU_SORT(snapshot, 'currentLumisection', true);
+        }
+        FFFTableSortFunctions.BU_CURRENTLUMISECTION_DESC = BU_CURRENTLUMISECTION_DESC;
+        function BU_FUOUTPUTBANDWIDTHINMB_ASC(snapshot) {
+            return BU_SORT(snapshot, 'fuOutputBandwidthInMB', false);
+        }
+        FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_ASC = BU_FUOUTPUTBANDWIDTHINMB_ASC;
+        function BU_FUOUTPUTBANDWIDTHINMB_DESC(snapshot) {
+            return BU_SORT(snapshot, 'fuOutputBandwidthInMB', true);
+        }
+        FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_DESC = BU_FUOUTPUTBANDWIDTHINMB_DESC;
+        function BU_NUMLUMISECTIONSWITHFILES_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsWithFiles', false);
+        }
+        FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_ASC = BU_NUMLUMISECTIONSWITHFILES_ASC;
+        function BU_NUMLUMISECTIONSWITHFILES_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsWithFiles', true);
+        }
+        FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_DESC = BU_NUMLUMISECTIONSWITHFILES_DESC;
+        function BU_NUMLUMISECTIONSFORHLT_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsForHLT', false);
+        }
+        FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_ASC = BU_NUMLUMISECTIONSFORHLT_ASC;
+        function BU_NUMLUMISECTIONSFORHLT_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsForHLT', true);
+        }
+        FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_DESC = BU_NUMLUMISECTIONSFORHLT_DESC;
+        function BU_NUMLUMISECTIONSOUTHLT_ASC(snapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsOutHLT', false);
+        }
+        FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_ASC = BU_NUMLUMISECTIONSOUTHLT_ASC;
+        function BU_NUMLUMISECTIONSOUTHLT_DESC(snapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsOutHLT', true);
+        }
+        FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC = BU_NUMLUMISECTIONSOUTHLT_DESC;
     })(FFFTableSortFunctions = DAQView.FFFTableSortFunctions || (DAQView.FFFTableSortFunctions = {}));
     var FFFTableNumberFormats;
     (function (FFFTableNumberFormats) {
@@ -165,25 +321,158 @@ var DAQView;
                         Descending: FFFTableSortFunctions.BU_RATE_DESC
                     }
                 },
-                { content: 'thru (MB/s)' },
-                { content: 'size (kB)' },
-                { content: '#events' },
-                { content: '#evts in BU' },
-                { content: 'priority' },
-                { content: '#req. sent' },
-                { content: '#req. used' },
-                { content: '#req. blocked' },
-                { content: '#FUs HLT' },
-                { content: '#FUs crash' },
-                { content: '#FUs stale' },
-                { content: '#FUs cloud' },
-                { content: 'RAM disk usage' },
-                { content: '#files' },
-                { content: '#LS w/ files' },
-                { content: 'current LS' },
-                { content: '#LS for HLT' },
-                { content: '#LS out HLT' },
-                { content: 'b/w out (MB/s)' }
+                {
+                    content: 'thru (MB/s)',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_THROUGHPUT_ASC,
+                        Descending: FFFTableSortFunctions.BU_THROUGHPUT_DESC
+                    }
+                },
+                {
+                    content: 'size (kB)',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_EVENTSIZEMEAN_ASC,
+                        Descending: FFFTableSortFunctions.BU_EVENTSIZEMEAN_DESC
+                    }
+                },
+                {
+                    content: '#events',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMEVENTS_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMEVENTS_DESC
+                    }
+                },
+                {
+                    content: '#evts in BU',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMEVENTSINBU_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMEVENTSINBU_DESC
+                    }
+                },
+                {
+                    content: 'priority',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_PRIORITY_ASC,
+                        Descending: FFFTableSortFunctions.BU_PRIORITY_DESC
+                    }
+                },
+                {
+                    content: '#req. sent',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMREQUESTSSENT_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMREQUESTSSENT_DESC
+                    }
+                },
+                {
+                    content: '#req. used',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMREQUESTSUSED_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMREQUESTSUSED_DESC
+                    }
+                },
+                {
+                    content: '#req. blocked',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_DESC
+                    }
+                },
+                {
+                    content: '#FUs HLT',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFUSHLT_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFUSHLT_DESC
+                    }
+                },
+                {
+                    content: '#FUs crash',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFUSCRASHED_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFUSCRASHED_DESC
+                    }
+                },
+                {
+                    content: '#FUs stale',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFUSSTALE_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFUSSTALE_DESC
+                    }
+                },
+                {
+                    content: '#FUs cloud',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFUSCLOUD_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFUSCLOUD_DESC
+                    }
+                },
+                {
+                    content: 'RAM disk usage',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_RAMDISKUSAGE_ASC,
+                        Descending: FFFTableSortFunctions.BU_RAMDISKUSAGE_DESC
+                    }
+                },
+                {
+                    content: '#files',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFILES_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFILES_DESC
+                    }
+                },
+                {
+                    content: '#LS w/ files',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_DESC
+                    }
+                },
+                {
+                    content: 'current LS',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_CURRENTLUMISECTION_ASC,
+                        Descending: FFFTableSortFunctions.BU_CURRENTLUMISECTION_DESC
+                    }
+                },
+                {
+                    content: '#LS for HLT',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_DESC
+                    }
+                },
+                {
+                    content: '#LS out HLT',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC
+                    }
+                },
+                {
+                    content: 'b/w out (MB/s)',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_ASC,
+                        Descending: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_DESC
+                    }
+                }
             ];
             var topHeaders = baseHeaders.slice();
             topHeaders.unshift({

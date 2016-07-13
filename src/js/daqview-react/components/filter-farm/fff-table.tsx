@@ -31,7 +31,11 @@ namespace DAQView {
             '#FUs cloud': Sorting.None,
             'RAM disk usage': Sorting.None,
             '#files': Sorting.None,
-            'b/w out (MB/s)': Sorting.None
+            'b/w out (MB/s)': Sorting.None,
+            '#LS w/ files': Sorting.None,
+            'current LS': Sorting.None,
+            '#LS for HLT': Sorting.None,
+            '#LS out HLT': Sorting.None
         };
 
         constructor(htmlRootElementName: string) {
@@ -130,6 +134,160 @@ namespace DAQView {
         export function BU_RATE_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'rate', true);
         }
+        
+        export function BU_THROUGHPUT_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'throughput', false);
+        }
+
+        export function BU_THROUGHPUT_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'throughput', true);
+        }
+        
+        export function BU_EVENTSIZEMEAN_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'eventSizeMean', false);
+        }
+
+        export function BU_EVENTSIZEMEAN_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'eventSizeMean', true);
+        }
+        
+        export function BU_NUMEVENTS_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numEvents', false);
+        }
+
+        export function BU_NUMEVENTS_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numEvents', true);
+        }
+        
+        export function BU_NUMEVENTSINBU_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numEventsInBU', false);
+        }
+
+        export function BU_NUMEVENTSINBU_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numEventsInBU', true);
+        }
+        
+        export function BU_PRIORITY_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'priority', false);
+        }
+
+        export function BU_PRIORITY_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'priority', true);
+        }
+        
+        export function BU_NUMREQUESTSSENT_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numRequestsSent', false);
+        }
+
+        export function BU_NUMREQUESTSSENT_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numRequestsSent', true);
+        }
+        
+        export function BU_NUMREQUESTSUSED_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numRequestsUsed', false);
+        }
+
+        export function BU_NUMREQUESTSUSED_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numRequestsUsed', true);
+        }
+        
+        export function BU_NUMREQUESTSBLOCKED_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numRequestsBlocked', false);
+        }
+
+        export function BU_NUMREQUESTSBLOCKED_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numRequestsBlocked', true);
+        }
+        
+        export function BU_NUMFUSHLT_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFUsHlt', false);
+        }
+
+        export function BU_NUMFUSHLT_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFUsHlt', true);
+        }
+        
+        export function BU_NUMFUSCRASHED_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFUsCrashed', false);
+        }
+
+        export function BU_NUMFUSCRASHED_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFUsCrashed', true);
+        }
+        
+        export function BU_NUMFUSSTALE_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFUsStale', false);
+        }
+
+        export function BU_NUMFUSSTALE_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFUsStale', true);
+        }
+        
+        export function BU_NUMFUSCLOUD_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFUsCloud', false);
+        }
+
+        export function BU_NUMFUSCLOUD_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFUsCloud', true);
+        }
+        
+        export function BU_RAMDISKUSAGE_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'ramDiskUsage', false);
+        }
+
+        export function BU_RAMDISKUSAGE_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'ramDiskUsage', true);
+        }
+        
+        export function BU_NUMFILES_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFiles', false);
+        }
+    
+        export function BU_NUMFILES_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numFiles', true);
+        }
+        
+        export function BU_CURRENTLUMISECTION_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'currentLumisection', false);
+        }
+    
+        export function BU_CURRENTLUMISECTION_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'currentLumisection', true);
+        }
+        
+        export function BU_FUOUTPUTBANDWIDTHINMB_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'fuOutputBandwidthInMB', false);
+        }
+    
+        export function BU_FUOUTPUTBANDWIDTHINMB_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'fuOutputBandwidthInMB', true);
+        }
+        
+        export function BU_NUMLUMISECTIONSWITHFILES_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsWithFiles', false);
+        }
+    
+        export function BU_NUMLUMISECTIONSWITHFILES_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsWithFiles', true);
+        }
+        
+        export function BU_NUMLUMISECTIONSFORHLT_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsForHLT', false);
+        }
+    
+        export function BU_NUMLUMISECTIONSFORHLT_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsForHLT', true);
+        }
+        
+        export function BU_NUMLUMISECTIONSOUTHLT_ASC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsOutHLT', false);
+        }
+    
+        export function BU_NUMLUMISECTIONSOUTHLT_DESC(snapshot: DAQAggregatorSnapshot) {
+            return BU_SORT(snapshot, 'numLumisectionsOutHLT', true);
+        }
+        
+        
     }
 
     export namespace FFFTableNumberFormats {
@@ -188,25 +346,158 @@ namespace DAQView {
                         Descending: FFFTableSortFunctions.BU_RATE_DESC
                     }
                 },
-                {content: 'thru (MB/s)'},
-                {content: 'size (kB)'},
-                {content: '#events'},
-                {content: '#evts in BU'},
-                {content: 'priority'},
-                {content: '#req. sent'},
-                {content: '#req. used'},
-                {content: '#req. blocked'},
-                {content: '#FUs HLT'},
-                {content: '#FUs crash'},
-                {content: '#FUs stale'},
-                {content: '#FUs cloud'},
-                {content: 'RAM disk usage'},
-                {content: '#files'},
-                {content: '#LS w/ files'},
-                {content: 'current LS'},
-                {content: '#LS for HLT'},
-                {content: '#LS out HLT'},
-                {content: 'b/w out (MB/s)'}
+                {
+                    content: 'thru (MB/s)',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_THROUGHPUT_ASC,
+                        Descending: FFFTableSortFunctions.BU_THROUGHPUT_DESC
+                    }
+                },
+                {
+                    content: 'size (kB)',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_EVENTSIZEMEAN_ASC,
+                        Descending: FFFTableSortFunctions.BU_EVENTSIZEMEAN_DESC
+                    }
+                },
+                {
+                    content: '#events',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMEVENTS_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMEVENTS_DESC
+                    }
+                },
+                {
+                    content: '#evts in BU',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMEVENTSINBU_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMEVENTSINBU_DESC
+                    }
+                },
+                {
+                    content: 'priority',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_PRIORITY_ASC,
+                        Descending: FFFTableSortFunctions.BU_PRIORITY_DESC
+                    }
+                },
+                {
+                    content: '#req. sent',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMREQUESTSSENT_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMREQUESTSSENT_DESC
+                    }
+                },
+                {
+                    content: '#req. used',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMREQUESTSUSED_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMREQUESTSUSED_DESC
+                    }
+                },
+                {
+                    content: '#req. blocked',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_DESC
+                    }
+                },
+                {
+                    content: '#FUs HLT',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFUSHLT_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFUSHLT_DESC
+                    }
+                },
+                {
+                    content: '#FUs crash',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFUSCRASHED_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFUSCRASHED_DESC
+                    }
+                },
+                {
+                    content: '#FUs stale',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFUSSTALE_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFUSSTALE_DESC
+                    }
+                },
+                {
+                    content: '#FUs cloud',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFUSCLOUD_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFUSCLOUD_DESC
+                    }
+                },
+                {
+                    content: 'RAM disk usage',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_RAMDISKUSAGE_ASC,
+                        Descending: FFFTableSortFunctions.BU_RAMDISKUSAGE_DESC
+                    }
+                },
+                {
+                    content: '#files',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMFILES_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMFILES_DESC
+                    }
+                },
+                {
+                    content: '#LS w/ files',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_DESC
+                    }
+                },
+                {
+                    content: 'current LS',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_CURRENTLUMISECTION_ASC,
+                        Descending: FFFTableSortFunctions.BU_CURRENTLUMISECTION_DESC
+                    }
+                },
+                {
+                    content: '#LS for HLT',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_DESC
+                    }
+                },
+                {
+                    content: '#LS out HLT',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_ASC,
+                        Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC
+                    }
+                },
+                {
+                    content: 'b/w out (MB/s)',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_ASC,
+                        Descending: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_DESC
+                    }
+                }
             ];
 
             let topHeaders: FileBasedFilterFarmTableHeaderProperties[] = baseHeaders.slice();
