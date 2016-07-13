@@ -25,6 +25,8 @@ namespace DAQAggregator {
     export namespace Snapshot {
 
         export interface DAQ {
+            [key: string]: any;
+
             lastUpdate: number;
 
             sessionId: number;
@@ -44,12 +46,16 @@ namespace DAQAggregator {
         }
 
         export interface FEDBuilder {
+            [key: string]: any;
+
             name: string;
             ru?: RU;
             subFedbuilders?: SubFEDBuilder[];
         }
 
         export interface BUSummary {
+            [key: string]: any;
+
             rate: number;
             throughput: number;
 
@@ -84,6 +90,8 @@ namespace DAQAggregator {
         }
 
         export interface FEDBuilderSummary {
+            [key: string]: any;
+
             rate: number;
             throughput: number;
 
@@ -99,6 +107,7 @@ namespace DAQAggregator {
 
         export interface BU {
             [key: string]: any;
+
             hostname: string;
 
             rate: number;
@@ -135,6 +144,8 @@ namespace DAQAggregator {
         }
 
         export interface RU {
+            [key: string]: any;
+
             hostname: string;
             isEVM: boolean;
             // masked: boolean;
@@ -163,6 +174,8 @@ namespace DAQAggregator {
         }
 
         export interface SubFEDBuilder {
+            [key: string]: any;
+
             minTrig: number;
             maxTrig: number;
             frlPc?: FRLPc;
@@ -171,6 +184,8 @@ namespace DAQAggregator {
         }
 
         export interface TTCPartition {
+            [key: string]: any;
+
             name: string;
             ttsState: string;
             percentWarning: number;
@@ -179,12 +194,16 @@ namespace DAQAggregator {
         }
 
         export interface FMM {
+            [key: string]: any;
+
             geoslot: number;
             url: string;
             feds?: FED[];
         }
 
         export interface FRLPc {
+            [key: string]: any;
+
             hostname: string;
             // masked: boolean;
             // frls?: FRL[];
@@ -192,6 +211,8 @@ namespace DAQAggregator {
         }
 
         export interface FRL {
+            [key: string]: any;
+
             geoSlot: number;
             // type: string;
 
@@ -204,6 +225,8 @@ namespace DAQAggregator {
         }
 
         export interface FED {
+            [key: string]: any;
+
             id: number;
 
             fmm?: FMM;
