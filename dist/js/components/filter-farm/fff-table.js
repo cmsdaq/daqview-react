@@ -28,11 +28,11 @@ var DAQView;
                 '#FUs cloud': Sorting.None,
                 'RAM disk usage': Sorting.None,
                 '#files': Sorting.None,
-                'b/w out (MB/s)': Sorting.None,
                 '#LS w/ files': Sorting.None,
                 'current LS': Sorting.None,
                 '#LS for HLT': Sorting.None,
-                '#LS out HLT': Sorting.None
+                '#LS out HLT': Sorting.None,
+                'b/w out (MB/s)': Sorting.None
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
@@ -40,11 +40,7 @@ var DAQView;
             this.snapshot = snapshot;
             var sortedSnapshot = this.sort(snapshot);
             var daq = sortedSnapshot.getDAQ();
-            var fileBasedFilterFarmTableRootElement = React.createElement(FileBasedFilterFarmTableElement, {
-                tableObject: this,
-                bus: daq.bus,
-                buSummary: daq.buSummary
-            });
+            var fileBasedFilterFarmTableRootElement = React.createElement(FileBasedFilterFarmTableElement, {tableObject: this, bus: daq.bus, buSummary: daq.buSummary});
             ReactDOM.render(fileBasedFilterFarmTableRootElement, this.htmlRootElement);
         };
         FileBasedFilterFarmTable.prototype.setSortFunction = function (sortFunction) {
@@ -493,7 +489,7 @@ var DAQView;
                 numBus = bus.length;
                 bus.forEach(function (bu) { return buRows.push(React.createElement(FileBasedFilterFarmTableBURow, {bu: bu})); });
             }
-            return (React.createElement("table", {className: "fff-table"}, React.createElement("thead", {className: "fb-table-head"}, React.createElement(FileBasedFilterFarmTableTopHeaderRow, null), React.createElement(FileBasedFilterFarmTableHeaderRow, {headers: topHeaders})), React.createElement("tbody", {className: "fb-table-body"}, buRows, React.createElement(FileBasedFilterFarmTableHeaderRow, {headers: summaryHeaders}), React.createElement(FileBasedFilterFarmTableBUSummaryRow, {buSummary: buSummary, numBus: numBus}))));
+            return (React.createElement("table", {className: "fff-table"}, React.createElement("thead", {className: "fff-table-head"}, React.createElement(FileBasedFilterFarmTableTopHeaderRow, null), React.createElement(FileBasedFilterFarmTableHeaderRow, {headers: topHeaders})), React.createElement("tbody", {className: "fff-table-body"}, buRows, React.createElement(FileBasedFilterFarmTableHeaderRow, {headers: summaryHeaders}), React.createElement(FileBasedFilterFarmTableBUSummaryRow, {buSummary: buSummary, numBus: numBus}))));
         };
         return FileBasedFilterFarmTableElement;
     }(React.Component));
@@ -554,7 +550,7 @@ var DAQView;
             if (currentSorting) {
                 sortingImage = React.createElement("input", {type: "image", className: "fff-table-sort-image", src: 'dist/img/' + currentSorting.getImagePath(), alt: currentSorting.toString(), title: "Sort", onClick: clickFunction});
             }
-            return (React.createElement("th", {className: className, colSpan: colSpan ? colSpan : "1"}, content, " ", sortingImage));
+            return (React.createElement("th", {className: className, colSpan: colSpan ? colSpan : "1"}, content, sortingImage));
         };
         return FileBasedFilterFarmTableHeader;
     }(React.Component));
@@ -565,7 +561,7 @@ var DAQView;
         }
         FileBasedFilterFarmTableBURow.prototype.render = function () {
             var bu = this.props.bu;
-            var buUrl = bu.hostname + ':11100/urn:xdaq-application:service=bu';
+            var buUrl = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
             var hostname = bu.hostname.substring(0, bu.hostname.length - 4);
             var rate = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
             var throughput = FormatUtility.toFixedNumber(bu.throughput / 1024 / 1024, 1);

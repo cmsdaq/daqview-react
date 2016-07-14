@@ -31,11 +31,11 @@ namespace DAQView {
             '#FUs cloud': Sorting.None,
             'RAM disk usage': Sorting.None,
             '#files': Sorting.None,
-            'b/w out (MB/s)': Sorting.None,
             '#LS w/ files': Sorting.None,
             'current LS': Sorting.None,
             '#LS for HLT': Sorting.None,
-            '#LS out HLT': Sorting.None
+            '#LS out HLT': Sorting.None,
+            'b/w out (MB/s)': Sorting.None
         };
 
         constructor(htmlRootElementName: string) {
@@ -46,11 +46,9 @@ namespace DAQView {
             this.snapshot = snapshot;
             let sortedSnapshot: DAQAggregatorSnapshot = this.sort(snapshot);
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
-            let fileBasedFilterFarmTableRootElement = React.createElement(FileBasedFilterFarmTableElement, {
-                tableObject: this,
-                bus: daq.bus,
-                buSummary: daq.buSummary
-            });
+            let fileBasedFilterFarmTableRootElement: any = <FileBasedFilterFarmTableElement tableObject={this}
+                                                                                            bus={daq.bus}
+                                                                                            buSummary={daq.buSummary}/>;
             ReactDOM.render(fileBasedFilterFarmTableRootElement, this.htmlRootElement);
         }
 
@@ -96,10 +94,10 @@ namespace DAQView {
     }
 
     export namespace FFFTableSortFunctions {
-         export function NONE(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+        export function NONE(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
             return snapshot;
         }
-        
+
         function BU_SORT(snapshot: DAQAggregatorSnapshot, attribute: string, descending: boolean): DAQAggregatorSnapshot {
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let bus: DAQAggregatorSnapshot.BU[] = daq.bus;
@@ -134,7 +132,7 @@ namespace DAQView {
         export function BU_RATE_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'rate', true);
         }
-        
+
         export function BU_THROUGHPUT_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'throughput', false);
         }
@@ -142,7 +140,7 @@ namespace DAQView {
         export function BU_THROUGHPUT_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'throughput', true);
         }
-        
+
         export function BU_EVENTSIZEMEAN_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'eventSizeMean', false);
         }
@@ -150,7 +148,7 @@ namespace DAQView {
         export function BU_EVENTSIZEMEAN_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'eventSizeMean', true);
         }
-        
+
         export function BU_NUMEVENTS_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numEvents', false);
         }
@@ -158,7 +156,7 @@ namespace DAQView {
         export function BU_NUMEVENTS_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numEvents', true);
         }
-        
+
         export function BU_NUMEVENTSINBU_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numEventsInBU', false);
         }
@@ -166,7 +164,7 @@ namespace DAQView {
         export function BU_NUMEVENTSINBU_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numEventsInBU', true);
         }
-        
+
         export function BU_PRIORITY_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'priority', false);
         }
@@ -174,7 +172,7 @@ namespace DAQView {
         export function BU_PRIORITY_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'priority', true);
         }
-        
+
         export function BU_NUMREQUESTSSENT_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numRequestsSent', false);
         }
@@ -182,7 +180,7 @@ namespace DAQView {
         export function BU_NUMREQUESTSSENT_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numRequestsSent', true);
         }
-        
+
         export function BU_NUMREQUESTSUSED_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numRequestsUsed', false);
         }
@@ -190,7 +188,7 @@ namespace DAQView {
         export function BU_NUMREQUESTSUSED_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numRequestsUsed', true);
         }
-        
+
         export function BU_NUMREQUESTSBLOCKED_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numRequestsBlocked', false);
         }
@@ -198,7 +196,7 @@ namespace DAQView {
         export function BU_NUMREQUESTSBLOCKED_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numRequestsBlocked', true);
         }
-        
+
         export function BU_NUMFUSHLT_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFUsHlt', false);
         }
@@ -206,7 +204,7 @@ namespace DAQView {
         export function BU_NUMFUSHLT_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFUsHlt', true);
         }
-        
+
         export function BU_NUMFUSCRASHED_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFUsCrashed', false);
         }
@@ -214,7 +212,7 @@ namespace DAQView {
         export function BU_NUMFUSCRASHED_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFUsCrashed', true);
         }
-        
+
         export function BU_NUMFUSSTALE_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFUsStale', false);
         }
@@ -222,7 +220,7 @@ namespace DAQView {
         export function BU_NUMFUSSTALE_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFUsStale', true);
         }
-        
+
         export function BU_NUMFUSCLOUD_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFUsCloud', false);
         }
@@ -230,7 +228,7 @@ namespace DAQView {
         export function BU_NUMFUSCLOUD_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFUsCloud', true);
         }
-        
+
         export function BU_RAMDISKUSAGE_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'ramDiskUsage', false);
         }
@@ -238,56 +236,56 @@ namespace DAQView {
         export function BU_RAMDISKUSAGE_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'ramDiskUsage', true);
         }
-        
+
         export function BU_NUMFILES_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFiles', false);
         }
-    
+
         export function BU_NUMFILES_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numFiles', true);
         }
-        
+
         export function BU_CURRENTLUMISECTION_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'currentLumisection', false);
         }
-    
+
         export function BU_CURRENTLUMISECTION_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'currentLumisection', true);
         }
-        
+
         export function BU_FUOUTPUTBANDWIDTHINMB_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'fuOutputBandwidthInMB', false);
         }
-    
+
         export function BU_FUOUTPUTBANDWIDTHINMB_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'fuOutputBandwidthInMB', true);
         }
-        
+
         export function BU_NUMLUMISECTIONSWITHFILES_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numLumisectionsWithFiles', false);
         }
-    
+
         export function BU_NUMLUMISECTIONSWITHFILES_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numLumisectionsWithFiles', true);
         }
-        
+
         export function BU_NUMLUMISECTIONSFORHLT_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numLumisectionsForHLT', false);
         }
-    
+
         export function BU_NUMLUMISECTIONSFORHLT_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numLumisectionsForHLT', true);
         }
-        
+
         export function BU_NUMLUMISECTIONSOUTHLT_ASC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numLumisectionsOutHLT', false);
         }
-    
+
         export function BU_NUMLUMISECTIONSOUTHLT_DESC(snapshot: DAQAggregatorSnapshot) {
             return BU_SORT(snapshot, 'numLumisectionsOutHLT', true);
         }
-        
-        
+
+
     }
 
     export namespace FFFTableNumberFormats {
@@ -339,7 +337,7 @@ namespace DAQView {
             let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
             let baseHeaders: FileBasedFilterFarmTableHeaderProperties[] = [
                 {
-                    content: 'rate (kHz)', 
+                    content: 'rate (kHz)',
                     tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_RATE_ASC,
@@ -502,13 +500,13 @@ namespace DAQView {
 
             let topHeaders: FileBasedFilterFarmTableHeaderProperties[] = baseHeaders.slice();
             topHeaders.unshift(
-            {
-                content: 'BU',
-                tableObject: tableObject,
-                sortFunctions: {
-                    Ascending: FFFTableSortFunctions.BU_HOSTNAME_ASC,
-                    Descending: FFFTableSortFunctions.BU_HOSTNAME_DESC
-                     }
+                {
+                    content: 'BU',
+                    tableObject: tableObject,
+                    sortFunctions: {
+                        Ascending: FFFTableSortFunctions.BU_HOSTNAME_ASC,
+                        Descending: FFFTableSortFunctions.BU_HOSTNAME_DESC
+                    }
                 }
             );
 
@@ -526,11 +524,11 @@ namespace DAQView {
 
             return (
                 <table className="fff-table">
-                    <thead className="fb-table-head">
+                    <thead className="fff-table-head">
                     <FileBasedFilterFarmTableTopHeaderRow />
                     <FileBasedFilterFarmTableHeaderRow headers={topHeaders}/>
                     </thead>
-                    <tbody className="fb-table-body">
+                    <tbody className="fff-table-body">
                     {buRows}
                     <FileBasedFilterFarmTableHeaderRow headers={summaryHeaders}/>
                     <FileBasedFilterFarmTableBUSummaryRow buSummary={buSummary} numBus={numBus}/>
@@ -619,7 +617,7 @@ namespace DAQView {
 
             return (
                 <th className={className} colSpan={colSpan ? colSpan : "1"}>
-                    {content}&nbsp;{sortingImage}
+                    {content}{sortingImage}
                 </th>
             );
         }
@@ -632,7 +630,7 @@ namespace DAQView {
     class FileBasedFilterFarmTableBURow extends React.Component<FileBasedFilterFarmTableBURowProperties,{}> {
         render() {
             let bu: DAQAggregatorSnapshot.BU = this.props.bu;
-            let buUrl: string = bu.hostname + ':11100/urn:xdaq-application:service=bu';
+            let buUrl: string = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
 
             let hostname: string = bu.hostname.substring(0, bu.hostname.length - 4);
             let rate: number = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
