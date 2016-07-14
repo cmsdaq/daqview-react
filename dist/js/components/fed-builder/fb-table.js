@@ -16,15 +16,39 @@ var DAQView;
             console.log(snapshot);
             this.snapshot = snapshot;
             var daq = snapshot.getDAQ();
-            var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {
-                fedBuilders: daq.fedBuilders,
-                fedBuilderSummary: daq.fedBuilderSummary,
-            });
+            var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary});
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         };
         return FEDBuilderTable;
     }());
     DAQView.FEDBuilderTable = FEDBuilderTable;
+    var FBTableNumberFormats;
+    (function (FBTableNumberFormats) {
+        FBTableNumberFormats.RATE = {
+            baseStyle: 'fb-table-rate',
+            formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
+        };
+        FBTableNumberFormats.THROUGHPUT = {
+            baseStyle: 'fb-table-throughput',
+            formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
+        };
+        FBTableNumberFormats.SIZE = {
+            baseStyle: 'fb-table-size',
+            formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
+        };
+        FBTableNumberFormats.EVENTS = {
+            baseStyle: 'fb-table-events'
+        };
+        FBTableNumberFormats.FRAGMENTS_IN_RU = {
+            baseStyle: 'fb-table-fragments-in-ru'
+        };
+        FBTableNumberFormats.EVENTS_IN_RU = {
+            baseStyle: 'fb-table-events-in-ru'
+        };
+        FBTableNumberFormats.REQUESTS = {
+            baseStyle: 'fb-table-requests'
+        };
+    })(FBTableNumberFormats = DAQView.FBTableNumberFormats || (DAQView.FBTableNumberFormats = {}));
     var FEDBuilderTableElement = (function (_super) {
         __extends(FEDBuilderTableElement, _super);
         function FEDBuilderTableElement() {
@@ -35,6 +59,14 @@ var DAQView;
             var fbRowSubFbRowOddClassName = 'fb-table-subfb-row-odd';
             var evenRow = false;
             var fedBuilders = this.props.fedBuilders;
+            var evmMaxTrg = null;
+            fedBuilders.forEach(function (fedBuilder) {
+                if (fedBuilder.ru && fedBuilder.ru.isEVM) {
+                    if (fedBuilder.subFedbuilders && fedBuilder.subFedbuilders.length > 0) {
+                        evmMaxTrg = fedBuilder.subFedbuilders[0].maxTrig;
+                    }
+                }
+            });
             var rows = [];
             fedBuilders.forEach(function (fedBuilder) {
                 var subFedBuilders = fedBuilder.subFedbuilders;
@@ -42,7 +74,7 @@ var DAQView;
                 var ru = fedBuilder.ru;
                 var ruHostname = ru.hostname;
                 var ruName = ruHostname.substring(0, ruHostname.length - 4);
-                var ruUrl = ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+                var ruUrl = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
                 var fedBuilderData = [];
                 fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
                 fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
@@ -56,7 +88,7 @@ var DAQView;
                 fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.requests));
                 var rowClassName = evenRow ? fbRowSubFbRowEvenClassName : fbRowSubFbRowOddClassName;
                 var count = 0;
-                subFedBuilders.forEach(function (subFedBuilder) { return rows.push(React.createElement(SubFEDBuilderRow, {additionalClasses: rowClassName, subFedBuilder: subFedBuilder, additionalContent: ++count == 1 ? fedBuilderData : null})); });
+                subFedBuilders.forEach(function (subFedBuilder) { return rows.push(React.createElement(SubFEDBuilderRow, {evmMaxTrg: evmMaxTrg, additionalClasses: rowClassName, subFedBuilder: subFedBuilder, additionalContent: ++count == 1 ? fedBuilderData : null})); });
                 evenRow = !evenRow;
             });
             var baseHeaders = ['T', '%W', '%B', 'frlpc',
@@ -127,7 +159,7 @@ var DAQView;
             var frlPc = subFedBuilder.frlPc;
             var frlPcHostname = frlPc.hostname;
             var frlPcName = frlPcHostname.substring(0, frlPcHostname.length - 4);
-            var frlPcUrl = frlPcHostname + ':11100';
+            var frlPcUrl = 'http://' + frlPcHostname + ':11100';
             var frls = subFedBuilder.frls;
             var additionalClasses = this.props.additionalClasses;
             var className = classNames("fb-table-subfb-row", additionalClasses);
@@ -135,7 +167,28 @@ var DAQView;
             var ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '-';
             var ttsStateClasses = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name), React.createElement("td", null, React.createElement("span", {className: ttsStateClasses}, React.createElement("a", {href: (ttcPartition.fmm ? ttcPartition.fmm.url : '-'), target: "_blank"}, ttsState))), React.createElement("td", null, ttcPartition.percentWarning), React.createElement("td", null, ttcPartition.percentBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls}), React.createElement("td", null, subFedBuilder.minTrig), React.createElement("td", null, subFedBuilder.maxTrig), this.props.additionalContent ? this.props.additionalContent : null));
+            var minTrig = subFedBuilder.minTrig;
+            var maxTrig = subFedBuilder.maxTrig;
+            var ttcPartitionTTSStateLink = ttsState;
+            if (ttcPartition.fmm) {
+                ttcPartitionTTSStateLink = React.createElement("a", {href: ttcPartition.fmm.url, target: "_blank"}, ttsState);
+            }
+            var ttcPartitionTTSStateDisplay = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
+            var evmMaxTrg = this.props.evmMaxTrg;
+            var minTrigDisplayContent = '';
+            var maxTrigDisplayContent = maxTrig;
+            if (minTrig != maxTrig) {
+                minTrigDisplayContent = minTrig;
+            }
+            var minTrigClassNames = 'fb-table-subfb-min-trig';
+            var maxTrigClassNames = 'fb-table-subfb-max-trig';
+            if (evmMaxTrg && minTrig != evmMaxTrg) {
+                minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
+            }
+            if (evmMaxTrg && maxTrig != evmMaxTrg) {
+                maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
+            }
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name), React.createElement("td", null, ttcPartitionTTSStateDisplay), React.createElement("td", null, ttcPartition.percentWarning), React.createElement("td", null, ttcPartition.percentBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));

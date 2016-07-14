@@ -120,7 +120,7 @@
 }
 
 .fb-table-fed-tts-state-ffm-masked {
-    background-color: gray;
+    color: gray;
 }
 
 .fb-table-fed-percent-warning {
@@ -147,4 +147,20 @@
 .fb-table-slink-crc-errors {
     background-color: #FF3333;
     color: white;
+}
+
+.fb-table-subfb-min-trig {
+
+}
+
+.fb-table-subfb-min-trig-unequal {
+    background-color: #FFFF00;
+}
+
+.fb-table-subfb-max-trig {
+
+}
+
+.fb-table-subfb-max-trig-unequal {
+    background-color: #FFFF00;
 }
