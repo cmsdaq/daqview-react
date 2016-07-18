@@ -164,6 +164,7 @@ namespace DAQAggregator {
 
             fragmentsInRU: number;
             eventsInRU: number;
+            eventCount: number;
             requests: number;
 
             // #events missing?
@@ -255,6 +256,11 @@ namespace DAQAggregator {
 
             hasSLINK: boolean;
             hasTTS: boolean;
+            
+            ruFedWithoutFragments: boolean;
+            
+            frl_AccSlinkFullSec: number;
+            
         }
 
     }
