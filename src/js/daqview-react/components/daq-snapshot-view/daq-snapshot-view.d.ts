@@ -3,7 +3,7 @@
 declare namespace DAQView {
 
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
-
+    
     export interface DAQSnapshotView {
 
         setSnapshot(snapshot: DAQAggregatorSnapshot): void;

@@ -10,7 +10,7 @@ var count_o = 0; //counts further explorable fields, less (or equal) than count_
 var count_id = 0;
 var max_id = 1;
 var big_map = {};//index of all object definitions discovered
-
+var maxRecursionDepth = 3;
 
 function explore(obj) {
     for(var key in obj) { // iterate, `key` is the property key
@@ -51,7 +51,10 @@ function explore(obj) {
             if (level>max_level){
                 max_level = level;
             }
-            explore(elem); // call recursively
+            
+            if (level<=maxRecursionDepth){
+                explore(elem);
+            }
 
             //upon return from an object (so that its definition has already been stored), if it has @id field, replace its definition with a reference to its @id, at parent
             if (elemTypeLiteral != 'null'){
