@@ -18,7 +18,6 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot) {
-            console.log(snapshot);
             this.snapshot = snapshot;
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilderTableRootElement: any = <FEDBuilderTableElement fedBuilders={daq.fedBuilders}
@@ -304,11 +303,9 @@ namespace DAQView {
             frls.forEach(function (frl: DAQAggregatorSnapshot.FRL) {
                 fedData.push(<FRL frl={frl} firstFrl={firstFrl}/>);
                 firstFrl = false;
-                console.log(frl.feds);
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot: number) {
                     let fed: DAQAggregatorSnapshot.FED = frl.feds[slot];
                     if (fed) {
-                        console.log(fed.mainFeds);
                         pseudoFEDs = pseudoFEDs.concat(fed.mainFeds)
                     }
                 });
@@ -357,8 +354,6 @@ namespace DAQView {
     class FEDData extends React.Component<FEDDataProperties,{}> {
         render() {
             let fed: DAQAggregatorSnapshot.FED = this.props.fed;
-
-            console.log(fed);
 
             let percentWarning: number = fed.percentWarning;
             let percentBusy: number = fed.percentBusy;

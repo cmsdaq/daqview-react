@@ -13,7 +13,6 @@ var DAQView;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
         FEDBuilderTable.prototype.setSnapshot = function (snapshot) {
-            console.log(snapshot);
             this.snapshot = snapshot;
             var daq = snapshot.getDAQ();
             var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary});
@@ -205,11 +204,9 @@ var DAQView;
             frls.forEach(function (frl) {
                 fedData.push(React.createElement(FRL, {frl: frl, firstFrl: firstFrl}));
                 firstFrl = false;
-                console.log(frl.feds);
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot) {
                     var fed = frl.feds[slot];
                     if (fed) {
-                        console.log(fed.mainFeds);
                         pseudoFEDs = pseudoFEDs.concat(fed.mainFeds);
                     }
                 });
@@ -246,7 +243,6 @@ var DAQView;
         }
         FEDData.prototype.render = function () {
             var fed = this.props.fed;
-            console.log(fed);
             var percentWarning = fed.percentWarning;
             var percentBusy = fed.percentBusy;
             var ttsState = fed.ttsState ? fed.ttsState.substring(0, 1) : '';
