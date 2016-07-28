@@ -62,7 +62,7 @@ namespace DAQView {
         }
 
         public setCurrentSorting(headerName: string, sorting: Sorting) {
-            DAQViewUtility.forEachOwnObjectProperty(this.currentSorting, (header: string) => this.currentSorting[header] = Sorting.None)
+            DAQViewUtility.forEachOwnObjectProperty(this.currentSorting, (header: string) => this.currentSorting[header] = Sorting.None);
             this.currentSorting[headerName] = sorting;
         }
 
