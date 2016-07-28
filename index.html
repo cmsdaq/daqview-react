@@ -18,12 +18,13 @@
     <script type="text/javascript" src="dist/js/utilities/daqview-util.js"></script>
     <script type="text/javascript" src="dist/js/utilities/format-util.js"></script>
     <script type="text/javascript" src="dist/js/utilities/snapshot-randomizer.js"></script>
+    <script type="text/javascript" src="dist/js/utilities/parser.js"></script>
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
-
+	
+   
     <script type="text/javascript" src="dist/js/daqview.js"></script>
 
-    <script type="text/javascript" src="dist/js/parser.js"></script>
 
     <script type="text/javascript">
         var daqView;
@@ -41,21 +42,23 @@
                         }
                     }
                 });
-
+				var parser = new DAQAggregator.SnapshotParser();
                 var snapshotSource = {
-                    updateInterval: 2000,
+                    updateInterval: 5000,
                     getSourceURL: function () {
-                        return 'dist/json/dummy_snapshot.json'; // use local JSON
+                        return 'dist/json/1469177290765.ref.json'; // use local JSON
+                       //return 'file:///afs/cern.ch/user/m/mvougiou/Desktop/tmp/snapshots/1469177290765.json';
 
-                        var baseURL = 'http://dev-daq-expert.cern.ch/snapshot?time=';
+                       /* var baseURL = 'http://dev-daq-expert.cern.ch/snapshot?time=';
                         var currentTime = new Date(new Date().getTime() - (10 * 24 * 3600 * 1000)).toISOString();
 
                         return baseURL + '"' + currentTime + '"';
+                        */
                     },
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
-                        snapshot = parseSnapshot(snapshot);
-                        DAQAggregator.randomizeSnapshot(snapshot, 20);
+                        snapshot = parser.parse.bind(parser)(snapshot);
+                        //DAQAggregator.randomizeSnapshot(snapshot, 20);
                         console.log(snapshot);
                         return snapshot;
                     }).bind(window)

@@ -37,7 +37,7 @@ namespace DAQAggregator {
                     let snapshot: Snapshot;
                     startTime = new Date().getTime();
                     if (this.snapshotSource.parseSnapshot) {
-                        snapshot = new Snapshot(this.snapshotSource.parseSnapshot(snapshotJSON));
+                        snapshot = this.snapshotSource.parseSnapshot(snapshotJSON);
                     } else {
                         snapshot = new Snapshot(snapshotJSON);
                     }

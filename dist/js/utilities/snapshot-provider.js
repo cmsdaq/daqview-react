@@ -25,7 +25,7 @@ var DAQAggregator;
                     var snapshot;
                     startTime = new Date().getTime();
                     if (this.snapshotSource.parseSnapshot) {
-                        snapshot = new DAQAggregator.Snapshot(this.snapshotSource.parseSnapshot(snapshotJSON));
+                        snapshot = this.snapshotSource.parseSnapshot(snapshotJSON);
                     }
                     else {
                         snapshot = new DAQAggregator.Snapshot(snapshotJSON);
