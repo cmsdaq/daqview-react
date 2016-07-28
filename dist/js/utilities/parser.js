@@ -12,7 +12,7 @@ var DAQAggregator;
             }
             return new DAQAggregator.Snapshot(this.big_map['DAQ']);
         };
-        SnapshotParser.prototype.getFieldType = function (field) {
+        SnapshotParser.getFieldType = function (field) {
             var ret = typeof field;
             if ((ret == 'object') && (field instanceof Array)) {
                 ret = 'array';
@@ -29,11 +29,11 @@ var DAQAggregator;
                 if ((key == "@id")) {
                     this.big_map[elem] = obj;
                 }
-                var elemTypeLiteral = this.getFieldType(elem);
-                var objTypeLiteral = this.getFieldType(obj);
+                var elemTypeLiteral = SnapshotParser.getFieldType(elem);
+                var objTypeLiteral = SnapshotParser.getFieldType(obj);
                 var doPrependArrayName = false;
                 if (elemTypeLiteral == 'array') {
-                    if ((elem.length > 0) && (this.getFieldType(elem[0]) == 'object') && elem[0].hasOwnProperty("@id")) {
+                    if ((elem.length > 0) && (SnapshotParser.getFieldType(elem[0]) == 'object') && elem[0].hasOwnProperty("@id")) {
                         doPrependArrayName = true;
                     }
                 }
@@ -65,7 +65,7 @@ var DAQAggregator;
         SnapshotParser.prototype.scanAndReplace = function (obj) {
             for (var key in obj) {
                 var elem = obj[key]; // `obj[key]` is the value
-                var elemTypeLiteral = this.getFieldType(elem);
+                var elemTypeLiteral = SnapshotParser.getFieldType(elem);
                 //further explore objects or arrays with recursion
                 //will check if contains reference ids and will replace them with actual object references upon return
                 var replaceContent = false;
@@ -79,15 +79,18 @@ var DAQAggregator;
                     //array of references, object of values which are references, single field reference
                     if (elemTypeLiteral == 'array') {
                         var arr = [];
-                        for (var idx in elem) {
-                            arr[idx] = this.big_map[elem[idx]];
+                        var elemArray = elem;
+                        for (var idx = 0; idx < elemArray.length; idx++) {
+                            arr[idx] = this.big_map[elemArray[idx]];
                         }
                         obj[key] = arr;
                     }
                     else if (elemTypeLiteral == 'object') {
                         var o = {};
                         for (var pName in elem) {
-                            o[pName] = this.big_map[elem[pName]];
+                            if (elem.hasOwnProperty(pName)) {
+                                o[pName] = this.big_map[elem[pName]];
+                            }
                         }
                         obj[key] = o;
                     }

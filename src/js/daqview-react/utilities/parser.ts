@@ -2,7 +2,7 @@ namespace DAQAggregator {
 
     export class SnapshotParser {
 
-        private big_map: {} = {};
+        private big_map: {[key: string]: any} = {};
         private level: number = 1;
 
         public parse(snapshot: {}): Snapshot {
@@ -11,12 +11,11 @@ namespace DAQAggregator {
 
             for (var key in this.big_map) {
                 this.scanAndReplace(this.big_map[key]);
-                
             }
             return new Snapshot(this.big_map['DAQ']);
         }
 
-        getFieldType(field) {
+        static getFieldType(field: any) {
             var ret = typeof field;
             if ((ret == 'object') && (field instanceof Array)) {
                 ret = 'array';
@@ -27,7 +26,7 @@ namespace DAQAggregator {
             return ret;
         }
 
-        explore(obj: {}): void {
+        explore(obj: {[key: string]: any}): void {
             for (var key in obj) {
                 var elem = obj[key];
 
@@ -37,12 +36,12 @@ namespace DAQAggregator {
 
                 }
 
-                var elemTypeLiteral = this.getFieldType(elem);
-                var objTypeLiteral = this.getFieldType(obj);
+                var elemTypeLiteral = SnapshotParser.getFieldType(elem);
+                var objTypeLiteral = SnapshotParser.getFieldType(obj);
 
                 var doPrependArrayName = false;
                 if (elemTypeLiteral == 'array') {
-                    if ((elem.length > 0) && (this.getFieldType(elem[0]) == 'object') && elem[0].hasOwnProperty("@id")) {
+                    if ((elem.length > 0) && (SnapshotParser.getFieldType(elem[0]) == 'object') && elem[0].hasOwnProperty("@id")) {
                         doPrependArrayName = true;
                     }
                 }
@@ -76,12 +75,12 @@ namespace DAQAggregator {
             }
         }
 
-        scanAndReplace(obj: {}): void {
+        scanAndReplace(obj: {[key: string]: any}): void {
             for (var key in obj) { // iterate, `key` is the property key
                 var elem = obj[key]; // `obj[key]` is the value
 
 
-                var elemTypeLiteral = this.getFieldType(elem);
+                var elemTypeLiteral = SnapshotParser.getFieldType(elem);
 
                 //further explore objects or arrays with recursion
 
@@ -99,15 +98,19 @@ namespace DAQAggregator {
                     //array of references, object of values which are references, single field reference
 
                     if (elemTypeLiteral == 'array') {
-                        var arr = [];
-                        for (var idx in elem) {
-                            arr[idx] = this.big_map[elem[idx]];
+                        let arr: any[] = [];
+                        let elemArray: any[] = <any[]> elem;
+
+                        for (let idx: number = 0; idx < elemArray.length; idx++) {
+                            arr[idx] = this.big_map[elemArray[idx]];
                         }
                         obj[key] = arr;
                     } else if (elemTypeLiteral == 'object') {
-                        var o = {};
+                        var o: {[key: string]: any} = {};
                         for (var pName in elem) {
-                            o[pName] = this.big_map[elem[pName]];
+                            if (elem.hasOwnProperty(pName)) {
+                                o[pName] = this.big_map[elem[pName]];
+                            }
                         }
                         obj[key] = o;
                     } else if ((elemTypeLiteral == 'number') || (elemTypeLiteral == 'string')) {
