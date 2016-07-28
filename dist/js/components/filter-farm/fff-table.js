@@ -12,27 +12,27 @@ var DAQView;
         function FileBasedFilterFarmTable(htmlRootElementName) {
             this.sortFunction = FFFTableSortFunctions.NONE;
             this.currentSorting = {
-                'BU': Sorting.None,
-                'rate (kHz)': Sorting.None,
-                'thru (MB/s)': Sorting.None,
-                'size (kB)': Sorting.None,
-                '#events': Sorting.None,
-                '#evts in BU': Sorting.None,
-                'priority': Sorting.None,
-                '#req. sent': Sorting.None,
-                '#req. used': Sorting.None,
-                '#req. blocked': Sorting.None,
-                '#FUs HLT': Sorting.None,
-                '#FUs crash': Sorting.None,
-                '#FUs stale': Sorting.None,
-                '#FUs cloud': Sorting.None,
-                'RAM disk usage': Sorting.None,
-                '#files': Sorting.None,
-                '#LS w/ files': Sorting.None,
-                'current LS': Sorting.None,
-                '#LS for HLT': Sorting.None,
-                '#LS out HLT': Sorting.None,
-                'b/w out (MB/s)': Sorting.None
+                'BU': DAQView.Sorting.None,
+                'rate (kHz)': DAQView.Sorting.None,
+                'thru (MB/s)': DAQView.Sorting.None,
+                'size (kB)': DAQView.Sorting.None,
+                '#events': DAQView.Sorting.None,
+                '#evts in BU': DAQView.Sorting.None,
+                'priority': DAQView.Sorting.None,
+                '#req. sent': DAQView.Sorting.None,
+                '#req. used': DAQView.Sorting.None,
+                '#req. blocked': DAQView.Sorting.None,
+                '#FUs HLT': DAQView.Sorting.None,
+                '#FUs crash': DAQView.Sorting.None,
+                '#FUs stale': DAQView.Sorting.None,
+                '#FUs cloud': DAQView.Sorting.None,
+                'RAM disk usage': DAQView.Sorting.None,
+                '#files': DAQView.Sorting.None,
+                '#LS w/ files': DAQView.Sorting.None,
+                'current LS': DAQView.Sorting.None,
+                '#LS for HLT': DAQView.Sorting.None,
+                '#LS out HLT': DAQView.Sorting.None,
+                'b/w out (MB/s)': DAQView.Sorting.None
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
@@ -52,7 +52,7 @@ var DAQView;
         };
         FileBasedFilterFarmTable.prototype.setCurrentSorting = function (headerName, sorting) {
             var _this = this;
-            DAQViewUtility.forEachOwnObjectProperty(this.currentSorting, function (header) { return _this.currentSorting[header] = Sorting.None; });
+            DAQViewUtility.forEachOwnObjectProperty(this.currentSorting, function (header) { return _this.currentSorting[header] = DAQView.Sorting.None; });
             this.currentSorting[headerName] = sorting;
         };
         FileBasedFilterFarmTable.prototype.getCurrentSorting = function (headerName) {
@@ -61,22 +61,6 @@ var DAQView;
         return FileBasedFilterFarmTable;
     }());
     DAQView.FileBasedFilterFarmTable = FileBasedFilterFarmTable;
-    var Sorting = (function () {
-        function Sorting(value, imagePath) {
-            this.value = value;
-            this.imagePath = imagePath;
-        }
-        Sorting.prototype.toString = function () {
-            return this.value;
-        };
-        Sorting.prototype.getImagePath = function () {
-            return this.imagePath;
-        };
-        Sorting.None = new Sorting('None', 'unsorted.png');
-        Sorting.Ascending = new Sorting('Ascending', 'sort_asc.png');
-        Sorting.Descending = new Sorting('Descending', 'sort_desc.png');
-        return Sorting;
-    }());
     var FFFTableSortFunctions;
     (function (FFFTableSortFunctions) {
         function NONE(snapshot) {
@@ -533,16 +517,16 @@ var DAQView;
             }
             var clickFunction = null;
             if (tableObject && sortFunctions) {
-                if (currentSorting === Sorting.None || currentSorting === Sorting.Descending) {
+                if (currentSorting === DAQView.Sorting.None || currentSorting === DAQView.Sorting.Descending) {
                     clickFunction = function () {
-                        tableObject.setSortFunction.bind(tableObject)(sortFunctions[Sorting.Ascending.toString()]);
-                        tableObject.setCurrentSorting.bind(tableObject)(content, Sorting.Ascending);
+                        tableObject.setSortFunction.bind(tableObject)(sortFunctions[DAQView.Sorting.Ascending.toString()]);
+                        tableObject.setCurrentSorting.bind(tableObject)(content, DAQView.Sorting.Ascending);
                     };
                 }
-                else if (currentSorting === Sorting.Ascending) {
+                else if (currentSorting === DAQView.Sorting.Ascending) {
                     clickFunction = function () {
-                        tableObject.setSortFunction.bind(tableObject)(sortFunctions[Sorting.Descending.toString()]);
-                        tableObject.setCurrentSorting.bind(tableObject)(content, Sorting.Descending);
+                        tableObject.setSortFunction.bind(tableObject)(sortFunctions[DAQView.Sorting.Descending.toString()]);
+                        tableObject.setCurrentSorting.bind(tableObject)(content, DAQView.Sorting.Descending);
                     };
                 }
             }
