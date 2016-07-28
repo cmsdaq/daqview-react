@@ -198,11 +198,11 @@ namespace DAQView {
         }
 
         export function BU_NUMFUSHLT_ASC(snapshot: DAQAggregatorSnapshot) {
-            return BU_SORT(snapshot, 'numFUsHlt', false);
+            return BU_SORT(snapshot, 'numFUsHLT', false);
         }
 
         export function BU_NUMFUSHLT_DESC(snapshot: DAQAggregatorSnapshot) {
-            return BU_SORT(snapshot, 'numFUsHlt', true);
+            return BU_SORT(snapshot, 'numFUsHLT', true);
         }
 
         export function BU_NUMFUSCRASHED_ASC(snapshot: DAQAggregatorSnapshot) {
@@ -658,7 +658,7 @@ namespace DAQView {
                     <td className={FormatUtility.getClassNameForNumber(requestsSent, FFFTableNumberFormats.REQUESTS_SENT)}>{requestsSent}</td>
                     <td className={FormatUtility.getClassNameForNumber(requestsUsed, FFFTableNumberFormats.REQUESTS_USED)}>{requestsUsed}</td>
                     <td className={FormatUtility.getClassNameForNumber(requestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED)}>{requestsBlocked}</td>
-                    <td>{bu.numFUsHlt}</td>
+                    <td>{bu.numFUsHLT}</td>
                     <td>{bu.numFUsCrashed}</td>
                     <td>{bu.numFUsStale}</td>
                     <td>{bu.numFUsCloud}</td>
@@ -697,7 +697,7 @@ namespace DAQView {
                     <td>Σ {buSummary.numRequestsSent}</td>
                     <td>Σ {buSummary.numRequestsUsed}</td>
                     <td>Σ {buSummary.numRequestsBlocked}</td>
-                    <td>Σ {buSummary.numFUsHlt}</td>
+                    <td>Σ {buSummary.numFUsHLT}</td>
                     <td>Σ {buSummary.numFUsCrashed}</td>
                     <td>Σ {buSummary.numFUsStale}</td>
                     <td>Σ {buSummary.numFUsCloud}</td>

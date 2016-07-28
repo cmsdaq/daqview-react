@@ -71,7 +71,7 @@ namespace DAQAggregator {
             numRequestsUsed: number;
             numRequestsBlocked: number;
 
-            numFUsHlt: number;
+            numFUsHLT: number;
             numFUsCrashed: number;
             numFUsStale: number;
             numFUsCloud: number;
@@ -125,7 +125,7 @@ namespace DAQAggregator {
             numRequestsUsed: number;
             numRequestsBlocked: number;
 
-            numFUsHlt: number;
+            numFUsHLT: number;
             numFUsCrashed: number;
             numFUsStale: number;
             numFUsCloud: number;
