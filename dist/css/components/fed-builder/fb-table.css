@@ -164,3 +164,9 @@
 .fb-table-subfb-max-trig-unequal {
     background-color: #FFFF00;
 }
+
+.fb-table-sort-image {
+    width: 8px;
+    height: 8px;
+    margin: 0 0.2em 0 0.2em;
+}

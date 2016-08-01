@@ -12,6 +12,24 @@ namespace DAQView {
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot;
+        private sortFunction: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot = FBTableSortFunctions.NONE;
+
+        private currentSorting: {[key: string]: Sorting} = {
+            'TTCP': Sorting.None,
+            'FB Name': Sorting.None,
+            '%W': Sorting.None,
+            '%B': Sorting.None,
+
+            'RU': Sorting.None,
+            'warn': Sorting.None,
+            'rate (kHz)': Sorting.None,
+            'thru (MB/s)': Sorting.None,
+            'size (kB)': Sorting.None,
+            '#events': Sorting.None,
+            '#frags in RU': Sorting.None,
+            '#evts in RU': Sorting.None,
+            '#requests': Sorting.None
+        };
 
         constructor(htmlRootElementName: string) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
@@ -19,10 +37,30 @@ namespace DAQView {
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot) {
             this.snapshot = snapshot;
-            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
-            let fedBuilderTableRootElement: any = <FEDBuilderTableElement fedBuilders={daq.fedBuilders}
+            let sortedSnapshot: DAQAggregatorSnapshot = this.sort(snapshot);
+            let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
+            let fedBuilderTableRootElement: any = <FEDBuilderTableElement tableObject={this}
+                                                                          fedBuilders={daq.fedBuilders}
                                                                           fedBuilderSummary={daq.fedBuilderSummary}/>
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
+        }
+
+        public setSortFunction(sortFunction: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot) {
+            this.sortFunction = sortFunction;
+            this.setSnapshot(this.snapshot);
+        }
+
+        public sort(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return this.sortFunction(snapshot);
+        }
+
+        public setCurrentSorting(headerName: string, sorting: Sorting) {
+            DAQViewUtility.forEachOwnObjectProperty(this.currentSorting, (header: string) => this.currentSorting[header] = Sorting.None);
+            this.currentSorting[headerName] = sorting;
+        }
+
+        public getCurrentSorting(headerName: string) {
+            return this.currentSorting[headerName];
         }
     }
 
@@ -61,7 +99,104 @@ namespace DAQView {
 
     }
 
+    export namespace FBTableSortFunctions {
+        export function NONE(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return snapshot;
+        }
+
+        function DEFAULT(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the SubFEDBuilders of each FEDBuilder by their TTCP name
+            fedBuilders.forEach(function (fedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                fedBuilder.subFedbuilders.sort(function (firstSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder, secondSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder) {
+                    let firstSubFedBuilderTTCPName: string = firstSubFedBuilder.ttcPartition.name;
+                    let secondSubFedBuilderTTCPName: string = secondSubFedBuilder.ttcPartition.name;
+
+                    if (firstSubFedBuilderTTCPName > secondSubFedBuilderTTCPName) {
+                        return (descending ? -1 : 1);
+                    } else if (firstSubFedBuilderTTCPName < secondSubFedBuilderTTCPName) {
+                        return (descending ? 1 : -1);
+                    } else {
+                        return 0;
+                    }
+                });
+            });
+
+            // sort the FEDBuilders based on their first SubFEDBuilders TTCP name
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                let firstFedBuilderFirstTTCPName: string = firstFedBuilder.subFedbuilders[0].ttcPartition.name;
+                let secondFedBuilderFirstTTCPName: string = secondFedBuilder.subFedbuilders[0].ttcPartition.name;
+
+                if (firstFedBuilderFirstTTCPName > secondFedBuilderFirstTTCPName) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderFirstTTCPName < secondFedBuilderFirstTTCPName) {
+                    return (descending ? 1 : -1);
+                } else {
+                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilder name
+                    let firstFedBuilderName: string = firstFedBuilder.name;
+                    let secondFedBuilderName: string = secondFedBuilder.name;
+                    if (firstFedBuilderName > secondFedBuilderName) {
+                        return (descending ? -1 : 1);
+                    } else if (firstFedBuilderName < secondFedBuilderName) {
+                        return (descending ? 1 : -1);
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function DEFAULT_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return DEFAULT(snapshot, false);
+        }
+
+        export function DEFAULT_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return DEFAULT(snapshot, true);
+        }
+
+        export function TTCP_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return DEFAULT_ASC(snapshot);
+        }
+
+        export function TTCP_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return DEFAULT_DESC(snapshot);
+        }
+
+        function FB(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort by FEDBuilder name
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                let firstFedBuilderName: string = firstFedBuilder.name;
+                let secondFedBuilderName: string = secondFedBuilder.name;
+                if (firstFedBuilderName > secondFedBuilderName) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderName < secondFedBuilderName) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function FB_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return FB(snapshot, false);
+        }
+
+        export function FB_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return FB(snapshot, true);
+        }
+    }
+
     interface FEDBuilderTableElementProperties {
+        tableObject: FEDBuilderTable;
         fedBuilders: DAQAggregatorSnapshot.FEDBuilder[];
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
     }
@@ -75,7 +210,7 @@ namespace DAQView {
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = this.props.fedBuilders;
 
             let evmMaxTrg: number = null;
-            fedBuilders.forEach(function(fedBuilder) {
+            fedBuilders.forEach(function (fedBuilder) {
                 if (fedBuilder.ru && fedBuilder.ru.isEVM) {
                     if (fedBuilder.subFedbuilders && fedBuilder.subFedbuilders.length > 0) {
                         evmMaxTrg = fedBuilder.subFedbuilders[0].maxTrig;
@@ -120,19 +255,48 @@ namespace DAQView {
                 evenRow = !evenRow;
             });
 
-            let baseHeaders: string[] = ['T', '%W', '%B', 'frlpc',
-                'geoSlot:SrcId      /      TTSOnlyFEDSrcId', 'min Trg',
-                'max Trg', 'FB Name', 'RU', 'warn', 'rate (kHz)', 'thru (MB/s)',
-                'size (kB)', '#events', '#frags in RU', '#evts in RU', '#requests'];
+            let baseHeaders: FEDBuilderTableHeaderProperties[] = [
+                {content: 'T'},
+                {content: '%W'},
+                {content: '%B'},
+                {content: 'frlpc'},
+                {content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId'},
+                {content: 'min Trg'},
+                {content: 'max Trg'},
+                {
+                    content: 'FB Name',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.FB_ASC,
+                        Descending: FBTableSortFunctions.FB_DESC
+                    }
+                },
+                {content: 'RU'},
+                {content: 'warn'},
+                {content: 'rate (kHz)'},
+                {content: 'thru (MB/s)'},
+                {content: 'size (kB)'},
+                {content: '#events'},
+                {content: '#frags in RU'},
+                {content: '#evts in RU'},
+                {content: '#requests'}
+            ];
 
-            let topHeaders: string[] = baseHeaders.slice();
-            topHeaders.unshift('TTCP');
+            let topHeaders: FEDBuilderTableHeaderProperties[] = baseHeaders.slice();
+            topHeaders.unshift({
+                content: 'TTCP',
+                sortFunctions: {
+                    Ascending: FBTableSortFunctions.TTCP_ASC,
+                    Descending: FBTableSortFunctions.TTCP_DESC
+                }
+            });
 
-            let summaryHeaders: string[] = baseHeaders.slice();
-            summaryHeaders.unshift('Summary');
+            let summaryHeaders: FEDBuilderTableHeaderProperties[] = baseHeaders.slice();
+            summaryHeaders.unshift({content: 'Summary'});
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
             let numRus: number = fedBuilders.length;
+
+            let tableObject: FEDBuilderTable = this.props.tableObject;
 
             return (
                 <table className="fb-table">
@@ -141,11 +305,11 @@ namespace DAQView {
                     <colgroup className="fb-table-colgroup-unknown" span="2"/>
                     <thead className="fb-table-head">
                     <FEDBuilderTableTopHeaderRow />
-                    <FEDBuilderTableHeaderRow headers={topHeaders}/>
+                    <FEDBuilderTableHeaderRow tableObject={tableObject} headers={topHeaders}/>
                     </thead>
                     <tbody className="fb-table-body">
                     {rows}
-                    <FEDBuilderTableHeaderRow headers={summaryHeaders}/>
+                    <FEDBuilderTableHeaderRow tableObject={tableObject} headers={summaryHeaders}/>
                     <FEDBuilderTableSummaryRow fedBuilderSummary={fedBuilderSummary} numRus={numRus}/>
                     </tbody>
                 </table>
@@ -167,13 +331,20 @@ namespace DAQView {
     }
 
     interface FEDBuilderTableHeaderRowProperties {
-        headers: string[];
+        headers: FEDBuilderTableHeaderProperties[];
+        tableObject: FEDBuilderTable;
     }
 
     class FEDBuilderTableHeaderRow extends React.Component<FEDBuilderTableHeaderRowProperties,{}> {
         render() {
+            let tableObject: FEDBuilderTable = this.props.tableObject;
+
             let children: any[] = [];
-            this.props.headers.forEach(header => children.push(<FEDBuilderTableHeader content={header}/>));
+            this.props.headers.forEach(header => children.push(<FEDBuilderTableHeader content={header.content}
+                                                                                      colSpan={header.colSpan}
+                                                                                      additionalClasses={header.additionalClasses}
+                                                                                      tableObject={tableObject}
+                                                                                      sortFunctions={header.sortFunctions}/>));
             return (
                 <tr className="fb-table-header-row">
                     {children}
@@ -186,15 +357,50 @@ namespace DAQView {
         content: any;
         colSpan?: string;
         additionalClasses?: string | string[];
+        tableObject?: FEDBuilderTable;
+        sortFunctions?: { [key: string]: ((snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot) };
     }
 
     class FEDBuilderTableHeader extends React.Component<FEDBuilderTableHeaderProperties,{}> {
         render() {
+            let content: string = this.props.content;
+            let colSpan: string = this.props.colSpan;
             let additionalClasses: string | string[] = this.props.additionalClasses;
             let className: string = classNames("fb-table-header", additionalClasses);
+
+            let tableObject: FEDBuilderTable = this.props.tableObject;
+            let currentSorting: Sorting;
+            let sortFunctions: { [key: string]: ((snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot) } = this.props.sortFunctions;
+            if (tableObject && sortFunctions) {
+                currentSorting = tableObject.getCurrentSorting(content);
+            }
+
+            let clickFunction: () => void = null;
+            if (tableObject && sortFunctions) {
+                if (currentSorting === Sorting.None || currentSorting === Sorting.Descending) {
+                    clickFunction = function () {
+                        tableObject.setSortFunction.bind(tableObject)(sortFunctions[Sorting.Ascending.toString()]);
+                        tableObject.setCurrentSorting.bind(tableObject)(content, Sorting.Ascending);
+                    };
+                } else if (currentSorting === Sorting.Ascending) {
+                    clickFunction = function () {
+                        tableObject.setSortFunction.bind(tableObject)(sortFunctions[Sorting.Descending.toString()]);
+                        tableObject.setCurrentSorting.bind(tableObject)(content, Sorting.Descending);
+                    };
+                }
+            }
+
+            let sortingImage: any = null;
+            if (currentSorting) {
+                sortingImage = <input type="image" className="fb-table-sort-image"
+                                      src={'dist/img/' + currentSorting.getImagePath()}
+                                      alt={currentSorting.toString()}
+                                      title="Sort" onClick={clickFunction}/>;
+            }
+
             return (
-                <th className={className} colSpan={this.props.colSpan ? this.props.colSpan : 1}>
-                    {this.props.content}
+                <th className={className} colSpan={colSpan ? colSpan : "1"}>
+                    {content}{sortingImage}
                 </th>
             );
         }
