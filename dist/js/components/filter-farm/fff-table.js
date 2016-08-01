@@ -291,11 +291,9 @@ var DAQView;
             _super.apply(this, arguments);
         }
         FileBasedFilterFarmTableElement.prototype.render = function () {
-            var tableObject = this.props.tableObject;
             var baseHeaders = [
                 {
                     content: 'rate (kHz)',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_RATE_ASC,
                         Descending: FFFTableSortFunctions.BU_RATE_DESC
@@ -303,7 +301,6 @@ var DAQView;
                 },
                 {
                     content: 'thru (MB/s)',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_THROUGHPUT_ASC,
                         Descending: FFFTableSortFunctions.BU_THROUGHPUT_DESC
@@ -311,7 +308,6 @@ var DAQView;
                 },
                 {
                     content: 'size (kB)',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_EVENTSIZEMEAN_ASC,
                         Descending: FFFTableSortFunctions.BU_EVENTSIZEMEAN_DESC
@@ -319,7 +315,6 @@ var DAQView;
                 },
                 {
                     content: '#events',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMEVENTS_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMEVENTS_DESC
@@ -327,7 +322,6 @@ var DAQView;
                 },
                 {
                     content: '#evts in BU',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMEVENTSINBU_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMEVENTSINBU_DESC
@@ -335,7 +329,6 @@ var DAQView;
                 },
                 {
                     content: 'priority',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_PRIORITY_ASC,
                         Descending: FFFTableSortFunctions.BU_PRIORITY_DESC
@@ -343,7 +336,6 @@ var DAQView;
                 },
                 {
                     content: '#req. sent',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMREQUESTSSENT_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMREQUESTSSENT_DESC
@@ -351,7 +343,6 @@ var DAQView;
                 },
                 {
                     content: '#req. used',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMREQUESTSUSED_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMREQUESTSUSED_DESC
@@ -359,7 +350,6 @@ var DAQView;
                 },
                 {
                     content: '#req. blocked',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_DESC
@@ -367,7 +357,6 @@ var DAQView;
                 },
                 {
                     content: '#FUs HLT',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFUSHLT_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFUSHLT_DESC
@@ -375,7 +364,6 @@ var DAQView;
                 },
                 {
                     content: '#FUs crash',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFUSCRASHED_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFUSCRASHED_DESC
@@ -383,7 +371,6 @@ var DAQView;
                 },
                 {
                     content: '#FUs stale',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFUSSTALE_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFUSSTALE_DESC
@@ -391,7 +378,6 @@ var DAQView;
                 },
                 {
                     content: '#FUs cloud',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFUSCLOUD_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFUSCLOUD_DESC
@@ -399,7 +385,6 @@ var DAQView;
                 },
                 {
                     content: 'RAM disk usage',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_RAMDISKUSAGE_ASC,
                         Descending: FFFTableSortFunctions.BU_RAMDISKUSAGE_DESC
@@ -407,7 +392,6 @@ var DAQView;
                 },
                 {
                     content: '#files',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFILES_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFILES_DESC
@@ -415,7 +399,6 @@ var DAQView;
                 },
                 {
                     content: '#LS w/ files',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_DESC
@@ -423,7 +406,6 @@ var DAQView;
                 },
                 {
                     content: 'current LS',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_CURRENTLUMISECTION_ASC,
                         Descending: FFFTableSortFunctions.BU_CURRENTLUMISECTION_DESC
@@ -431,7 +413,6 @@ var DAQView;
                 },
                 {
                     content: '#LS for HLT',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_DESC
@@ -439,7 +420,6 @@ var DAQView;
                 },
                 {
                     content: '#LS out HLT',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC
@@ -447,7 +427,6 @@ var DAQView;
                 },
                 {
                     content: 'b/w out (MB/s)',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_ASC,
                         Descending: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_DESC
@@ -457,7 +436,6 @@ var DAQView;
             var topHeaders = baseHeaders.slice();
             topHeaders.unshift({
                 content: 'BU',
-                tableObject: tableObject,
                 sortFunctions: {
                     Ascending: FFFTableSortFunctions.BU_HOSTNAME_ASC,
                     Descending: FFFTableSortFunctions.BU_HOSTNAME_DESC
@@ -473,7 +451,8 @@ var DAQView;
                 numBus = bus.length;
                 bus.forEach(function (bu) { return buRows.push(React.createElement(FileBasedFilterFarmTableBURow, {bu: bu})); });
             }
-            return (React.createElement("table", {className: "fff-table"}, React.createElement("thead", {className: "fff-table-head"}, React.createElement(FileBasedFilterFarmTableTopHeaderRow, null), React.createElement(FileBasedFilterFarmTableHeaderRow, {headers: topHeaders})), React.createElement("tbody", {className: "fff-table-body"}, buRows, React.createElement(FileBasedFilterFarmTableHeaderRow, {headers: summaryHeaders}), React.createElement(FileBasedFilterFarmTableBUSummaryRow, {buSummary: buSummary, numBus: numBus}))));
+            var tableObject = this.props.tableObject;
+            return (React.createElement("table", {className: "fff-table"}, React.createElement("thead", {className: "fff-table-head"}, React.createElement(FileBasedFilterFarmTableTopHeaderRow, null), React.createElement(FileBasedFilterFarmTableHeaderRow, {tableObject: tableObject, headers: topHeaders})), React.createElement("tbody", {className: "fff-table-body"}, buRows, React.createElement(FileBasedFilterFarmTableHeaderRow, {tableObject: tableObject, headers: summaryHeaders}), React.createElement(FileBasedFilterFarmTableBUSummaryRow, {buSummary: buSummary, numBus: numBus}))));
         };
         return FileBasedFilterFarmTableElement;
     }(React.Component));
@@ -493,8 +472,9 @@ var DAQView;
             _super.apply(this, arguments);
         }
         FileBasedFilterFarmTableHeaderRow.prototype.render = function () {
+            var tableObject = this.props.tableObject;
             var children = [];
-            this.props.headers.forEach(function (header) { return children.push(React.createElement(FileBasedFilterFarmTableHeader, {content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: header.tableObject, sortFunctions: header.sortFunctions})); });
+            this.props.headers.forEach(function (header) { return children.push(React.createElement(FileBasedFilterFarmTableHeader, {content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sortFunctions: header.sortFunctions})); });
             return (React.createElement("tr", {className: "fff-table-header-row"}, children));
         };
         return FileBasedFilterFarmTableHeaderRow;

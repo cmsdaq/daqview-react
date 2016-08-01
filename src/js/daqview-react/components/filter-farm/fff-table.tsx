@@ -312,11 +312,9 @@ namespace DAQView {
 
     class FileBasedFilterFarmTableElement extends React.Component<FileBasedFilterFarmTableElementProperties,{}> {
         render() {
-            let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
             let baseHeaders: FileBasedFilterFarmTableHeaderProperties[] = [
                 {
                     content: 'rate (kHz)',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_RATE_ASC,
                         Descending: FFFTableSortFunctions.BU_RATE_DESC
@@ -324,7 +322,6 @@ namespace DAQView {
                 },
                 {
                     content: 'thru (MB/s)',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_THROUGHPUT_ASC,
                         Descending: FFFTableSortFunctions.BU_THROUGHPUT_DESC
@@ -332,7 +329,6 @@ namespace DAQView {
                 },
                 {
                     content: 'size (kB)',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_EVENTSIZEMEAN_ASC,
                         Descending: FFFTableSortFunctions.BU_EVENTSIZEMEAN_DESC
@@ -340,7 +336,6 @@ namespace DAQView {
                 },
                 {
                     content: '#events',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMEVENTS_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMEVENTS_DESC
@@ -348,7 +343,6 @@ namespace DAQView {
                 },
                 {
                     content: '#evts in BU',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMEVENTSINBU_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMEVENTSINBU_DESC
@@ -356,7 +350,6 @@ namespace DAQView {
                 },
                 {
                     content: 'priority',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_PRIORITY_ASC,
                         Descending: FFFTableSortFunctions.BU_PRIORITY_DESC
@@ -364,7 +357,6 @@ namespace DAQView {
                 },
                 {
                     content: '#req. sent',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMREQUESTSSENT_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMREQUESTSSENT_DESC
@@ -372,7 +364,6 @@ namespace DAQView {
                 },
                 {
                     content: '#req. used',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMREQUESTSUSED_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMREQUESTSUSED_DESC
@@ -380,7 +371,6 @@ namespace DAQView {
                 },
                 {
                     content: '#req. blocked',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_DESC
@@ -388,7 +378,6 @@ namespace DAQView {
                 },
                 {
                     content: '#FUs HLT',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFUSHLT_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFUSHLT_DESC
@@ -396,7 +385,6 @@ namespace DAQView {
                 },
                 {
                     content: '#FUs crash',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFUSCRASHED_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFUSCRASHED_DESC
@@ -404,7 +392,6 @@ namespace DAQView {
                 },
                 {
                     content: '#FUs stale',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFUSSTALE_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFUSSTALE_DESC
@@ -412,7 +399,6 @@ namespace DAQView {
                 },
                 {
                     content: '#FUs cloud',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFUSCLOUD_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFUSCLOUD_DESC
@@ -420,7 +406,6 @@ namespace DAQView {
                 },
                 {
                     content: 'RAM disk usage',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_RAMDISKUSAGE_ASC,
                         Descending: FFFTableSortFunctions.BU_RAMDISKUSAGE_DESC
@@ -428,7 +413,6 @@ namespace DAQView {
                 },
                 {
                     content: '#files',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMFILES_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMFILES_DESC
@@ -436,7 +420,6 @@ namespace DAQView {
                 },
                 {
                     content: '#LS w/ files',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_DESC
@@ -444,7 +427,6 @@ namespace DAQView {
                 },
                 {
                     content: 'current LS',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_CURRENTLUMISECTION_ASC,
                         Descending: FFFTableSortFunctions.BU_CURRENTLUMISECTION_DESC
@@ -452,7 +434,6 @@ namespace DAQView {
                 },
                 {
                     content: '#LS for HLT',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_DESC
@@ -460,7 +441,6 @@ namespace DAQView {
                 },
                 {
                     content: '#LS out HLT',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_ASC,
                         Descending: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC
@@ -468,7 +448,6 @@ namespace DAQView {
                 },
                 {
                     content: 'b/w out (MB/s)',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_ASC,
                         Descending: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_DESC
@@ -480,7 +459,6 @@ namespace DAQView {
             topHeaders.unshift(
                 {
                     content: 'BU',
-                    tableObject: tableObject,
                     sortFunctions: {
                         Ascending: FFFTableSortFunctions.BU_HOSTNAME_ASC,
                         Descending: FFFTableSortFunctions.BU_HOSTNAME_DESC
@@ -500,15 +478,17 @@ namespace DAQView {
                 bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow bu={bu}/>));
             }
 
+            let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
+
             return (
                 <table className="fff-table">
                     <thead className="fff-table-head">
                     <FileBasedFilterFarmTableTopHeaderRow />
-                    <FileBasedFilterFarmTableHeaderRow headers={topHeaders}/>
+                    <FileBasedFilterFarmTableHeaderRow tableObject={tableObject} headers={topHeaders}/>
                     </thead>
                     <tbody className="fff-table-body">
                     {buRows}
-                    <FileBasedFilterFarmTableHeaderRow headers={summaryHeaders}/>
+                    <FileBasedFilterFarmTableHeaderRow tableObject={tableObject} headers={summaryHeaders}/>
                     <FileBasedFilterFarmTableBUSummaryRow buSummary={buSummary} numBus={numBus}/>
                     </tbody>
                 </table>
@@ -530,15 +510,18 @@ namespace DAQView {
 
     interface FileBasedFilterFarmTableHeaderRowProperties {
         headers: FileBasedFilterFarmTableHeaderProperties[];
+        tableObject: FileBasedFilterFarmTable;
     }
 
     class FileBasedFilterFarmTableHeaderRow extends React.Component<FileBasedFilterFarmTableHeaderRowProperties,{}> {
         render() {
+            let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
+
             let children: any[] = [];
             this.props.headers.forEach(header => children.push(<FileBasedFilterFarmTableHeader content={header.content}
                                                                                                colSpan={header.colSpan}
                                                                                                additionalClasses={header.additionalClasses}
-                                                                                               tableObject={header.tableObject}
+                                                                                               tableObject={tableObject}
                                                                                                sortFunctions={header.sortFunctions}/>));
             return (
                 <tr className="fff-table-header-row">
