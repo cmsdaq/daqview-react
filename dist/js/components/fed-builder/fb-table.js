@@ -86,7 +86,7 @@ var DAQView;
             return snapshot;
         }
         FBTableSortFunctions.NONE = NONE;
-        function TTCP(snapshot, descending) {
+        function SubFBByTTCP(snapshot, descending) {
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
             // sort the SubFEDBuilders of each FEDBuilder by their TTCP name
@@ -105,6 +105,12 @@ var DAQView;
                     }
                 });
             });
+            return snapshot;
+        }
+        function TTCP(snapshot, descending) {
+            snapshot = SubFBByTTCP(snapshot, descending);
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
             // sort the FEDBuilders based on their first SubFEDBuilders TTCP name
             fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
                 if (firstFedBuilder.ru.isEVM) {
@@ -147,6 +153,7 @@ var DAQView;
         }
         FBTableSortFunctions.TTCP_DESC = TTCP_DESC;
         function FB(snapshot, descending) {
+            snapshot = SubFBByTTCP(snapshot, descending);
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
             // sort by FEDBuilder name

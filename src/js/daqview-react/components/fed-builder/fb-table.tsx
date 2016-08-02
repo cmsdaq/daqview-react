@@ -104,7 +104,7 @@ namespace DAQView {
             return snapshot;
         }
 
-        function TTCP(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+        function SubFBByTTCP(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
@@ -123,6 +123,15 @@ namespace DAQView {
                     }
                 });
             });
+
+            return snapshot;
+        }
+
+        function TTCP(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            snapshot = SubFBByTTCP(snapshot, descending);
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
             // sort the FEDBuilders based on their first SubFEDBuilders TTCP name
             fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
@@ -165,6 +174,8 @@ namespace DAQView {
         }
 
         function FB(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            snapshot = SubFBByTTCP(snapshot, descending);
+
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
