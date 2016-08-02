@@ -10,9 +10,9 @@ var DAQView;
 (function (DAQView) {
     var FileBasedFilterFarmTable = (function () {
         function FileBasedFilterFarmTable(htmlRootElementName) {
-            this.sortFunction = FFFTableSortFunctions.NONE;
+            this.sortFunction = FFFTableSortFunctions.BU_HOSTNAME_ASC;
             this.currentSorting = {
-                'BU': DAQView.Sorting.None,
+                'BU': DAQView.Sorting.Ascending,
                 'rate (kHz)': DAQView.Sorting.None,
                 'thru (MB/s)': DAQView.Sorting.None,
                 'size (kB)': DAQView.Sorting.None,

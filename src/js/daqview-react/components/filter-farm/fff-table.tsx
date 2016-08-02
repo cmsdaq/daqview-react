@@ -12,10 +12,10 @@ namespace DAQView {
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot;
-        private sortFunction: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot = FFFTableSortFunctions.NONE;
+        private sortFunction: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot = FFFTableSortFunctions.BU_HOSTNAME_ASC;
 
         private currentSorting: {[key: string]: Sorting} = {
-            'BU': Sorting.None,
+            'BU': Sorting.Ascending,
             'rate (kHz)': Sorting.None,
             'thru (MB/s)': Sorting.None,
             'size (kB)': Sorting.None,
