@@ -157,12 +157,20 @@
     background-color: #FFFF00;
 }
 
+.fb-table-subfb-min-trig-equal {
+    color: #008800;
+}
+
 .fb-table-subfb-max-trig {
 
 }
 
 .fb-table-subfb-max-trig-unequal {
     background-color: #FFFF00;
+}
+
+.fb-table-subfb-max-trig-equal {
+    color: #008800;
 }
 
 .fb-table-sort-image {

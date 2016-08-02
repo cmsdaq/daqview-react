@@ -491,10 +491,14 @@ namespace DAQView {
             if (evmMaxTrg) {
                 if (minTrig != evmMaxTrg && minTrigUnequalMaxTrig) {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
+                } else {
+                    minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-equal');
                 }
 
                 if (maxTrig != evmMaxTrg) {
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
+                } else {
+                    maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
 

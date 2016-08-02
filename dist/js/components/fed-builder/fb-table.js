@@ -381,8 +381,14 @@ var DAQView;
                 if (minTrig != evmMaxTrg && minTrigUnequalMaxTrig) {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
                 }
+                else {
+                    minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-equal');
+                }
                 if (maxTrig != evmMaxTrg) {
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
+                }
+                else {
+                    maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
             return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name), React.createElement("td", null, ttcPartitionTTSStateDisplay), React.createElement("td", null, ttcPartition.percentWarning), React.createElement("td", null, ttcPartition.percentBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
