@@ -10,9 +10,9 @@ var DAQView;
 (function (DAQView) {
     var FEDBuilderTable = (function () {
         function FEDBuilderTable(htmlRootElementName) {
-            this.sortFunction = FBTableSortFunctions.NONE;
+            this.sortFunction = FBTableSortFunctions.TTCP_ASC;
             this.currentSorting = {
-                'TTCP': DAQView.Sorting.None,
+                'TTCP': DAQView.Sorting.Ascending,
                 'FB Name': DAQView.Sorting.None,
                 '%W': DAQView.Sorting.None,
                 '%B': DAQView.Sorting.None,
@@ -86,7 +86,7 @@ var DAQView;
             return snapshot;
         }
         FBTableSortFunctions.NONE = NONE;
-        function DEFAULT(snapshot, descending) {
+        function TTCP(snapshot, descending) {
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
             // sort the SubFEDBuilders of each FEDBuilder by their TTCP name
@@ -107,6 +107,12 @@ var DAQView;
             });
             // sort the FEDBuilders based on their first SubFEDBuilders TTCP name
             fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
                 var firstFedBuilderFirstTTCPName = firstFedBuilder.subFedbuilders[0].ttcPartition.name;
                 var secondFedBuilderFirstTTCPName = secondFedBuilder.subFedbuilders[0].ttcPartition.name;
                 if (firstFedBuilderFirstTTCPName > secondFedBuilderFirstTTCPName) {
@@ -132,20 +138,12 @@ var DAQView;
             });
             return snapshot;
         }
-        function DEFAULT_ASC(snapshot) {
-            return DEFAULT(snapshot, false);
-        }
-        FBTableSortFunctions.DEFAULT_ASC = DEFAULT_ASC;
-        function DEFAULT_DESC(snapshot) {
-            return DEFAULT(snapshot, true);
-        }
-        FBTableSortFunctions.DEFAULT_DESC = DEFAULT_DESC;
         function TTCP_ASC(snapshot) {
-            return DEFAULT_ASC(snapshot);
+            return TTCP(snapshot, false);
         }
         FBTableSortFunctions.TTCP_ASC = TTCP_ASC;
         function TTCP_DESC(snapshot) {
-            return DEFAULT_DESC(snapshot);
+            return TTCP(snapshot, true);
         }
         FBTableSortFunctions.TTCP_DESC = TTCP_DESC;
         function FB(snapshot, descending) {
@@ -153,6 +151,12 @@ var DAQView;
             var fedBuilders = daq.fedBuilders;
             // sort by FEDBuilder name
             fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
                 var firstFedBuilderName = firstFedBuilder.name;
                 var secondFedBuilderName = secondFedBuilder.name;
                 if (firstFedBuilderName > secondFedBuilderName) {

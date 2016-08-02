@@ -12,10 +12,10 @@ namespace DAQView {
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot;
-        private sortFunction: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot = FBTableSortFunctions.NONE;
+        private sortFunction: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot = FBTableSortFunctions.TTCP_ASC;
 
         private currentSorting: {[key: string]: Sorting} = {
-            'TTCP': Sorting.None,
+            'TTCP': Sorting.Ascending,
             'FB Name': Sorting.None,
             '%W': Sorting.None,
             '%B': Sorting.None,
@@ -104,7 +104,7 @@ namespace DAQView {
             return snapshot;
         }
 
-        function DEFAULT(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+        function TTCP(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
@@ -126,6 +126,12 @@ namespace DAQView {
 
             // sort the FEDBuilders based on their first SubFEDBuilders TTCP name
             fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
                 let firstFedBuilderFirstTTCPName: string = firstFedBuilder.subFedbuilders[0].ttcPartition.name;
                 let secondFedBuilderFirstTTCPName: string = secondFedBuilder.subFedbuilders[0].ttcPartition.name;
 
@@ -150,20 +156,12 @@ namespace DAQView {
             return snapshot;
         }
 
-        export function DEFAULT_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
-            return DEFAULT(snapshot, false);
-        }
-
-        export function DEFAULT_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
-            return DEFAULT(snapshot, true);
-        }
-
         export function TTCP_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
-            return DEFAULT_ASC(snapshot);
+            return TTCP(snapshot, false);
         }
 
         export function TTCP_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
-            return DEFAULT_DESC(snapshot);
+            return TTCP(snapshot, true);
         }
 
         function FB(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
@@ -172,6 +170,13 @@ namespace DAQView {
 
             // sort by FEDBuilder name
             fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+
                 let firstFedBuilderName: string = firstFedBuilder.name;
                 let secondFedBuilderName: string = secondFedBuilder.name;
                 if (firstFedBuilderName > secondFedBuilderName) {
