@@ -5,6 +5,7 @@
     <title>DAQ View 2 React</title>
 
     <link rel="StyleSheet" href="dist/css/daqview.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/metadata/metadata-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/fed-builder/fb-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/filter-farm/fff-table.css" type="text/css"/>
 
@@ -20,6 +21,7 @@
     <script type="text/javascript" src="dist/js/utilities/snapshot-randomizer.js"></script>
     <script type="text/javascript" src="dist/js/utilities/parser.js"></script>
     <script type="text/javascript" src="dist/js/components/common/sorting.js"></script>
+    <script type="text/javascript" src="dist/js/components/metadata/metadata-table.js"></script>
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
    
@@ -31,6 +33,7 @@
         $(document).ready(function () {
             try {
                 daqView = new DAQView.DAQViewReact();
+                daqView.createMetadataTable('daqview-react-metadata-table');
                 daqView.createFBTable('daqview-react-fb-table');
                 daqView.createFFFTable('daqview-react-fff-table');
 
@@ -76,6 +79,8 @@
 </head>
 <body>
 <div id="daqview-react">
+    <div id="daqview-react-metadata-table"></div>
+    <br/><br/>
     <div id="daqview-react-fb-table"></div>
     <br/><br/>
     <div id="daqview-react-fff-table"></div>

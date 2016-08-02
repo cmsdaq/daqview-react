@@ -21,6 +21,14 @@ namespace DAQView {
             DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot));
         }
 
+        public createMetadataTable(elementName: string) {
+            let newTable = new MetadataTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        }
+
         public createFBTable(elementName: string) {
             this.createFEDBuilderTable(elementName);
         }

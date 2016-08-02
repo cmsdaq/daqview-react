@@ -14,6 +14,13 @@ var DAQView;
             var _this = this;
             DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].setSnapshot(snapshot); });
         };
+        DAQViewReact.prototype.createMetadataTable = function (elementName) {
+            var newTable = new DAQView.MetadataTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        };
         DAQViewReact.prototype.createFBTable = function (elementName) {
             this.createFEDBuilderTable(elementName);
         };
