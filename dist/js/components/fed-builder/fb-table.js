@@ -371,7 +371,7 @@ var DAQView;
             var minTrigClassNames = 'fb-table-subfb-min-trig';
             var maxTrigClassNames = 'fb-table-subfb-max-trig';
             if (evmMaxTrg) {
-                if (minTrig != maxTrig && minTrigUnequalMaxTrig) {
+                if (minTrig != evmMaxTrg && minTrigUnequalMaxTrig) {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
                 }
                 if (maxTrig != evmMaxTrg) {

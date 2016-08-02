@@ -478,7 +478,7 @@ namespace DAQView {
             let maxTrigClassNames: string = 'fb-table-subfb-max-trig';
 
             if (evmMaxTrg) {
-                if (minTrig != maxTrig && minTrigUnequalMaxTrig) {
+                if (minTrig != evmMaxTrg && minTrigUnequalMaxTrig) {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
                 }
 
