@@ -2894,7 +2894,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 14,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TIBTID4"
   }, {
     "@id" : "RU_ru-c2e13-18-01.cms",
@@ -2915,7 +2915,7 @@
     "requests" : 423432,
     "incompleteSuperFragmentCount" : 15,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TOB-3a"
   }, {
     "@id" : "RU_ru-c2e13-30-01.cms",
@@ -2936,7 +2936,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 10,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC+2a"
   }, {
     "@id" : "RU_ru-c2e13-34-01.cms",
@@ -2957,7 +2957,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 13,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC+2b"
   }, {
     "@id" : "RU_ru-c2e12-10-01.cms",
@@ -2978,7 +2978,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 8,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC+3a"
   }, {
     "@id" : "RU_ru-c2e12-12-01.cms",
@@ -2999,7 +2999,7 @@
     "requests" : 423432,
     "incompleteSuperFragmentCount" : 15,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_EE-"
   }, {
     "@id" : "RU_ru-c2e12-27-01.cms",
@@ -3020,7 +3020,7 @@
     "requests" : 424144,
     "incompleteSuperFragmentCount" : 12,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC-2a"
   }, {
     "@id" : "RU_ru-c2e15-10-01.cms",
@@ -3041,7 +3041,7 @@
     "requests" : 0,
     "incompleteSuperFragmentCount" : 0,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_HBHEc"
   }, {
     "@id" : "RU_ru-c2e14-29-01.cms",
@@ -3062,7 +3062,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 13,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_ES+1a"
   }, {
     "@id" : "RU_ru-c2e14-19-01.cms",
@@ -3083,7 +3083,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 6,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_CALTRIGUP"
   }, {
     "@id" : "RU_ru-c2e13-10-01.cms",
@@ -3104,7 +3104,7 @@
     "requests" : 423432,
     "incompleteSuperFragmentCount" : 18,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TOB-1a"
   }, {
     "@id" : "RU_ru-c2e14-34-01.cms",
@@ -3125,7 +3125,7 @@
     "requests" : 0,
     "incompleteSuperFragmentCount" : 0,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_HBHEb"
   }, {
     "@id" : "RU_ru-c2e15-30-01.cms",
@@ -3146,7 +3146,7 @@
     "requests" : 423432,
     "incompleteSuperFragmentCount" : 15,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_BPIX2"
   }, {
     "@id" : "RU_ru-c2e13-11-01.cms",
@@ -3167,7 +3167,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 8,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TOB-1b"
   }, {
     "@id" : "RU_ru-c2e13-35-01.cms",
@@ -3188,7 +3188,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 11,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_BPIX1"
   }, {
     "@id" : "RU_ru-c2e13-14-01.cms",
@@ -3209,7 +3209,7 @@
     "requests" : 423464,
     "incompleteSuperFragmentCount" : 13,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TOB-2a"
   }, {
     "@id" : "RU_ru-c2e15-24-01.cms",
@@ -3230,7 +3230,7 @@
     "requests" : 424864,
     "incompleteSuperFragmentCount" : 9,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_RPC"
   }, {
     "@id" : "RU_ru-c2e14-10-01.cms",
@@ -3251,7 +3251,7 @@
     "requests" : 423531,
     "incompleteSuperFragmentCount" : 0,
     "status" : null,
-    "evm" : true,
+    "isEVM" : true,
     "ref_fedBuilder" : "FEDB_TCDS"
   }, {
     "@id" : "RU_ru-c2e14-16-01.cms",
@@ -3272,7 +3272,7 @@
     "requests" : 424144,
     "incompleteSuperFragmentCount" : 6,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_EMTFOMTF"
   }, {
     "@id" : "RU_ru-c2e13-13-01.cms",
@@ -3293,7 +3293,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 8,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TIBTID6a"
   }, {
     "@id" : "RU_ru-c2e14-30-01.cms",
@@ -3314,7 +3314,7 @@
     "requests" : 0,
     "incompleteSuperFragmentCount" : 0,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_HBHEa"
   }, {
     "@id" : "RU_ru-c2e12-16-01.cms",
@@ -3335,7 +3335,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 13,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_ES-1b"
   }, {
     "@id" : "RU_ru-c2e13-24-01.cms",
@@ -3356,7 +3356,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 10,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TIBTID3"
   }, {
     "@id" : "RU_ru-c2e14-22-01.cms",
@@ -3377,7 +3377,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 11,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TWINMUX2"
   }, {
     "@id" : "RU_ru-c2e13-15-01.cms",
@@ -3398,7 +3398,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 9,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TOB-2b"
   }, {
     "@id" : "RU_ru-c2e12-14-01.cms",
@@ -3419,7 +3419,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 10,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC-3b"
   }, {
     "@id" : "RU_ru-c2e13-29-01.cms",
@@ -3440,7 +3440,7 @@
     "requests" : 423432,
     "incompleteSuperFragmentCount" : 15,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_BPIX3"
   }, {
     "@id" : "RU_ru-c2e12-22-01.cms",
@@ -3461,7 +3461,7 @@
     "requests" : 423432,
     "incompleteSuperFragmentCount" : 15,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_BMTFGMTGT"
   }, {
     "@id" : "RU_ru-c2e13-39-01.cms",
@@ -3482,7 +3482,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 9,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TIBTID6b"
   }, {
     "@id" : "RU_ru-c2e15-28-01.cms",
@@ -3503,7 +3503,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 13,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_DT"
   }, {
     "@id" : "RU_ru-c2e12-13-01.cms",
@@ -3524,7 +3524,7 @@
     "requests" : 423464,
     "incompleteSuperFragmentCount" : 18,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC-3a"
   }, {
     "@id" : "RU_ru-c2e15-13-01.cms",
@@ -3545,7 +3545,7 @@
     "requests" : 423416,
     "incompleteSuperFragmentCount" : 17,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_HOSCAL"
   }, {
     "@id" : "RU_ru-c2e13-40-01.cms",
@@ -3566,7 +3566,7 @@
     "requests" : 424168,
     "incompleteSuperFragmentCount" : 6,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TOB-3b"
   }, {
     "@id" : "RU_ru-c2e12-24-01.cms",
@@ -3587,7 +3587,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 11,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC-1a"
   }, {
     "@id" : "RU_ru-c2e12-25-01.cms",
@@ -3608,7 +3608,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 6,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC-1b"
   }, {
     "@id" : "RU_ru-c2e12-19-01.cms",
@@ -3629,7 +3629,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 8,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_EE+"
   }, {
     "@id" : "RU_ru-c2e13-22-01.cms",
@@ -3650,7 +3650,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 8,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TOB-4b"
   }, {
     "@id" : "RU_ru-c2e12-31-01.cms",
@@ -3671,7 +3671,7 @@
     "requests" : 0,
     "incompleteSuperFragmentCount" : 0,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_CTPPS_TOT"
   }, {
     "@id" : "RU_ru-c2e14-23-01.cms",
@@ -3692,7 +3692,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 7,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TWINMUX1"
   }, {
     "@id" : "RU_ru-c2e12-28-01.cms",
@@ -3713,7 +3713,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 6,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC-2b"
   }, {
     "@id" : "RU_ru-c2e13-23-01.cms",
@@ -3734,7 +3734,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 12,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TIBTID2"
   }, {
     "@id" : "RU_ru-c2e13-19-01.cms",
@@ -3755,7 +3755,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 13,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TOB-4a"
   }, {
     "@id" : "RU_ru-c2e14-28-01.cms",
@@ -3776,7 +3776,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 8,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_EB-2"
   }, {
     "@id" : "RU_ru-c2e12-26-01.cms",
@@ -3797,7 +3797,7 @@
     "requests" : 424144,
     "incompleteSuperFragmentCount" : 12,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_EB+2"
   }, {
     "@id" : "RU_ru-c2e15-27-01.cms",
@@ -3818,7 +3818,7 @@
     "requests" : 423432,
     "incompleteSuperFragmentCount" : 18,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_BPIX4"
   }, {
     "@id" : "RU_ru-c2e15-11-01.cms",
@@ -3839,7 +3839,7 @@
     "requests" : 0,
     "incompleteSuperFragmentCount" : 0,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_HF"
   }, {
     "@id" : "RU_ru-c2e15-23-01.cms",
@@ -3860,7 +3860,7 @@
     "requests" : 0,
     "incompleteSuperFragmentCount" : 0,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_HBHEcuTCA"
   }, {
     "@id" : "RU_ru-c2e13-16-01.cms",
@@ -3881,7 +3881,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 13,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TIBTID1a"
   }, {
     "@id" : "RU_ru-c2e13-27-01.cms",
@@ -3902,7 +3902,7 @@
     "requests" : 423464,
     "incompleteSuperFragmentCount" : 13,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC+1a"
   }, {
     "@id" : "RU_ru-c2e13-17-01.cms",
@@ -3923,7 +3923,7 @@
     "requests" : 423464,
     "incompleteSuperFragmentCount" : 14,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TIBTID1b"
   }, {
     "@id" : "RU_ru-c2e12-17-01.cms",
@@ -3944,7 +3944,7 @@
     "requests" : 423432,
     "incompleteSuperFragmentCount" : 12,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_EB-1"
   }, {
     "@id" : "RU_ru-c2e12-34-01.cms",
@@ -3965,7 +3965,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 6,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_CSC-"
   }, {
     "@id" : "RU_ru-c2e12-40-01.cms",
@@ -3986,7 +3986,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 6,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_FPIXPixelPilot"
   }, {
     "@id" : "RU_ru-c2e13-31-01.cms",
@@ -4007,7 +4007,7 @@
     "requests" : 423432,
     "incompleteSuperFragmentCount" : 12,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TIBTID5"
   }, {
     "@id" : "RU_ru-c2e13-25-01.cms",
@@ -4028,7 +4028,7 @@
     "requests" : 423464,
     "incompleteSuperFragmentCount" : 10,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TOB-5"
   }, {
     "@id" : "RU_ru-c2e12-15-01.cms",
@@ -4049,7 +4049,7 @@
     "requests" : 424144,
     "incompleteSuperFragmentCount" : 9,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_EB+1"
   }, {
     "@id" : "RU_ru-c2e12-30-01.cms",
@@ -4070,7 +4070,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 11,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_CSC+"
   }, {
     "@id" : "RU_ru-c2e14-27-01.cms",
@@ -4091,7 +4091,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 7,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_ES+1b"
   }, {
     "@id" : "RU_ru-c2e12-18-01.cms",
@@ -4112,7 +4112,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 8,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_ES-1a"
   }, {
     "@id" : "RU_ru-c2e12-39-01.cms",
@@ -4133,7 +4133,7 @@
     "requests" : 423464,
     "incompleteSuperFragmentCount" : 4,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_CSCTF"
   }, {
     "@id" : "RU_ru-c2e15-22-01.cms",
@@ -4154,7 +4154,7 @@
     "requests" : 0,
     "incompleteSuperFragmentCount" : 0,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_HBHEbuTCA"
   }, {
     "@id" : "RU_ru-c2e13-28-01.cms",
@@ -4175,7 +4175,7 @@
     "requests" : 424152,
     "incompleteSuperFragmentCount" : 8,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC+1b"
   }, {
     "@id" : "RU_ru-c2e12-11-01.cms",
@@ -4196,7 +4196,7 @@
     "requests" : 423448,
     "incompleteSuperFragmentCount" : 14,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_TEC+3b"
   }, {
     "@id" : "RU_ru-c2e15-19-01.cms",
@@ -4217,7 +4217,7 @@
     "requests" : 0,
     "incompleteSuperFragmentCount" : 0,
     "status" : null,
-    "evm" : false,
+    "isEVM" : false,
     "ref_fedBuilder" : "FEDB_HBHEauTCA"
   } ],
   "fmmApplications" : [ {
