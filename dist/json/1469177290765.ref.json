@@ -5267,7 +5267,7 @@
   "subFEDBuilders" : [ {
     "@id" : "SFB_MUTFUP$frlpc-s1d06-36-01.cms",
     "id" : null,
-    "minTrig" : 423439,
+    "minTrig" : 423669,
     "maxTrig" : 423439,
     "ref_fedBuilder" : "FEDB_BMTFGMTGT",
     "ref_ttcPartition" : "TTCP_MUTFUP",

@@ -457,6 +457,8 @@ namespace DAQView {
             let minTrig: number = subFedBuilder.minTrig;
             let maxTrig: number = subFedBuilder.maxTrig;
 
+            let minTrigUnequalMaxTrig: boolean = minTrig != maxTrig;
+
             let ttcPartitionTTSStateLink: any = ttsState;
             if (ttcPartition.fmm) {
                 ttcPartitionTTSStateLink = <a href={ttcPartition.fmm.url} target="_blank">{ttsState}</a>;
@@ -468,19 +470,21 @@ namespace DAQView {
             let minTrigDisplayContent: any = '';
             let maxTrigDisplayContent: any = maxTrig;
 
-            if (minTrig != maxTrig) {
+            if (minTrigUnequalMaxTrig) {
                 minTrigDisplayContent = minTrig;
             }
 
             let minTrigClassNames: string = 'fb-table-subfb-min-trig';
             let maxTrigClassNames: string = 'fb-table-subfb-max-trig';
 
-            if (evmMaxTrg && minTrig != evmMaxTrg) {
-                minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
-            }
+            if (evmMaxTrg) {
+                if (minTrig != maxTrig && minTrigUnequalMaxTrig) {
+                    minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
+                }
 
-            if (evmMaxTrg && maxTrig != evmMaxTrg) {
-                maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
+                if (maxTrig != evmMaxTrg) {
+                    maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
+                }
             }
 
             return (

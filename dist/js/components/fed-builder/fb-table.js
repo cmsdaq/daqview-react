@@ -356,6 +356,7 @@ var DAQView;
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
             var minTrig = subFedBuilder.minTrig;
             var maxTrig = subFedBuilder.maxTrig;
+            var minTrigUnequalMaxTrig = minTrig != maxTrig;
             var ttcPartitionTTSStateLink = ttsState;
             if (ttcPartition.fmm) {
                 ttcPartitionTTSStateLink = React.createElement("a", {href: ttcPartition.fmm.url, target: "_blank"}, ttsState);
@@ -364,16 +365,18 @@ var DAQView;
             var evmMaxTrg = this.props.evmMaxTrg;
             var minTrigDisplayContent = '';
             var maxTrigDisplayContent = maxTrig;
-            if (minTrig != maxTrig) {
+            if (minTrigUnequalMaxTrig) {
                 minTrigDisplayContent = minTrig;
             }
             var minTrigClassNames = 'fb-table-subfb-min-trig';
             var maxTrigClassNames = 'fb-table-subfb-max-trig';
-            if (evmMaxTrg && minTrig != evmMaxTrg) {
-                minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
-            }
-            if (evmMaxTrg && maxTrig != evmMaxTrg) {
-                maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
+            if (evmMaxTrg) {
+                if (minTrig != maxTrig && minTrigUnequalMaxTrig) {
+                    minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
+                }
+                if (maxTrig != evmMaxTrg) {
+                    maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
+                }
             }
             return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name), React.createElement("td", null, ttcPartitionTTSStateDisplay), React.createElement("td", null, ttcPartition.percentWarning), React.createElement("td", null, ttcPartition.percentBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
         };
