@@ -5740,7 +5740,7 @@
     "ref_fedBuilder" : "FEDB_HBHEb",
     "ref_ttcPartition" : "TTCP_HBHEB",
     "ref_frlPc" : "FRLPC_frlpc-s2d10-12-01.cms",
-    "ref_frls" : [ "FRL_1$frlpc-s2d10-12-01.cms" ]
+    "ref_frls" : [ "FRL_1$frlpc-s2d10-12-01.cms", "FRL_9$frlpc-s1d06-08-01.cms", "FRL_1$frlpc-s1d06-05-01.cms" ]
   }, {
     "@id" : "SFB_TEC-$frlpc-s1d06-08-01.cms",
     "id" : null,
