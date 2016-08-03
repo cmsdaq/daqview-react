@@ -108,7 +108,7 @@ namespace DAQView {
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
-            // sort the SubFEDBuilders of each FEDBuilderRow by their TTCP name
+            // sort the SubFEDBuilders of each FEDBuilder by their TTCP name
             fedBuilders.forEach(function (fedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
                 fedBuilder.subFedbuilders.sort(function (firstSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder, secondSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder) {
                     let firstSubFedBuilderTTCPName: string = firstSubFedBuilder.ttcPartition.name;
@@ -149,7 +149,7 @@ namespace DAQView {
                 } else if (firstFedBuilderFirstTTCPName < secondFedBuilderFirstTTCPName) {
                     return (descending ? 1 : -1);
                 } else {
-                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilderRow name
+                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilder name
                     let firstFedBuilderName: string = firstFedBuilder.name;
                     let secondFedBuilderName: string = secondFedBuilder.name;
                     if (firstFedBuilderName > secondFedBuilderName) {
@@ -179,7 +179,7 @@ namespace DAQView {
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
-            // sort by FEDBuilderRow name
+            // sort by FEDBuilder name
             fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
                 if (firstFedBuilder.ru.isEVM) {
                     return -1;

@@ -89,7 +89,7 @@ var DAQView;
         function SubFBByTTCP(snapshot, descending) {
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
-            // sort the SubFEDBuilders of each FEDBuilderRow by their TTCP name
+            // sort the SubFEDBuilders of each FEDBuilder by their TTCP name
             fedBuilders.forEach(function (fedBuilder) {
                 fedBuilder.subFedbuilders.sort(function (firstSubFedBuilder, secondSubFedBuilder) {
                     var firstSubFedBuilderTTCPName = firstSubFedBuilder.ttcPartition.name;
@@ -128,7 +128,7 @@ var DAQView;
                     return (descending ? 1 : -1);
                 }
                 else {
-                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilderRow name
+                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilder name
                     var firstFedBuilderName = firstFedBuilder.name;
                     var secondFedBuilderName = secondFedBuilder.name;
                     if (firstFedBuilderName > secondFedBuilderName) {
@@ -156,7 +156,7 @@ var DAQView;
             snapshot = SubFBByTTCP(snapshot, descending);
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
-            // sort by FEDBuilderRow name
+            // sort by FEDBuilder name
             fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
                 if (firstFedBuilder.ru.isEVM) {
                     return -1;
