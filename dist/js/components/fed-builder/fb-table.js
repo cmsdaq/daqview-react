@@ -89,7 +89,7 @@ var DAQView;
         function SubFBByTTCP(snapshot, descending) {
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
-            // sort the SubFEDBuilders of each FEDBuilder by their TTCP name
+            // sort the SubFEDBuilders of each FEDBuilderRow by their TTCP name
             fedBuilders.forEach(function (fedBuilder) {
                 fedBuilder.subFedbuilders.sort(function (firstSubFedBuilder, secondSubFedBuilder) {
                     var firstSubFedBuilderTTCPName = firstSubFedBuilder.ttcPartition.name;
@@ -128,7 +128,7 @@ var DAQView;
                     return (descending ? 1 : -1);
                 }
                 else {
-                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilder name
+                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilderRow name
                     var firstFedBuilderName = firstFedBuilder.name;
                     var secondFedBuilderName = secondFedBuilder.name;
                     if (firstFedBuilderName > secondFedBuilderName) {
@@ -156,7 +156,7 @@ var DAQView;
             snapshot = SubFBByTTCP(snapshot, descending);
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
-            // sort by FEDBuilder name
+            // sort by FEDBuilderRow name
             fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
                 if (firstFedBuilder.ru.isEVM) {
                     return -1;
@@ -193,9 +193,6 @@ var DAQView;
             _super.apply(this, arguments);
         }
         FEDBuilderTableElement.prototype.render = function () {
-            var fbRowSubFbRowEvenClassName = 'fb-table-subfb-row-even';
-            var fbRowSubFbRowOddClassName = 'fb-table-subfb-row-odd';
-            var evenRow = false;
             var fedBuilders = this.props.fedBuilders;
             var evmMaxTrg = null;
             fedBuilders.forEach(function (fedBuilder) {
@@ -205,29 +202,9 @@ var DAQView;
                     }
                 }
             });
-            var rows = [];
+            var fedBuilderRows = [];
             fedBuilders.forEach(function (fedBuilder) {
-                var subFedBuilders = fedBuilder.subFedbuilders;
-                var numSubFedBuilders = subFedBuilders.length;
-                var ru = fedBuilder.ru;
-                var ruHostname = ru.hostname;
-                var ruName = ruHostname.substring(0, ruHostname.length - 4);
-                var ruUrl = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
-                var fedBuilderData = [];
-                fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
-                fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
-                fedBuilderData.push(React.createElement(RUMessages, {rowSpan: numSubFedBuilders, infoMessage: ru.infoMsg, warnMessage: ru.warnMsg, errorMessage: ru.errorMsg}));
-                fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.rate / 1000).toFixed(3)));
-                fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.throughput / 1024 / 1024).toFixed(1)));
-                fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.superFragmentSizeMean / 1024).toFixed(1), "±", (ru.superFragmentSizeStddev / 1024).toFixed(1)));
-                fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, "evts"));
-                fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.fragmentsInRU));
-                fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.eventsInRU));
-                fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.requests));
-                var rowClassName = evenRow ? fbRowSubFbRowEvenClassName : fbRowSubFbRowOddClassName;
-                var count = 0;
-                subFedBuilders.forEach(function (subFedBuilder) { return rows.push(React.createElement(SubFEDBuilderRow, {evmMaxTrg: evmMaxTrg, additionalClasses: rowClassName, subFedBuilder: subFedBuilder, additionalContent: ++count == 1 ? fedBuilderData : null})); });
-                evenRow = !evenRow;
+                fedBuilderRows.push(React.createElement(FEDBuilderRow, {fedBuilder: fedBuilder, evmMaxTrg: evmMaxTrg}));
             });
             var baseHeaders = [
                 { content: 'T' },
@@ -267,9 +244,42 @@ var DAQView;
             var fedBuilderSummary = this.props.fedBuilderSummary;
             var numRus = fedBuilders.length;
             var tableObject = this.props.tableObject;
-            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-unknown", span: "2"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, null), React.createElement(FEDBuilderTableHeaderRow, {tableObject: tableObject, headers: topHeaders})), React.createElement("tbody", {className: "fb-table-body"}, rows, React.createElement(FEDBuilderTableHeaderRow, {tableObject: tableObject, headers: summaryHeaders}), React.createElement(FEDBuilderTableSummaryRow, {fedBuilderSummary: fedBuilderSummary, numRus: numRus}))));
+            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-unknown", span: "2"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, null), React.createElement(FEDBuilderTableHeaderRow, {tableObject: tableObject, headers: topHeaders})), fedBuilderRows, React.createElement("tfoot", {className: "fb-table-foot"}, React.createElement(FEDBuilderTableHeaderRow, {tableObject: tableObject, headers: summaryHeaders}), React.createElement(FEDBuilderTableSummaryRow, {fedBuilderSummary: fedBuilderSummary, numRus: numRus}))));
         };
         return FEDBuilderTableElement;
+    }(React.Component));
+    var FEDBuilderRow = (function (_super) {
+        __extends(FEDBuilderRow, _super);
+        function FEDBuilderRow() {
+            _super.apply(this, arguments);
+        }
+        FEDBuilderRow.prototype.render = function () {
+            var _this = this;
+            var fedBuilder = this.props.fedBuilder;
+            var subFedBuilders = fedBuilder.subFedbuilders;
+            var numSubFedBuilders = subFedBuilders.length;
+            var ru = fedBuilder.ru;
+            var ruHostname = ru.hostname;
+            var ruName = ruHostname.substring(0, ruHostname.length - 4);
+            var ruUrl = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+            var fedBuilderData = [];
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
+            fedBuilderData.push(React.createElement(RUMessages, {rowSpan: numSubFedBuilders, infoMessage: ru.infoMsg, warnMessage: ru.warnMsg, errorMessage: ru.errorMsg}));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.rate / 1000).toFixed(3)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.throughput / 1024 / 1024).toFixed(1)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.superFragmentSizeMean / 1024).toFixed(1), "±", (ru.superFragmentSizeStddev / 1024).toFixed(1)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, "evts"));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.fragmentsInRU));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.eventsInRU));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.requests));
+            var fbRowClassName = classNames("fb-table-fb-row", this.props.additionalClasses);
+            var children = [];
+            var count = 0;
+            subFedBuilders.forEach(function (subFedBuilder) { return children.push(React.createElement(SubFEDBuilderRow, {evmMaxTrg: _this.props.evmMaxTrg, subFedBuilder: subFedBuilder, additionalContent: ++count == 1 ? fedBuilderData : null})); });
+            return (React.createElement("tbody", {className: fbRowClassName}, children));
+        };
+        return FEDBuilderRow;
     }(React.Component));
     var FEDBuilderTableTopHeaderRow = (function (_super) {
         __extends(FEDBuilderTableTopHeaderRow, _super);

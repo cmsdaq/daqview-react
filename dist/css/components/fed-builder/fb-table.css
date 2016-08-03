@@ -45,7 +45,7 @@
     background-color: #DDDDAA;
 }
 
-.fb-table-body {
+.fb-table-foot {
 
 }
 
@@ -65,15 +65,19 @@
 
 }
 
-.fb-table-subfb-row {
+.fb-table-fb-row {
 
 }
 
-.fb-table-subfb-row-even {
+.fb-table-fb-row:nth-of-type(even) {
     background-color: #DDDDAA;
 }
 
-.fb-table-subfb-row-odd {
+.fb-table-fb-row:nth-of-type(odd) {
+
+}
+
+.fb-table-subfb-row {
 
 }
 

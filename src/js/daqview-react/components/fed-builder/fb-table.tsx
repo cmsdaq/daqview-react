@@ -108,7 +108,7 @@ namespace DAQView {
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
-            // sort the SubFEDBuilders of each FEDBuilder by their TTCP name
+            // sort the SubFEDBuilders of each FEDBuilderRow by their TTCP name
             fedBuilders.forEach(function (fedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
                 fedBuilder.subFedbuilders.sort(function (firstSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder, secondSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder) {
                     let firstSubFedBuilderTTCPName: string = firstSubFedBuilder.ttcPartition.name;
@@ -149,7 +149,7 @@ namespace DAQView {
                 } else if (firstFedBuilderFirstTTCPName < secondFedBuilderFirstTTCPName) {
                     return (descending ? 1 : -1);
                 } else {
-                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilder name
+                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilderRow name
                     let firstFedBuilderName: string = firstFedBuilder.name;
                     let secondFedBuilderName: string = secondFedBuilder.name;
                     if (firstFedBuilderName > secondFedBuilderName) {
@@ -179,7 +179,7 @@ namespace DAQView {
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
-            // sort by FEDBuilder name
+            // sort by FEDBuilderRow name
             fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
                 if (firstFedBuilder.ru.isEVM) {
                     return -1;
@@ -219,10 +219,6 @@ namespace DAQView {
 
     class FEDBuilderTableElement extends React.Component<FEDBuilderTableElementProperties,{}> {
         render() {
-            let fbRowSubFbRowEvenClassName: string = 'fb-table-subfb-row-even';
-            let fbRowSubFbRowOddClassName: string = 'fb-table-subfb-row-odd';
-            let evenRow: boolean = false;
-
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = this.props.fedBuilders;
 
             let evmMaxTrg: number = null;
@@ -234,41 +230,9 @@ namespace DAQView {
                 }
             });
 
-            let rows: any[] = [];
+            let fedBuilderRows: any[] = [];
             fedBuilders.forEach(function (fedBuilder) {
-                let subFedBuilders: DAQAggregatorSnapshot.SubFEDBuilder[] = fedBuilder.subFedbuilders;
-                let numSubFedBuilders: number = subFedBuilders.length;
-
-                let ru: DAQAggregatorSnapshot.RU = fedBuilder.ru;
-                let ruHostname: string = ru.hostname;
-                let ruName: string = ruHostname.substring(0, ruHostname.length - 4);
-                let ruUrl: string = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
-
-                let fedBuilderData: any[] = [];
-                fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
-                fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
-                </td>);
-                fedBuilderData.push(<RUMessages rowSpan={numSubFedBuilders} infoMessage={ru.infoMsg}
-                                                warnMessage={ru.warnMsg}
-                                                errorMessage={ru.errorMsg}/>);
-                fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{(ru.rate / 1000).toFixed(3)}</td>);
-                fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{(ru.throughput / 1024 / 1024).toFixed(1)}</td>);
-                fedBuilderData.push(<td
-                    rowSpan={numSubFedBuilders}>{(ru.superFragmentSizeMean / 1024).toFixed(1)}±{(ru.superFragmentSizeStddev / 1024).toFixed(1)}</td>);
-                fedBuilderData.push(<td rowSpan={numSubFedBuilders}>evts</td>);
-                fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.fragmentsInRU}</td>);
-                fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.eventsInRU}</td>);
-                fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.requests}</td>);
-
-                let rowClassName: string = evenRow ? fbRowSubFbRowEvenClassName : fbRowSubFbRowOddClassName;
-
-                let count: number = 0;
-                subFedBuilders.forEach(subFedBuilder => rows.push(<SubFEDBuilderRow evmMaxTrg={evmMaxTrg}
-                                                                                    additionalClasses={rowClassName}
-                                                                                    subFedBuilder={subFedBuilder}
-                                                                                    additionalContent={++count == 1 ? fedBuilderData : null}/>));
-
-                evenRow = !evenRow;
+                fedBuilderRows.push(<FEDBuilderRow fedBuilder={fedBuilder} evmMaxTrg={evmMaxTrg}/>);
             });
 
             let baseHeaders: FEDBuilderTableHeaderProperties[] = [
@@ -323,12 +287,61 @@ namespace DAQView {
                     <FEDBuilderTableTopHeaderRow />
                     <FEDBuilderTableHeaderRow tableObject={tableObject} headers={topHeaders}/>
                     </thead>
-                    <tbody className="fb-table-body">
-                    {rows}
+                    {fedBuilderRows}
+                    <tfoot className="fb-table-foot">
                     <FEDBuilderTableHeaderRow tableObject={tableObject} headers={summaryHeaders}/>
                     <FEDBuilderTableSummaryRow fedBuilderSummary={fedBuilderSummary} numRus={numRus}/>
-                    </tbody>
+                    </tfoot>
                 </table>
+            );
+        }
+    }
+
+    interface FEDBuilderRowProperties {
+        fedBuilder: DAQAggregatorSnapshot.FEDBuilder;
+        evmMaxTrg: number;
+        additionalClasses?: string | string[];
+    }
+
+    class FEDBuilderRow extends React.Component<FEDBuilderRowProperties,{}> {
+        render() {
+            let fedBuilder: DAQAggregatorSnapshot.FEDBuilder = this.props.fedBuilder;
+
+            let subFedBuilders: DAQAggregatorSnapshot.SubFEDBuilder[] = fedBuilder.subFedbuilders;
+            let numSubFedBuilders: number = subFedBuilders.length;
+
+            let ru: DAQAggregatorSnapshot.RU = fedBuilder.ru;
+            let ruHostname: string = ru.hostname;
+            let ruName: string = ruHostname.substring(0, ruHostname.length - 4);
+            let ruUrl: string = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+
+            let fedBuilderData: any[] = [];
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
+            </td>);
+            fedBuilderData.push(<RUMessages rowSpan={numSubFedBuilders} infoMessage={ru.infoMsg}
+                                            warnMessage={ru.warnMsg}
+                                            errorMessage={ru.errorMsg}/>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{(ru.rate / 1000).toFixed(3)}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{(ru.throughput / 1024 / 1024).toFixed(1)}</td>);
+            fedBuilderData.push(<td
+                rowSpan={numSubFedBuilders}>{(ru.superFragmentSizeMean / 1024).toFixed(1)}±{(ru.superFragmentSizeStddev / 1024).toFixed(1)}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>evts</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.fragmentsInRU}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.eventsInRU}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.requests}</td>);
+
+            let fbRowClassName: string = classNames("fb-table-fb-row", this.props.additionalClasses);
+
+            let children: any = [];
+            let count: number = 0;
+            subFedBuilders.forEach(subFedBuilder => children.push(<SubFEDBuilderRow evmMaxTrg={this.props.evmMaxTrg}
+                                                                                    subFedBuilder={subFedBuilder}
+                                                                                    additionalContent={++count == 1 ? fedBuilderData : null}/>));
+            return (
+                <tbody className={fbRowClassName}>
+                {children}
+                </tbody>
             );
         }
     }
