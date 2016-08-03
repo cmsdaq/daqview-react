@@ -452,7 +452,7 @@ var DAQView;
                 bus.forEach(function (bu) { return buRows.push(React.createElement(FileBasedFilterFarmTableBURow, {bu: bu})); });
             }
             var tableObject = this.props.tableObject;
-            return (React.createElement("table", {className: "fff-table"}, React.createElement("thead", {className: "fff-table-head"}, React.createElement(FileBasedFilterFarmTableTopHeaderRow, null), React.createElement(FileBasedFilterFarmTableHeaderRow, {tableObject: tableObject, headers: topHeaders})), React.createElement("tbody", {className: "fff-table-body"}, buRows, React.createElement(FileBasedFilterFarmTableHeaderRow, {tableObject: tableObject, headers: summaryHeaders}), React.createElement(FileBasedFilterFarmTableBUSummaryRow, {buSummary: buSummary, numBus: numBus}))));
+            return (React.createElement("table", {className: "fff-table"}, React.createElement("thead", {className: "fff-table-head"}, React.createElement(FileBasedFilterFarmTableTopHeaderRow, null), React.createElement(FileBasedFilterFarmTableHeaderRow, {tableObject: tableObject, headers: topHeaders})), React.createElement("tbody", {className: "fff-table-body"}, buRows), React.createElement("tfoot", {className: "fff-table-foot"}, React.createElement(FileBasedFilterFarmTableHeaderRow, {tableObject: tableObject, headers: summaryHeaders}), React.createElement(FileBasedFilterFarmTableBUSummaryRow, {buSummary: buSummary, numBus: numBus}))));
         };
         return FileBasedFilterFarmTableElement;
     }(React.Component));

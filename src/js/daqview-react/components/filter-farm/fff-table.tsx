@@ -488,9 +488,11 @@ namespace DAQView {
                     </thead>
                     <tbody className="fff-table-body">
                     {buRows}
+                    </tbody>
+                    <tfoot className="fff-table-foot">
                     <FileBasedFilterFarmTableHeaderRow tableObject={tableObject} headers={summaryHeaders}/>
                     <FileBasedFilterFarmTableBUSummaryRow buSummary={buSummary} numBus={numBus}/>
-                    </tbody>
+                    </tfoot>
                 </table>
             );
         }
