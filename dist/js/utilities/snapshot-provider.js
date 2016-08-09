@@ -48,4 +48,3 @@ var DAQAggregator;
     }());
     DAQAggregator.SnapshotProvider = SnapshotProvider;
 })(DAQAggregator || (DAQAggregator = {}));
-//# sourceMappingURL=snapshot-provider.js.map

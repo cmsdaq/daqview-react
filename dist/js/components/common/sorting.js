@@ -18,4 +18,3 @@ var DAQView;
     }());
     DAQView.Sorting = Sorting;
 })(DAQView || (DAQView = {}));
-//# sourceMappingURL=sorting.js.map

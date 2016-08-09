@@ -526,7 +526,7 @@ var DAQView;
         FileBasedFilterFarmTableBURow.prototype.render = function () {
             var bu = this.props.bu;
             var buUrl = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
-            var hostname = bu.hostname.substring(0, bu.hostname.length - 4);
+            var hostname = bu.hostname.substring(3, bu.hostname.length - 4);
             var rate = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
             var throughput = FormatUtility.toFixedNumber(bu.throughput / 1024 / 1024, 1);
             var sizeMean = FormatUtility.toFixedNumber(bu.eventSizeMean / 1024, 1);
@@ -554,4 +554,3 @@ var DAQView;
         return FileBasedFilterFarmTableBUSummaryRow;
     }(React.Component));
 })(DAQView || (DAQView = {}));
-//# sourceMappingURL=fff-table.js.map

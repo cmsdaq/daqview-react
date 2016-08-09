@@ -45,4 +45,3 @@ var DAQView;
     }());
     DAQView.DAQViewReact = DAQViewReact;
 })(DAQView || (DAQView = {}));
-//# sourceMappingURL=daqview.js.map

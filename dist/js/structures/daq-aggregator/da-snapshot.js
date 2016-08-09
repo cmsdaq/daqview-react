@@ -18,4 +18,3 @@ var DAQAggregator;
     }());
     DAQAggregator.Snapshot = Snapshot;
 })(DAQAggregator || (DAQAggregator = {}));
-//# sourceMappingURL=da-snapshot.js.map

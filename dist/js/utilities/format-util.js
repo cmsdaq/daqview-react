@@ -56,4 +56,3 @@ var FormatUtility;
     }
     FormatUtility.toFixedNumber = toFixedNumber;
 })(FormatUtility || (FormatUtility = {}));
-//# sourceMappingURL=format-util.js.map

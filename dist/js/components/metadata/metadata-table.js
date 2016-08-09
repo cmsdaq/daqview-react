@@ -29,4 +29,3 @@ var DAQView;
         return MetadataTableElement;
     }(React.Component));
 })(DAQView || (DAQView = {}));
-//# sourceMappingURL=metadata-table.js.map

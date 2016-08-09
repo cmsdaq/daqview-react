@@ -106,4 +106,3 @@ var DAQAggregator;
     }());
     DAQAggregator.SnapshotParser = SnapshotParser;
 })(DAQAggregator || (DAQAggregator = {}));
-//# sourceMappingURL=parser.js.map
