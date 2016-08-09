@@ -187,6 +187,7 @@ namespace DAQAggregator {
         export interface TTCPartition {
             [key: string]: any;
 
+            ttcpNr: number;
             name: string;
             ttsState: string;
             percentWarning: number;
@@ -247,7 +248,7 @@ namespace DAQAggregator {
             ttsState?: string;
 
             numSCRCerrors: number;
-            numFRCerrors: number;
+            numFCRCerrors: number;
             numTriggers: number;
             eventCounter: number;
 
@@ -256,11 +257,11 @@ namespace DAQAggregator {
 
             hasSLINK: boolean;
             hasTTS: boolean;
-            
+
             ruFedWithoutFragments: boolean;
-            
+
             frl_AccSlinkFullSec: number;
-            
+
         }
 
     }

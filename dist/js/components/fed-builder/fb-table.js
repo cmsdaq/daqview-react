@@ -401,7 +401,7 @@ var DAQView;
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name), React.createElement("td", null, ttcPartitionTTSStateDisplay), React.createElement("td", null, ttcPartition.percentWarning), React.createElement("td", null, ttcPartition.percentBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", null, ttcPartitionTTSStateDisplay), React.createElement("td", null, ttcPartition.percentWarning), React.createElement("td", null, ttcPartition.percentBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));
@@ -463,7 +463,7 @@ var DAQView;
             var percentBackpressure = fed.percentBackpressure;
             var expectedSourceId = fed.srcIdExpected;
             var receivedSourceId = fed.srcIdReceived;
-            var fedCRCErrors = fed.numFRCerrors;
+            var fedCRCErrors = fed.numFCRCerrors;
             var slinkCRCErrors = fed.numSCRCerrors;
             var percentWarningDisplay = percentWarning > 0 ?
                 React.createElement("span", {className: "fb-table-fed-percent-warning"}, "W:", percentWarning.toFixed(1), "%") : '';

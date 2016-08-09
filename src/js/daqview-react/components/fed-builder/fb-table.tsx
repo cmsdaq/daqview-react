@@ -517,7 +517,7 @@ namespace DAQView {
 
             return (
                 <tr className={className}>
-                    <td>{ttcPartition.name}</td>
+                    <td>{ttcPartition.name}:{ttcPartition.ttcpNr}</td>
                     <td>{ttcPartitionTTSStateDisplay}</td>
                     <td>{ttcPartition.percentWarning}</td>
                     <td>{ttcPartition.percentBusy}</td>
@@ -608,7 +608,7 @@ namespace DAQView {
             let expectedSourceId: number = fed.srcIdExpected;
             let receivedSourceId: number = fed.srcIdReceived;
 
-            let fedCRCErrors: number = fed.numFRCerrors;
+            let fedCRCErrors: number = fed.numFCRCerrors;
             let slinkCRCErrors: number = fed.numSCRCerrors;
 
             let percentWarningDisplay: any = percentWarning > 0 ?
