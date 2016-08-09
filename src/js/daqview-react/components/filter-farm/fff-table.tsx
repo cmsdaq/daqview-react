@@ -595,7 +595,7 @@ namespace DAQView {
             let bu: DAQAggregatorSnapshot.BU = this.props.bu;
             let buUrl: string = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
 
-            let hostname: string = bu.hostname.substring(0, bu.hostname.length - 4);
+            let hostname: string = bu.hostname.substring(3, bu.hostname.length - 4);
             let rate: number = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
             let throughput: number = FormatUtility.toFixedNumber(bu.throughput / 1024 / 1024, 1);
             let sizeMean: number = FormatUtility.toFixedNumber(bu.eventSizeMean / 1024, 1);
