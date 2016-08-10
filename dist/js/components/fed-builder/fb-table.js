@@ -269,7 +269,7 @@ var DAQView;
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.rate / 1000).toFixed(3)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.throughput / 1024 / 1024).toFixed(1)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.superFragmentSizeMean / 1024).toFixed(1), "±", (ru.superFragmentSizeStddev / 1024).toFixed(1)));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, "evts"));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.eventCount));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.fragmentsInRU));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.eventsInRU));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.requests));

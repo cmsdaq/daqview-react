@@ -326,7 +326,7 @@ namespace DAQView {
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{(ru.throughput / 1024 / 1024).toFixed(1)}</td>);
             fedBuilderData.push(<td
                 rowSpan={numSubFedBuilders}>{(ru.superFragmentSizeMean / 1024).toFixed(1)}±{(ru.superFragmentSizeStddev / 1024).toFixed(1)}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>evts</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.eventCount}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.fragmentsInRU}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.eventsInRU}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.requests}</td>);

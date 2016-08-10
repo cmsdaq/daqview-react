@@ -167,8 +167,6 @@ namespace DAQAggregator {
             eventCount: number;
             requests: number;
 
-            // #events missing?
-
             // status: string;
             // incompleteSuperFragmentCount: number;
 
