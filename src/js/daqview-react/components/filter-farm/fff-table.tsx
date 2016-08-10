@@ -625,7 +625,7 @@ namespace DAQView {
                     <td>{bu.numFUsCrashed}</td>
                     <td>{bu.numFUsStale}</td>
                     <td>{bu.numFUsCloud}</td>
-                    <td>{(bu.ramDiskUsage*100).toFixed(1)}% of {bu.ramDiskTotal.toFixed(1)}GB</td>
+                    <td>{(bu.ramDiskUsage).toFixed(1)}% of {bu.ramDiskTotal.toFixed(1)}GB</td>
                     <td>{bu.numFiles}</td>
                     <td>{bu.numLumisectionsWithFiles}</td>
                     <td>{bu.currentLumisection}</td>
