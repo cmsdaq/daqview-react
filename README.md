@@ -8,7 +8,8 @@
 - [ ] complete display of FEDs in the FB table
   - [ ] correctly find and distribute dependent FEDs
 - [ ] display FED errors in RU warn column of FB table
-- [ ] add header view to display snapshot metadata and system status (timestamp, DPSet path, last run start, run numbber, session id)
+- [x] add header view to display snapshot metadata and system status
+  - [ ] add additional information (beam mode etc.)
 - [ ] add page-wide styles and/or notifications to draw the shifter's attention to a problem
 - [x] rewrite parser to match the new snapshot format
 - [ ] add navigation options (display snapshot by run, session, time, next/previous snapshot) => requires server-side API
