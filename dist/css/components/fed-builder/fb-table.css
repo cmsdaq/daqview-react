@@ -101,7 +101,29 @@
     background-color: #33FF33;
 }
 
-.fb-table-fed-tts-state {
+.fb-table-subfb-tts-state-W {
+    background-color: #FFCC00;
+}
+
+.fb-table-subfb-tts-state-B {
+    background-color: #FF6600;
+}
+
+.fb-table-subfb-tts-state-E,
+.fb-table-subfb-tts-state-S,
+.fb-table-subfb-tts-state-I {
+    background-color: #CC0033;
+}
+
+.fb-table-subfb-tts-state-D {
+    background-color: #3399FF;
+}
+
+.fb-table-fed-tts-state,
+.fb-table-fed-tts-state a,
+.fb-table-fed-tts-state a:hover,
+.fb-table-fed-tts-state a:visited {
+    color: black;
     font-weight: bold;
 }
 
