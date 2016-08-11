@@ -1,11 +1,11 @@
 var DAQViewGUIUtility;
 (function (DAQViewGUIUtility) {
     function getParametersFromCurrentRequestURL() {
-        return getParametersFromURL(document.location.search);
+        return parseURLParameters(document.location.search);
     }
     DAQViewGUIUtility.getParametersFromCurrentRequestURL = getParametersFromCurrentRequestURL;
-    function getParametersFromURL(url) {
-        var queryString = url.split('+').join(' ');
+    function parseURLParameters(urlParameters) {
+        var queryString = urlParameters.split('+').join(' ');
         var parameters = {};
         var re = /[?&]?([^=]+)=([^&]*)/g;
         var tokens;
@@ -14,5 +14,5 @@ var DAQViewGUIUtility;
         }
         return parameters;
     }
-    DAQViewGUIUtility.getParametersFromURL = getParametersFromURL;
+    DAQViewGUIUtility.parseURLParameters = parseURLParameters;
 })(DAQViewGUIUtility || (DAQViewGUIUtility = {}));

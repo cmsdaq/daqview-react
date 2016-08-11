@@ -1,11 +1,11 @@
 namespace DAQViewGUIUtility {
 
     export function getParametersFromCurrentRequestURL(): {[key: string]: string} {
-        return getParametersFromURL(document.location.search);
+        return parseURLParameters(document.location.search);
     }
 
-    export function getParametersFromURL(url: string): {[key: string]: string} {
-        let queryString: string = url.split('+').join(' ');
+    export function parseURLParameters(urlParameters: string): {[key: string]: string} {
+        let queryString: string = urlParameters.split('+').join(' ');
 
         let parameters: {[key: string]: string} = {};
         let re: RegExp = /[?&]?([^=]+)=([^&]*)/g;
