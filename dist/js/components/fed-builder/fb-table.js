@@ -86,7 +86,31 @@ var DAQView;
             return snapshot;
         }
         FBTableSortFunctions.NONE = NONE;
+        function FrlsByGeoslot(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FRLs of each SubFEDBuilder, of each FEDBuilder by their FRL geoslot
+            fedBuilders.forEach(function (fedBuilder) {
+                fedBuilder.subFedbuilders.forEach(function (subFEDBuilder) {
+                    subFEDBuilder.frls.sort(function (firstFrl, secondFrl) {
+                        var firstFrlGeoslot = firstFrl.geoSlot;
+                        var secondFrlGeoslot = secondFrl.geoSlot;
+                        if (firstFrlGeoslot > secondFrlGeoslot) {
+                            return (descending ? -1 : 1);
+                        }
+                        else if (firstFrlGeoslot < secondFrlGeoslot) {
+                            return (descending ? 1 : -1);
+                        }
+                        else {
+                            return 0;
+                        }
+                    });
+                });
+            });
+            return snapshot;
+        }
         function SubFBByTTCP(snapshot, descending) {
+            snapshot = FrlsByGeoslot(snapshot, false);
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
             // sort the SubFEDBuilders of each FEDBuilder by their TTCP name

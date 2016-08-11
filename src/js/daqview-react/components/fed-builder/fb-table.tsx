@@ -104,7 +104,36 @@ namespace DAQView {
             return snapshot;
         }
 
+        function FrlsByGeoslot(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot{
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FRLs of each SubFEDBuilder, of each FEDBuilder by their FRL geoslot
+            fedBuilders.forEach(function (fedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                fedBuilder.subFedbuilders.forEach(function (subFEDBuilder: DAQAggregatorSnapshot.SubFEDBuilder){
+
+                    subFEDBuilder.frls.sort(function (firstFrl: DAQAggregatorSnapshot.FRL, secondFrl: DAQAggregatorSnapshot.FRL) {
+                        let firstFrlGeoslot: number = firstFrl.geoSlot;
+                        let secondFrlGeoslot: number = secondFrl.geoSlot;
+
+                        if (firstFrlGeoslot > secondFrlGeoslot) {
+                            return (descending ? -1 : 1);
+                        } else if (firstFrlGeoslot < secondFrlGeoslot) {
+                            return (descending ? 1 : -1);
+                        } else {
+                            return 0;
+                        }
+                    });
+
+                });
+            });
+
+            return snapshot;
+        }
+
         function SubFBByTTCP(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            snapshot = FrlsByGeoslot(snapshot, false);
+
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
