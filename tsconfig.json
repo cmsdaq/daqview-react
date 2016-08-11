@@ -24,6 +24,7 @@
     "src/js/daqview-react/utilities/parser.ts",
     "src/js/daqview-react/utilities/snapshot-provider.ts",
     "src/js/daqview-react/utilities/snapshot-randomizer.ts",
+    "src/js/daqview-react/utilities/gui-util.ts",
     "src/js/daqview-react/daqview.ts"
   ]
 }
