@@ -29,15 +29,18 @@ var DAQView;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
         FEDBuilderTable.prototype.setSnapshot = function (snapshot) {
-            this.snapshot = snapshot;
-            var sortedSnapshot = this.sort(snapshot);
+            this.snapshot = FBTableSortFunctions.STATIC(snapshot);
+            this.updateSnapshot();
+        };
+        FEDBuilderTable.prototype.updateSnapshot = function () {
+            var sortedSnapshot = this.sort(this.snapshot);
             var daq = sortedSnapshot.getDAQ();
             var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {tableObject: this, fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary});
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         };
         FEDBuilderTable.prototype.setSortFunction = function (sortFunction) {
             this.sortFunction = sortFunction;
-            this.setSnapshot(this.snapshot);
+            this.updateSnapshot();
         };
         FEDBuilderTable.prototype.sort = function (snapshot) {
             return this.sortFunction(snapshot);
@@ -86,6 +89,10 @@ var DAQView;
             return snapshot;
         }
         FBTableSortFunctions.NONE = NONE;
+        function STATIC(snapshot) {
+            return FrlsByGeoslot(snapshot, false);
+        }
+        FBTableSortFunctions.STATIC = STATIC;
         function FrlsByGeoslot(snapshot, descending) {
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
@@ -110,7 +117,6 @@ var DAQView;
             return snapshot;
         }
         function SubFBByTTCP(snapshot, descending) {
-            snapshot = FrlsByGeoslot(snapshot, false);
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
             // sort the SubFEDBuilders of each FEDBuilder by their TTCP name
@@ -122,6 +128,48 @@ var DAQView;
                         return (descending ? -1 : 1);
                     }
                     else if (firstSubFedBuilderTTCPName < secondSubFedBuilderTTCPName) {
+                        return (descending ? 1 : -1);
+                    }
+                    else {
+                        return 0;
+                    }
+                });
+            });
+            return snapshot;
+        }
+        function SubFBByPERCBusy(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the SubFEDBuilders of each FEDBuilder by their TTS percentage busy
+            fedBuilders.forEach(function (fedBuilder) {
+                fedBuilder.subFedbuilders.sort(function (firstSubFedBuilder, secondSubFedBuilder) {
+                    var firstSubFedBuilderTTSBusy = firstSubFedBuilder.ttcPartition.percentBusy;
+                    var secondSubFedBuilderTTSBusy = secondSubFedBuilder.ttcPartition.percentBusy;
+                    if (firstSubFedBuilderTTSBusy > secondSubFedBuilderTTSBusy) {
+                        return (descending ? -1 : 1);
+                    }
+                    else if (firstSubFedBuilderTTSBusy < secondSubFedBuilderTTSBusy) {
+                        return (descending ? 1 : -1);
+                    }
+                    else {
+                        return 0;
+                    }
+                });
+            });
+            return snapshot;
+        }
+        function SubFBByPERCWarning(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the SubFEDBuilders of each FEDBuilder by their TTS percentage warning
+            fedBuilders.forEach(function (fedBuilder) {
+                fedBuilder.subFedbuilders.sort(function (firstSubFedBuilder, secondSubFedBuilder) {
+                    var firstSubFedBuilderTTSWarning = firstSubFedBuilder.ttcPartition.percentWarning;
+                    var secondSubFedBuilderTTSWarning = secondSubFedBuilder.ttcPartition.percentWarning;
+                    if (firstSubFedBuilderTTSWarning > secondSubFedBuilderTTSWarning) {
+                        return (descending ? -1 : 1);
+                    }
+                    else if (firstSubFedBuilderTTSWarning < secondSubFedBuilderTTSWarning) {
                         return (descending ? 1 : -1);
                     }
                     else {
@@ -210,6 +258,96 @@ var DAQView;
             return FB(snapshot, true);
         }
         FBTableSortFunctions.FB_DESC = FB_DESC;
+        function PERCBUSY(snapshot, descending) {
+            snapshot = SubFBByPERCBusy(snapshot, true); //returns subFEDBuilders in each FEDBuildder, sorted by decreasing TTS busy percentage
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their top subFEDBuilder's TTCP busy status percentage
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderFirstTTCPBusy = firstFedBuilder.subFedbuilders[0].ttcPartition.percentBusy;
+                var secondFedBuilderFirstTTCPBusy = secondFedBuilder.subFedbuilders[0].ttcPartition.percentBusy;
+                if (firstFedBuilderFirstTTCPBusy > secondFedBuilderFirstTTCPBusy) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderFirstTTCPBusy < secondFedBuilderFirstTTCPBusy) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    // if the first TTS busy percentage of both FEDBuilders is the same, sort by FEDBuilder name
+                    var firstFedBuilderName = firstFedBuilder.name;
+                    var secondFedBuilderName = secondFedBuilder.name;
+                    if (firstFedBuilderName > secondFedBuilderName) {
+                        return (descending ? -1 : 1);
+                    }
+                    else if (firstFedBuilderName < secondFedBuilderName) {
+                        return (descending ? 1 : -1);
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+            });
+            return snapshot;
+        }
+        function PERCBUSY_ASC(snapshot) {
+            return PERCBUSY(snapshot, false);
+        }
+        FBTableSortFunctions.PERCBUSY_ASC = PERCBUSY_ASC;
+        function PERCBUSY_DESC(snapshot) {
+            return PERCBUSY(snapshot, true);
+        }
+        FBTableSortFunctions.PERCBUSY_DESC = PERCBUSY_DESC;
+        function PERCWARNING(snapshot, descending) {
+            snapshot = SubFBByPERCWarning(snapshot, true); //returns subFEDBuilders in each FEDBuildder, sorted by decreasing TTS warning percentage
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their top subFEDBuilder's TTCP warning status percentage
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderFirstTTCPWarning = firstFedBuilder.subFedbuilders[0].ttcPartition.percentWarning;
+                var secondFedBuilderFirstTTCPWarning = secondFedBuilder.subFedbuilders[0].ttcPartition.percentWarning;
+                if (firstFedBuilderFirstTTCPWarning > secondFedBuilderFirstTTCPWarning) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderFirstTTCPWarning < secondFedBuilderFirstTTCPWarning) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    // if the first TTS busy percentage of both FEDBuilders is the same, sort by FEDBuilder name
+                    var firstFedBuilderName = firstFedBuilder.name;
+                    var secondFedBuilderName = secondFedBuilder.name;
+                    if (firstFedBuilderName > secondFedBuilderName) {
+                        return (descending ? -1 : 1);
+                    }
+                    else if (firstFedBuilderName < secondFedBuilderName) {
+                        return (descending ? 1 : -1);
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+            });
+            return snapshot;
+        }
+        function PERCWARNING_ASC(snapshot) {
+            return PERCWARNING(snapshot, false);
+        }
+        FBTableSortFunctions.PERCWARNING_ASC = PERCWARNING_ASC;
+        function PERCWARNING_DESC(snapshot) {
+            return PERCWARNING(snapshot, true);
+        }
+        FBTableSortFunctions.PERCWARNING_DESC = PERCWARNING_DESC;
     })(FBTableSortFunctions = DAQView.FBTableSortFunctions || (DAQView.FBTableSortFunctions = {}));
     var FEDBuilderTableElement = (function (_super) {
         __extends(FEDBuilderTableElement, _super);
@@ -232,8 +370,20 @@ var DAQView;
             });
             var baseHeaders = [
                 { content: 'T' },
-                { content: '%W' },
-                { content: '%B' },
+                {
+                    content: '%W',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.PERCWARNING_ASC,
+                        Descending: FBTableSortFunctions.PERCWARNING_DESC
+                    }
+                },
+                {
+                    content: '%B',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.PERCBUSY_ASC,
+                        Descending: FBTableSortFunctions.PERCBUSY_DESC
+                    }
+                },
                 { content: 'frlpc' },
                 { content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId' },
                 { content: 'min Trg' },

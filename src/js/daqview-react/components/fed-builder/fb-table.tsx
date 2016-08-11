@@ -36,8 +36,12 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot) {
-            this.snapshot = snapshot;
-            let sortedSnapshot: DAQAggregatorSnapshot = this.sort(snapshot);
+            this.snapshot = FBTableSortFunctions.STATIC(snapshot);
+            this.updateSnapshot();
+        }
+
+        private updateSnapshot() {
+            let sortedSnapshot: DAQAggregatorSnapshot = this.sort(this.snapshot);
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
             let fedBuilderTableRootElement: any = <FEDBuilderTableElement tableObject={this}
                                                                           fedBuilders={daq.fedBuilders}
@@ -47,7 +51,7 @@ namespace DAQView {
 
         public setSortFunction(sortFunction: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot) {
             this.sortFunction = sortFunction;
-            this.setSnapshot(this.snapshot);
+            this.updateSnapshot();
         }
 
         public sort(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
@@ -104,13 +108,17 @@ namespace DAQView {
             return snapshot;
         }
 
-        function FrlsByGeoslot(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot{
+        export function STATIC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return FrlsByGeoslot(snapshot, false);
+        }
+
+        function FrlsByGeoslot(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
             // sort the FRLs of each SubFEDBuilder, of each FEDBuilder by their FRL geoslot
             fedBuilders.forEach(function (fedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
-                fedBuilder.subFedbuilders.forEach(function (subFEDBuilder: DAQAggregatorSnapshot.SubFEDBuilder){
+                fedBuilder.subFedbuilders.forEach(function (subFEDBuilder: DAQAggregatorSnapshot.SubFEDBuilder) {
 
                     subFEDBuilder.frls.sort(function (firstFrl: DAQAggregatorSnapshot.FRL, secondFrl: DAQAggregatorSnapshot.FRL) {
                         let firstFrlGeoslot: number = firstFrl.geoSlot;
@@ -132,8 +140,6 @@ namespace DAQView {
         }
 
         function SubFBByTTCP(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
-            snapshot = FrlsByGeoslot(snapshot, false);
-
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
 
@@ -146,6 +152,52 @@ namespace DAQView {
                     if (firstSubFedBuilderTTCPName > secondSubFedBuilderTTCPName) {
                         return (descending ? -1 : 1);
                     } else if (firstSubFedBuilderTTCPName < secondSubFedBuilderTTCPName) {
+                        return (descending ? 1 : -1);
+                    } else {
+                        return 0;
+                    }
+                });
+            });
+
+            return snapshot;
+        }
+
+        function SubFBByPERCBusy(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the SubFEDBuilders of each FEDBuilder by their TTS percentage busy
+            fedBuilders.forEach(function (fedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                fedBuilder.subFedbuilders.sort(function (firstSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder, secondSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder) {
+                    let firstSubFedBuilderTTSBusy: number = firstSubFedBuilder.ttcPartition.percentBusy;
+                    let secondSubFedBuilderTTSBusy: number = secondSubFedBuilder.ttcPartition.percentBusy;
+
+                    if (firstSubFedBuilderTTSBusy > secondSubFedBuilderTTSBusy) {
+                        return (descending ? -1 : 1);
+                    } else if (firstSubFedBuilderTTSBusy < secondSubFedBuilderTTSBusy) {
+                        return (descending ? 1 : -1);
+                    } else {
+                        return 0;
+                    }
+                });
+            });
+
+            return snapshot;
+        }
+
+        function SubFBByPERCWarning(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the SubFEDBuilders of each FEDBuilder by their TTS percentage warning
+            fedBuilders.forEach(function (fedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                fedBuilder.subFedbuilders.sort(function (firstSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder, secondSubFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder) {
+                    let firstSubFedBuilderTTSWarning: number = firstSubFedBuilder.ttcPartition.percentWarning;
+                    let secondSubFedBuilderTTSWarning: number = secondSubFedBuilder.ttcPartition.percentWarning;
+
+                    if (firstSubFedBuilderTTSWarning > secondSubFedBuilderTTSWarning) {
+                        return (descending ? -1 : 1);
+                    } else if (firstSubFedBuilderTTSWarning < secondSubFedBuilderTTSWarning) {
                         return (descending ? 1 : -1);
                     } else {
                         return 0;
@@ -238,6 +290,102 @@ namespace DAQView {
         export function FB_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
             return FB(snapshot, true);
         }
+
+
+        function PERCBUSY(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            snapshot = SubFBByPERCBusy(snapshot, true); //returns subFEDBuilders in each FEDBuildder, sorted by decreasing TTS busy percentage
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their top subFEDBuilder's TTCP busy status percentage
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderFirstTTCPBusy: number = firstFedBuilder.subFedbuilders[0].ttcPartition.percentBusy;
+                let secondFedBuilderFirstTTCPBusy: number = secondFedBuilder.subFedbuilders[0].ttcPartition.percentBusy;
+
+                if (firstFedBuilderFirstTTCPBusy > secondFedBuilderFirstTTCPBusy) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderFirstTTCPBusy < secondFedBuilderFirstTTCPBusy) {
+                    return (descending ? 1 : -1);
+                } else {
+                    // if the first TTS busy percentage of both FEDBuilders is the same, sort by FEDBuilder name
+                    let firstFedBuilderName: string = firstFedBuilder.name;
+                    let secondFedBuilderName: string = secondFedBuilder.name;
+                    if (firstFedBuilderName > secondFedBuilderName) {
+                        return (descending ? -1 : 1);
+                    } else if (firstFedBuilderName < secondFedBuilderName) {
+                        return (descending ? 1 : -1);
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function PERCBUSY_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return PERCBUSY(snapshot, false);
+        }
+
+        export function PERCBUSY_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return PERCBUSY(snapshot, true);
+        }
+
+
+        function PERCWARNING(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            snapshot = SubFBByPERCWarning(snapshot, true); //returns subFEDBuilders in each FEDBuildder, sorted by decreasing TTS warning percentage
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their top subFEDBuilder's TTCP warning status percentage
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderFirstTTCPWarning: number = firstFedBuilder.subFedbuilders[0].ttcPartition.percentWarning;
+                let secondFedBuilderFirstTTCPWarning: number = secondFedBuilder.subFedbuilders[0].ttcPartition.percentWarning;
+
+                if (firstFedBuilderFirstTTCPWarning > secondFedBuilderFirstTTCPWarning) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderFirstTTCPWarning < secondFedBuilderFirstTTCPWarning) {
+                    return (descending ? 1 : -1);
+                } else {
+                    // if the first TTS busy percentage of both FEDBuilders is the same, sort by FEDBuilder name
+                    let firstFedBuilderName: string = firstFedBuilder.name;
+                    let secondFedBuilderName: string = secondFedBuilder.name;
+                    if (firstFedBuilderName > secondFedBuilderName) {
+                        return (descending ? -1 : 1);
+                    } else if (firstFedBuilderName < secondFedBuilderName) {
+                        return (descending ? 1 : -1);
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function PERCWARNING_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return PERCWARNING(snapshot, false);
+        }
+
+        export function PERCWARNING_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return PERCWARNING(snapshot, true);
+        }
+
+
     }
 
     interface FEDBuilderTableElementProperties {
@@ -266,8 +414,20 @@ namespace DAQView {
 
             let baseHeaders: FEDBuilderTableHeaderProperties[] = [
                 {content: 'T'},
-                {content: '%W'},
-                {content: '%B'},
+                {
+                    content: '%W',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.PERCWARNING_ASC,
+                        Descending: FBTableSortFunctions.PERCWARNING_DESC
+                    }
+                },
+                {
+                    content: '%B',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.PERCBUSY_ASC,
+                        Descending: FBTableSortFunctions.PERCBUSY_DESC
+                    }
+                },
                 {content: 'frlpc'},
                 {content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId'},
                 {content: 'min Trg'},
