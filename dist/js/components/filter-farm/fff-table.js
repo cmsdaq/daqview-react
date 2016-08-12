@@ -38,14 +38,17 @@ var DAQView;
         }
         FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot) {
             this.snapshot = snapshot;
-            var sortedSnapshot = this.sort(snapshot);
+            this.updateSnapshot();
+        };
+        FileBasedFilterFarmTable.prototype.updateSnapshot = function () {
+            var sortedSnapshot = this.sort(this.snapshot);
             var daq = sortedSnapshot.getDAQ();
             var fileBasedFilterFarmTableRootElement = React.createElement(FileBasedFilterFarmTableElement, {tableObject: this, bus: daq.bus, buSummary: daq.buSummary});
             ReactDOM.render(fileBasedFilterFarmTableRootElement, this.htmlRootElement);
         };
         FileBasedFilterFarmTable.prototype.setSortFunction = function (sortFunction) {
             this.sortFunction = sortFunction;
-            this.setSnapshot(this.snapshot);
+            this.updateSnapshot();
         };
         FileBasedFilterFarmTable.prototype.sort = function (snapshot) {
             return this.sortFunction(snapshot);

@@ -44,7 +44,11 @@ namespace DAQView {
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot) {
             this.snapshot = snapshot;
-            let sortedSnapshot: DAQAggregatorSnapshot = this.sort(snapshot);
+            this.updateSnapshot();
+        }
+
+        private updateSnapshot() {
+            let sortedSnapshot: DAQAggregatorSnapshot = this.sort(this.snapshot);
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
             let fileBasedFilterFarmTableRootElement: any = <FileBasedFilterFarmTableElement tableObject={this}
                                                                                             bus={daq.bus}
@@ -54,7 +58,7 @@ namespace DAQView {
 
         public setSortFunction(sortFunction: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot) {
             this.sortFunction = sortFunction;
-            this.setSnapshot(this.snapshot);
+            this.updateSnapshot();
         }
 
         public sort(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
