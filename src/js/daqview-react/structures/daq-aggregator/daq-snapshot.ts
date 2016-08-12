@@ -24,9 +24,13 @@ namespace DAQAggregator {
 
     export namespace Snapshot {
 
-        export interface DAQ {
+        export interface SnapshotElement {
             [key: string]: any;
 
+            "@id": string;
+        }
+
+        export interface DAQ extends SnapshotElement {
             lastUpdate: number;
 
             sessionId: number;
@@ -45,17 +49,13 @@ namespace DAQAggregator {
             buSummary: BUSummary;
         }
 
-        export interface FEDBuilder {
-            [key: string]: any;
-
+        export interface FEDBuilder extends SnapshotElement {
             name: string;
             ru?: RU;
             subFedbuilders?: SubFEDBuilder[];
         }
 
-        export interface BUSummary {
-            [key: string]: any;
-
+        export interface BUSummary extends SnapshotElement {
             rate: number;
             throughput: number;
 
@@ -89,9 +89,7 @@ namespace DAQAggregator {
             fuOutputBandwidthInMB: number;
         }
 
-        export interface FEDBuilderSummary {
-            [key: string]: any;
-
+        export interface FEDBuilderSummary extends SnapshotElement {
             rate: number;
             throughput: number;
 
@@ -105,9 +103,7 @@ namespace DAQAggregator {
             sumRequests: number;
         }
 
-        export interface BU {
-            [key: string]: any;
-
+        export interface BU extends SnapshotElement {
             hostname: string;
 
             rate: number;
@@ -143,9 +139,7 @@ namespace DAQAggregator {
             fuOutputBandwidthInMB: number;
         }
 
-        export interface RU {
-            [key: string]: any;
-
+        export interface RU extends SnapshotElement {
             hostname: string;
             isEVM: boolean;
             // masked: boolean;
@@ -169,12 +163,9 @@ namespace DAQAggregator {
 
             // status: string;
             // incompleteSuperFragmentCount: number;
-
         }
 
-        export interface SubFEDBuilder {
-            [key: string]: any;
-
+        export interface SubFEDBuilder extends SnapshotElement {
             minTrig: number;
             maxTrig: number;
             frlPc?: FRLPc;
@@ -182,9 +173,7 @@ namespace DAQAggregator {
             ttcPartition?: TTCPartition;
         }
 
-        export interface TTCPartition {
-            [key: string]: any;
-
+        export interface TTCPartition extends SnapshotElement {
             ttcpNr: number;
             name: string;
             ttsState: string;
@@ -193,26 +182,20 @@ namespace DAQAggregator {
             fmm?: FMM;
         }
 
-        export interface FMM {
-            [key: string]: any;
-
+        export interface FMM extends SnapshotElement {
             geoslot: number;
             url: string;
             feds?: FED[];
         }
 
-        export interface FRLPc {
-            [key: string]: any;
-
+        export interface FRLPc extends SnapshotElement {
             hostname: string;
             // masked: boolean;
             // frls?: FRL[];
             // crashed: boolean;
         }
 
-        export interface FRL {
-            [key: string]: any;
-
+        export interface FRL extends SnapshotElement {
             geoSlot: number;
             // type: string;
 
@@ -225,9 +208,7 @@ namespace DAQAggregator {
             // url: string;
         }
 
-        export interface FED {
-            [key: string]: any;
-
+        export interface FED extends SnapshotElement {
             id: number;
 
             fmm?: FMM;
@@ -262,7 +243,6 @@ namespace DAQAggregator {
             ruFedWithoutFragments: boolean;
 
             frl_AccSlinkFullSec: number;
-
         }
 
     }

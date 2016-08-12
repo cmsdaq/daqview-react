@@ -43,6 +43,9 @@ var DAQView;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
         FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot) {
+            if (this.snapshot && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                return;
+            }
             this.snapshot = snapshot;
             this.updateSnapshot();
         };
@@ -74,6 +77,9 @@ var DAQView;
             this.currentSorting[headerName] = sorting;
         };
         FileBasedFilterFarmTable.prototype.getCurrentSorting = function (headerName) {
+            if (!this.currentSorting.hasOwnProperty(headerName)) {
+                return null;
+            }
             return this.currentSorting[headerName];
         };
         return FileBasedFilterFarmTable;
@@ -303,174 +309,174 @@ var DAQView;
             baseStyle: 'fff-table-requests-blocked'
         };
     })(FFFTableNumberFormats = DAQView.FFFTableNumberFormats || (DAQView.FFFTableNumberFormats = {}));
+    var FFF_TABLE_BASE_HEADERS = [
+        {
+            content: 'rate (kHz)',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_RATE_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_RATE_DESC }
+            }
+        },
+        {
+            content: 'thru (MB/s)',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_THROUGHPUT_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_THROUGHPUT_DESC }
+            }
+        },
+        {
+            content: 'size (kB)',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_EVENTSIZEMEAN_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_EVENTSIZEMEAN_DESC }
+            }
+        },
+        {
+            content: '#events',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMEVENTS_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMEVENTS_DESC }
+            }
+        },
+        {
+            content: '#evts in BU',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMEVENTSINBU_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMEVENTSINBU_DESC }
+            }
+        },
+        {
+            content: 'priority',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_PRIORITY_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_PRIORITY_DESC }
+            }
+        },
+        {
+            content: '#req. sent',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSSENT_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSSENT_DESC }
+            }
+        },
+        {
+            content: '#req. used',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSUSED_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSUSED_DESC }
+            }
+        },
+        {
+            content: '#req. blocked',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_DESC }
+            }
+        },
+        {
+            content: '#FUs HLT',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMFUSHLT_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMFUSHLT_DESC }
+            }
+        },
+        {
+            content: '#FUs crash',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMFUSCRASHED_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMFUSCRASHED_DESC }
+            }
+        },
+        {
+            content: '#FUs stale',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMFUSSTALE_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMFUSSTALE_DESC }
+            }
+        },
+        {
+            content: '#FUs cloud',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMFUSCLOUD_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMFUSCLOUD_DESC }
+            }
+        },
+        {
+            content: 'RAM disk usage',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_RAMDISKUSAGE_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_RAMDISKUSAGE_DESC }
+            }
+        },
+        {
+            content: '#files',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMFILES_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMFILES_DESC }
+            }
+        },
+        {
+            content: '#LS w/ files',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_DESC }
+            }
+        },
+        {
+            content: 'current LS',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_CURRENTLUMISECTION_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_CURRENTLUMISECTION_DESC }
+            }
+        },
+        {
+            content: '#LS for HLT',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_DESC }
+            }
+        },
+        {
+            content: '#LS out HLT',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC }
+            }
+        },
+        {
+            content: 'b/w out (MB/s)',
+            sortFunctions: {
+                Ascending: { sort: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_ASC },
+                Descending: { sort: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_DESC }
+            }
+        }
+    ];
+    var FFF_TABLE_TOP_HEADERS = FFF_TABLE_BASE_HEADERS.slice();
+    FFF_TABLE_TOP_HEADERS.unshift({
+        content: 'BU',
+        sortFunctions: {
+            Ascending: { presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_ASC },
+            Descending: { presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_DESC }
+        }
+    });
+    var FFF_TABLE_SUMMARY_HEADERS = FFF_TABLE_BASE_HEADERS.slice();
+    FFF_TABLE_SUMMARY_HEADERS.unshift({ content: 'Summary' });
     var FileBasedFilterFarmTableElement = (function (_super) {
         __extends(FileBasedFilterFarmTableElement, _super);
         function FileBasedFilterFarmTableElement() {
             _super.apply(this, arguments);
         }
         FileBasedFilterFarmTableElement.prototype.render = function () {
-            var baseHeaders = [
-                {
-                    content: 'rate (kHz)',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_RATE_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_RATE_DESC }
-                    }
-                },
-                {
-                    content: 'thru (MB/s)',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_THROUGHPUT_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_THROUGHPUT_DESC }
-                    }
-                },
-                {
-                    content: 'size (kB)',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_EVENTSIZEMEAN_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_EVENTSIZEMEAN_DESC }
-                    }
-                },
-                {
-                    content: '#events',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMEVENTS_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMEVENTS_DESC }
-                    }
-                },
-                {
-                    content: '#evts in BU',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMEVENTSINBU_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMEVENTSINBU_DESC }
-                    }
-                },
-                {
-                    content: 'priority',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_PRIORITY_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_PRIORITY_DESC }
-                    }
-                },
-                {
-                    content: '#req. sent',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSSENT_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSSENT_DESC }
-                    }
-                },
-                {
-                    content: '#req. used',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSUSED_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSUSED_DESC }
-                    }
-                },
-                {
-                    content: '#req. blocked',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_DESC }
-                    }
-                },
-                {
-                    content: '#FUs HLT',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMFUSHLT_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMFUSHLT_DESC }
-                    }
-                },
-                {
-                    content: '#FUs crash',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMFUSCRASHED_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMFUSCRASHED_DESC }
-                    }
-                },
-                {
-                    content: '#FUs stale',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMFUSSTALE_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMFUSSTALE_DESC }
-                    }
-                },
-                {
-                    content: '#FUs cloud',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMFUSCLOUD_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMFUSCLOUD_DESC }
-                    }
-                },
-                {
-                    content: 'RAM disk usage',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_RAMDISKUSAGE_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_RAMDISKUSAGE_DESC }
-                    }
-                },
-                {
-                    content: '#files',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMFILES_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMFILES_DESC }
-                    }
-                },
-                {
-                    content: '#LS w/ files',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_DESC }
-                    }
-                },
-                {
-                    content: 'current LS',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_CURRENTLUMISECTION_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_CURRENTLUMISECTION_DESC }
-                    }
-                },
-                {
-                    content: '#LS for HLT',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_DESC }
-                    }
-                },
-                {
-                    content: '#LS out HLT',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC }
-                    }
-                },
-                {
-                    content: 'b/w out (MB/s)',
-                    sortFunctions: {
-                        Ascending: { sort: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_ASC },
-                        Descending: { sort: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_DESC }
-                    }
-                }
-            ];
-            var topHeaders = baseHeaders.slice();
-            topHeaders.unshift({
-                content: 'BU',
-                sortFunctions: {
-                    Ascending: { presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_ASC },
-                    Descending: { presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_DESC }
-                }
-            });
-            var summaryHeaders = baseHeaders.slice();
-            summaryHeaders.unshift({ content: 'Summary' });
             var buSummary = this.props.buSummary;
             var bus = this.props.bus;
             var numBus = 0;
             var buRows = [];
             if (bus) {
                 numBus = bus.length;
-                bus.forEach(function (bu) { return buRows.push(React.createElement(FileBasedFilterFarmTableBURow, {bu: bu})); });
+                bus.forEach(function (bu) { return buRows.push(React.createElement(FileBasedFilterFarmTableBURow, {key: bu['@id'], bu: bu})); });
             }
             var tableObject = this.props.tableObject;
-            return (React.createElement("table", {className: "fff-table"}, React.createElement("thead", {className: "fff-table-head"}, React.createElement(FileBasedFilterFarmTableTopHeaderRow, null), React.createElement(FileBasedFilterFarmTableHeaderRow, {tableObject: tableObject, headers: topHeaders})), React.createElement("tbody", {className: "fff-table-body"}, buRows), React.createElement("tfoot", {className: "fff-table-foot"}, React.createElement(FileBasedFilterFarmTableHeaderRow, {tableObject: tableObject, headers: summaryHeaders}), React.createElement(FileBasedFilterFarmTableBUSummaryRow, {buSummary: buSummary, numBus: numBus}))));
+            return (React.createElement("table", {className: "fff-table"}, React.createElement("thead", {className: "fff-table-head"}, React.createElement(FileBasedFilterFarmTableTopHeaderRow, {key: "fff-top-header-row"}), React.createElement(FileBasedFilterFarmTableHeaderRow, {key: "fff-header-row", tableObject: tableObject, headers: FFF_TABLE_TOP_HEADERS})), React.createElement("tbody", {className: "fff-table-body"}, buRows), React.createElement("tfoot", {className: "fff-table-foot"}, React.createElement(FileBasedFilterFarmTableHeaderRow, {key: "fff-summary-header-row", tableObject: tableObject, headers: FFF_TABLE_SUMMARY_HEADERS}), React.createElement(FileBasedFilterFarmTableBUSummaryRow, {key: "fff-summary-row", buSummary: buSummary, numBus: numBus}))));
         };
         return FileBasedFilterFarmTableElement;
     }(React.Component));
@@ -479,6 +485,9 @@ var DAQView;
         function FileBasedFilterFarmTableTopHeaderRow() {
             _super.apply(this, arguments);
         }
+        FileBasedFilterFarmTableTopHeaderRow.prototype.shouldComponentUpdate = function () {
+            return false;
+        };
         FileBasedFilterFarmTableTopHeaderRow.prototype.render = function () {
             return (React.createElement("tr", {className: "fff-table-top-header-row"}, React.createElement(FileBasedFilterFarmTableHeader, {additionalClasses: "fff-table-help", content: React.createElement("a", {href: "."}, "Table Help"), colSpan: "2"}), React.createElement(FileBasedFilterFarmTableHeader, {content: "B U I L D E R   U N I T   ( B U )", colSpan: "19"})));
         };
@@ -492,7 +501,7 @@ var DAQView;
         FileBasedFilterFarmTableHeaderRow.prototype.render = function () {
             var tableObject = this.props.tableObject;
             var children = [];
-            this.props.headers.forEach(function (header) { return children.push(React.createElement(FileBasedFilterFarmTableHeader, {content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sortFunctions: header.sortFunctions})); });
+            this.props.headers.forEach(function (header) { return children.push(React.createElement(FileBasedFilterFarmTableHeader, {key: header.content, content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions})); });
             return (React.createElement("tr", {className: "fff-table-header-row"}, children));
         };
         return FileBasedFilterFarmTableHeaderRow;
@@ -502,19 +511,19 @@ var DAQView;
         function FileBasedFilterFarmTableHeader() {
             _super.apply(this, arguments);
         }
+        FileBasedFilterFarmTableHeader.prototype.shouldComponentUpdate = function (nextProps) {
+            return this.props.sorting !== nextProps.sorting;
+        };
         FileBasedFilterFarmTableHeader.prototype.render = function () {
             var content = this.props.content;
             var colSpan = this.props.colSpan;
             var additionalClasses = this.props.additionalClasses;
             var className = classNames("fff-table-header", additionalClasses);
             var tableObject = this.props.tableObject;
-            var currentSorting;
+            var currentSorting = this.props.sorting ? this.props.sorting : null;
             var sortFunctions = this.props.sortFunctions;
-            if (tableObject && sortFunctions) {
-                currentSorting = tableObject.getCurrentSorting(content);
-            }
             var clickFunction = null;
-            if (tableObject && sortFunctions) {
+            if (currentSorting && sortFunctions) {
                 if (currentSorting === DAQView.Sorting.None || currentSorting === DAQView.Sorting.Descending) {
                     clickFunction = function () {
                         tableObject.setSortFunction.bind(tableObject)(sortFunctions[DAQView.Sorting.Ascending.toString()]);
@@ -541,6 +550,9 @@ var DAQView;
         function FileBasedFilterFarmTableBURow() {
             _super.apply(this, arguments);
         }
+        FileBasedFilterFarmTableBURow.prototype.shouldComponentUpdate = function (nextProps) {
+            return !DAQViewUtility.areEqualShallow(this.props.bu, nextProps.bu);
+        };
         FileBasedFilterFarmTableBURow.prototype.render = function () {
             var bu = this.props.bu;
             var buUrl = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
@@ -564,6 +576,9 @@ var DAQView;
         function FileBasedFilterFarmTableBUSummaryRow() {
             _super.apply(this, arguments);
         }
+        FileBasedFilterFarmTableBUSummaryRow.prototype.shouldComponentUpdate = function (nextProps) {
+            return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.areEqualShallow(this.props.buSummary, nextProps.buSummary));
+        };
         FileBasedFilterFarmTableBUSummaryRow.prototype.render = function () {
             var buSummary = this.props.buSummary;
             buSummary.fuOutputBandwidthInMB = 0;

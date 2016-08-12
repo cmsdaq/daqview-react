@@ -51,6 +51,9 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot) {
+            if (this.snapshot && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                return;
+            }
             this.snapshot = snapshot;
             this.updateSnapshot();
         }
@@ -89,6 +92,9 @@ namespace DAQView {
         }
 
         public getCurrentSorting(headerName: string) {
+            if (!this.currentSorting.hasOwnProperty(headerName)) {
+                return null;
+            }
             return this.currentSorting[headerName];
         }
     }
@@ -336,172 +342,173 @@ namespace DAQView {
         buSummary: DAQAggregatorSnapshot.BUSummary;
     }
 
+    const FFF_TABLE_BASE_HEADERS: FileBasedFilterFarmTableHeaderProperties[] = [
+        {
+            content: 'rate (kHz)',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_RATE_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_RATE_DESC}
+            }
+        },
+        {
+            content: 'thru (MB/s)',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_THROUGHPUT_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_THROUGHPUT_DESC}
+            }
+        },
+        {
+            content: 'size (kB)',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_EVENTSIZEMEAN_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_EVENTSIZEMEAN_DESC}
+            }
+        },
+        {
+            content: '#events',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMEVENTS_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMEVENTS_DESC}
+            }
+        },
+        {
+            content: '#evts in BU',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMEVENTSINBU_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMEVENTSINBU_DESC}
+            }
+        },
+        {
+            content: 'priority',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_PRIORITY_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_PRIORITY_DESC}
+            }
+        },
+        {
+            content: '#req. sent',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSSENT_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSSENT_DESC}
+            }
+        },
+        {
+            content: '#req. used',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSUSED_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSUSED_DESC}
+            }
+        },
+        {
+            content: '#req. blocked',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_DESC}
+            }
+        },
+        {
+            content: '#FUs HLT',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMFUSHLT_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMFUSHLT_DESC}
+            }
+        },
+        {
+            content: '#FUs crash',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMFUSCRASHED_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMFUSCRASHED_DESC}
+            }
+        },
+        {
+            content: '#FUs stale',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMFUSSTALE_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMFUSSTALE_DESC}
+            }
+        },
+        {
+            content: '#FUs cloud',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMFUSCLOUD_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMFUSCLOUD_DESC}
+            }
+        },
+        {
+            content: 'RAM disk usage',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_RAMDISKUSAGE_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_RAMDISKUSAGE_DESC}
+            }
+        },
+        {
+            content: '#files',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMFILES_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMFILES_DESC}
+            }
+        },
+        {
+            content: '#LS w/ files',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_DESC}
+            }
+        },
+        {
+            content: 'current LS',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_CURRENTLUMISECTION_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_CURRENTLUMISECTION_DESC}
+            }
+        },
+        {
+            content: '#LS for HLT',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_DESC}
+            }
+        },
+        {
+            content: '#LS out HLT',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC}
+            }
+        },
+        {
+            content: 'b/w out (MB/s)',
+            sortFunctions: {
+                Ascending: {sort: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_ASC},
+                Descending: {sort: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_DESC}
+            }
+        }
+    ];
+
+    const FFF_TABLE_TOP_HEADERS: FileBasedFilterFarmTableHeaderProperties[] = FFF_TABLE_BASE_HEADERS.slice();
+    FFF_TABLE_TOP_HEADERS.unshift(
+        {
+            content: 'BU',
+            sortFunctions: {
+                Ascending: {presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_ASC},
+                Descending: {presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_DESC}
+            }
+        }
+    );
+
+    const FFF_TABLE_SUMMARY_HEADERS: FileBasedFilterFarmTableHeaderProperties[] = FFF_TABLE_BASE_HEADERS.slice();
+    FFF_TABLE_SUMMARY_HEADERS.unshift({content: 'Summary'});
+
     class FileBasedFilterFarmTableElement extends React.Component<FileBasedFilterFarmTableElementProperties,{}> {
+
         render() {
-            let baseHeaders: FileBasedFilterFarmTableHeaderProperties[] = [
-                {
-                    content: 'rate (kHz)',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_RATE_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_RATE_DESC}
-                    }
-                },
-                {
-                    content: 'thru (MB/s)',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_THROUGHPUT_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_THROUGHPUT_DESC}
-                    }
-                },
-                {
-                    content: 'size (kB)',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_EVENTSIZEMEAN_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_EVENTSIZEMEAN_DESC}
-                    }
-                },
-                {
-                    content: '#events',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMEVENTS_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMEVENTS_DESC}
-                    }
-                },
-                {
-                    content: '#evts in BU',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMEVENTSINBU_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMEVENTSINBU_DESC}
-                    }
-                },
-                {
-                    content: 'priority',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_PRIORITY_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_PRIORITY_DESC}
-                    }
-                },
-                {
-                    content: '#req. sent',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSSENT_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSSENT_DESC}
-                    }
-                },
-                {
-                    content: '#req. used',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSUSED_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSUSED_DESC}
-                    }
-                },
-                {
-                    content: '#req. blocked',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMREQUESTSBLOCKED_DESC}
-                    }
-                },
-                {
-                    content: '#FUs HLT',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMFUSHLT_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMFUSHLT_DESC}
-                    }
-                },
-                {
-                    content: '#FUs crash',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMFUSCRASHED_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMFUSCRASHED_DESC}
-                    }
-                },
-                {
-                    content: '#FUs stale',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMFUSSTALE_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMFUSSTALE_DESC}
-                    }
-                },
-                {
-                    content: '#FUs cloud',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMFUSCLOUD_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMFUSCLOUD_DESC}
-                    }
-                },
-                {
-                    content: 'RAM disk usage',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_RAMDISKUSAGE_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_RAMDISKUSAGE_DESC}
-                    }
-                },
-                {
-                    content: '#files',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMFILES_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMFILES_DESC}
-                    }
-                },
-                {
-                    content: '#LS w/ files',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSWITHFILES_DESC}
-                    }
-                },
-                {
-                    content: 'current LS',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_CURRENTLUMISECTION_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_CURRENTLUMISECTION_DESC}
-                    }
-                },
-                {
-                    content: '#LS for HLT',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSFORHLT_DESC}
-                    }
-                },
-                {
-                    content: '#LS out HLT',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC}
-                    }
-                },
-                {
-                    content: 'b/w out (MB/s)',
-                    sortFunctions: {
-                        Ascending: {sort: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_ASC},
-                        Descending: {sort: FFFTableSortFunctions.BU_FUOUTPUTBANDWIDTHINMB_DESC}
-                    }
-                }
-            ];
-
-            let topHeaders: FileBasedFilterFarmTableHeaderProperties[] = baseHeaders.slice();
-            topHeaders.unshift(
-                {
-                    content: 'BU',
-                    sortFunctions: {
-                        Ascending: {presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_ASC},
-                        Descending: {presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_DESC}
-                    }
-                }
-            );
-
-            let summaryHeaders: FileBasedFilterFarmTableHeaderProperties[] = baseHeaders.slice();
-            summaryHeaders.unshift({content: 'Summary'});
-
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
             let bus: DAQAggregatorSnapshot.BU[] = this.props.bus;
             let numBus: number = 0;
             let buRows: any[] = [];
             if (bus) {
                 numBus = bus.length;
-                bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow bu={bu}/>));
+                bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu}/>));
             }
 
             let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
@@ -509,15 +516,17 @@ namespace DAQView {
             return (
                 <table className="fff-table">
                     <thead className="fff-table-head">
-                    <FileBasedFilterFarmTableTopHeaderRow />
-                    <FileBasedFilterFarmTableHeaderRow tableObject={tableObject} headers={topHeaders}/>
+                    <FileBasedFilterFarmTableTopHeaderRow key="fff-top-header-row"/>
+                    <FileBasedFilterFarmTableHeaderRow key="fff-header-row" tableObject={tableObject}
+                                                       headers={FFF_TABLE_TOP_HEADERS}/>
                     </thead>
                     <tbody className="fff-table-body">
                     {buRows}
                     </tbody>
                     <tfoot className="fff-table-foot">
-                    <FileBasedFilterFarmTableHeaderRow tableObject={tableObject} headers={summaryHeaders}/>
-                    <FileBasedFilterFarmTableBUSummaryRow buSummary={buSummary} numBus={numBus}/>
+                    <FileBasedFilterFarmTableHeaderRow key="fff-summary-header-row" tableObject={tableObject}
+                                                       headers={FFF_TABLE_SUMMARY_HEADERS}/>
+                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus}/>
                     </tfoot>
                 </table>
             );
@@ -525,6 +534,10 @@ namespace DAQView {
     }
 
     class FileBasedFilterFarmTableTopHeaderRow extends React.Component<{},{}> {
+        shouldComponentUpdate() {
+            return false;
+        }
+
         render() {
             return (
                 <tr className="fff-table-top-header-row">
@@ -546,10 +559,12 @@ namespace DAQView {
             let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
 
             let children: any[] = [];
-            this.props.headers.forEach(header => children.push(<FileBasedFilterFarmTableHeader content={header.content}
+            this.props.headers.forEach(header => children.push(<FileBasedFilterFarmTableHeader key={header.content}
+                                                                                               content={header.content}
                                                                                                colSpan={header.colSpan}
                                                                                                additionalClasses={header.additionalClasses}
                                                                                                tableObject={tableObject}
+                                                                                               sorting={tableObject.getCurrentSorting(header.content)}
                                                                                                sortFunctions={header.sortFunctions}/>));
             return (
                 <tr className="fff-table-header-row">
@@ -564,10 +579,15 @@ namespace DAQView {
         colSpan?: string;
         additionalClasses?: string | string[];
         tableObject?: FileBasedFilterFarmTable;
+        sorting?: Sorting;
         sortFunctions?: { [key: string]: SortFunction };
     }
 
     class FileBasedFilterFarmTableHeader extends React.Component<FileBasedFilterFarmTableHeaderProperties,{}> {
+        shouldComponentUpdate(nextProps: FileBasedFilterFarmTableHeaderProperties) {
+            return this.props.sorting !== nextProps.sorting;
+        }
+
         render() {
             let content: string = this.props.content;
             let colSpan: string = this.props.colSpan;
@@ -575,14 +595,11 @@ namespace DAQView {
             let className: string = classNames("fff-table-header", additionalClasses);
 
             let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
-            let currentSorting: Sorting;
+            let currentSorting: Sorting = this.props.sorting ? this.props.sorting : null;
             let sortFunctions: { [key: string]: SortFunction } = this.props.sortFunctions;
-            if (tableObject && sortFunctions) {
-                currentSorting = tableObject.getCurrentSorting(content);
-            }
 
             let clickFunction: () => void = null;
-            if (tableObject && sortFunctions) {
+            if (currentSorting && sortFunctions) {
                 if (currentSorting === Sorting.None || currentSorting === Sorting.Descending) {
                     clickFunction = function () {
                         tableObject.setSortFunction.bind(tableObject)(sortFunctions[Sorting.Ascending.toString()]);
@@ -617,6 +634,10 @@ namespace DAQView {
     }
 
     class FileBasedFilterFarmTableBURow extends React.Component<FileBasedFilterFarmTableBURowProperties,{}> {
+        shouldComponentUpdate(nextProps: FileBasedFilterFarmTableBURowProperties) {
+            return !DAQViewUtility.areEqualShallow(this.props.bu, nextProps.bu);
+        }
+
         render() {
             let bu: DAQAggregatorSnapshot.BU = this.props.bu;
             let buUrl: string = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
@@ -669,6 +690,10 @@ namespace DAQView {
     }
 
     class FileBasedFilterFarmTableBUSummaryRow extends React.Component<FileBasedFilterFarmTableBUSummaryRowProperties,{}> {
+        shouldComponentUpdate(nextProps: FileBasedFilterFarmTableBUSummaryRowProperties) {
+            return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.areEqualShallow(this.props.buSummary, nextProps.buSummary));
+        }
+
         render() {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
 
