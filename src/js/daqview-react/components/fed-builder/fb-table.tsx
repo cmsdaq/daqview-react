@@ -1,4 +1,4 @@
-///<reference path="../../structures/daq-aggregator/da-snapshot.ts"/>
+///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
 ///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
 
 ///<reference path="../../utilities/format-util.ts"/>

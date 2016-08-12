@@ -12,8 +12,8 @@
   ],
   "files": [
     "src/typings/index.d.ts",
-    "src/js/daqview-react/structures/daq-aggregator/da-snapshot.ts",
-    "src/js/daqview-react/structures/daq-aggregator/da-snapshot-source.d.ts",
+    "src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts",
+    "src/js/daqview-react/structures/daq-aggregator/daq-snapshot-source.d.ts",
     "src/js/daqview-react/components/daq-snapshot-view/daq-snapshot-view.d.ts",
     "src/js/daqview-react/components/common/sorting",
     "src/js/daqview-react/components/metadata/metadata-table.tsx",

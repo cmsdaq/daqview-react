@@ -1,4 +1,4 @@
-///<reference path="da-snapshot.ts"/>
+///<reference path="daq-snapshot.ts"/>
 
 declare namespace DAQAggregator {
 
