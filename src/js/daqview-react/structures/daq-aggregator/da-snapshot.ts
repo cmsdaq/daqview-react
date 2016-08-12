@@ -243,6 +243,7 @@ namespace DAQAggregator {
             percentWarning: number;
             percentBusy: number;
 
+            ttcp: TTCPartition;
             ttsState?: string;
 
             numSCRCerrors: number;

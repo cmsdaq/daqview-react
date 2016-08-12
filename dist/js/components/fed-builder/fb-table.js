@@ -200,7 +200,7 @@ var DAQView;
                     return (descending ? 1 : -1);
                 }
                 else {
-                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilder name
+                    // if the first TTCP name of both FEDBuilders is the same, sort
                     var firstFedBuilderName = firstFedBuilder.name;
                     var secondFedBuilderName = secondFedBuilder.name;
                     if (firstFedBuilderName > secondFedBuilderName) {
@@ -279,18 +279,7 @@ var DAQView;
                     return (descending ? 1 : -1);
                 }
                 else {
-                    // if the first TTS busy percentage of both FEDBuilders is the same, sort by FEDBuilder name
-                    var firstFedBuilderName = firstFedBuilder.name;
-                    var secondFedBuilderName = secondFedBuilder.name;
-                    if (firstFedBuilderName > secondFedBuilderName) {
-                        return (descending ? -1 : 1);
-                    }
-                    else if (firstFedBuilderName < secondFedBuilderName) {
-                        return (descending ? 1 : -1);
-                    }
-                    else {
-                        return 0;
-                    }
+                    return 0;
                 }
             });
             return snapshot;
@@ -324,18 +313,7 @@ var DAQView;
                     return (descending ? 1 : -1);
                 }
                 else {
-                    // if the first TTS busy percentage of both FEDBuilders is the same, sort by FEDBuilder name
-                    var firstFedBuilderName = firstFedBuilder.name;
-                    var secondFedBuilderName = secondFedBuilder.name;
-                    if (firstFedBuilderName > secondFedBuilderName) {
-                        return (descending ? -1 : 1);
-                    }
-                    else if (firstFedBuilderName < secondFedBuilderName) {
-                        return (descending ? 1 : -1);
-                    }
-                    else {
-                        return 0;
-                    }
+                    return 0;
                 }
             });
             return snapshot;
@@ -348,6 +326,204 @@ var DAQView;
             return PERCWARNING(snapshot, true);
         }
         FBTableSortFunctions.PERCWARNING_DESC = PERCWARNING_DESC;
+        function RURATE(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU rate
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRURate = firstFedBuilder.ru.rate;
+                var secondFedBuilderRURate = secondFedBuilder.ru.rate;
+                if (firstFedBuilderRURate > secondFedBuilderRURate) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRURate < secondFedBuilderRURate) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RURATE_ASC(snapshot) {
+            return RURATE(snapshot, false);
+        }
+        FBTableSortFunctions.RURATE_ASC = RURATE_ASC;
+        function RURATE_DESC(snapshot) {
+            return RURATE(snapshot, true);
+        }
+        FBTableSortFunctions.RURATE_DESC = RURATE_DESC;
+        function RUTHROUGHPUT(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU throughput
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRUThroughput = firstFedBuilder.ru.throughput;
+                var secondFedBuilderRUThroughput = secondFedBuilder.ru.throughput;
+                if (firstFedBuilderRUThroughput > secondFedBuilderRUThroughput) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRUThroughput < secondFedBuilderRUThroughput) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RUTHROUGHPUT_ASC(snapshot) {
+            return RUTHROUGHPUT(snapshot, false);
+        }
+        FBTableSortFunctions.RUTHROUGHPUT_ASC = RUTHROUGHPUT_ASC;
+        function RUTHROUGHPUT_DESC(snapshot) {
+            return RUTHROUGHPUT(snapshot, true);
+        }
+        FBTableSortFunctions.RUTHROUGHPUT_DESC = RUTHROUGHPUT_DESC;
+        function RUSIZE(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU size
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRUSize = firstFedBuilder.ru.superFragmentSizeMean;
+                var secondFedBuilderRUSize = secondFedBuilder.ru.superFragmentSizeMean;
+                if (firstFedBuilderRUSize > secondFedBuilderRUSize) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRUSize < secondFedBuilderRUSize) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RUSIZE_ASC(snapshot) {
+            return RUSIZE(snapshot, false);
+        }
+        FBTableSortFunctions.RUSIZE_ASC = RUSIZE_ASC;
+        function RUSIZE_DESC(snapshot) {
+            return RUSIZE(snapshot, true);
+        }
+        FBTableSortFunctions.RUSIZE_DESC = RUSIZE_DESC;
+        function RUNUMFRAG(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU number of fragments in RU
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRUNumfrag = firstFedBuilder.ru.fragmentsInRU;
+                var secondFedBuilderRUNumfrag = secondFedBuilder.ru.fragmentsInRU;
+                if (firstFedBuilderRUNumfrag > secondFedBuilderRUNumfrag) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRUNumfrag < secondFedBuilderRUNumfrag) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RUNUMFRAG_ASC(snapshot) {
+            return RUNUMFRAG(snapshot, false);
+        }
+        FBTableSortFunctions.RUNUMFRAG_ASC = RUNUMFRAG_ASC;
+        function RUNUMFRAG_DESC(snapshot) {
+            return RUNUMFRAG(snapshot, true);
+        }
+        FBTableSortFunctions.RUNUMFRAG_DESC = RUNUMFRAG_DESC;
+        function RUNUMEVTS(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU number of events in RU
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRUNumevts = firstFedBuilder.ru.eventsInRU;
+                var secondFedBuilderRUNumevts = secondFedBuilder.ru.eventsInRU;
+                if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRUNumevts < secondFedBuilderRUNumevts) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RUNUMEVTS_ASC(snapshot) {
+            return RUNUMEVTS(snapshot, false);
+        }
+        FBTableSortFunctions.RUNUMEVTS_ASC = RUNUMEVTS_ASC;
+        function RUNUMEVTS_DESC(snapshot) {
+            return RUNUMEVTS(snapshot, true);
+        }
+        FBTableSortFunctions.RUNUMEVTS_DESC = RUNUMEVTS_DESC;
+        function RUREQUESTS(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU number of requests
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRURequests = firstFedBuilder.ru.requests;
+                var secondFedBuilderRURequests = secondFedBuilder.ru.requests;
+                if (firstFedBuilderRURequests > secondFedBuilderRURequests) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRURequests < secondFedBuilderRURequests) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RUREQUESTS_ASC(snapshot) {
+            return RUREQUESTS(snapshot, false);
+        }
+        FBTableSortFunctions.RUREQUESTS_ASC = RUREQUESTS_ASC;
+        function RUREQUESTS_DESC(snapshot) {
+            return RUREQUESTS(snapshot, true);
+        }
+        FBTableSortFunctions.RUREQUESTS_DESC = RUREQUESTS_DESC;
     })(FBTableSortFunctions = DAQView.FBTableSortFunctions || (DAQView.FBTableSortFunctions = {}));
     var FEDBuilderTableElement = (function (_super) {
         __extends(FEDBuilderTableElement, _super);
@@ -396,14 +572,50 @@ var DAQView;
                     }
                 },
                 { content: 'RU' },
-                { content: 'warn' },
-                { content: 'rate (kHz)' },
-                { content: 'thru (MB/s)' },
-                { content: 'size (kB)' },
+                { content: 'warn', },
+                {
+                    content: 'rate (kHz)',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RURATE_ASC,
+                        Descending: FBTableSortFunctions.RURATE_DESC
+                    }
+                },
+                {
+                    content: 'thru (MB/s)',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUTHROUGHPUT_ASC,
+                        Descending: FBTableSortFunctions.RUTHROUGHPUT_DESC
+                    }
+                },
+                {
+                    content: 'size (kB)',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUSIZE_ASC,
+                        Descending: FBTableSortFunctions.RUSIZE_DESC
+                    }
+                },
                 { content: '#events' },
-                { content: '#frags in RU' },
-                { content: '#evts in RU' },
-                { content: '#requests' }
+                {
+                    content: '#frags in RU',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUNUMFRAG_ASC,
+                        Descending: FBTableSortFunctions.RUNUMFRAG_DESC
+                    }
+                },
+                {
+                    content: '#evts in RU',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUNUMEVTS_ASC,
+                        Descending: FBTableSortFunctions.RUNUMEVTS_DESC
+                    }
+                },
+                {
+                    content: '#requests',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUREQUESTS_ASC,
+                        Descending: FBTableSortFunctions.RUREQUESTS_DESC
+                    }
+                }
             ];
             var topHeaders = baseHeaders.slice();
             topHeaders.unshift({
@@ -550,7 +762,7 @@ var DAQView;
             var minTrigUnequalMaxTrig = minTrig != maxTrig;
             var ttcPartitionTTSStateLink = ttsState;
             if (ttcPartition.fmm) {
-                ttcPartitionTTSStateLink = React.createElement("a", {href: ttcPartition.fmm.url, target: "_blank"}, ttsState);
+                ttcPartitionTTSStateLink = React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsState);
             }
             var ttcPartitionTTSStateDisplay = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
             var evmMaxTrg = this.props.evmMaxTrg;
@@ -643,7 +855,13 @@ var DAQView;
                 React.createElement("span", {className: "fb-table-fed-percent-warning"}, "W:", percentWarning.toFixed(1), "%") : '';
             var percentBusyDisplay = percentBusy > 0 ?
                 React.createElement("span", {className: "fb-table-fed-percent-busy"}, "B:", percentBusy.toFixed(1), "%") : '';
+            var ttcPartition = fed.ttcp;
             var ttsStateDisplay = (ttsState !== 'R' && ttsState.length !== 0) ? ttsState : '';
+            var ttcPartitionTTSStateLink = ttsState;
+            if (ttcPartition.fmm) {
+                ttcPartitionTTSStateLink = React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsStateDisplay);
+                ttsStateDisplay = ttcPartitionTTSStateLink;
+            }
             var ttsStateClass;
             if (fed.fmmMasked === true) {
                 ttsStateClass = 'fb-table-fed-tts-state-ffm-masked';

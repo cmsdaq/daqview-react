@@ -230,7 +230,7 @@ namespace DAQView {
                 } else if (firstFedBuilderFirstTTCPName < secondFedBuilderFirstTTCPName) {
                     return (descending ? 1 : -1);
                 } else {
-                    // if the first TTCP name of both FEDBuilders is the same, sort by FEDBuilder name
+                    // if the first TTCP name of both FEDBuilders is the same, sort
                     let firstFedBuilderName: string = firstFedBuilder.name;
                     let secondFedBuilderName: string = secondFedBuilder.name;
                     if (firstFedBuilderName > secondFedBuilderName) {
@@ -314,16 +314,7 @@ namespace DAQView {
                 } else if (firstFedBuilderFirstTTCPBusy < secondFedBuilderFirstTTCPBusy) {
                     return (descending ? 1 : -1);
                 } else {
-                    // if the first TTS busy percentage of both FEDBuilders is the same, sort by FEDBuilder name
-                    let firstFedBuilderName: string = firstFedBuilder.name;
-                    let secondFedBuilderName: string = secondFedBuilder.name;
-                    if (firstFedBuilderName > secondFedBuilderName) {
-                        return (descending ? -1 : 1);
-                    } else if (firstFedBuilderName < secondFedBuilderName) {
-                        return (descending ? 1 : -1);
-                    } else {
-                        return 0;
-                    }
+                    return 0;
                 }
             });
 
@@ -361,16 +352,7 @@ namespace DAQView {
                 } else if (firstFedBuilderFirstTTCPWarning < secondFedBuilderFirstTTCPWarning) {
                     return (descending ? 1 : -1);
                 } else {
-                    // if the first TTS busy percentage of both FEDBuilders is the same, sort by FEDBuilder name
-                    let firstFedBuilderName: string = firstFedBuilder.name;
-                    let secondFedBuilderName: string = secondFedBuilder.name;
-                    if (firstFedBuilderName > secondFedBuilderName) {
-                        return (descending ? -1 : 1);
-                    } else if (firstFedBuilderName < secondFedBuilderName) {
-                        return (descending ? 1 : -1);
-                    } else {
-                        return 0;
-                    }
+                    return 0;
                 }
             });
 
@@ -383,6 +365,223 @@ namespace DAQView {
 
         export function PERCWARNING_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
             return PERCWARNING(snapshot, true);
+        }
+
+
+        function RURATE(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU rate
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRURate: number = firstFedBuilder.ru.rate;
+                let secondFedBuilderRURate: number = secondFedBuilder.ru.rate;
+
+                if (firstFedBuilderRURate > secondFedBuilderRURate) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRURate < secondFedBuilderRURate) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RURATE_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RURATE(snapshot, false);
+        }
+
+        export function RURATE_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RURATE(snapshot, true);
+        }
+
+        function RUTHROUGHPUT(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU throughput
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRUThroughput: number = firstFedBuilder.ru.throughput;
+                let secondFedBuilderRUThroughput: number = secondFedBuilder.ru.throughput;
+
+                if (firstFedBuilderRUThroughput > secondFedBuilderRUThroughput) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRUThroughput < secondFedBuilderRUThroughput) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RUTHROUGHPUT_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUTHROUGHPUT(snapshot, false);
+        }
+
+        export function RUTHROUGHPUT_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUTHROUGHPUT(snapshot, true);
+        }
+
+        function RUSIZE(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU size
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRUSize: number = firstFedBuilder.ru.superFragmentSizeMean;
+                let secondFedBuilderRUSize: number = secondFedBuilder.ru.superFragmentSizeMean;
+
+                if (firstFedBuilderRUSize > secondFedBuilderRUSize) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRUSize < secondFedBuilderRUSize) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RUSIZE_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUSIZE(snapshot, false);
+        }
+
+        export function RUSIZE_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUSIZE(snapshot, true);
+        }
+
+        function RUNUMFRAG(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU number of fragments in RU
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRUNumfrag: number = firstFedBuilder.ru.fragmentsInRU;
+                let secondFedBuilderRUNumfrag: number = secondFedBuilder.ru.fragmentsInRU;
+
+                if (firstFedBuilderRUNumfrag > secondFedBuilderRUNumfrag) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRUNumfrag < secondFedBuilderRUNumfrag) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RUNUMFRAG_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUNUMFRAG(snapshot, false);
+        }
+
+        export function RUNUMFRAG_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUNUMFRAG(snapshot, true);
+        }
+
+        function RUNUMEVTS(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU number of events in RU
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRUNumevts: number = firstFedBuilder.ru.eventsInRU;
+                let secondFedBuilderRUNumevts: number = secondFedBuilder.ru.eventsInRU;
+
+                if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRUNumevts < secondFedBuilderRUNumevts) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RUNUMEVTS_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUNUMEVTS(snapshot, false);
+        }
+
+        export function RUNUMEVTS_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUNUMEVTS(snapshot, true);
+        }
+
+        function RUREQUESTS(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU number of requests
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRURequests: number = firstFedBuilder.ru.requests;
+                let secondFedBuilderRURequests: number = secondFedBuilder.ru.requests;
+
+                if (firstFedBuilderRURequests > secondFedBuilderRURequests) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRURequests < secondFedBuilderRURequests) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RUREQUESTS_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUREQUESTS(snapshot, false);
+        }
+
+        export function RUREQUESTS_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUREQUESTS(snapshot, true);
         }
 
 
@@ -440,14 +639,50 @@ namespace DAQView {
                     }
                 },
                 {content: 'RU'},
-                {content: 'warn'},
-                {content: 'rate (kHz)'},
-                {content: 'thru (MB/s)'},
-                {content: 'size (kB)'},
+                {content: 'warn',},
+                {
+                    content: 'rate (kHz)',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RURATE_ASC,
+                        Descending: FBTableSortFunctions.RURATE_DESC
+                    }
+                },
+                {
+                    content: 'thru (MB/s)',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUTHROUGHPUT_ASC,
+                        Descending: FBTableSortFunctions.RUTHROUGHPUT_DESC
+                    }
+                },
+                {
+                    content: 'size (kB)',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUSIZE_ASC,
+                        Descending: FBTableSortFunctions.RUSIZE_DESC
+                    }
+                },
                 {content: '#events'},
-                {content: '#frags in RU'},
-                {content: '#evts in RU'},
-                {content: '#requests'}
+                {
+                    content: '#frags in RU',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUNUMFRAG_ASC,
+                        Descending: FBTableSortFunctions.RUNUMFRAG_DESC
+                    }
+                },
+                {
+                    content: '#evts in RU',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUNUMEVTS_ASC,
+                        Descending: FBTableSortFunctions.RUNUMEVTS_DESC
+                    }
+                },
+                {
+                    content: '#requests',
+                    sortFunctions: {
+                        Ascending: FBTableSortFunctions.RUREQUESTS_ASC,
+                        Descending: FBTableSortFunctions.RUREQUESTS_DESC
+                    }
+                }
             ];
 
             let topHeaders: FEDBuilderTableHeaderProperties[] = baseHeaders.slice();
@@ -674,7 +909,7 @@ namespace DAQView {
 
             let ttcPartitionTTSStateLink: any = ttsState;
             if (ttcPartition.fmm) {
-                ttcPartitionTTSStateLink = <a href={ttcPartition.fmm.url} target="_blank">{ttsState}</a>;
+                ttcPartitionTTSStateLink = <a href={ttcPartition.fmm.url+'/urn:xdaq-application:service=fmmcontroller'} target="_blank">{ttsState}</a>;
             }
             let ttcPartitionTTSStateDisplay: any = <span className={ttsStateClasses}>{ttcPartitionTTSStateLink}</span>;
 
@@ -805,7 +1040,15 @@ namespace DAQView {
             let percentBusyDisplay: any = percentBusy > 0 ?
                 <span className="fb-table-fed-percent-busy">B:{percentBusy.toFixed(1)}%</span> : '';
 
+            let ttcPartition = fed.ttcp;
+
             let ttsStateDisplay: string = (ttsState !== 'R' && ttsState.length !== 0) ? ttsState : '';
+
+            let ttcPartitionTTSStateLink: any = ttsState;
+            if (ttcPartition.fmm) {
+                ttcPartitionTTSStateLink = <a href={ttcPartition.fmm.url+'/urn:xdaq-application:service=fmmcontroller'} target="_blank">{ttsStateDisplay}</a>;
+                ttsStateDisplay = ttcPartitionTTSStateLink;
+            }
 
             let ttsStateClass: string;
             if (fed.fmmMasked === true) {
