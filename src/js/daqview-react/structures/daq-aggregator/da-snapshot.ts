@@ -217,6 +217,7 @@ namespace DAQAggregator {
             // type: string;
 
             feds?: {[key: number]: FED};
+            subFedbuilder?: SubFEDBuilder;
 
             // state: string;
             // substate: string;
@@ -230,6 +231,7 @@ namespace DAQAggregator {
             id: number;
 
             fmm?: FMM;
+            frl?: FRL;
             frlIO: number;
             fmmIO: number;
 
