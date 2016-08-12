@@ -4,7 +4,7 @@ namespace DAQAggregator {
 
     export class SnapshotProvider implements DAQSnapshotView {
         private snapshotSource: SnapshotSource;
-        private currentSnapshotIntervalId: number;
+        private isRunning: boolean = false;
 
         private views: DAQSnapshotView[] = [];
 
@@ -21,10 +21,16 @@ namespace DAQAggregator {
         }
 
         public start() {
-            if (this.currentSnapshotIntervalId) {
-                clearInterval(this.currentSnapshotIntervalId);
+            if (this.isRunning) {
+                return;
             }
-            this.currentSnapshotIntervalId = setInterval((function () {
+            this.isRunning = true;
+
+            let updateFunction: () => void = (function () {
+                if (!this.isRunning) {
+                    return;
+                }
+
                 let url: string = this.snapshotSource.getSourceURL();
 
                 let startTime: number = new Date().getTime();
@@ -48,14 +54,15 @@ namespace DAQAggregator {
                     this.setSnapshot(snapshot);
                     time = new Date().getTime() - startTime;
                     console.log('Time to update page: ' + time + 'ms');
+
+                    setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
-            }).bind(this), this.snapshotSource.updateInterval);
+            }).bind(this);
+            setTimeout(updateFunction, this.snapshotSource.updateInterval);
         }
 
         public stop() {
-            if (this.currentSnapshotIntervalId) {
-                clearInterval(this.currentSnapshotIntervalId);
-            }
+            this.isRunning = false;
         }
     }
 

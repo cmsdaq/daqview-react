@@ -2,6 +2,7 @@ var DAQAggregator;
 (function (DAQAggregator) {
     var SnapshotProvider = (function () {
         function SnapshotProvider(snapshotSource) {
+            this.isRunning = false;
             this.views = [];
             this.snapshotSource = snapshotSource;
         }
@@ -12,10 +13,14 @@ var DAQAggregator;
             this.views.forEach(function (view) { return view.setSnapshot(snapshot); });
         };
         SnapshotProvider.prototype.start = function () {
-            if (this.currentSnapshotIntervalId) {
-                clearInterval(this.currentSnapshotIntervalId);
+            if (this.isRunning) {
+                return;
             }
-            this.currentSnapshotIntervalId = setInterval((function () {
+            this.isRunning = true;
+            var updateFunction = (function () {
+                if (!this.isRunning) {
+                    return;
+                }
                 var url = this.snapshotSource.getSourceURL();
                 var startTime = new Date().getTime();
                 var snapshotRequest = jQuery.getJSON(url);
@@ -36,13 +41,13 @@ var DAQAggregator;
                     this.setSnapshot(snapshot);
                     time = new Date().getTime() - startTime;
                     console.log('Time to update page: ' + time + 'ms');
+                    setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
-            }).bind(this), this.snapshotSource.updateInterval);
+            }).bind(this);
+            setTimeout(updateFunction, this.snapshotSource.updateInterval);
         };
         SnapshotProvider.prototype.stop = function () {
-            if (this.currentSnapshotIntervalId) {
-                clearInterval(this.currentSnapshotIntervalId);
-            }
+            this.isRunning = false;
         };
         return SnapshotProvider;
     }());
