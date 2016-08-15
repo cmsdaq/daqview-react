@@ -47,7 +47,7 @@
                 });
 				var parser = new DAQAggregator.SnapshotParser();
                 var snapshotSource = {
-                    updateInterval: 5000,
+                    updateInterval: 2000,
                     getSourceURL: function () {
                         return 'http://pcepcmd62.cern.ch:3000/mydaqview/api/getmostrecentprodsnapshot';
 
