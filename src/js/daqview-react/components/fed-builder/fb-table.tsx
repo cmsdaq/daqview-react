@@ -71,34 +71,35 @@ namespace DAQView {
     export namespace FBTableNumberFormats {
 
         export const RATE: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-rate',
+            baseStyle: 'fb-table-ru-rate',
             formats: [{min: 0, max: 0, styleSuffix: '-zero'}, {styleSuffix: '-nonzero'}]
         };
 
         export const THROUGHPUT: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-throughput',
+            baseStyle: 'fb-table-ru-throughput',
             formats: [{min: 0, max: 0, styleSuffix: '-zero'}, {styleSuffix: '-nonzero'}]
         };
 
         export const SIZE: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-size',
+            baseStyle: 'fb-table-ru-size',
             formats: [{min: 0, max: 0, styleSuffix: '-zero'}, {styleSuffix: '-nonzero'}]
         };
 
         export const EVENTS: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-events'
+            baseStyle: 'fb-table-ru-events',
+            formats: [{min: 0, max: 0, styleSuffix: '-zero'}, {styleSuffix: '-nonzero'}]
         };
 
         export const FRAGMENTS_IN_RU: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-fragments-in-ru'
+            baseStyle: 'fb-table-ru-fragments-in-ru',
         };
 
         export const EVENTS_IN_RU: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-events-in-ru'
+            baseStyle: 'fb-table-ru-events-in-ru',
         };
 
         export const REQUESTS: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-requests'
+            baseStyle: 'fb-table-ru-requests',
         };
 
     }
@@ -735,6 +736,7 @@ namespace DAQView {
             let numSubFedBuilders: number = subFedBuilders.length;
 
             let ru: DAQAggregatorSnapshot.RU = fedBuilder.ru;
+            let ruMasked: boolean = ru.masked;
             let ruHostname: string = ru.hostname;
             let ruName: string = ruHostname.substring(3, ruHostname.length - 4);
             let ruUrl: string = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
@@ -750,10 +752,29 @@ namespace DAQView {
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{(ru.throughput / 1024 / 1024).toFixed(1)}</td>);
             fedBuilderData.push(<td
                 rowSpan={numSubFedBuilders}>{(ru.superFragmentSizeMean / 1024).toFixed(1)}±{(ru.superFragmentSizeStddev / 1024).toFixed(1)}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.eventCount}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className={FormatUtility.getClassNameForNumber(ru.fragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}>{ru.fragmentsInRU}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className={FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU)}>{ru.eventsInRU}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className={FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS)}>{ru.requests}</td>);
+
+            let eventCountClass: string;
+            let fragmentInRuClass: string;
+            let eventsInRuClass: string;
+            let requestsClass: string;
+
+            if (ruMasked && ru.eventCount == 0) {
+
+                eventCountClass = fragmentInRuClass = eventsInRuClass = requestsClass = 'fb-table-ru-masked';
+            } else {
+                eventCountClass = FormatUtility.getClassNameForNumber(ru.eventCount, FBTableNumberFormats.EVENTS);
+                fragmentInRuClass = FormatUtility.getClassNameForNumber(ru.fragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU);
+                eventsInRuClass = FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
+                requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
+            }
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}
+                                    className={eventCountClass}>{ru.eventCount}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}
+                                    className={fragmentInRuClass}>{ru.fragmentsInRU}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}
+                                    className={eventsInRuClass}>{ru.eventsInRU}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}
+                                    className={requestsClass}>{ru.requests}</td>);
 
 
             let fbRowClassName: string = classNames("fb-table-fb-row", this.props.additionalClasses);
@@ -910,7 +931,8 @@ namespace DAQView {
 
             let ttcPartitionTTSStateLink: any = ttsState;
             if (ttcPartition.fmm) {
-                ttcPartitionTTSStateLink = <a href={ttcPartition.fmm.url+'/urn:xdaq-application:service=fmmcontroller'} target="_blank">{ttsState}</a>;
+                ttcPartitionTTSStateLink =<a href={ttcPartition.fmm.url+'/urn:xdaq-application:service=fmmcontroller'}
+                                             target="_blank">{ttsState}</a>;
             }
             let ttcPartitionTTSStateDisplay: any = <span className={ttsStateClasses}>{ttcPartitionTTSStateLink}</span>;
 
@@ -1047,7 +1069,8 @@ namespace DAQView {
 
             let ttcPartitionTTSStateLink: any = ttsState;
             if (ttcPartition.fmm != null) {
-                ttcPartitionTTSStateLink = <a href={ttcPartition.fmm.url+'/urn:xdaq-application:service=fmmcontroller'} target="_blank">{ttsStateDisplay}</a>;
+                ttcPartitionTTSStateLink =<a href={ttcPartition.fmm.url+'/urn:xdaq-application:service=fmmcontroller'}
+                                             target="_blank">{ttsStateDisplay}</a>;
                 ttsStateDisplay = ttcPartitionTTSStateLink;
             }
 

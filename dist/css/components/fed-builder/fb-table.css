@@ -49,6 +49,18 @@
 
 }
 
+.fb-table-ru-rate {
+
+}
+
+.fb-table-ru-throughput {
+
+}
+
+.fb-table-ru-size {
+
+}
+
 .fb-table-ru-messages {
 
 }
@@ -65,20 +77,28 @@
 
 }
 
-.fb-table-events {
-    color: #18ff40;
+.fb-table-ru-events-nonzero {
+    color: #008800;
 }
 
-.fb-table-fragments-in-ru {
+.fb-table-ru-events-zero {
+    color: #666666;
+}
+
+.fb-table-ru-fragments-in-ru {
     color: #FF0000;
 }
 
-.fb-table-events-in-ru {
+.fb-table-ru-events-in-ru {
     color: #FF0000;
 }
 
-.fb-table-requests {
+.fb-table-ru-requests {
     color: #FF0000;
+}
+
+.fb-table-ru-masked {
+    color: #666666;
 }
 
 .fb-table-fb-row {

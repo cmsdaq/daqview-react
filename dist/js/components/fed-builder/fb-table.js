@@ -59,28 +59,29 @@ var DAQView;
     var FBTableNumberFormats;
     (function (FBTableNumberFormats) {
         FBTableNumberFormats.RATE = {
-            baseStyle: 'fb-table-rate',
+            baseStyle: 'fb-table-ru-rate',
             formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
         };
         FBTableNumberFormats.THROUGHPUT = {
-            baseStyle: 'fb-table-throughput',
+            baseStyle: 'fb-table-ru-throughput',
             formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
         };
         FBTableNumberFormats.SIZE = {
-            baseStyle: 'fb-table-size',
+            baseStyle: 'fb-table-ru-size',
             formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
         };
         FBTableNumberFormats.EVENTS = {
-            baseStyle: 'fb-table-events'
+            baseStyle: 'fb-table-ru-events',
+            formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
         };
         FBTableNumberFormats.FRAGMENTS_IN_RU = {
-            baseStyle: 'fb-table-fragments-in-ru'
+            baseStyle: 'fb-table-ru-fragments-in-ru',
         };
         FBTableNumberFormats.EVENTS_IN_RU = {
-            baseStyle: 'fb-table-events-in-ru'
+            baseStyle: 'fb-table-ru-events-in-ru',
         };
         FBTableNumberFormats.REQUESTS = {
-            baseStyle: 'fb-table-requests'
+            baseStyle: 'fb-table-ru-requests',
         };
     })(FBTableNumberFormats = DAQView.FBTableNumberFormats || (DAQView.FBTableNumberFormats = {}));
     var FBTableSortFunctions;
@@ -645,6 +646,7 @@ var DAQView;
             var subFedBuilders = fedBuilder.subFedbuilders;
             var numSubFedBuilders = subFedBuilders.length;
             var ru = fedBuilder.ru;
+            var ruMasked = ru.masked;
             var ruHostname = ru.hostname;
             var ruName = ruHostname.substring(3, ruHostname.length - 4);
             var ruUrl = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
@@ -655,10 +657,23 @@ var DAQView;
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.rate / 1000).toFixed(3)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.throughput / 1024 / 1024).toFixed(1)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.superFragmentSizeMean / 1024).toFixed(1), "±", (ru.superFragmentSizeStddev / 1024).toFixed(1)));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.eventCount));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.fragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}, ru.fragmentsInRU));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU)}, ru.eventsInRU));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS)}, ru.requests));
+            var eventCountClass;
+            var fragmentInRuClass;
+            var eventsInRuClass;
+            var requestsClass;
+            if (ruMasked && ru.eventCount == 0) {
+                eventCountClass = fragmentInRuClass = eventsInRuClass = requestsClass = 'fb-table-ru-masked';
+            }
+            else {
+                eventCountClass = FormatUtility.getClassNameForNumber(ru.eventCount, FBTableNumberFormats.EVENTS);
+                fragmentInRuClass = FormatUtility.getClassNameForNumber(ru.fragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU);
+                eventsInRuClass = FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
+                requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
+            }
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: eventCountClass}, ru.eventCount));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: fragmentInRuClass}, ru.fragmentsInRU));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: eventsInRuClass}, ru.eventsInRU));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: requestsClass}, ru.requests));
             var fbRowClassName = classNames("fb-table-fb-row", this.props.additionalClasses);
             var children = [];
             var count = 0;
