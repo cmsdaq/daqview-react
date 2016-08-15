@@ -58,7 +58,7 @@ namespace DAQView {
                         <td>{this.props.daqState}</td>
                         <td>{this.props.sessionId}</td>
                         <td>{this.props.dpSetPath}</td>
-                        <td>{this.props.snapshotTimestamp}</td>
+                        <td>{new Date(this.props.snapshotTimestamp).toLocaleString()}</td>
                     </tr>
                     </tbody>
                 </table>
