@@ -1,4 +1,4 @@
-///<reference path="../../structures/daq-aggregator/da-snapshot.ts"/>
+///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
 ///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];

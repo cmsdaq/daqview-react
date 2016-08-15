@@ -1,4 +1,4 @@
-///<reference path="../../structures/daq-aggregator/da-snapshot.ts"/>
+///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
 
 declare namespace DAQView {
 
