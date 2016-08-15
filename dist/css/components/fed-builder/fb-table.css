@@ -65,6 +65,22 @@
 
 }
 
+.fb-table-events {
+    color: #18ff40;
+}
+
+.fb-table-fragments-in-ru {
+    color: #FF0000;
+}
+
+.fb-table-events-in-ru {
+    color: #FF0000;
+}
+
+.fb-table-requests {
+    color: #FF0000;
+}
+
 .fb-table-fb-row {
 
 }

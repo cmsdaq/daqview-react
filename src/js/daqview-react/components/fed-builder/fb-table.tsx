@@ -751,9 +751,10 @@ namespace DAQView {
             fedBuilderData.push(<td
                 rowSpan={numSubFedBuilders}>{(ru.superFragmentSizeMean / 1024).toFixed(1)}±{(ru.superFragmentSizeStddev / 1024).toFixed(1)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.eventCount}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.fragmentsInRU}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.eventsInRU}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{ru.requests}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className={FormatUtility.getClassNameForNumber(ru.fragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}>{ru.fragmentsInRU}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className={FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU)}>{ru.eventsInRU}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className={FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS)}>{ru.requests}</td>);
+
 
             let fbRowClassName: string = classNames("fb-table-fb-row", this.props.additionalClasses);
 
@@ -1045,7 +1046,7 @@ namespace DAQView {
             let ttsStateDisplay: string = (ttsState !== 'R' && ttsState.length !== 0) ? ttsState : '';
 
             let ttcPartitionTTSStateLink: any = ttsState;
-            if (ttcPartition.fmm) {
+            if (ttcPartition.fmm != null) {
                 ttcPartitionTTSStateLink = <a href={ttcPartition.fmm.url+'/urn:xdaq-application:service=fmmcontroller'} target="_blank">{ttsStateDisplay}</a>;
                 ttsStateDisplay = ttcPartitionTTSStateLink;
             }

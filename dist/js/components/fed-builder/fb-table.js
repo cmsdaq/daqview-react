@@ -656,9 +656,9 @@ var DAQView;
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.throughput / 1024 / 1024).toFixed(1)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.superFragmentSizeMean / 1024).toFixed(1), "±", (ru.superFragmentSizeStddev / 1024).toFixed(1)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.eventCount));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.fragmentsInRU));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.eventsInRU));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, ru.requests));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.fragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}, ru.fragmentsInRU));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU)}, ru.eventsInRU));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS)}, ru.requests));
             var fbRowClassName = classNames("fb-table-fb-row", this.props.additionalClasses);
             var children = [];
             var count = 0;
@@ -858,7 +858,7 @@ var DAQView;
             var ttcPartition = fed.ttcp;
             var ttsStateDisplay = (ttsState !== 'R' && ttsState.length !== 0) ? ttsState : '';
             var ttcPartitionTTSStateLink = ttsState;
-            if (ttcPartition.fmm) {
+            if (ttcPartition.fmm != null) {
                 ttcPartitionTTSStateLink = React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsStateDisplay);
                 ttsStateDisplay = ttcPartitionTTSStateLink;
             }
