@@ -142,7 +142,7 @@ namespace DAQAggregator {
         export interface RU extends SnapshotElement {
             hostname: string;
             isEVM: boolean;
-            // masked: boolean;
+            masked: boolean;
             // instance: number;
 
             // stateName: string;
