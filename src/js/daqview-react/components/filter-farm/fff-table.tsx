@@ -16,7 +16,7 @@ namespace DAQView {
 
         public htmlRootElement: Element;
 
-        private snapshot: DAQAggregatorSnapshot;
+        private snapshot: DAQAggregatorSnapshot = null;
         private sortFunction: SortFunction = {
             presort: this.INITIAL_PRESORT_FUNCTION,
             sort: this.INITIAL_SORT_FUNCTION
@@ -51,7 +51,7 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot) {
-            if (this.snapshot && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                 return;
             }
             this.snapshot = snapshot;
@@ -336,12 +336,6 @@ namespace DAQView {
         };
     }
 
-    interface FileBasedFilterFarmTableElementProperties {
-        tableObject: FileBasedFilterFarmTable;
-        bus: DAQAggregatorSnapshot.BU[];
-        buSummary: DAQAggregatorSnapshot.BUSummary;
-    }
-
     const FFF_TABLE_BASE_HEADERS: FileBasedFilterFarmTableHeaderProperties[] = [
         {
             content: 'rate (kHz)',
@@ -499,6 +493,12 @@ namespace DAQView {
     const FFF_TABLE_SUMMARY_HEADERS: FileBasedFilterFarmTableHeaderProperties[] = FFF_TABLE_BASE_HEADERS.slice();
     FFF_TABLE_SUMMARY_HEADERS.unshift({content: 'Summary'});
 
+    interface FileBasedFilterFarmTableElementProperties {
+        tableObject: FileBasedFilterFarmTable;
+        bus: DAQAggregatorSnapshot.BU[];
+        buSummary: DAQAggregatorSnapshot.BUSummary;
+    }
+
     class FileBasedFilterFarmTableElement extends React.Component<FileBasedFilterFarmTableElementProperties,{}> {
 
         render() {
@@ -506,7 +506,7 @@ namespace DAQView {
             let bus: DAQAggregatorSnapshot.BU[] = this.props.bus;
             let numBus: number = 0;
             let buRows: any[] = [];
-            if (bus) {
+            if (bus != null) {
                 numBus = bus.length;
                 bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu}/>));
             }
@@ -599,7 +599,7 @@ namespace DAQView {
             let sortFunctions: { [key: string]: SortFunction } = this.props.sortFunctions;
 
             let clickFunction: () => void = null;
-            if (currentSorting && sortFunctions) {
+            if (currentSorting != null && sortFunctions != null) {
                 if (currentSorting === Sorting.None || currentSorting === Sorting.Descending) {
                     clickFunction = function () {
                         tableObject.setSortFunction.bind(tableObject)(sortFunctions[Sorting.Ascending.toString()]);
@@ -614,7 +614,7 @@ namespace DAQView {
             }
 
             let sortingImage: any = null;
-            if (currentSorting) {
+            if (currentSorting != null) {
                 sortingImage = <input type="image" className="fff-table-sort-image"
                                       src={'dist/img/' + currentSorting.getImagePath()}
                                       alt={currentSorting.toString()}
