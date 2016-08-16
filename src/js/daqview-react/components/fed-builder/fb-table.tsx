@@ -1010,7 +1010,7 @@ namespace DAQView {
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot: number) {
                     let fed: DAQAggregatorSnapshot.FED = frl.feds[slot];
                     if (fed != null) {
-                        pseudoFEDs = pseudoFEDs.concat(fed.mainFeds)
+                        pseudoFEDs = pseudoFEDs.concat(fed.dependentFeds);
                     }
                 });
             });

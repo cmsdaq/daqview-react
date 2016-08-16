@@ -218,7 +218,7 @@ namespace DAQAggregator {
 
             srcIdExpected: number;
 
-            mainFeds?: FED[];
+            dependentFeds?: FED[];
 
             srcIdReceived: number;
 

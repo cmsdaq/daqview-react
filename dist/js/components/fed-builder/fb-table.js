@@ -825,7 +825,7 @@ var DAQView;
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot) {
                     var fed = frl.feds[slot];
                     if (fed != null) {
-                        pseudoFEDs = pseudoFEDs.concat(fed.mainFeds);
+                        pseudoFEDs = pseudoFEDs.concat(fed.dependentFeds);
                     }
                 });
             });
