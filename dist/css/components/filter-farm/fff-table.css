@@ -4,6 +4,18 @@
     border-collapse: collapse;
 }
 
+.fff-table,
+.fff-table-header-row th,
+.fff-table-bu-summary-row td {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.fff-table-body td {
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-width: 0px 1px 0px 1px;
+}
+
 .fff-table-help {
     text-align: left;
 }
@@ -26,13 +38,6 @@
 
 .fff-table-header-row {
     text-align: left;
-}
-
-.fff-table,
-.fff-table-body td,
-.fff-table-header-row th,
-.fff-table-bu-summary-row td {
-    border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .fff-table-header {

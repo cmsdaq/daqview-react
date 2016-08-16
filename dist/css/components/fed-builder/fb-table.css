@@ -4,17 +4,23 @@
     border-collapse: collapse;
 }
 
-.fb-table-help {
-    text-align: left;
-}
-
+.fb-table,
+.fb-table-header-row th,
+.fb-table-fb-summary-row td,
 .fb-table-colgroup-fedbuilder,
 .fb-table-colgroup-evb,
-.fb-table-colgroup-unknown {
-    border-color: black;
+.fb-table-colgroup-unknown{
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.fb-table-fb-row td {
     border-style: solid;
-    border-width: 0px 1px;
-    border-collapse: collapse;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-width: 0px 1px 0px 1px;
+}
+
+.fb-table-help {
+    text-align: left;
 }
 
 .fb-table-colgroup-fedbuilder {
