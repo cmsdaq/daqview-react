@@ -586,6 +586,92 @@ namespace DAQView {
 
     }
 
+    const FB_TABLE_BASE_HEADERS: FEDBuilderTableHeaderProperties[] = [
+        {content: 'T'},
+        {
+            content: '%W',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.PERCWARNING_ASC,
+                Descending: FBTableSortFunctions.PERCWARNING_DESC
+            }
+        },
+        {
+            content: '%B',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.PERCBUSY_ASC,
+                Descending: FBTableSortFunctions.PERCBUSY_DESC
+            }
+        },
+        {content: 'frlpc'},
+        {content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId'},
+        {content: 'min Trg'},
+        {content: 'max Trg'},
+        {
+            content: 'FB Name',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.FB_ASC,
+                Descending: FBTableSortFunctions.FB_DESC
+            }
+        },
+        {content: 'RU'},
+        {content: 'warn',},
+        {
+            content: 'rate (kHz)',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RURATE_ASC,
+                Descending: FBTableSortFunctions.RURATE_DESC
+            }
+        },
+        {
+            content: 'thru (MB/s)',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUTHROUGHPUT_ASC,
+                Descending: FBTableSortFunctions.RUTHROUGHPUT_DESC
+            }
+        },
+        {
+            content: 'size (kB)',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUSIZE_ASC,
+                Descending: FBTableSortFunctions.RUSIZE_DESC
+            }
+        },
+        {content: '#events'},
+        {
+            content: '#frags in RU',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUNUMFRAG_ASC,
+                Descending: FBTableSortFunctions.RUNUMFRAG_DESC
+            }
+        },
+        {
+            content: '#evts in RU',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUNUMEVTS_ASC,
+                Descending: FBTableSortFunctions.RUNUMEVTS_DESC
+            }
+        },
+        {
+            content: '#requests',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUREQUESTS_ASC,
+                Descending: FBTableSortFunctions.RUREQUESTS_DESC
+            }
+        }
+    ];
+
+    const FB_TABLE_TOP_HEADERS: FEDBuilderTableHeaderProperties[] = FB_TABLE_BASE_HEADERS.slice();
+    FB_TABLE_TOP_HEADERS.unshift({
+        content: 'TTCP',
+        sortFunctions: {
+            Ascending: FBTableSortFunctions.TTCP_ASC,
+            Descending: FBTableSortFunctions.TTCP_DESC
+        }
+    });
+
+    const FB_TABLE_SUMMARY_HEADERS: FEDBuilderTableHeaderProperties[] = FB_TABLE_BASE_HEADERS.slice();
+    FB_TABLE_SUMMARY_HEADERS.unshift({content: 'Summary'});
+
     interface FEDBuilderTableElementProperties {
         tableObject: FEDBuilderTable;
         fedBuilders: DAQAggregatorSnapshot.FEDBuilder[];
@@ -607,94 +693,9 @@ namespace DAQView {
 
             let fedBuilderRows: any[] = [];
             fedBuilders.forEach(function (fedBuilder) {
-                fedBuilderRows.push(<FEDBuilderRow fedBuilder={fedBuilder} evmMaxTrg={evmMaxTrg}/>);
+                fedBuilderRows.push(<FEDBuilderRow key={fedBuilder['@id']} fedBuilder={fedBuilder}
+                                                   evmMaxTrg={evmMaxTrg}/>);
             });
-
-            let baseHeaders: FEDBuilderTableHeaderProperties[] = [
-                {content: 'T'},
-                {
-                    content: '%W',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.PERCWARNING_ASC,
-                        Descending: FBTableSortFunctions.PERCWARNING_DESC
-                    }
-                },
-                {
-                    content: '%B',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.PERCBUSY_ASC,
-                        Descending: FBTableSortFunctions.PERCBUSY_DESC
-                    }
-                },
-                {content: 'frlpc'},
-                {content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId'},
-                {content: 'min Trg'},
-                {content: 'max Trg'},
-                {
-                    content: 'FB Name',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.FB_ASC,
-                        Descending: FBTableSortFunctions.FB_DESC
-                    }
-                },
-                {content: 'RU'},
-                {content: 'warn',},
-                {
-                    content: 'rate (kHz)',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RURATE_ASC,
-                        Descending: FBTableSortFunctions.RURATE_DESC
-                    }
-                },
-                {
-                    content: 'thru (MB/s)',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUTHROUGHPUT_ASC,
-                        Descending: FBTableSortFunctions.RUTHROUGHPUT_DESC
-                    }
-                },
-                {
-                    content: 'size (kB)',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUSIZE_ASC,
-                        Descending: FBTableSortFunctions.RUSIZE_DESC
-                    }
-                },
-                {content: '#events'},
-                {
-                    content: '#frags in RU',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUNUMFRAG_ASC,
-                        Descending: FBTableSortFunctions.RUNUMFRAG_DESC
-                    }
-                },
-                {
-                    content: '#evts in RU',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUNUMEVTS_ASC,
-                        Descending: FBTableSortFunctions.RUNUMEVTS_DESC
-                    }
-                },
-                {
-                    content: '#requests',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUREQUESTS_ASC,
-                        Descending: FBTableSortFunctions.RUREQUESTS_DESC
-                    }
-                }
-            ];
-
-            let topHeaders: FEDBuilderTableHeaderProperties[] = baseHeaders.slice();
-            topHeaders.unshift({
-                content: 'TTCP',
-                sortFunctions: {
-                    Ascending: FBTableSortFunctions.TTCP_ASC,
-                    Descending: FBTableSortFunctions.TTCP_DESC
-                }
-            });
-
-            let summaryHeaders: FEDBuilderTableHeaderProperties[] = baseHeaders.slice();
-            summaryHeaders.unshift({content: 'Summary'});
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
             let numRus: number = fedBuilders.length;
@@ -707,13 +708,16 @@ namespace DAQView {
                     <colgroup className="fb-table-colgroup-evb" span="9"/>
                     <colgroup className="fb-table-colgroup-unknown" span="2"/>
                     <thead className="fb-table-head">
-                    <FEDBuilderTableTopHeaderRow />
-                    <FEDBuilderTableHeaderRow tableObject={tableObject} headers={topHeaders}/>
+                    <FEDBuilderTableTopHeaderRow key="fb-top-header-row"/>
+                    <FEDBuilderTableHeaderRow key="fb-header-row" tableObject={tableObject}
+                                              headers={FB_TABLE_TOP_HEADERS}/>
                     </thead>
                     {fedBuilderRows}
                     <tfoot className="fb-table-foot">
-                    <FEDBuilderTableHeaderRow tableObject={tableObject} headers={summaryHeaders}/>
-                    <FEDBuilderTableSummaryRow fedBuilderSummary={fedBuilderSummary} numRus={numRus}/>
+                    <FEDBuilderTableHeaderRow key="fb-summary-header-row" tableObject={tableObject}
+                                              headers={FB_TABLE_SUMMARY_HEADERS}/>
+                    <FEDBuilderTableSummaryRow key="fb-summary-row" fedBuilderSummary={fedBuilderSummary}
+                                               numRus={numRus}/>
                     </tfoot>
                 </table>
             );
@@ -793,6 +797,10 @@ namespace DAQView {
     }
 
     class FEDBuilderTableTopHeaderRow extends React.Component<{},{}> {
+        shouldComponentUpdate() {
+            return false;
+        }
+
         render() {
             return (
                 <tr className="fb-table-top-header-row">
@@ -819,6 +827,7 @@ namespace DAQView {
                                                                                       colSpan={header.colSpan}
                                                                                       additionalClasses={header.additionalClasses}
                                                                                       tableObject={tableObject}
+                                                                                      sorting={tableObject.getCurrentSorting(header.content)}
                                                                                       sortFunctions={header.sortFunctions}/>));
             return (
                 <tr className="fb-table-header-row">
@@ -833,10 +842,15 @@ namespace DAQView {
         colSpan?: string;
         additionalClasses?: string | string[];
         tableObject?: FEDBuilderTable;
+        sorting?: Sorting;
         sortFunctions?: { [key: string]: ((snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot) };
     }
 
     class FEDBuilderTableHeader extends React.Component<FEDBuilderTableHeaderProperties,{}> {
+        shouldComponentUpdate(nextProps: FEDBuilderTableHeaderProperties) {
+            return this.props.sorting !== nextProps.sorting;
+        }
+
         render() {
             let content: string = this.props.content;
             let colSpan: string = this.props.colSpan;
@@ -844,14 +858,10 @@ namespace DAQView {
             let className: string = classNames("fb-table-header", additionalClasses);
 
             let tableObject: FEDBuilderTable = this.props.tableObject;
-            let currentSorting: Sorting;
+            let currentSorting: Sorting = this.props.sorting ? this.props.sorting : null;
             let sortFunctions: { [key: string]: ((snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot) } = this.props.sortFunctions;
 
             let isSortable: boolean = (tableObject != null && sortFunctions != null);
-
-            if (isSortable) {
-                currentSorting = tableObject.getCurrentSorting(content);
-            }
 
             let clickFunction: () => void = null;
             if (isSortable) {
@@ -1046,6 +1056,21 @@ namespace DAQView {
     }
 
     class FEDData extends React.Component<FEDDataProperties,{}> {
+        shouldComponentUpdate(nextProps: FEDDataProperties) {
+            let shouldUpdate: boolean = false;
+
+            let currentFMMIsNull: boolean = this.props.fed.fmm == null;
+            let newFmmIsNull: boolean = nextProps.fed.fmm == null;
+            if (currentFMMIsNull !== newFmmIsNull) {
+                shouldUpdate = true;
+            } else if (!currentFMMIsNull && !newFmmIsNull) {
+                shouldUpdate = shouldUpdate || (this.props.fed.fmm.url !== nextProps.fed.fmm.url);
+            }
+            shouldUpdate = shouldUpdate || !DAQViewUtility.areEqualShallow(this.props.fed, nextProps.fed);
+
+            return shouldUpdate;
+        }
+
         render() {
             let fed: DAQAggregatorSnapshot.FED = this.props.fed;
 

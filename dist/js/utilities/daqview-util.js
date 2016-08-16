@@ -12,6 +12,12 @@ var DAQViewUtility;
         return (type === 'string' || type === 'number' || type === 'boolean');
     }
     function areEqualShallow(a, b) {
+        if (a == null) {
+            return b == null;
+        }
+        else if (b == null) {
+            return false;
+        }
         if (a['@id'] !== b['@id'])
             return false;
         for (var key in a) {

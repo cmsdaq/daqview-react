@@ -524,6 +524,89 @@ var DAQView;
         }
         FBTableSortFunctions.RUREQUESTS_DESC = RUREQUESTS_DESC;
     })(FBTableSortFunctions = DAQView.FBTableSortFunctions || (DAQView.FBTableSortFunctions = {}));
+    var FB_TABLE_BASE_HEADERS = [
+        { content: 'T' },
+        {
+            content: '%W',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.PERCWARNING_ASC,
+                Descending: FBTableSortFunctions.PERCWARNING_DESC
+            }
+        },
+        {
+            content: '%B',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.PERCBUSY_ASC,
+                Descending: FBTableSortFunctions.PERCBUSY_DESC
+            }
+        },
+        { content: 'frlpc' },
+        { content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId' },
+        { content: 'min Trg' },
+        { content: 'max Trg' },
+        {
+            content: 'FB Name',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.FB_ASC,
+                Descending: FBTableSortFunctions.FB_DESC
+            }
+        },
+        { content: 'RU' },
+        { content: 'warn', },
+        {
+            content: 'rate (kHz)',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RURATE_ASC,
+                Descending: FBTableSortFunctions.RURATE_DESC
+            }
+        },
+        {
+            content: 'thru (MB/s)',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUTHROUGHPUT_ASC,
+                Descending: FBTableSortFunctions.RUTHROUGHPUT_DESC
+            }
+        },
+        {
+            content: 'size (kB)',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUSIZE_ASC,
+                Descending: FBTableSortFunctions.RUSIZE_DESC
+            }
+        },
+        { content: '#events' },
+        {
+            content: '#frags in RU',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUNUMFRAG_ASC,
+                Descending: FBTableSortFunctions.RUNUMFRAG_DESC
+            }
+        },
+        {
+            content: '#evts in RU',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUNUMEVTS_ASC,
+                Descending: FBTableSortFunctions.RUNUMEVTS_DESC
+            }
+        },
+        {
+            content: '#requests',
+            sortFunctions: {
+                Ascending: FBTableSortFunctions.RUREQUESTS_ASC,
+                Descending: FBTableSortFunctions.RUREQUESTS_DESC
+            }
+        }
+    ];
+    var FB_TABLE_TOP_HEADERS = FB_TABLE_BASE_HEADERS.slice();
+    FB_TABLE_TOP_HEADERS.unshift({
+        content: 'TTCP',
+        sortFunctions: {
+            Ascending: FBTableSortFunctions.TTCP_ASC,
+            Descending: FBTableSortFunctions.TTCP_DESC
+        }
+    });
+    var FB_TABLE_SUMMARY_HEADERS = FB_TABLE_BASE_HEADERS.slice();
+    FB_TABLE_SUMMARY_HEADERS.unshift({ content: 'Summary' });
     var FEDBuilderTableElement = (function (_super) {
         __extends(FEDBuilderTableElement, _super);
         function FEDBuilderTableElement() {
@@ -541,95 +624,12 @@ var DAQView;
             });
             var fedBuilderRows = [];
             fedBuilders.forEach(function (fedBuilder) {
-                fedBuilderRows.push(React.createElement(FEDBuilderRow, {fedBuilder: fedBuilder, evmMaxTrg: evmMaxTrg}));
+                fedBuilderRows.push(React.createElement(FEDBuilderRow, {key: fedBuilder['@id'], fedBuilder: fedBuilder, evmMaxTrg: evmMaxTrg}));
             });
-            var baseHeaders = [
-                { content: 'T' },
-                {
-                    content: '%W',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.PERCWARNING_ASC,
-                        Descending: FBTableSortFunctions.PERCWARNING_DESC
-                    }
-                },
-                {
-                    content: '%B',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.PERCBUSY_ASC,
-                        Descending: FBTableSortFunctions.PERCBUSY_DESC
-                    }
-                },
-                { content: 'frlpc' },
-                { content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId' },
-                { content: 'min Trg' },
-                { content: 'max Trg' },
-                {
-                    content: 'FB Name',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.FB_ASC,
-                        Descending: FBTableSortFunctions.FB_DESC
-                    }
-                },
-                { content: 'RU' },
-                { content: 'warn', },
-                {
-                    content: 'rate (kHz)',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RURATE_ASC,
-                        Descending: FBTableSortFunctions.RURATE_DESC
-                    }
-                },
-                {
-                    content: 'thru (MB/s)',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUTHROUGHPUT_ASC,
-                        Descending: FBTableSortFunctions.RUTHROUGHPUT_DESC
-                    }
-                },
-                {
-                    content: 'size (kB)',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUSIZE_ASC,
-                        Descending: FBTableSortFunctions.RUSIZE_DESC
-                    }
-                },
-                { content: '#events' },
-                {
-                    content: '#frags in RU',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUNUMFRAG_ASC,
-                        Descending: FBTableSortFunctions.RUNUMFRAG_DESC
-                    }
-                },
-                {
-                    content: '#evts in RU',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUNUMEVTS_ASC,
-                        Descending: FBTableSortFunctions.RUNUMEVTS_DESC
-                    }
-                },
-                {
-                    content: '#requests',
-                    sortFunctions: {
-                        Ascending: FBTableSortFunctions.RUREQUESTS_ASC,
-                        Descending: FBTableSortFunctions.RUREQUESTS_DESC
-                    }
-                }
-            ];
-            var topHeaders = baseHeaders.slice();
-            topHeaders.unshift({
-                content: 'TTCP',
-                sortFunctions: {
-                    Ascending: FBTableSortFunctions.TTCP_ASC,
-                    Descending: FBTableSortFunctions.TTCP_DESC
-                }
-            });
-            var summaryHeaders = baseHeaders.slice();
-            summaryHeaders.unshift({ content: 'Summary' });
             var fedBuilderSummary = this.props.fedBuilderSummary;
             var numRus = fedBuilders.length;
             var tableObject = this.props.tableObject;
-            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-unknown", span: "2"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, null), React.createElement(FEDBuilderTableHeaderRow, {tableObject: tableObject, headers: topHeaders})), fedBuilderRows, React.createElement("tfoot", {className: "fb-table-foot"}, React.createElement(FEDBuilderTableHeaderRow, {tableObject: tableObject, headers: summaryHeaders}), React.createElement(FEDBuilderTableSummaryRow, {fedBuilderSummary: fedBuilderSummary, numRus: numRus}))));
+            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-unknown", span: "2"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, {key: "fb-top-header-row"}), React.createElement(FEDBuilderTableHeaderRow, {key: "fb-header-row", tableObject: tableObject, headers: FB_TABLE_TOP_HEADERS})), fedBuilderRows, React.createElement("tfoot", {className: "fb-table-foot"}, React.createElement(FEDBuilderTableHeaderRow, {key: "fb-summary-header-row", tableObject: tableObject, headers: FB_TABLE_SUMMARY_HEADERS}), React.createElement(FEDBuilderTableSummaryRow, {key: "fb-summary-row", fedBuilderSummary: fedBuilderSummary, numRus: numRus}))));
         };
         return FEDBuilderTableElement;
     }(React.Component));
@@ -685,6 +685,9 @@ var DAQView;
         function FEDBuilderTableTopHeaderRow() {
             _super.apply(this, arguments);
         }
+        FEDBuilderTableTopHeaderRow.prototype.shouldComponentUpdate = function () {
+            return false;
+        };
         FEDBuilderTableTopHeaderRow.prototype.render = function () {
             return (React.createElement("tr", {className: "fb-table-top-header-row"}, React.createElement(FEDBuilderTableHeader, {additionalClasses: "fb-table-help", content: React.createElement("a", {href: "."}, "Table Help"), colSpan: "2"}), React.createElement(FEDBuilderTableHeader, {content: "F E D B U I L D E R", colSpan: "7"}), React.createElement(FEDBuilderTableHeader, {content: "E V B", colSpan: "9"})));
         };
@@ -698,7 +701,7 @@ var DAQView;
         FEDBuilderTableHeaderRow.prototype.render = function () {
             var tableObject = this.props.tableObject;
             var children = [];
-            this.props.headers.forEach(function (header) { return children.push(React.createElement(FEDBuilderTableHeader, {content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sortFunctions: header.sortFunctions})); });
+            this.props.headers.forEach(function (header) { return children.push(React.createElement(FEDBuilderTableHeader, {content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions})); });
             return (React.createElement("tr", {className: "fb-table-header-row"}, children));
         };
         return FEDBuilderTableHeaderRow;
@@ -708,18 +711,18 @@ var DAQView;
         function FEDBuilderTableHeader() {
             _super.apply(this, arguments);
         }
+        FEDBuilderTableHeader.prototype.shouldComponentUpdate = function (nextProps) {
+            return this.props.sorting !== nextProps.sorting;
+        };
         FEDBuilderTableHeader.prototype.render = function () {
             var content = this.props.content;
             var colSpan = this.props.colSpan;
             var additionalClasses = this.props.additionalClasses;
             var className = classNames("fb-table-header", additionalClasses);
             var tableObject = this.props.tableObject;
-            var currentSorting;
+            var currentSorting = this.props.sorting ? this.props.sorting : null;
             var sortFunctions = this.props.sortFunctions;
             var isSortable = (tableObject != null && sortFunctions != null);
-            if (isSortable) {
-                currentSorting = tableObject.getCurrentSorting(content);
-            }
             var clickFunction = null;
             if (isSortable) {
                 if (currentSorting === DAQView.Sorting.None || currentSorting === DAQView.Sorting.Descending) {
@@ -856,6 +859,19 @@ var DAQView;
         function FEDData() {
             _super.apply(this, arguments);
         }
+        FEDData.prototype.shouldComponentUpdate = function (nextProps) {
+            var shouldUpdate = false;
+            var currentFMMIsNull = this.props.fed.fmm == null;
+            var newFmmIsNull = nextProps.fed.fmm == null;
+            if (currentFMMIsNull !== newFmmIsNull) {
+                shouldUpdate = true;
+            }
+            else if (!currentFMMIsNull && !newFmmIsNull) {
+                shouldUpdate = shouldUpdate || (this.props.fed.fmm.url !== nextProps.fed.fmm.url);
+            }
+            shouldUpdate = shouldUpdate || !DAQViewUtility.areEqualShallow(this.props.fed, nextProps.fed);
+            return shouldUpdate;
+        };
         FEDData.prototype.render = function () {
             var fed = this.props.fed;
             var percentWarning = fed.percentWarning;

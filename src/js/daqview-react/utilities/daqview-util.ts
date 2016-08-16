@@ -13,6 +13,11 @@ namespace DAQViewUtility {
     }
 
     export function areEqualShallow(a: DAQAggregator.Snapshot.SnapshotElement, b: DAQAggregator.Snapshot.SnapshotElement) {
+        if (a == null) {
+            return b == null;
+        } else if (b == null) {
+            return false;
+        }
         if (a['@id'] !== b['@id']) return false;
 
         for (let key in a) {
