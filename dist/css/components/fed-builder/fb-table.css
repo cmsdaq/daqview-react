@@ -56,15 +56,25 @@
 }
 
 .fb-table-ru-rate {
+    font-weight: bold;
+}
 
+.fb-table-ru-rate-zero {
+    color: #880000;
+}
+
+.fb-table-ru-rate-nonzero {
+    color: #666600;
 }
 
 .fb-table-ru-throughput {
-
+    font-weight: bold;
+    color: #008800;
 }
 
 .fb-table-ru-size {
-
+    font-weight: bold;
+    color: #0000FF;
 }
 
 .fb-table-ru-messages {

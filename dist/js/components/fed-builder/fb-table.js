@@ -63,12 +63,10 @@ var DAQView;
             formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
         };
         FBTableNumberFormats.THROUGHPUT = {
-            baseStyle: 'fb-table-ru-throughput',
-            formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
+            baseStyle: 'fb-table-ru-throughput'
         };
         FBTableNumberFormats.SIZE = {
-            baseStyle: 'fb-table-ru-size',
-            formats: [{ min: 0, max: 0, styleSuffix: '-zero' }, { styleSuffix: '-nonzero' }]
+            baseStyle: 'fb-table-ru-size'
         };
         FBTableNumberFormats.EVENTS = {
             baseStyle: 'fb-table-ru-events',
@@ -654,9 +652,9 @@ var DAQView;
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
             fedBuilderData.push(React.createElement(RUMessages, {rowSpan: numSubFedBuilders, infoMessage: ru.infoMsg, warnMessage: ru.warnMsg, errorMessage: ru.errorMsg}));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.rate / 1000).toFixed(3)));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.throughput / 1024 / 1024).toFixed(1)));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, (ru.superFragmentSizeMean / 1024).toFixed(1), "±", (ru.superFragmentSizeStddev / 1024).toFixed(1)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}, (ru.rate / 1000).toFixed(3)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}, (ru.throughput / 1024 / 1024).toFixed(1)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.superFragmentSizeMean, FBTableNumberFormats.SIZE)}, (ru.superFragmentSizeMean / 1024).toFixed(1), "±", (ru.superFragmentSizeStddev / 1024).toFixed(1)));
             var eventCountClass;
             var fragmentInRuClass;
             var eventsInRuClass;
@@ -778,7 +776,8 @@ var DAQView;
             var minTrigUnequalMaxTrig = minTrig != maxTrig;
             var ttcPartitionTTSStateLink = ttsState;
             if (ttcPartition.fmm != null && ttcPartition.fmm.url != null) {
-                ttcPartitionTTSStateLink = React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsState);
+                ttcPartitionTTSStateLink =
+                    React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsState);
             }
             var ttcPartitionTTSStateDisplay = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
             var evmMaxTrg = this.props.evmMaxTrg;
