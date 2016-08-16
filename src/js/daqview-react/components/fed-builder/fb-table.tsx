@@ -76,13 +76,11 @@ namespace DAQView {
         };
 
         export const THROUGHPUT: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-ru-throughput',
-            formats: [{min: 0, max: 0, styleSuffix: '-zero'}, {styleSuffix: '-nonzero'}]
+            baseStyle: 'fb-table-ru-throughput'
         };
 
         export const SIZE: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-ru-size',
-            formats: [{min: 0, max: 0, styleSuffix: '-zero'}, {styleSuffix: '-nonzero'}]
+            baseStyle: 'fb-table-ru-size'
         };
 
         export const EVENTS: FormatUtility.NumberFormat = {
@@ -748,10 +746,13 @@ namespace DAQView {
             fedBuilderData.push(<RUMessages rowSpan={numSubFedBuilders} infoMessage={ru.infoMsg}
                                             warnMessage={ru.warnMsg}
                                             errorMessage={ru.errorMsg}/>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{(ru.rate / 1000).toFixed(3)}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{(ru.throughput / 1024 / 1024).toFixed(1)}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}
+                                    className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}
+                                    className={FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}>{(ru.throughput / 1024 / 1024).toFixed(1)}</td>);
             fedBuilderData.push(<td
-                rowSpan={numSubFedBuilders}>{(ru.superFragmentSizeMean / 1024).toFixed(1)}±{(ru.superFragmentSizeStddev / 1024).toFixed(1)}</td>);
+                rowSpan={numSubFedBuilders}
+                className={FormatUtility.getClassNameForNumber(ru.superFragmentSizeMean, FBTableNumberFormats.SIZE)}>{(ru.superFragmentSizeMean / 1024).toFixed(1)}±{(ru.superFragmentSizeStddev / 1024).toFixed(1)}</td>);
 
             let eventCountClass: string;
             let fragmentInRuClass: string;
@@ -933,8 +934,9 @@ namespace DAQView {
 
             let ttcPartitionTTSStateLink: any = ttsState;
             if (ttcPartition.fmm != null && ttcPartition.fmm.url != null) {
-                ttcPartitionTTSStateLink = <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
-                                             target="_blank">{ttsState}</a>;
+                ttcPartitionTTSStateLink =
+                    <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
+                       target="_blank">{ttsState}</a>;
             }
             let ttcPartitionTTSStateDisplay: any = <span className={ttsStateClasses}>{ttcPartitionTTSStateLink}</span>;
 
@@ -1070,7 +1072,7 @@ namespace DAQView {
             let fedTTSStateLink: any = ttsState;
             if (fed.fmm != null && fed.fmm.url != null) {
                 fedTTSStateLink =<a href={fed.fmm.url+'/urn:xdaq-application:service=fmmcontroller'}
-                                             target="_blank">{ttsStateDisplay}</a>;
+                                    target="_blank">{ttsStateDisplay}</a>;
                 ttsStateDisplay = fedTTSStateLink;
             }
 
