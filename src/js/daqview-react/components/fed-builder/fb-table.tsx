@@ -968,8 +968,8 @@ namespace DAQView {
                 <tr className={className}>
                     <td>{ttcPartition.name}:{ttcPartition.ttcpNr}</td>
                     <td>{ttcPartitionTTSStateDisplay}</td>
-                    <td>{ttcPartition.percentWarning}</td>
-                    <td>{ttcPartition.percentBusy}</td>
+                    <td>{ttcPartition.percentWarning.toFixed(1)}</td>
+                    <td>{ttcPartition.percentBusy.toFixed(1)}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
                     <FRLs frls={frls}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
