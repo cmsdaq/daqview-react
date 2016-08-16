@@ -535,8 +535,8 @@ var DAQView;
             var fedBuilders = this.props.fedBuilders;
             var evmMaxTrg = null;
             fedBuilders.forEach(function (fedBuilder) {
-                if (fedBuilder.ru && fedBuilder.ru.isEVM) {
-                    if (fedBuilder.subFedbuilders && fedBuilder.subFedbuilders.length > 0) {
+                if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
+                    if (fedBuilder.subFedbuilders != null && fedBuilder.subFedbuilders.length > 0) {
                         evmMaxTrg = fedBuilder.subFedbuilders[0].maxTrig;
                     }
                 }
@@ -718,11 +718,12 @@ var DAQView;
             var tableObject = this.props.tableObject;
             var currentSorting;
             var sortFunctions = this.props.sortFunctions;
-            if (tableObject && sortFunctions) {
+            var isSortable = (tableObject != null && sortFunctions != null);
+            if (isSortable) {
                 currentSorting = tableObject.getCurrentSorting(content);
             }
             var clickFunction = null;
-            if (tableObject && sortFunctions) {
+            if (isSortable) {
                 if (currentSorting === DAQView.Sorting.None || currentSorting === DAQView.Sorting.Descending) {
                     clickFunction = function () {
                         tableObject.setSortFunction.bind(tableObject)(sortFunctions[DAQView.Sorting.Ascending.toString()]);
@@ -737,7 +738,7 @@ var DAQView;
                 }
             }
             var sortingImage = null;
-            if (currentSorting) {
+            if (currentSorting != null) {
                 sortingImage = React.createElement("input", {type: "image", className: "fb-table-sort-image", src: 'dist/img/' + currentSorting.getImagePath(), alt: currentSorting.toString(), title: "Sort", onClick: clickFunction});
             }
             return (React.createElement("th", {className: className, colSpan: colSpan ? colSpan : "1"}, content, sortingImage));
@@ -788,7 +789,7 @@ var DAQView;
             }
             var minTrigClassNames = 'fb-table-subfb-min-trig';
             var maxTrigClassNames = 'fb-table-subfb-max-trig';
-            if (evmMaxTrg) {
+            if (evmMaxTrg != null) {
                 if (minTrig != evmMaxTrg && minTrigUnequalMaxTrig) {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
                 }
@@ -821,7 +822,7 @@ var DAQView;
                 firstFrl = false;
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot) {
                     var fed = frl.feds[slot];
-                    if (fed) {
+                    if (fed != null) {
                         pseudoFEDs = pseudoFEDs.concat(fed.mainFeds);
                     }
                 });

@@ -600,8 +600,8 @@ namespace DAQView {
 
             let evmMaxTrg: number = null;
             fedBuilders.forEach(function (fedBuilder) {
-                if (fedBuilder.ru && fedBuilder.ru.isEVM) {
-                    if (fedBuilder.subFedbuilders && fedBuilder.subFedbuilders.length > 0) {
+                if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
+                    if (fedBuilder.subFedbuilders != null && fedBuilder.subFedbuilders.length > 0) {
                         evmMaxTrg = fedBuilder.subFedbuilders[0].maxTrig;
                     }
                 }
@@ -759,7 +759,6 @@ namespace DAQView {
             let requestsClass: string;
 
             if (ruMasked && ru.eventCount == 0) {
-
                 eventCountClass = fragmentInRuClass = eventsInRuClass = requestsClass = 'fb-table-ru-masked';
             } else {
                 eventCountClass = FormatUtility.getClassNameForNumber(ru.eventCount, FBTableNumberFormats.EVENTS);
@@ -846,12 +845,15 @@ namespace DAQView {
             let tableObject: FEDBuilderTable = this.props.tableObject;
             let currentSorting: Sorting;
             let sortFunctions: { [key: string]: ((snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot) } = this.props.sortFunctions;
-            if (tableObject && sortFunctions) {
+
+            let isSortable: boolean = (tableObject != null && sortFunctions != null);
+
+            if (isSortable) {
                 currentSorting = tableObject.getCurrentSorting(content);
             }
 
             let clickFunction: () => void = null;
-            if (tableObject && sortFunctions) {
+            if (isSortable) {
                 if (currentSorting === Sorting.None || currentSorting === Sorting.Descending) {
                     clickFunction = function () {
                         tableObject.setSortFunction.bind(tableObject)(sortFunctions[Sorting.Ascending.toString()]);
@@ -866,7 +868,7 @@ namespace DAQView {
             }
 
             let sortingImage: any = null;
-            if (currentSorting) {
+            if (currentSorting != null) {
                 sortingImage = <input type="image" className="fb-table-sort-image"
                                       src={'dist/img/' + currentSorting.getImagePath()}
                                       alt={currentSorting.toString()}
@@ -948,7 +950,7 @@ namespace DAQView {
             let minTrigClassNames: string = 'fb-table-subfb-min-trig';
             let maxTrigClassNames: string = 'fb-table-subfb-max-trig';
 
-            if (evmMaxTrg) {
+            if (evmMaxTrg != null) {
                 if (minTrig != evmMaxTrg && minTrigUnequalMaxTrig) {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-unequal');
                 } else {
@@ -995,7 +997,7 @@ namespace DAQView {
                 firstFrl = false;
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot: number) {
                     let fed: DAQAggregatorSnapshot.FED = frl.feds[slot];
-                    if (fed) {
+                    if (fed != null) {
                         pseudoFEDs = pseudoFEDs.concat(fed.mainFeds)
                     }
                 });
