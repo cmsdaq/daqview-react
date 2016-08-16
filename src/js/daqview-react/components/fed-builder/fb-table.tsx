@@ -930,8 +930,8 @@ namespace DAQView {
             let minTrigUnequalMaxTrig: boolean = minTrig != maxTrig;
 
             let ttcPartitionTTSStateLink: any = ttsState;
-            if (ttcPartition.fmm) {
-                ttcPartitionTTSStateLink =<a href={ttcPartition.fmm.url+'/urn:xdaq-application:service=fmmcontroller'}
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null) {
+                ttcPartitionTTSStateLink = <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
                                              target="_blank">{ttsState}</a>;
             }
             let ttcPartitionTTSStateDisplay: any = <span className={ttsStateClasses}>{ttcPartitionTTSStateLink}</span>;
@@ -1063,15 +1063,13 @@ namespace DAQView {
             let percentBusyDisplay: any = percentBusy > 0 ?
                 <span className="fb-table-fed-percent-busy">B:{percentBusy.toFixed(1)}%</span> : '';
 
-            let ttcPartition = fed.ttcp;
-
             let ttsStateDisplay: string = (ttsState !== 'R' && ttsState.length !== 0) ? ttsState : '';
 
-            let ttcPartitionTTSStateLink: any = ttsState;
-            if (ttcPartition.fmm != null) {
-                ttcPartitionTTSStateLink =<a href={ttcPartition.fmm.url+'/urn:xdaq-application:service=fmmcontroller'}
+            let fedTTSStateLink: any = ttsState;
+            if (fed.fmm != null && fed.fmm.url != null) {
+                fedTTSStateLink =<a href={fed.fmm.url+'/urn:xdaq-application:service=fmmcontroller'}
                                              target="_blank">{ttsStateDisplay}</a>;
-                ttsStateDisplay = ttcPartitionTTSStateLink;
+                ttsStateDisplay = fedTTSStateLink;
             }
 
             let ttsStateClass: string;

@@ -776,7 +776,7 @@ var DAQView;
             var maxTrig = subFedBuilder.maxTrig;
             var minTrigUnequalMaxTrig = minTrig != maxTrig;
             var ttcPartitionTTSStateLink = ttsState;
-            if (ttcPartition.fmm) {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null) {
                 ttcPartitionTTSStateLink = React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsState);
             }
             var ttcPartitionTTSStateDisplay = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
@@ -870,12 +870,11 @@ var DAQView;
                 React.createElement("span", {className: "fb-table-fed-percent-warning"}, "W:", percentWarning.toFixed(1), "%") : '';
             var percentBusyDisplay = percentBusy > 0 ?
                 React.createElement("span", {className: "fb-table-fed-percent-busy"}, "B:", percentBusy.toFixed(1), "%") : '';
-            var ttcPartition = fed.ttcp;
             var ttsStateDisplay = (ttsState !== 'R' && ttsState.length !== 0) ? ttsState : '';
-            var ttcPartitionTTSStateLink = ttsState;
-            if (ttcPartition.fmm != null) {
-                ttcPartitionTTSStateLink = React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsStateDisplay);
-                ttsStateDisplay = ttcPartitionTTSStateLink;
+            var fedTTSStateLink = ttsState;
+            if (fed.fmm != null && fed.fmm.url != null) {
+                fedTTSStateLink = React.createElement("a", {href: fed.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsStateDisplay);
+                ttsStateDisplay = fedTTSStateLink;
             }
             var ttsStateClass;
             if (fed.fmmMasked === true) {
