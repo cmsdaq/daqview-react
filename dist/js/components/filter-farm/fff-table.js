@@ -552,7 +552,7 @@ var DAQView;
             _super.apply(this, arguments);
         }
         FileBasedFilterFarmTableBURow.prototype.shouldComponentUpdate = function (nextProps) {
-            return !DAQViewUtility.areEqualShallow(this.props.bu, nextProps.bu);
+            return !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
         };
         FileBasedFilterFarmTableBURow.prototype.render = function () {
             var bu = this.props.bu;
@@ -578,7 +578,7 @@ var DAQView;
             _super.apply(this, arguments);
         }
         FileBasedFilterFarmTableBUSummaryRow.prototype.shouldComponentUpdate = function (nextProps) {
-            return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.areEqualShallow(this.props.buSummary, nextProps.buSummary));
+            return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary));
         };
         FileBasedFilterFarmTableBUSummaryRow.prototype.render = function () {
             var buSummary = this.props.buSummary;

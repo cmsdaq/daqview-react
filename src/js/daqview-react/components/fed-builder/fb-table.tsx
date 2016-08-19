@@ -7,11 +7,12 @@ namespace DAQView {
 
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
     import DAQ = DAQAggregator.Snapshot.DAQ;
+    import snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
 
     export class FEDBuilderTable implements DAQSnapshotView {
         public htmlRootElement: Element;
 
-        private snapshot: DAQAggregatorSnapshot;
+        private snapshot: DAQAggregatorSnapshot = null;
         private sortFunction: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot = FBTableSortFunctions.TTCP_ASC;
 
         private currentSorting: {[key: string]: Sorting} = {
@@ -36,6 +37,10 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot) {
+            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                return;
+            }
+
             this.snapshot = FBTableSortFunctions.STATIC(snapshot);
             this.updateSnapshot();
         }
@@ -748,7 +753,8 @@ namespace DAQView {
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
             </td>);
-            fedBuilderData.push(<RUMessages rowSpan={numSubFedBuilders} infoMessage={ru.infoMsg}
+            fedBuilderData.push(<RUMessages key={ru['@id'] + '_messages'} rowSpan={numSubFedBuilders}
+                                            infoMessage={ru.infoMsg}
                                             warnMessage={ru.warnMsg}
                                             errorMessage={ru.errorMsg}/>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
@@ -826,12 +832,14 @@ namespace DAQView {
             let tableObject: FEDBuilderTable = this.props.tableObject;
 
             let children: any[] = [];
-            this.props.headers.forEach(header => children.push(<FEDBuilderTableHeader content={header.content}
-                                                                                      colSpan={header.colSpan}
-                                                                                      additionalClasses={header.additionalClasses}
-                                                                                      tableObject={tableObject}
-                                                                                      sorting={tableObject.getCurrentSorting(header.content)}
-                                                                                      sortFunctions={header.sortFunctions}/>));
+            this.props.headers.forEach(header => children.push(<FEDBuilderTableHeader
+                key={header.content}
+                content={header.content}
+                colSpan={header.colSpan}
+                additionalClasses={header.additionalClasses}
+                tableObject={tableObject}
+                sorting={tableObject.getCurrentSorting(header.content)}
+                sortFunctions={header.sortFunctions}/>));
             return (
                 <tr className="fb-table-header-row">
                     {children}
@@ -905,6 +913,16 @@ namespace DAQView {
     }
 
     class RUMessages extends React.Component<RUMessagesProperties,{}> {
+        shouldComponentUpdate(nextProps: RUMessagesProperties) {
+            let shouldUpdate: boolean = false;
+            shouldUpdate = shouldUpdate || this.props.rowSpan === nextProps.rowSpan;
+            shouldUpdate = shouldUpdate || this.props.infoMessage === nextProps.infoMessage;
+            shouldUpdate = shouldUpdate || this.props.warnMessage === nextProps.warnMessage;
+            shouldUpdate = shouldUpdate || this.props.errorMessage === nextProps.errorMessage;
+
+            return shouldUpdate;
+        }
+
         render() {
             return (
                 <td className="fb-table-ru-messages" rowSpan={this.props.rowSpan ? this.props.rowSpan : 1}>
@@ -931,6 +949,7 @@ namespace DAQView {
             let frlPcName: string = frlPcHostname.substring(6, frlPcHostname.length - 4);
             let frlPcUrl: string = 'http://' + frlPcHostname + ':11100';
             let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
+            let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
 
             let additionalClasses: string | string[] = this.props.additionalClasses;
             let className: string = classNames("fb-table-subfb-row", additionalClasses);
@@ -986,7 +1005,7 @@ namespace DAQView {
                     <td>{ttcPartition.percentWarning.toFixed(1)}</td>
                     <td>{ttcPartition.percentBusy.toFixed(1)}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
-                    <FRLs frls={frls}/>
+                    <FRLs frls={frls} pseudoFeds={pseudoFeds} />
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
                     <td className={maxTrigClassNames}>{maxTrigDisplayContent}</td>
                     {this.props.additionalContent ? this.props.additionalContent : null}
@@ -997,30 +1016,28 @@ namespace DAQView {
 
     interface FRLsProperties {
         frls: DAQAggregatorSnapshot.FRL[];
+        pseudoFeds: DAQAggregatorSnapshot.FED[];
     }
 
     class FRLs extends React.Component<FRLsProperties,{}> {
         render() {
             let frls: DAQAggregatorSnapshot.FRL[] = this.props.frls;
 
-            let pseudoFEDs: DAQAggregatorSnapshot.FED[] = [];
+            let pseudoFEDs: DAQAggregatorSnapshot.FED[] = this.props.pseudoFeds;
 
             let fedData: any[] = [];
             let firstFrl: boolean = true;
             frls.forEach(function (frl: DAQAggregatorSnapshot.FRL) {
-                fedData.push(<FRL frl={frl} firstFrl={firstFrl}/>);
+                fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl}/>);
                 firstFrl = false;
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot: number) {
                     let fed: DAQAggregatorSnapshot.FED = frl.feds[slot];
-                    if (fed != null) {
-                        pseudoFEDs = pseudoFEDs.concat(fed.dependentFeds);
-                    }
                 });
             });
 
             pseudoFEDs.forEach(function (fed: DAQAggregatorSnapshot.FED) {
                 fedData.push(' ');
-                fedData.push(<FEDData fed={fed}/>);
+                fedData.push(<FEDData key={fed['@id']} fed={fed}/>);
             });
 
             return (
@@ -1040,9 +1057,9 @@ namespace DAQView {
 
             let feds: {[key: number]: DAQAggregatorSnapshot.FED} = frl.feds;
             let firstFed: DAQAggregatorSnapshot.FED = feds[0];
-            let firstFedDisplay: any = firstFed ? <FEDData fed={firstFed}/> : '-';
+            let firstFedDisplay: any = firstFed ? <FEDData key={firstFed['@id']} fed={firstFed}/> : '-';
             let secondFed: DAQAggregatorSnapshot.FED = feds[1];
-            let secondFedDisplay: any = secondFed ? <FEDData fed={secondFed}/> : '';
+            let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed}/> : '';
 
             let firstFrl: boolean = this.props.firstFrl;
 
@@ -1069,7 +1086,7 @@ namespace DAQView {
             } else if (!currentFMMIsNull && !newFmmIsNull) {
                 shouldUpdate = shouldUpdate || (this.props.fed.fmm.url !== nextProps.fed.fmm.url);
             }
-            shouldUpdate = shouldUpdate || !DAQViewUtility.areEqualShallow(this.props.fed, nextProps.fed);
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.fed, nextProps.fed);
 
             return shouldUpdate;
         }
@@ -1151,6 +1168,10 @@ namespace DAQView {
     }
 
     class FEDBuilderTableSummaryRow extends React.Component<FEDBuilderTableSummaryRowProperties,{}> {
+        shouldComponentUpdate(nextProps: FEDBuilderTableSummaryRowProperties) {
+            return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
+        }
+
         render() {
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
             return (

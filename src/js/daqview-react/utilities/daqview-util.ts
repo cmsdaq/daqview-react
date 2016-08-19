@@ -12,7 +12,7 @@ namespace DAQViewUtility {
         return (type === 'string' || type === 'number' || type === 'boolean');
     }
 
-    export function areEqualShallow(a: DAQAggregator.Snapshot.SnapshotElement, b: DAQAggregator.Snapshot.SnapshotElement) {
+    export function snapshotElementsEqualShallow(a: DAQAggregator.Snapshot.SnapshotElement, b: DAQAggregator.Snapshot.SnapshotElement) {
         if (a == null) {
             return b == null;
         } else if (b == null) {
@@ -32,5 +32,7 @@ namespace DAQViewUtility {
 
         return true;
     }
+
+
 
 }

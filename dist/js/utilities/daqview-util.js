@@ -11,7 +11,7 @@ var DAQViewUtility;
     function isPrimitiveType(type) {
         return (type === 'string' || type === 'number' || type === 'boolean');
     }
-    function areEqualShallow(a, b) {
+    function snapshotElementsEqualShallow(a, b) {
         if (a == null) {
             return b == null;
         }
@@ -32,5 +32,5 @@ var DAQViewUtility;
         }
         return true;
     }
-    DAQViewUtility.areEqualShallow = areEqualShallow;
+    DAQViewUtility.snapshotElementsEqualShallow = snapshotElementsEqualShallow;
 })(DAQViewUtility || (DAQViewUtility = {}));

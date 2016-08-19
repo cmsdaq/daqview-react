@@ -559,13 +559,14 @@ namespace DAQView {
             let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
 
             let children: any[] = [];
-            this.props.headers.forEach(header => children.push(<FileBasedFilterFarmTableHeader key={header.content}
-                                                                                               content={header.content}
-                                                                                               colSpan={header.colSpan}
-                                                                                               additionalClasses={header.additionalClasses}
-                                                                                               tableObject={tableObject}
-                                                                                               sorting={tableObject.getCurrentSorting(header.content)}
-                                                                                               sortFunctions={header.sortFunctions}/>));
+            this.props.headers.forEach(header => children.push(<FileBasedFilterFarmTableHeader
+                key={header.content}
+                content={header.content}
+                colSpan={header.colSpan}
+                additionalClasses={header.additionalClasses}
+                tableObject={tableObject}
+                sorting={tableObject.getCurrentSorting(header.content)}
+                sortFunctions={header.sortFunctions}/>));
             return (
                 <tr className="fff-table-header-row">
                     {children}
@@ -635,7 +636,7 @@ namespace DAQView {
 
     class FileBasedFilterFarmTableBURow extends React.Component<FileBasedFilterFarmTableBURowProperties,{}> {
         shouldComponentUpdate(nextProps: FileBasedFilterFarmTableBURowProperties) {
-            return !DAQViewUtility.areEqualShallow(this.props.bu, nextProps.bu);
+            return !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
         }
 
         render() {
@@ -691,7 +692,7 @@ namespace DAQView {
 
     class FileBasedFilterFarmTableBUSummaryRow extends React.Component<FileBasedFilterFarmTableBUSummaryRowProperties,{}> {
         shouldComponentUpdate(nextProps: FileBasedFilterFarmTableBUSummaryRowProperties) {
-            return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.areEqualShallow(this.props.buSummary, nextProps.buSummary));
+            return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary));
         }
 
         render() {

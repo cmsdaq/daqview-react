@@ -8,8 +8,10 @@ var __extends = (this && this.__extends) || function (d, b) {
 ///<reference path="../../utilities/format-util.ts"/>
 var DAQView;
 (function (DAQView) {
+    var snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
     var FEDBuilderTable = (function () {
         function FEDBuilderTable(htmlRootElementName) {
+            this.snapshot = null;
             this.sortFunction = FBTableSortFunctions.TTCP_ASC;
             this.currentSorting = {
                 'TTCP': DAQView.Sorting.Ascending,
@@ -29,6 +31,9 @@ var DAQView;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
         FEDBuilderTable.prototype.setSnapshot = function (snapshot) {
+            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                return;
+            }
             this.snapshot = FBTableSortFunctions.STATIC(snapshot);
             this.updateSnapshot();
         };
@@ -652,7 +657,7 @@ var DAQView;
             var fedBuilderData = [];
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
-            fedBuilderData.push(React.createElement(RUMessages, {rowSpan: numSubFedBuilders, infoMessage: ru.infoMsg, warnMessage: ru.warnMsg, errorMessage: ru.errorMsg}));
+            fedBuilderData.push(React.createElement(RUMessages, {key: ru['@id'] + '_messages', rowSpan: numSubFedBuilders, infoMessage: ru.infoMsg, warnMessage: ru.warnMsg, errorMessage: ru.errorMsg}));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}, (ru.rate / 1000).toFixed(3)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}, (ru.throughput / 1024 / 1024).toFixed(1)));
             var sizeClass;
@@ -704,7 +709,7 @@ var DAQView;
         FEDBuilderTableHeaderRow.prototype.render = function () {
             var tableObject = this.props.tableObject;
             var children = [];
-            this.props.headers.forEach(function (header) { return children.push(React.createElement(FEDBuilderTableHeader, {content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions})); });
+            this.props.headers.forEach(function (header) { return children.push(React.createElement(FEDBuilderTableHeader, {key: header.content, content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions})); });
             return (React.createElement("tr", {className: "fb-table-header-row"}, children));
         };
         return FEDBuilderTableHeaderRow;
@@ -754,6 +759,14 @@ var DAQView;
         function RUMessages() {
             _super.apply(this, arguments);
         }
+        RUMessages.prototype.shouldComponentUpdate = function (nextProps) {
+            var shouldUpdate = false;
+            shouldUpdate = shouldUpdate || this.props.rowSpan === nextProps.rowSpan;
+            shouldUpdate = shouldUpdate || this.props.infoMessage === nextProps.infoMessage;
+            shouldUpdate = shouldUpdate || this.props.warnMessage === nextProps.warnMessage;
+            shouldUpdate = shouldUpdate || this.props.errorMessage === nextProps.errorMessage;
+            return shouldUpdate;
+        };
         RUMessages.prototype.render = function () {
             return (React.createElement("td", {className: "fb-table-ru-messages", rowSpan: this.props.rowSpan ? this.props.rowSpan : 1}, React.createElement("span", {className: "fb-table-ru-error-message"}, this.props.errorMessage), React.createElement("span", {className: "fb-table-ru-warn-message"}, this.props.warnMessage), React.createElement("span", {className: "fb-table-ru-info-message"}, this.props.infoMessage)));
         };
@@ -771,6 +784,7 @@ var DAQView;
             var frlPcName = frlPcHostname.substring(6, frlPcHostname.length - 4);
             var frlPcUrl = 'http://' + frlPcHostname + ':11100';
             var frls = subFedBuilder.frls;
+            var pseudoFeds = subFedBuilder.feds;
             var additionalClasses = this.props.additionalClasses;
             var className = classNames("fb-table-subfb-row", additionalClasses);
             var ttcPartition = subFedBuilder.ttcPartition;
@@ -808,7 +822,7 @@ var DAQView;
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", null, ttcPartitionTTSStateDisplay), React.createElement("td", null, ttcPartition.percentWarning.toFixed(1)), React.createElement("td", null, ttcPartition.percentBusy.toFixed(1)), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", null, ttcPartitionTTSStateDisplay), React.createElement("td", null, ttcPartition.percentWarning.toFixed(1)), React.createElement("td", null, ttcPartition.percentBusy.toFixed(1)), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls, pseudoFeds: pseudoFeds}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));
@@ -819,22 +833,19 @@ var DAQView;
         }
         FRLs.prototype.render = function () {
             var frls = this.props.frls;
-            var pseudoFEDs = [];
+            var pseudoFEDs = this.props.pseudoFeds;
             var fedData = [];
             var firstFrl = true;
             frls.forEach(function (frl) {
-                fedData.push(React.createElement(FRL, {frl: frl, firstFrl: firstFrl}));
+                fedData.push(React.createElement(FRL, {key: frl['@id'], frl: frl, firstFrl: firstFrl}));
                 firstFrl = false;
                 DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot) {
                     var fed = frl.feds[slot];
-                    if (fed != null) {
-                        pseudoFEDs = pseudoFEDs.concat(fed.dependentFeds);
-                    }
                 });
             });
             pseudoFEDs.forEach(function (fed) {
                 fedData.push(' ');
-                fedData.push(React.createElement(FEDData, {fed: fed}));
+                fedData.push(React.createElement(FEDData, {key: fed['@id'], fed: fed}));
             });
             return (React.createElement("td", null, fedData));
         };
@@ -849,9 +860,9 @@ var DAQView;
             var frl = this.props.frl;
             var feds = frl.feds;
             var firstFed = feds[0];
-            var firstFedDisplay = firstFed ? React.createElement(FEDData, {fed: firstFed}) : '-';
+            var firstFedDisplay = firstFed ? React.createElement(FEDData, {key: firstFed['@id'], fed: firstFed}) : '-';
             var secondFed = feds[1];
-            var secondFedDisplay = secondFed ? React.createElement(FEDData, {fed: secondFed}) : '';
+            var secondFedDisplay = secondFed ? React.createElement(FEDData, {key: secondFed['@id'], fed: secondFed}) : '';
             var firstFrl = this.props.firstFrl;
             return (React.createElement("span", null, firstFrl ? '' : ', ', frl.geoSlot, ":", firstFedDisplay, secondFed ? ',' : '', secondFedDisplay));
         };
@@ -872,7 +883,7 @@ var DAQView;
             else if (!currentFMMIsNull && !newFmmIsNull) {
                 shouldUpdate = shouldUpdate || (this.props.fed.fmm.url !== nextProps.fed.fmm.url);
             }
-            shouldUpdate = shouldUpdate || !DAQViewUtility.areEqualShallow(this.props.fed, nextProps.fed);
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.fed, nextProps.fed);
             return shouldUpdate;
         };
         FEDData.prototype.render = function () {
@@ -923,6 +934,9 @@ var DAQView;
         function FEDBuilderTableSummaryRow() {
             _super.apply(this, arguments);
         }
+        FEDBuilderTableSummaryRow.prototype.shouldComponentUpdate = function (nextProps) {
+            return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
+        };
         FEDBuilderTableSummaryRow.prototype.render = function () {
             var fedBuilderSummary = this.props.fedBuilderSummary;
             return (React.createElement("tr", {className: "fb-table-fb-summary-row"}, React.createElement("td", {colSpan: "9"}), React.createElement("td", null, "Σ x / ", this.props.numRus), React.createElement("td", null), React.createElement("td", null, (fedBuilderSummary.rate / 1000).toFixed(3)), React.createElement("td", null, "Σ ", (fedBuilderSummary.throughput / 1024 / 1024).toFixed(1)), React.createElement("td", null, "Σ ", (fedBuilderSummary.superFragmentSizeMean / 1024).toFixed(1), "±", (fedBuilderSummary.superFragmentSizeStddev / 1024).toFixed(1)), React.createElement("td", null, "Δ ", fedBuilderSummary.deltaEvents), React.createElement("td", null, "Σ ", FormatUtility.formatSINumber(fedBuilderSummary.sumFragmentsInRU, 1)), React.createElement("td", null, "Σ ", fedBuilderSummary.sumEventsInRU), React.createElement("td", null, "Σ ", fedBuilderSummary.sumRequests)));
