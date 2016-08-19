@@ -76,7 +76,8 @@ namespace DAQView {
         };
 
         export const THROUGHPUT: FormatUtility.NumberFormat = {
-            baseStyle: 'fb-table-ru-throughput'
+            baseStyle: 'fb-table-ru-throughput',
+            formats: [{min: 0, max: 0, styleSuffix: '-zero'}, {styleSuffix: '-nonzero'}]
         };
 
         export const SIZE: FormatUtility.NumberFormat = {
@@ -754,23 +755,25 @@ namespace DAQView {
                                     className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}>{(ru.throughput / 1024 / 1024).toFixed(1)}</td>);
-            fedBuilderData.push(<td
-                rowSpan={numSubFedBuilders}
-                className={FormatUtility.getClassNameForNumber(ru.superFragmentSizeMean, FBTableNumberFormats.SIZE)}>{(ru.superFragmentSizeMean / 1024).toFixed(1)}±{(ru.superFragmentSizeStddev / 1024).toFixed(1)}</td>);
 
+            let sizeClass: string;
             let eventCountClass: string;
             let fragmentInRuClass: string;
             let eventsInRuClass: string;
             let requestsClass: string;
 
             if (ruMasked && ru.eventCount == 0) {
-                eventCountClass = fragmentInRuClass = eventsInRuClass = requestsClass = 'fb-table-ru-masked';
+                sizeClass = eventCountClass = fragmentInRuClass = eventsInRuClass = requestsClass = 'fb-table-ru-masked';
             } else {
+                sizeClass = FormatUtility.getClassNameForNumber(ru.superFragmentSizeMean, FBTableNumberFormats.SIZE);
                 eventCountClass = FormatUtility.getClassNameForNumber(ru.eventCount, FBTableNumberFormats.EVENTS);
                 fragmentInRuClass = FormatUtility.getClassNameForNumber(ru.fragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU);
                 eventsInRuClass = FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
                 requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
             }
+
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}
+                                    className={sizeClass}>{(ru.superFragmentSizeMean / 1024).toFixed(1)}±{(ru.superFragmentSizeStddev / 1024).toFixed(1)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={eventCountClass}>{ru.eventCount}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}

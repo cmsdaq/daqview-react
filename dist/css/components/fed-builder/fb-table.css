@@ -69,6 +69,13 @@
 
 .fb-table-ru-throughput {
     font-weight: bold;
+}
+
+.fb-table-ru-throughput-zero {
+    color: #880000;
+}
+
+.fb-table-ru-throughput-nonzero {
     color: #008800;
 }
 
