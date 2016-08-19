@@ -170,6 +170,7 @@ namespace DAQAggregator {
             maxTrig: number;
             frlPc?: FRLPc;
             frls?: FRL[];
+            feds: FED[];
             ttcPartition?: TTCPartition;
         }
 
