@@ -208,6 +208,14 @@
     color: gray;
 }
 
+.fb-table-fed-id {
+    font-weight: bold;
+}
+
+.fb-table-fed-frl-masked {
+    color: gray;
+}
+
 .fb-table-fed-percent-warning {
     background-color: #FFCC88;
 }

@@ -1005,7 +1005,7 @@ namespace DAQView {
                     <td>{ttcPartition.percentWarning.toFixed(1)}</td>
                     <td>{ttcPartition.percentBusy.toFixed(1)}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
-                    <FRLs frls={frls} pseudoFeds={pseudoFeds} />
+                    <FRLs frls={frls} pseudoFeds={pseudoFeds}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
                     <td className={maxTrigClassNames}>{maxTrigDisplayContent}</td>
                     {this.props.additionalContent ? this.props.additionalContent : null}
@@ -1030,9 +1030,6 @@ namespace DAQView {
             frls.forEach(function (frl: DAQAggregatorSnapshot.FRL) {
                 fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl}/>);
                 firstFrl = false;
-                DAQViewUtility.forEachOwnObjectProperty(frl.feds, function (slot: number) {
-                    let fed: DAQAggregatorSnapshot.FED = frl.feds[slot];
-                });
             });
 
             pseudoFEDs.forEach(function (fed: DAQAggregatorSnapshot.FED) {
@@ -1122,10 +1119,18 @@ namespace DAQView {
             }
 
             let ttsStateClass: string;
+            let fedIdClasses: string = 'fb-table-fed-id';
+
+            ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
+
+            if (fed.frlMasked === true) {
+                fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
+            } else if (ttsStateClass != null) {
+                fedIdClasses = classNames(fedIdClasses, ttsStateClass);
+            }
+
             if (fed.fmmMasked === true) {
                 ttsStateClass = 'fb-table-fed-tts-state-ffm-masked';
-            } else {
-                ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
             }
 
             let ttsStateClasses: string = classNames('fb-table-fed-tts-state', ttsStateClass);
@@ -1134,7 +1139,7 @@ namespace DAQView {
                 <span className="fb-table-fed-percent-backpressure">{'<'}{percentWarning.toFixed(1)}%</span> : '';
 
             let unexpectedSourceIdDisplay: any = '';
-            if (receivedSourceId != expectedSourceId) {
+            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId) {
                 unexpectedSourceIdDisplay =
                     <span className="fb-table-fed-received-source-id">rcvSrcId:{receivedSourceId}</span>;
             }
@@ -1151,6 +1156,8 @@ namespace DAQView {
                     {percentBusyDisplay}
                     <span className={ttsStateClasses}>
                         {ttsStateDisplay}
+                    </span>
+                    <span className={fedIdClasses}>
                         {expectedSourceId}
                     </span>
                     {percentBackpressureDisplay}
