@@ -293,11 +293,6 @@ namespace DAQView {
 
     }
 
-    interface SortFunction {
-        presort?: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot;
-        sort: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot;
-    }
-
     export namespace FFFTableNumberFormats {
 
         export const RATE: FormatUtility.NumberFormat = {
