@@ -11,8 +11,14 @@ var DAQView;
     var snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
     var FEDBuilderTable = (function () {
         function FEDBuilderTable(htmlRootElementName) {
+            this.DEFAULT_PRESORT_FUNCTION = FBTableSortFunctions.TTCP_ASC;
+            this.INITIAL_SORT_FUNCTION = FBTableSortFunctions.TTCP_ASC;
+            this.INITIAL_PRESORT_FUNCTION = FBTableSortFunctions.NONE;
             this.snapshot = null;
-            this.sortFunction = FBTableSortFunctions.TTCP_ASC;
+            this.sortFunction = {
+                presort: this.INITIAL_PRESORT_FUNCTION,
+                sort: this.INITIAL_SORT_FUNCTION
+            };
             this.currentSorting = {
                 'TTCP': DAQView.Sorting.Ascending,
                 'FB Name': DAQView.Sorting.None,
@@ -43,12 +49,21 @@ var DAQView;
             var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {tableObject: this, fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary});
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         };
-        FEDBuilderTable.prototype.setSortFunction = function (sortFunction) {
-            this.sortFunction = sortFunction;
+        FEDBuilderTable.prototype.setSortFunction = function (sortFunctions) {
+            var presortFunction;
+            var sortFunction;
+            if (sortFunctions.hasOwnProperty('presort')) {
+                presortFunction = sortFunctions.presort;
+            }
+            else {
+                presortFunction = this.DEFAULT_PRESORT_FUNCTION;
+            }
+            sortFunction = sortFunctions.sort;
+            this.sortFunction = { presort: presortFunction, sort: sortFunction };
             this.updateSnapshot();
         };
         FEDBuilderTable.prototype.sort = function (snapshot) {
-            return this.sortFunction(snapshot);
+            return this.sortFunction.sort(this.sortFunction.presort(snapshot));
         };
         FEDBuilderTable.prototype.setCurrentSorting = function (headerName, sorting) {
             var _this = this;
@@ -95,9 +110,36 @@ var DAQView;
         }
         FBTableSortFunctions.NONE = NONE;
         function STATIC(snapshot) {
+            snapshot = SubFbPseudoFEDsById(snapshot, false);
             return FrlsByGeoslot(snapshot, false);
         }
         FBTableSortFunctions.STATIC = STATIC;
+        function FedsById(feds, descending) {
+            feds.sort(function (firstFed, secondFed) {
+                var firstFedId = firstFed.srcIdExpected;
+                var secondFedId = secondFed.srcIdExpected;
+                if (firstFedId > secondFedId) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedId < secondFedId) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+        }
+        FBTableSortFunctions.FedsById = FedsById;
+        function SubFbPseudoFEDsById(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            fedBuilders.forEach(function (fedBuilder) {
+                fedBuilder.subFedbuilders.forEach(function (subFedBuilder) {
+                    FedsById(subFedBuilder.feds, descending);
+                });
+            });
+            return snapshot;
+        }
         function FrlsByGeoslot(snapshot, descending) {
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
@@ -535,15 +577,15 @@ var DAQView;
         {
             content: '%W',
             sortFunctions: {
-                Ascending: FBTableSortFunctions.PERCWARNING_ASC,
-                Descending: FBTableSortFunctions.PERCWARNING_DESC
+                Ascending: { sort: FBTableSortFunctions.PERCWARNING_ASC },
+                Descending: { sort: FBTableSortFunctions.PERCWARNING_DESC }
             }
         },
         {
             content: '%B',
             sortFunctions: {
-                Ascending: FBTableSortFunctions.PERCBUSY_ASC,
-                Descending: FBTableSortFunctions.PERCBUSY_DESC
+                Ascending: { sort: FBTableSortFunctions.PERCBUSY_ASC },
+                Descending: { sort: FBTableSortFunctions.PERCBUSY_DESC }
             }
         },
         { content: 'frlpc' },
@@ -553,8 +595,8 @@ var DAQView;
         {
             content: 'FB Name',
             sortFunctions: {
-                Ascending: FBTableSortFunctions.FB_ASC,
-                Descending: FBTableSortFunctions.FB_DESC
+                Ascending: { sort: FBTableSortFunctions.FB_ASC },
+                Descending: { sort: FBTableSortFunctions.FB_DESC }
             }
         },
         { content: 'RU' },
@@ -562,44 +604,44 @@ var DAQView;
         {
             content: 'rate (kHz)',
             sortFunctions: {
-                Ascending: FBTableSortFunctions.RURATE_ASC,
-                Descending: FBTableSortFunctions.RURATE_DESC
+                Ascending: { sort: FBTableSortFunctions.RURATE_ASC },
+                Descending: { sort: FBTableSortFunctions.RURATE_DESC }
             }
         },
         {
             content: 'thru (MB/s)',
             sortFunctions: {
-                Ascending: FBTableSortFunctions.RUTHROUGHPUT_ASC,
-                Descending: FBTableSortFunctions.RUTHROUGHPUT_DESC
+                Ascending: { sort: FBTableSortFunctions.RUTHROUGHPUT_ASC },
+                Descending: { sort: FBTableSortFunctions.RUTHROUGHPUT_DESC }
             }
         },
         {
             content: 'size (kB)',
             sortFunctions: {
-                Ascending: FBTableSortFunctions.RUSIZE_ASC,
-                Descending: FBTableSortFunctions.RUSIZE_DESC
+                Ascending: { sort: FBTableSortFunctions.RUSIZE_ASC },
+                Descending: { sort: FBTableSortFunctions.RUSIZE_DESC }
             }
         },
         { content: '#events' },
         {
             content: '#frags in RU',
             sortFunctions: {
-                Ascending: FBTableSortFunctions.RUNUMFRAG_ASC,
-                Descending: FBTableSortFunctions.RUNUMFRAG_DESC
+                Ascending: { sort: FBTableSortFunctions.RUNUMFRAG_ASC },
+                Descending: { sort: FBTableSortFunctions.RUNUMFRAG_DESC }
             }
         },
         {
             content: '#evts in RU',
             sortFunctions: {
-                Ascending: FBTableSortFunctions.RUNUMEVTS_ASC,
-                Descending: FBTableSortFunctions.RUNUMEVTS_DESC
+                Ascending: { sort: FBTableSortFunctions.RUNUMEVTS_ASC },
+                Descending: { sort: FBTableSortFunctions.RUNUMEVTS_DESC }
             }
         },
         {
             content: '#requests',
             sortFunctions: {
-                Ascending: FBTableSortFunctions.RUREQUESTS_ASC,
-                Descending: FBTableSortFunctions.RUREQUESTS_DESC
+                Ascending: { sort: FBTableSortFunctions.RUREQUESTS_ASC },
+                Descending: { sort: FBTableSortFunctions.RUREQUESTS_DESC }
             }
         }
     ];
@@ -607,8 +649,8 @@ var DAQView;
     FB_TABLE_TOP_HEADERS.unshift({
         content: 'TTCP',
         sortFunctions: {
-            Ascending: FBTableSortFunctions.TTCP_ASC,
-            Descending: FBTableSortFunctions.TTCP_DESC
+            Ascending: { presort: FBTableSortFunctions.NONE, sort: FBTableSortFunctions.TTCP_ASC },
+            Descending: { presort: FBTableSortFunctions.NONE, sort: FBTableSortFunctions.TTCP_DESC }
         }
     });
     var FB_TABLE_SUMMARY_HEADERS = FB_TABLE_BASE_HEADERS.slice();
