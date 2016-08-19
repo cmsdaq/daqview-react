@@ -717,7 +717,7 @@ var DAQView;
                 eventsInRuClass = FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
                 requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
             }
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: sizeClass}, (ru.superFragmentSizeMean / 1024).toFixed(1), "±", (ru.superFragmentSizeStddev / 1024).toFixed(1)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: sizeClass}, (ru.superFragmentSizeMean / 1024).toFixed(3), "±", (ru.superFragmentSizeStddev / 1024).toFixed(3)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: eventCountClass}, ru.eventCount));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: fragmentInRuClass}, ru.fragmentsInRU));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: eventsInRuClass}, ru.eventsInRU));
