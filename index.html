@@ -46,6 +46,7 @@
                     }
                 });
 				var parser = new DAQAggregator.SnapshotParser();
+                var ruWarningsResolver = new DAQAggregator.RUWarnMessageAggregator();
                 var snapshotSource = {
                     updateInterval: 2000,
                     getSourceURL: function () {
@@ -60,6 +61,7 @@
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
                         snapshot = parser.parse.bind(parser)(snapshot);
+                        snapshot = ruWarningsResolver.resolveRUWarnings.bind(ruWarningsResolver)(snapshot);
                         //DAQAggregator.randomizeSnapshot(snapshot, 20);
                         console.log(snapshot);
                         return snapshot;

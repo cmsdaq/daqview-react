@@ -1,5 +1,10 @@
 namespace DAQAggregator {
 
+    import RU = DAQAggregator.Snapshot.RU;
+    import FEDBuilder = DAQAggregator.Snapshot.FEDBuilder;
+    import SubFEDBuilder = DAQAggregator.Snapshot.SubFEDBuilder;
+    import FED = DAQAggregator.Snapshot.FED;
+    import FRL = DAQAggregator.Snapshot.FRL;
     export class SnapshotParser {
 
         private big_map: {[key: string]: any} = {};
@@ -79,7 +84,6 @@ namespace DAQAggregator {
             for (var key in obj) { // iterate, `key` is the property key
                 var elem = obj[key]; // `obj[key]` is the value
 
-
                 var elemTypeLiteral = SnapshotParser.getFieldType(elem);
 
                 //further explore objects or arrays with recursion
@@ -126,4 +130,59 @@ namespace DAQAggregator {
 
 
     }
+
+    export class RUWarnMessageAggregator {
+        public resolveRUWarnings(snapshot: Snapshot): Snapshot {
+            //retrieve and assign warning messages to RUs
+            let rus: RU[] = snapshot.getDAQ().rus;
+
+            for (let idx: number = 0; idx < rus.length; idx++) {
+                rus[idx].warningsFromFeds = this.getWarnInfoForRU(rus[idx]);
+            }
+
+            return snapshot;
+        }
+
+        //returns warning objects indexed by FED
+        getWarnInfoForRU(ru: RU): {[key: string]: RUFEDWarningObject} {
+
+            //fed: warnings
+            let ruWarnings: {[key: string]: RUFEDWarningObject} = {};
+            //iterate all messages from feds
+            let fedBuilder: FEDBuilder = ru.fedBuilder;
+            for (var subFEDBuilder of fedBuilder.subFedbuilders){
+               for(var frl of (<SubFEDBuilder>subFEDBuilder).frls){
+                   let feds: {[key: number]: FED} = (<FRL>frl.feds);
+                   for (var fedSlot in feds){
+                       let fed: FED = feds[fedSlot];
+
+                       let warningObj: RUFEDWarningObject = new RUFEDWarningObject();
+                       warningObj.ruFedInError = fed.ruFedInError;
+                       warningObj.ruFedBXError = fed.ruFedBXError;
+                       warningObj.ruFedCRCError = fed.ruFedCRCError;
+                       warningObj.ruFedDataCorruption = fed.ruFedDataCorruption;
+                       warningObj.ruFedOutOfSync = fed.ruFedOutOfSync;
+                       warningObj.ruFedWithoutFragments = fed.ruFedWithoutFragments;
+
+                       ruWarnings[fed.srcIdExpected] = warningObj; //add info to this RU, for a fed indexed by its expectedSrcId
+                   }
+               }
+            }
+
+
+
+            return ruWarnings;
+        }
+
+    }
+
+    export class RUFEDWarningObject{
+        ruFedInError: boolean;
+        ruFedBXError: number;
+        ruFedCRCError: number;
+        ruFedDataCorruption: number;
+        ruFedOutOfSync: number;
+        ruFedWithoutFragments: boolean;
+    }
+
 }

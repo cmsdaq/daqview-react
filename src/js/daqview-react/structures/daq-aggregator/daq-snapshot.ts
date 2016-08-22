@@ -44,6 +44,7 @@ namespace DAQAggregator {
 
             fedBuilders: FEDBuilder[];
             bus?: BU[];
+            rus?: RU[];
 
             fedBuilderSummary: FEDBuilderSummary;
             buSummary: BUSummary;
@@ -145,7 +146,7 @@ namespace DAQAggregator {
             masked: boolean;
             // instance: number;
 
-            // stateName: string;
+            stateName?: string;
             errorMsg: string;
             warnMsg: string;
             infoMsg: string;
@@ -161,8 +162,11 @@ namespace DAQAggregator {
             eventCount: number;
             requests: number;
 
-            // status: string;
-            // incompleteSuperFragmentCount: number;
+            incompleteSuperFragmentCount: number;
+
+            warningsFromFeds: {[key: string]: RUFEDWarningObject};
+
+            fedBuilder: FEDBuilder;
         }
 
         export interface SubFEDBuilder extends SnapshotElement {
@@ -241,6 +245,11 @@ namespace DAQAggregator {
             hasSLINK: boolean;
             hasTTS: boolean;
 
+            ruFedInError: boolean;
+            ruFedBXError: number;
+            ruFedCRCError: number;
+            ruFedDataCorruption: number;
+            ruFedOutOfSync: number;
             ruFedWithoutFragments: boolean;
 
             frl_AccSlinkFullSec: number;
