@@ -2,7 +2,7 @@ var DAQAggregator;
 (function (DAQAggregator) {
     var SnapshotProvider = (function () {
         function SnapshotProvider(snapshotSource) {
-            this.isRunning = false;
+            this.running = false;
             this.views = [];
             this.snapshotSource = snapshotSource;
         }
@@ -12,13 +12,16 @@ var DAQAggregator;
         SnapshotProvider.prototype.setSnapshot = function (snapshot) {
             this.views.forEach(function (view) { return view.setSnapshot(snapshot); });
         };
+        SnapshotProvider.prototype.isRunning = function () {
+            return this.running;
+        };
         SnapshotProvider.prototype.start = function () {
-            if (this.isRunning) {
+            if (this.running) {
                 return;
             }
-            this.isRunning = true;
+            this.running = true;
             var updateFunction = (function () {
-                if (!this.isRunning) {
+                if (!this.running) {
                     return;
                 }
                 var url = this.snapshotSource.getSourceURL();
@@ -47,7 +50,7 @@ var DAQAggregator;
             setTimeout(updateFunction, this.snapshotSource.updateInterval);
         };
         SnapshotProvider.prototype.stop = function () {
-            this.isRunning = false;
+            this.running = false;
         };
         return SnapshotProvider;
     }());

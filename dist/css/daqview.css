@@ -16,3 +16,15 @@ html, body {
 #daqview-react-fff-table {
     width: 100%;
 }
+
+#daqview-control {
+    width: 100%;
+    text-align: center;
+}
+
+.daqview-control-previous,
+.daqview-control-pause-resume ,
+.daqview-control-next {
+    width: 24px;
+    height: 24px;
+}

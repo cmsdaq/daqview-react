@@ -4,7 +4,7 @@ namespace DAQAggregator {
 
     export class SnapshotProvider implements DAQSnapshotView {
         private snapshotSource: SnapshotSource;
-        private isRunning: boolean = false;
+        private running: boolean = false;
 
         private views: DAQSnapshotView[] = [];
 
@@ -20,14 +20,18 @@ namespace DAQAggregator {
             this.views.forEach(view => view.setSnapshot(snapshot));
         }
 
+        public isRunning(): boolean {
+            return this.running;
+        }
+
         public start() {
-            if (this.isRunning) {
+            if (this.running) {
                 return;
             }
-            this.isRunning = true;
+            this.running = true;
 
             let updateFunction: () => void = (function () {
-                if (!this.isRunning) {
+                if (!this.running) {
                     return;
                 }
 
@@ -62,7 +66,7 @@ namespace DAQAggregator {
         }
 
         public stop() {
-            this.isRunning = false;
+            this.running = false;
         }
     }
 
