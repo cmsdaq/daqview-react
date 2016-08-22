@@ -681,6 +681,51 @@ var DAQView;
         };
         return FEDBuilderTableElement;
     }(React.Component));
+    var RUWarningData = (function (_super) {
+        __extends(RUWarningData, _super);
+        function RUWarningData() {
+            _super.apply(this, arguments);
+        }
+        RUWarningData.prototype.render = function () {
+            var warnMsg = '';
+            var ruWarningData = [];
+            var ru = this.props.ru;
+            if (ru.stateName != 'Halted' && ru.stateName != 'Ready' && ru.stateName != 'Enabled') {
+                warnMsg += ru.stateName + ' ';
+            }
+            var fedsWithErrors = ru.fedsWithErrors;
+            var fedWithErrors;
+            //without fragments
+            for (var idx = 0; idx < fedsWithErrors.length; idx++) {
+                fedWithErrors = fedsWithErrors[idx];
+                if (fedWithErrors.ruFedWithoutFragments && ru.eventsInRU == 0 && ru.incompleteSuperFragmentCount > 0) {
+                    ruWarningData.push(React.createElement("span", {className: "fb-table-ru-warn-message"}, " ", fedWithErrors.srcIdExpected + ' ', " "));
+                }
+            }
+            //error counters
+            for (var idx = 0; idx < fedsWithErrors.length; idx++) {
+                fedWithErrors = fedsWithErrors[idx];
+                var errorString = '';
+                if (fedWithErrors.ruFedDataCorruption > 0) {
+                    errorString += '#bad=' + fedWithErrors.ruFedDataCorruption + ',';
+                }
+                if (fedWithErrors.ruFedOutOfSync > 0) {
+                    errorString += '#OOS=' + fedWithErrors.ruFedOutOfSync + ',';
+                }
+                if (fedWithErrors.ruFedBXError > 0) {
+                    errorString += '#BX=' + fedWithErrors.ruFedBXError + ',';
+                }
+                if (fedWithErrors.ruFedCRCError > 0) {
+                    errorString += '#CRC=' + fedWithErrors.ruFedCRCError + ',';
+                }
+                if (errorString != '') {
+                    ruWarningData.push(React.createElement("span", {className: "fb-table-ru-warn-message"}, " ", fedWithErrors.srcIdExpected + ':' + errorString, " "));
+                }
+            }
+            return (React.createElement("td", null, ruWarningData));
+        };
+        return RUWarningData;
+    }(React.Component));
     var FEDBuilderRow = (function (_super) {
         __extends(FEDBuilderRow, _super);
         function FEDBuilderRow() {
@@ -699,7 +744,7 @@ var DAQView;
             var fedBuilderData = [];
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
-            fedBuilderData.push(React.createElement(RUMessages, {key: ru['@id'] + '_messages', rowSpan: numSubFedBuilders, infoMessage: ru.infoMsg, warnMessage: ru.warnMsg, errorMessage: ru.errorMsg}));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement(RUWarningData, {key: ru['@id'], ru: ru})));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}, (ru.rate / 1000).toFixed(3)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}, (ru.throughput / 1024 / 1024).toFixed(1)));
             var sizeClass;

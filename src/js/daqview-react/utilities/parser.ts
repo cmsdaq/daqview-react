@@ -137,17 +137,17 @@ namespace DAQAggregator {
             let rus: RU[] = snapshot.getDAQ().rus;
 
             for (let idx: number = 0; idx < rus.length; idx++) {
-                rus[idx].warningsFromFeds = this.getWarnInfoForRU(rus[idx]);
+                rus[idx].fedsWithErrors = this.getFedWithErrorsForRU(rus[idx]);
             }
 
             return snapshot;
         }
 
-        //returns warning objects indexed by FED
-        getWarnInfoForRU(ru: RU): {[key: string]: RUFEDWarningObject} {
+        //returns FED for this RU (excluding pseudofeds), by expectedId, if they contain error or withoutFragments warning
+        getFedWithErrorsForRU(ru: RU): FED [] {
 
             //fed: warnings
-            let ruWarnings: {[key: string]: RUFEDWarningObject} = {};
+            let fedsWithErrors: FED [] = [];
             //iterate all messages from feds
             let fedBuilder: FEDBuilder = ru.fedBuilder;
             for (var subFEDBuilder of fedBuilder.subFedbuilders){
@@ -156,33 +156,18 @@ namespace DAQAggregator {
                    for (var fedSlot in feds){
                        let fed: FED = feds[fedSlot];
 
-                       let warningObj: RUFEDWarningObject = new RUFEDWarningObject();
-                       warningObj.ruFedInError = fed.ruFedInError;
-                       warningObj.ruFedBXError = fed.ruFedBXError;
-                       warningObj.ruFedCRCError = fed.ruFedCRCError;
-                       warningObj.ruFedDataCorruption = fed.ruFedDataCorruption;
-                       warningObj.ruFedOutOfSync = fed.ruFedOutOfSync;
-                       warningObj.ruFedWithoutFragments = fed.ruFedWithoutFragments;
-
-                       ruWarnings[fed.srcIdExpected] = warningObj; //add info to this RU, for a fed indexed by its expectedSrcId
+                       if (fed.ruFedWithoutFragments || fed.ruFedInError) {
+                           fedsWithErrors.push(fed); //fed indexed by its expectedSrcId
+                       }
                    }
                }
             }
 
 
 
-            return ruWarnings;
+            return fedsWithErrors;
         }
 
-    }
-
-    export class RUFEDWarningObject{
-        ruFedInError: boolean;
-        ruFedBXError: number;
-        ruFedCRCError: number;
-        ruFedDataCorruption: number;
-        ruFedOutOfSync: number;
-        ruFedWithoutFragments: boolean;
     }
 
 }

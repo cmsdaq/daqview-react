@@ -93,7 +93,8 @@
 }
 
 .fb-table-ru-warn-message {
-
+    color: #FFFFFF;
+    background: #FF0000;
 }
 
 .fb-table-ru-info-message {

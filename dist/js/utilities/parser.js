@@ -112,14 +112,14 @@ var DAQAggregator;
             //retrieve and assign warning messages to RUs
             var rus = snapshot.getDAQ().rus;
             for (var idx = 0; idx < rus.length; idx++) {
-                rus[idx].warningsFromFeds = this.getWarnInfoForRU(rus[idx]);
+                rus[idx].fedsWithErrors = this.getFedWithErrorsForRU(rus[idx]);
             }
             return snapshot;
         };
-        //returns warning objects indexed by FED
-        RUWarnMessageAggregator.prototype.getWarnInfoForRU = function (ru) {
+        //returns FED for this RU (excluding pseudofeds), by expectedId, if they contain error or withoutFragments warning
+        RUWarnMessageAggregator.prototype.getFedWithErrorsForRU = function (ru) {
             //fed: warnings
-            var ruWarnings = {};
+            var fedsWithErrors = [];
             //iterate all messages from feds
             var fedBuilder = ru.fedBuilder;
             for (var _i = 0, _a = fedBuilder.subFedbuilders; _i < _a.length; _i++) {
@@ -129,26 +129,15 @@ var DAQAggregator;
                     var feds = frl.feds;
                     for (var fedSlot in feds) {
                         var fed = feds[fedSlot];
-                        var warningObj = new RUFEDWarningObject();
-                        warningObj.ruFedInError = fed.ruFedInError;
-                        warningObj.ruFedBXError = fed.ruFedBXError;
-                        warningObj.ruFedCRCError = fed.ruFedCRCError;
-                        warningObj.ruFedDataCorruption = fed.ruFedDataCorruption;
-                        warningObj.ruFedOutOfSync = fed.ruFedOutOfSync;
-                        warningObj.ruFedWithoutFragments = fed.ruFedWithoutFragments;
-                        ruWarnings[fed.srcIdExpected] = warningObj; //add info to this RU, for a fed indexed by its expectedSrcId
+                        if (fed.ruFedWithoutFragments || fed.ruFedInError) {
+                            fedsWithErrors.push(fed); //fed indexed by its expectedSrcId
+                        }
                     }
                 }
             }
-            return ruWarnings;
+            return fedsWithErrors;
         };
         return RUWarnMessageAggregator;
     }());
     DAQAggregator.RUWarnMessageAggregator = RUWarnMessageAggregator;
-    var RUFEDWarningObject = (function () {
-        function RUFEDWarningObject() {
-        }
-        return RUFEDWarningObject;
-    }());
-    DAQAggregator.RUFEDWarningObject = RUFEDWarningObject;
 })(DAQAggregator || (DAQAggregator = {}));

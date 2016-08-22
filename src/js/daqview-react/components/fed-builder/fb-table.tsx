@@ -8,6 +8,7 @@ namespace DAQView {
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
     import DAQ = DAQAggregator.Snapshot.DAQ;
     import snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
+    import FED = DAQAggregator.Snapshot.FED;
 
     export class FEDBuilderTable implements DAQSnapshotView {
         private DEFAULT_PRESORT_FUNCTION: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot = FBTableSortFunctions.TTCP_ASC;
@@ -783,6 +784,65 @@ namespace DAQView {
         additionalClasses?: string | string[];
     }
 
+    interface RUWarningDataProperties {
+        ru: DAQAggregatorSnapshot.RU;
+    }
+
+    class RUWarningData extends React.Component<RUWarningDataProperties,{}> {
+        render() {
+            let warnMsg: string = '';
+
+            let ruWarningData: any[] = [];
+
+            let ru: DAQAggregatorSnapshot.RU = this.props.ru;
+
+
+            if (ru.stateName != 'Halted' && ru.stateName != 'Ready' && ru.stateName != 'Enabled'){
+                warnMsg += ru.stateName + ' ';
+            }
+
+            let fedsWithErrors: FED[] = ru.fedsWithErrors;
+
+
+            let fedWithErrors: FED;
+
+            //without fragments
+            for (var idx=0;idx<fedsWithErrors.length;idx++){
+                fedWithErrors = fedsWithErrors[idx];
+                if (fedWithErrors.ruFedWithoutFragments && ru.eventsInRU == 0 && ru.incompleteSuperFragmentCount > 0){
+                    ruWarningData.push(<span className="fb-table-ru-warn-message"> {fedWithErrors.srcIdExpected + ' '} </span>);
+                }
+            }
+
+            //error counters
+            for (var idx=0;idx<fedsWithErrors.length;idx++){
+                fedWithErrors = fedsWithErrors[idx];
+                let errorString: String = '';
+
+                if (fedWithErrors.ruFedDataCorruption > 0){
+                    errorString += '#bad=' + fedWithErrors.ruFedDataCorruption + ',';
+                }
+                if (fedWithErrors.ruFedOutOfSync > 0){
+                    errorString += '#OOS=' +fedWithErrors.ruFedOutOfSync + ',';
+                }
+                if (fedWithErrors.ruFedBXError > 0){
+                    errorString += '#BX=' +fedWithErrors.ruFedBXError + ',';
+                }
+                if (fedWithErrors.ruFedCRCError > 0){
+                    errorString += '#CRC=' +fedWithErrors.ruFedCRCError + ',';
+                }
+
+                if (errorString!='') {
+                    ruWarningData.push(<span className="fb-table-ru-warn-message"> { fedWithErrors.srcIdExpected + ':' + errorString} </span>);
+                }
+            }
+
+            return (
+                <td>{ruWarningData}</td>
+            );
+        }
+    }
+
     class FEDBuilderRow extends React.Component<FEDBuilderRowProperties,{}> {
         render() {
             let fedBuilder: DAQAggregatorSnapshot.FEDBuilder = this.props.fedBuilder;
@@ -791,6 +851,7 @@ namespace DAQView {
             let numSubFedBuilders: number = subFedBuilders.length;
 
             let ru: DAQAggregatorSnapshot.RU = fedBuilder.ru;
+
             let ruMasked: boolean = ru.masked;
             let ruHostname: string = ru.hostname;
             let ruName: string = ruHostname.substring(3, ruHostname.length - 4);
@@ -800,10 +861,7 @@ namespace DAQView {
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
             </td>);
-            fedBuilderData.push(<RUMessages key={ru['@id'] + '_messages'} rowSpan={numSubFedBuilders}
-                                            infoMessage={ru.infoMsg}
-                                            warnMessage={ru.warnMsg}
-                                            errorMessage={ru.errorMsg}/>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}><RUWarningData key={ru['@id']} ru={ru}/></td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}

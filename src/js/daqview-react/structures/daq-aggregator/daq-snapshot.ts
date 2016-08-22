@@ -164,7 +164,7 @@ namespace DAQAggregator {
 
             incompleteSuperFragmentCount: number;
 
-            warningsFromFeds: {[key: string]: RUFEDWarningObject};
+            fedsWithErrors: FED[];
 
             fedBuilder: FEDBuilder;
         }
