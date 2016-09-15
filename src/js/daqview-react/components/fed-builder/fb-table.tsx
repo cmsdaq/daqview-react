@@ -641,7 +641,9 @@ namespace DAQView {
     }
 
     const FB_TABLE_BASE_HEADERS: FEDBuilderTableHeaderProperties[] = [
-        {content: 'T'},
+        {content: 'P'},
+        {content: 'A'},
+        {content: 'F'},
         {
             content: '%W',
             sortFunctions: {
@@ -763,6 +765,7 @@ namespace DAQView {
                     <colgroup className="fb-table-colgroup-unknown" span="2"/>
                     <thead className="fb-table-head">
                     <FEDBuilderTableTopHeaderRow key="fb-top-header-row"/>
+                    <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row"/>
                     <FEDBuilderTableHeaderRow key="fb-header-row" tableObject={tableObject}
                                               headers={FB_TABLE_TOP_HEADERS}/>
                     </thead>
@@ -918,11 +921,29 @@ namespace DAQView {
         render() {
             return (
                 <tr className="fb-table-top-header-row">
-                    <FEDBuilderTableHeader additionalClasses="fb-table-help" content={<a href=".">Table Help</a>}
+                    <FEDBuilderTableHeader additionalClasses="fb-table-help" content={<a href="fbtablehelp.html" target="_blank">Table Help</a>}
                                            colSpan="2"/>
-                    <FEDBuilderTableHeader content="F E D B U I L D E R" colSpan="7"/>
-                    <FEDBuilderTableHeader content="E V B" colSpan="9"/>
+                    <FEDBuilderTableHeader content="F  E  D  B  U  I  L  D  E  R" colSpan="9"/>
+                    <FEDBuilderTableHeader content="E  V  B" colSpan="9"/>
                 </tr>
+
+            );
+        }
+    }
+
+    class FEDBuilderTableSecondaryHeaderRow extends React.Component<{},{}> {
+        shouldComponentUpdate() {
+            return false;
+        }
+
+        render() {
+            return (
+                <tr className="fb-table-secondary-header-row">
+                    <FEDBuilderTableHeader content="" colSpan="1"/>
+                    <FEDBuilderTableHeader content="T T S" colSpan="3"/>
+                    <FEDBuilderTableHeader content="" colSpan="16"/>
+                </tr>
+
             );
         }
     }
@@ -993,6 +1014,21 @@ namespace DAQView {
                     };
                 }
             }
+
+
+            //handlers to be used with onMouseOver and onMouseOut of this element
+            /*
+            let mouseOverFunction: () => void = null;
+            mouseOverFunction = function (){
+
+            };
+
+            let mouseOutFunction: () => void = null;
+            mouseOutFunction = function (){
+
+                //alert("mouseOut"+content);
+            };*/
+
 
             let sortingImage: any = null;
             if (currentSorting != null) {
@@ -1075,7 +1111,9 @@ namespace DAQView {
                     <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
                        target="_blank">{ttsState}</a>;
             }
-            let ttcPartitionTTSStateDisplay: any = <span className={ttsStateClasses}>{ttcPartitionTTSStateLink}</span>;
+            let ttcPartitionTTSStateDisplay_F: any = <span className={ttsStateClasses}>{ttcPartitionTTSStateLink}</span>;
+            let ttcPartitionTTSStateDisplay_P: any = <span className={ttsStateClasses}>{'P'}</span>;
+            let ttcPartitionTTSStateDisplay_A: any = <span className={ttsStateClasses}>{'A'}</span>;
 
             let evmMaxTrg: number = this.props.evmMaxTrg;
 
@@ -1106,7 +1144,9 @@ namespace DAQView {
             return (
                 <tr className={className}>
                     <td>{ttcPartition.name}:{ttcPartition.ttcpNr}</td>
-                    <td>{ttcPartitionTTSStateDisplay}</td>
+                    <td>{ttcPartitionTTSStateDisplay_P}</td>
+                    <td>{ttcPartitionTTSStateDisplay_A}</td>
+                    <td>{ttcPartitionTTSStateDisplay_F}</td>
                     <td>{ttcPartition.percentWarning.toFixed(1)}</td>
                     <td>{ttcPartition.percentBusy.toFixed(1)}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>

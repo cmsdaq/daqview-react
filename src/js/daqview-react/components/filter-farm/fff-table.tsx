@@ -537,7 +537,7 @@ namespace DAQView {
             return (
                 <tr className="fff-table-top-header-row">
                     <FileBasedFilterFarmTableHeader additionalClasses="fff-table-help"
-                                                    content={<a href=".">Table Help</a>} colSpan="2"/>
+                                                    content={<a href="ffftablehelp.html" target="_blank">Table Help</a>} colSpan="2"/>
                     <FileBasedFilterFarmTableHeader content="B U I L D E R   U N I T   ( B U )" colSpan="19"/>
                 </tr>
             );

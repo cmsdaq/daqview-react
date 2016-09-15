@@ -573,7 +573,9 @@ var DAQView;
         FBTableSortFunctions.RUREQUESTS_DESC = RUREQUESTS_DESC;
     })(FBTableSortFunctions = DAQView.FBTableSortFunctions || (DAQView.FBTableSortFunctions = {}));
     var FB_TABLE_BASE_HEADERS = [
-        { content: 'T' },
+        { content: 'P' },
+        { content: 'A' },
+        { content: 'F' },
         {
             content: '%W',
             sortFunctions: {
@@ -677,7 +679,7 @@ var DAQView;
             var fedBuilderSummary = this.props.fedBuilderSummary;
             var numRus = fedBuilders.length;
             var tableObject = this.props.tableObject;
-            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-unknown", span: "2"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, {key: "fb-top-header-row"}), React.createElement(FEDBuilderTableHeaderRow, {key: "fb-header-row", tableObject: tableObject, headers: FB_TABLE_TOP_HEADERS})), fedBuilderRows, React.createElement("tfoot", {className: "fb-table-foot"}, React.createElement(FEDBuilderTableHeaderRow, {key: "fb-summary-header-row", tableObject: tableObject, headers: FB_TABLE_SUMMARY_HEADERS}), React.createElement(FEDBuilderTableSummaryRow, {key: "fb-summary-row", fedBuilderSummary: fedBuilderSummary, numRus: numRus}))));
+            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-unknown", span: "2"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, {key: "fb-top-header-row"}), React.createElement(FEDBuilderTableSecondaryHeaderRow, {key: "fb-secondary-header-row"}), React.createElement(FEDBuilderTableHeaderRow, {key: "fb-header-row", tableObject: tableObject, headers: FB_TABLE_TOP_HEADERS})), fedBuilderRows, React.createElement("tfoot", {className: "fb-table-foot"}, React.createElement(FEDBuilderTableHeaderRow, {key: "fb-summary-header-row", tableObject: tableObject, headers: FB_TABLE_SUMMARY_HEADERS}), React.createElement(FEDBuilderTableSummaryRow, {key: "fb-summary-row", fedBuilderSummary: fedBuilderSummary, numRus: numRus}))));
         };
         return FEDBuilderTableElement;
     }(React.Component));
@@ -784,9 +786,22 @@ var DAQView;
             return false;
         };
         FEDBuilderTableTopHeaderRow.prototype.render = function () {
-            return (React.createElement("tr", {className: "fb-table-top-header-row"}, React.createElement(FEDBuilderTableHeader, {additionalClasses: "fb-table-help", content: React.createElement("a", {href: "."}, "Table Help"), colSpan: "2"}), React.createElement(FEDBuilderTableHeader, {content: "F E D B U I L D E R", colSpan: "7"}), React.createElement(FEDBuilderTableHeader, {content: "E V B", colSpan: "9"})));
+            return (React.createElement("tr", {className: "fb-table-top-header-row"}, React.createElement(FEDBuilderTableHeader, {additionalClasses: "fb-table-help", content: React.createElement("a", {href: "fbtablehelp.html", target: "_blank"}, "Table Help"), colSpan: "2"}), React.createElement(FEDBuilderTableHeader, {content: "F  E  D  B  U  I  L  D  E  R", colSpan: "9"}), React.createElement(FEDBuilderTableHeader, {content: "E  V  B", colSpan: "9"})));
         };
         return FEDBuilderTableTopHeaderRow;
+    }(React.Component));
+    var FEDBuilderTableSecondaryHeaderRow = (function (_super) {
+        __extends(FEDBuilderTableSecondaryHeaderRow, _super);
+        function FEDBuilderTableSecondaryHeaderRow() {
+            _super.apply(this, arguments);
+        }
+        FEDBuilderTableSecondaryHeaderRow.prototype.shouldComponentUpdate = function () {
+            return false;
+        };
+        FEDBuilderTableSecondaryHeaderRow.prototype.render = function () {
+            return (React.createElement("tr", {className: "fb-table-secondary-header-row"}, React.createElement(FEDBuilderTableHeader, {content: "", colSpan: "1"}), React.createElement(FEDBuilderTableHeader, {content: "T T S", colSpan: "3"}), React.createElement(FEDBuilderTableHeader, {content: "", colSpan: "16"})));
+        };
+        return FEDBuilderTableSecondaryHeaderRow;
     }(React.Component));
     var FEDBuilderTableHeaderRow = (function (_super) {
         __extends(FEDBuilderTableHeaderRow, _super);
@@ -833,6 +848,18 @@ var DAQView;
                     };
                 }
             }
+            //handlers to be used with onMouseOver and onMouseOut of this element
+            /*
+            let mouseOverFunction: () => void = null;
+            mouseOverFunction = function (){
+
+            };
+
+            let mouseOutFunction: () => void = null;
+            mouseOutFunction = function (){
+
+                //alert("mouseOut"+content);
+            };*/
             var sortingImage = null;
             if (currentSorting != null) {
                 sortingImage = React.createElement("input", {type: "image", className: "fb-table-sort-image", src: 'dist/img/' + currentSorting.getImagePath(), alt: currentSorting.toString(), title: "Sort", onClick: clickFunction});
@@ -886,7 +913,9 @@ var DAQView;
                 ttcPartitionTTSStateLink =
                     React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsState);
             }
-            var ttcPartitionTTSStateDisplay = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
+            var ttcPartitionTTSStateDisplay_F = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
+            var ttcPartitionTTSStateDisplay_P = React.createElement("span", {className: ttsStateClasses}, 'P');
+            var ttcPartitionTTSStateDisplay_A = React.createElement("span", {className: ttsStateClasses}, 'A');
             var evmMaxTrg = this.props.evmMaxTrg;
             var minTrigDisplayContent = '';
             var maxTrigDisplayContent = maxTrig;
@@ -909,7 +938,7 @@ var DAQView;
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", null, ttcPartitionTTSStateDisplay), React.createElement("td", null, ttcPartition.percentWarning.toFixed(1)), React.createElement("td", null, ttcPartition.percentBusy.toFixed(1)), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls, pseudoFeds: pseudoFeds}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", null, ttcPartitionTTSStateDisplay_P), React.createElement("td", null, ttcPartitionTTSStateDisplay_A), React.createElement("td", null, ttcPartitionTTSStateDisplay_F), React.createElement("td", null, ttcPartition.percentWarning.toFixed(1)), React.createElement("td", null, ttcPartition.percentBusy.toFixed(1)), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls, pseudoFeds: pseudoFeds}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));
