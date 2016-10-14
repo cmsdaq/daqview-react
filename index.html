@@ -67,12 +67,12 @@
 
                         // return 'http://pcepcmd62.cern.ch:3000/mydaqview/api/getmostrecentprodsnapshot';
 
-                         var baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
+                         var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
                         //var baseURL = 'http://dev-daq-expert.cern.ch/snapshot?time=';
                          var currentTime = new Date(new Date().getTime()).toISOString();
 
                         //console.log(baseURL + '"' + currentTime + '"');
-                         return baseURL + '' + currentTime + '';
+                         return baseURL + '"' + currentTime + '"';
                         //return 'http://pcepcmd62.cern.ch:3000/mydaqview/api/getmostrecentprodsnapshot';
 
                     },
@@ -152,14 +152,10 @@
 <body>
 <div id="daqview-react">
     <div id="daqview-control">
-        <input type="image" class="daqview-control-previous" src="dist/img/previous.png" alt="previous snapshot"
-               title="previous snapshot"/>
         &nbsp;
         <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
                title="pause/resume"/>
-        &nbsp;
-        <input type="image" class="daqview-control-next" src="dist/img/next.png" alt="next snapshot"
-               title="next snapshot"/>
+
     </div>
     <br/><br/>
     <div id="daqview-react-metadata-table"></div>

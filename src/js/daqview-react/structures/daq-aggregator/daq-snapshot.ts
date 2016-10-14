@@ -182,9 +182,12 @@ namespace DAQAggregator {
             ttcpNr: number;
             name: string;
             ttsState: string;
+            tcds_pm_ttsState: string;
+            tcds_apv_pm_ttsState: string;
             percentWarning: number;
             percentBusy: number;
             fmm?: FMM;
+            masked: boolean;
         }
 
         export interface FMM extends SnapshotElement {

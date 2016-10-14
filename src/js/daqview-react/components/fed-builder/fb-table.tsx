@@ -1096,9 +1096,22 @@ namespace DAQView {
             let className: string = classNames("fb-table-subfb-row", additionalClasses);
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = subFedBuilder.ttcPartition;
-            let ttsState: string = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '-';
+
+            let ttsState: string = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : 'x';
+            if (ttcPartition.masked){
+                ttsState = '-';
+            }
+
+            let ttsStateTcdsPm: string = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
+            let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
+
             let ttsStateClasses: string = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
+            let ttsStateTcdsPmClasses: string = ttcPartition.tcds_pm_ttsState || ttcPartition.tcds_pm_ttsState != '-'? 'fb-table-subfb-tts-state-' + ttsStateTcdsPm : 'fb-table-subfb-tts-state-none';
+            ttsStateTcdsPmClasses = classNames(ttsStateTcdsPmClasses, 'fb-table-subfb-tts-state');
+            let ttsStateTcdsApvClasses: string = ttcPartition.tcds_apv_pm_ttsState || ttcPartition.tcds_apv_pm_ttsState != '-'? 'fb-table-subfb-tts-state-' + ttsStateTcdsApvPm : 'fb-table-subfb-tts-state-none';
+            ttsStateTcdsApvClasses = classNames(ttsStateTcdsApvClasses, 'fb-table-subfb-tts-state');
+
 
             let minTrig: number = subFedBuilder.minTrig;
             let maxTrig: number = subFedBuilder.maxTrig;
@@ -1106,14 +1119,35 @@ namespace DAQView {
             let minTrigUnequalMaxTrig: boolean = minTrig != maxTrig;
 
             let ttcPartitionTTSStateLink: any = ttsState;
-            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null) {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-') {
                 ttcPartitionTTSStateLink =
                     <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
                        target="_blank">{ttsState}</a>;
             }
+
+            //two vars below should be available from the data model instead of being hardcoded
+            let tcdsControlUrl: string = 'http://tcds-control-cpm.cms:2050';
+            let tcdsControlService: string = 'cpm-pri';
+
+            let ttcPartitionTTSStateTcdsPmLink: any = ttsStateTcdsPm;
+            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-') {  //review this check
+                ttcPartitionTTSStateTcdsPmLink =
+                    <a href={tcdsControlUrl + '/urn:xdaq-application:service='+tcdsControlService}
+                       target="_blank">{ttsStateTcdsPm}</a>;
+            }
+
+            let ttcPartitionTTSStateTcdsApvPmLink: any = ttsStateTcdsApvPm;
+            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-') {  //review this check
+                ttcPartitionTTSStateTcdsApvPmLink =
+                    <a href={tcdsControlUrl + '/urn:xdaq-application:service='+tcdsControlService}
+                       target="_blank">{ttsStateTcdsApvPm}</a>;
+            }
+
+
+
             let ttcPartitionTTSStateDisplay_F: any = <span className={ttsStateClasses}>{ttcPartitionTTSStateLink}</span>;
-            let ttcPartitionTTSStateDisplay_P: any = <span className={ttsStateClasses}>{'P'}</span>;
-            let ttcPartitionTTSStateDisplay_A: any = <span className={ttsStateClasses}>{'A'}</span>;
+            let ttcPartitionTTSStateDisplay_P: any = <span className={ttsStateTcdsPmClasses}>{ttcPartitionTTSStateTcdsPmLink}</span>;
+            let ttcPartitionTTSStateDisplay_A: any = <span className={ttsStateTcdsApvClasses}>{ttcPartitionTTSStateTcdsApvPmLink}</span>;
 
             let evmMaxTrg: number = this.props.evmMaxTrg;
 
