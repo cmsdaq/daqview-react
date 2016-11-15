@@ -89,7 +89,6 @@
                         //pass it through chain of preprocessors
                         snapshot = ruWarningsResolver.resolveRUWarnings.bind(ruWarningsResolver)(snapshot);
                         snapshot = ruMaskedCounter.countMaskedRUs.bind(ruMaskedCounter)(snapshot);
-                        snapshot = ruMaskedCounter.countMaskedRUs.bind(ruMaskedCounter)(snapshot);
                         snapshot = buNoRateCounter.countNoRateBUs.bind(buNoRateCounter)(snapshot);
 
                         //DAQAggregator.randomizeSnapshot(snapshot, 20);
