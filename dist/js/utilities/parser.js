@@ -159,4 +159,22 @@ var DAQAggregator;
         return RUMaskedCounter;
     }());
     DAQAggregator.RUMaskedCounter = RUMaskedCounter;
+    var BUNoRateCounter = (function () {
+        function BUNoRateCounter() {
+        }
+        BUNoRateCounter.prototype.countNoRateBUs = function (snapshot) {
+            //retrieve and assign warning messages to RUs
+            var bus = snapshot.getDAQ().bus;
+            var busNoRate = 0;
+            for (var idx = 0; idx < bus.length; idx++) {
+                if (bus[idx].rate == 0) {
+                    busNoRate++;
+                }
+            }
+            snapshot.getDAQ().buSummary.busNoRate = busNoRate;
+            return snapshot;
+        };
+        return BUNoRateCounter;
+    }());
+    DAQAggregator.BUNoRateCounter = BUNoRateCounter;
 })(DAQAggregator || (DAQAggregator = {}));

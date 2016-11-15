@@ -89,6 +89,8 @@ namespace DAQAggregator {
             numLumisectionsOutHLT: number;
 
             fuOutputBandwidthInMB: number;
+
+            busNoRate: number; //locally calculated
         }
 
         export interface FEDBuilderSummary extends SnapshotElement {

@@ -48,12 +48,13 @@
                 var parser = new DAQAggregator.SnapshotParser();
                 var ruWarningsResolver = new DAQAggregator.RUWarnMessageAggregator();
                 var ruMaskedCounter = new DAQAggregator.RUMaskedCounter();
+                var buNoRateCounter = new DAQAggregator.BUNoRateCounter();
 
                 //var maxIndex = snapshots.length - 1;
                 //var currentIndex = 0;
 
                 var snapshotSource = {
-                    updateInterval: 1000,
+                    updateInterval: 500,
                     getSourceURL: function () {
 
                         /*
@@ -64,7 +65,7 @@
                         }
                         */
 
-                        var debugSnapshotSource = false;
+                        var debugSnapshotSource = true;
 
                          var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
                         var timestampDelim = '"';
@@ -88,6 +89,8 @@
                         //pass it through chain of preprocessors
                         snapshot = ruWarningsResolver.resolveRUWarnings.bind(ruWarningsResolver)(snapshot);
                         snapshot = ruMaskedCounter.countMaskedRUs.bind(ruMaskedCounter)(snapshot);
+                        snapshot = ruMaskedCounter.countMaskedRUs.bind(ruMaskedCounter)(snapshot);
+                        snapshot = buNoRateCounter.countNoRateBUs.bind(buNoRateCounter)(snapshot);
 
                         //DAQAggregator.randomizeSnapshot(snapshot, 20);
                         console.log(snapshot);

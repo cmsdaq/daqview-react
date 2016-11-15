@@ -500,11 +500,13 @@ namespace DAQView {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
             let bus: DAQAggregatorSnapshot.BU[] = this.props.bus;
             let numBus: number = 0;
+
             let buRows: any[] = [];
             if (bus != null) {
                 numBus = bus.length;
                 bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu}/>));
             }
+            let numBusNoRate:number = numBus - buSummary.busNoRate;
 
             let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
 
@@ -521,7 +523,7 @@ namespace DAQView {
                     <tfoot className="fff-table-foot">
                     <FileBasedFilterFarmTableHeaderRow key="fff-summary-header-row" tableObject={tableObject}
                                                        headers={FFF_TABLE_SUMMARY_HEADERS}/>
-                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus}/>
+                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus } numBusNoRate={numBusNoRate}/>
                     </tfoot>
                 </table>
             );
@@ -682,6 +684,7 @@ namespace DAQView {
 
     interface FileBasedFilterFarmTableBUSummaryRowProperties {
         numBus: number;
+        numBusNoRate: number;
         buSummary: DAQAggregatorSnapshot.BUSummary;
     }
 
@@ -697,7 +700,7 @@ namespace DAQView {
 
             return (
                 <tr className="fff-table-bu-summary-row">
-                    <td>Σ BUs = x / {this.props.numBus}</td>
+                    <td>Σ BUs = {this.props.numBusNoRate} / {this.props.numBus}</td>
                     <td>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
                     <td>Σ {(buSummary.throughput / 1024 / 1024).toFixed(1)}</td>
                     <td>{(buSummary.eventSizeMean / 1024).toFixed(1)}±{(buSummary.eventSizeStddev / 1024).toFixed(1)}</td>
