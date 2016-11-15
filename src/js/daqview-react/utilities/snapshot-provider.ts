@@ -61,7 +61,19 @@ namespace DAQAggregator {
 
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
+
+
+                snapshotRequest.fail((function (){
+                    console.log("error in getting remote snapshot...retrying after "+this.snapshotSource.updateInterval+" millis");
+                    setTimeout(updateFunction, this.snapshotSource.updateInterval);
+                }).bind(this));
+
+
             }).bind(this);
+
+
+
+
             setTimeout(updateFunction, this.snapshotSource.updateInterval);
         }
 
