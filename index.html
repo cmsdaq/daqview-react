@@ -47,12 +47,13 @@
                 });
                 var parser = new DAQAggregator.SnapshotParser();
                 var ruWarningsResolver = new DAQAggregator.RUWarnMessageAggregator();
+                var ruMaskedCounter = new DAQAggregator.RUMaskedCounter();
 
                 //var maxIndex = snapshots.length - 1;
                 //var currentIndex = 0;
 
                 var snapshotSource = {
-                    updateInterval: 2000,
+                    updateInterval: 1000,
                     getSourceURL: function () {
 
                         /*
@@ -63,23 +64,31 @@
                         }
                         */
 
-                       // return 'http://pcepcmd62.cern.ch:3000/mydaqview/api/getsnapshotbytimestamp?timestamp=' + snapshots[currentIndex];
-
-                        // return 'http://pcepcmd62.cern.ch:3000/mydaqview/api/getmostrecentprodsnapshot';
+                        var debugSnapshotSource = false;
 
                          var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
-                        //var baseURL = 'http://dev-daq-expert.cern.ch/snapshot?time=';
+                        var timestampDelim = '"';
                          var currentTime = new Date(new Date().getTime()).toISOString();
 
+                        if (debugSnapshotSource){
+                            baseURL = 'http://localhost:3000/mydaqview/api/snapshot?time=';
+                            timestampDelim = '';
+                        }
+
                         //console.log(baseURL + '"' + currentTime + '"');
-                         return baseURL + '"' + currentTime + '"';
-                        //return 'http://pcepcmd62.cern.ch:3000/mydaqview/api/getmostrecentprodsnapshot';
+                         return baseURL + timestampDelim + currentTime + timestampDelim;
 
                     },
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
+
+                        //parse original snapshots
                         snapshot = parser.parse.bind(parser)(snapshot);
+
+                        //pass it through chain of preprocessors
                         snapshot = ruWarningsResolver.resolveRUWarnings.bind(ruWarningsResolver)(snapshot);
+                        snapshot = ruMaskedCounter.countMaskedRUs.bind(ruMaskedCounter)(snapshot);
+
                         //DAQAggregator.randomizeSnapshot(snapshot, 20);
                         console.log(snapshot);
                         return snapshot;

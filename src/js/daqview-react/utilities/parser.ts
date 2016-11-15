@@ -5,6 +5,7 @@ namespace DAQAggregator {
     import SubFEDBuilder = DAQAggregator.Snapshot.SubFEDBuilder;
     import FED = DAQAggregator.Snapshot.FED;
     import FRL = DAQAggregator.Snapshot.FRL;
+    import snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
     export class SnapshotParser {
 
         private big_map: {[key: string]: any} = {};
@@ -168,6 +169,23 @@ namespace DAQAggregator {
             return fedsWithErrors;
         }
 
+    }
+
+    export class RUMaskedCounter {
+        public countMaskedRUs(snapshot: Snapshot): Snapshot {
+            //retrieve and assign warning messages to RUs
+            let rus: RU[] = snapshot.getDAQ().rus;
+            let rusMasked: number = 0;
+            for (let idx: number = 0; idx < rus.length; idx++) {
+                if (rus[idx].masked){
+                    rusMasked++;
+                }
+            }
+            snapshot.getDAQ().fedBuilderSummary.rusMasked = rusMasked;
+            //console.log(rusMasked);
+
+            return snapshot;
+        }
     }
 
 }

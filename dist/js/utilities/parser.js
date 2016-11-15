@@ -140,4 +140,23 @@ var DAQAggregator;
         return RUWarnMessageAggregator;
     }());
     DAQAggregator.RUWarnMessageAggregator = RUWarnMessageAggregator;
+    var RUMaskedCounter = (function () {
+        function RUMaskedCounter() {
+        }
+        RUMaskedCounter.prototype.countMaskedRUs = function (snapshot) {
+            //retrieve and assign warning messages to RUs
+            var rus = snapshot.getDAQ().rus;
+            var rusMasked = 0;
+            for (var idx = 0; idx < rus.length; idx++) {
+                if (rus[idx].masked) {
+                    rusMasked++;
+                }
+            }
+            snapshot.getDAQ().fedBuilderSummary.rusMasked = rusMasked;
+            //console.log(rusMasked);
+            return snapshot;
+        };
+        return RUMaskedCounter;
+    }());
+    DAQAggregator.RUMaskedCounter = RUMaskedCounter;
 })(DAQAggregator || (DAQAggregator = {}));

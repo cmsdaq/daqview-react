@@ -755,6 +755,9 @@ namespace DAQView {
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
             let numRus: number = fedBuilders.length;
+            let numUsedRus: number = numRus - fedBuilderSummary.rusMasked;
+
+
 
             let tableObject: FEDBuilderTable = this.props.tableObject;
 
@@ -774,7 +777,7 @@ namespace DAQView {
                     <FEDBuilderTableHeaderRow key="fb-summary-header-row" tableObject={tableObject}
                                               headers={FB_TABLE_SUMMARY_HEADERS}/>
                     <FEDBuilderTableSummaryRow key="fb-summary-row" fedBuilderSummary={fedBuilderSummary}
-                                               numRus={numRus}/>
+                                               numRus={numRus} numUsedRus={numUsedRus}/>
                     </tfoot>
                 </table>
             );
@@ -1098,9 +1101,6 @@ namespace DAQView {
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = subFedBuilder.ttcPartition;
 
             let ttsState: string = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : 'x';
-            if (ttcPartition.masked){
-                ttsState = '-';
-            }
 
             let ttsStateTcdsPm: string = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
             let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
@@ -1350,6 +1350,7 @@ namespace DAQView {
 
     interface FEDBuilderTableSummaryRowProperties {
         numRus: number;
+        numUsedRus: number;
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
     }
 
@@ -1360,10 +1361,11 @@ namespace DAQView {
 
         render() {
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
+
             return (
                 <tr className="fb-table-fb-summary-row">
-                    <td colSpan="9"></td>
-                    <td>Σ x / {this.props.numRus}</td>
+                    <td colSpan="11"></td>
+                    <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
                     <td>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
                     <td>Σ {(fedBuilderSummary.throughput / 1024 / 1024).toFixed(1)}</td>

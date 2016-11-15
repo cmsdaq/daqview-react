@@ -48,6 +48,7 @@ namespace DAQAggregator {
 
             fedBuilderSummary: FEDBuilderSummary;
             buSummary: BUSummary;
+
         }
 
         export interface FEDBuilder extends SnapshotElement {
@@ -102,6 +103,8 @@ namespace DAQAggregator {
             sumFragmentsInRU: number;
             sumEventsInRU: number;
             sumRequests: number;
+
+            rusMasked: number; //locally calculated
         }
 
         export interface BU extends SnapshotElement {
