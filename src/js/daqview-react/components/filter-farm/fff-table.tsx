@@ -652,8 +652,6 @@ namespace DAQView {
             let requestsUsed: number = bu.numRequestsUsed;
             let requestsBlocked: number = bu.numRequestsBlocked;
 
-            bu.fuOutputBandwidthInMB = 0;
-
             return (
                 <tr className="fff-table-bu-row">
                     <td><a href={buUrl} target="_blank">{hostname}</a></td>
@@ -676,7 +674,8 @@ namespace DAQView {
                     <td>{bu.currentLumisection}</td>
                     <td>{bu.numLumisectionsForHLT}</td>
                     <td>{bu.numLumisectionsOutHLT}</td>
-                    <td>{bu.fuOutputBandwidthInMB.toFixed(1)}</td>
+                    <td>{bu.fuOutputBandwidthInMB.toFixed(2)}</td>
+
                 </tr>
             );
         }
@@ -695,8 +694,6 @@ namespace DAQView {
 
         render() {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
-
-            buSummary.fuOutputBandwidthInMB = 0;
 
             return (
                 <tr className="fff-table-bu-summary-row">
@@ -720,7 +717,7 @@ namespace DAQView {
                     <td>{buSummary.currentLumisection}</td>
                     <td>{buSummary.numLumisectionsForHLT}</td>
                     <td>{buSummary.numLumisectionsOutHLT}</td>
-                    <td>{buSummary.fuOutputBandwidthInMB.toFixed(1)}</td>
+                    <td>{buSummary.fuOutputBandwidthInMB.toFixed(2)}</td>
                 </tr>
             );
         }
