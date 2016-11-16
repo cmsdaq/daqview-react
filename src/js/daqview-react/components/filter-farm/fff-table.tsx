@@ -642,9 +642,9 @@ namespace DAQView {
 
             let hostname: string = bu.hostname.substring(3, bu.hostname.length - 4);
             let rate: number = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
-            let throughput: number = FormatUtility.toFixedNumber(bu.throughput / 1024 / 1024, 1);
-            let sizeMean: number = FormatUtility.toFixedNumber(bu.eventSizeMean / 1024, 1);
-            let sizeStddev: number = FormatUtility.toFixedNumber(bu.eventSizeStddev / 1024, 1);
+            let throughput: number = FormatUtility.toFixedNumber(bu.throughput / 1000 / 1000, 1);
+            let sizeMean: number = FormatUtility.toFixedNumber(bu.eventSizeMean / 1000, 1);
+            let sizeStddev: number = FormatUtility.toFixedNumber(bu.eventSizeStddev / 1000, 1);
             let events: number = bu.numEvents;
             let eventsInBU: number = bu.numEventsInBU;
 
@@ -699,8 +699,8 @@ namespace DAQView {
                 <tr className="fff-table-bu-summary-row">
                     <td>Σ BUs = {this.props.numBusNoRate} / {this.props.numBus}</td>
                     <td>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
-                    <td>Σ {(buSummary.throughput / 1024 / 1024).toFixed(1)}</td>
-                    <td>{(buSummary.eventSizeMean / 1024).toFixed(1)}±{(buSummary.eventSizeStddev / 1024).toFixed(1)}</td>
+                    <td>Σ {(buSummary.throughput / 1000 / 1000).toFixed(1)}</td>
+                    <td>{(buSummary.eventSizeMean / 1000).toFixed(1)}±{(buSummary.eventSizeStddev / 1000).toFixed(1)}</td>
                     <td>Σ {buSummary.numEvents}</td>
                     <td>Σ {buSummary.numEventsInBU}</td>
                     <td>{buSummary.priority}</td>
