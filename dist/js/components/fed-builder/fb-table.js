@@ -765,7 +765,7 @@ var DAQView;
                 eventsInRuClass = FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
                 requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
             }
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: sizeClass}, (ru.superFragmentSizeMean / 1024).toFixed(3), "±", (ru.superFragmentSizeStddev / 1024).toFixed(3)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: sizeClass}, (ru.superFragmentSizeMean / 1000).toFixed(3), "±", (ru.superFragmentSizeStddev / 1000).toFixed(3)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: eventCountClass}, ru.eventCount));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: fragmentInRuClass}, ru.fragmentsInRU));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: eventsInRuClass}, ru.eventsInRU));
@@ -1077,7 +1077,7 @@ var DAQView;
         };
         FEDBuilderTableSummaryRow.prototype.render = function () {
             var fedBuilderSummary = this.props.fedBuilderSummary;
-            return (React.createElement("tr", {className: "fb-table-fb-summary-row"}, React.createElement("td", {colSpan: "11"}), React.createElement("td", null, "Σ ", this.props.numUsedRus, " / ", this.props.numRus), React.createElement("td", null), React.createElement("td", null, (fedBuilderSummary.rate / 1000).toFixed(3)), React.createElement("td", null, "Σ ", (fedBuilderSummary.throughput / 1024 / 1024).toFixed(1)), React.createElement("td", null, "Σ ", (fedBuilderSummary.superFragmentSizeMean / 1024).toFixed(1), "±", (fedBuilderSummary.superFragmentSizeStddev / 1024).toFixed(1)), React.createElement("td", null, "Δ ", fedBuilderSummary.deltaEvents), React.createElement("td", null, "Σ ", FormatUtility.formatSINumber(fedBuilderSummary.sumFragmentsInRU, 1)), React.createElement("td", null, "Σ ", fedBuilderSummary.sumEventsInRU), React.createElement("td", null, "Σ ", fedBuilderSummary.sumRequests)));
+            return (React.createElement("tr", {className: "fb-table-fb-summary-row"}, React.createElement("td", {colSpan: "11"}), React.createElement("td", null, "Σ ", this.props.numUsedRus, " / ", this.props.numRus), React.createElement("td", null), React.createElement("td", null, (fedBuilderSummary.rate / 1000).toFixed(3)), React.createElement("td", null, "Σ ", (fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)), React.createElement("td", null, "Σ ", (fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1), "±", (fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)), React.createElement("td", null, "Δ ", fedBuilderSummary.deltaEvents), React.createElement("td", null, "Σ ", FormatUtility.formatSINumber(fedBuilderSummary.sumFragmentsInRU, 1)), React.createElement("td", null, "Σ ", fedBuilderSummary.sumEventsInRU), React.createElement("td", null, "Σ ", fedBuilderSummary.sumRequests)));
         };
         return FEDBuilderTableSummaryRow;
     }(React.Component));

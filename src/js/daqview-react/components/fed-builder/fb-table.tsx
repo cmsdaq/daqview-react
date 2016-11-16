@@ -890,7 +890,7 @@ namespace DAQView {
             }
 
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
-                                    className={sizeClass}>{(ru.superFragmentSizeMean / 1024).toFixed(3)}±{(ru.superFragmentSizeStddev / 1024).toFixed(3)}</td>);
+                                    className={sizeClass}>{(ru.superFragmentSizeMean / 1000).toFixed(3)}±{(ru.superFragmentSizeStddev / 1000).toFixed(3)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={eventCountClass}>{ru.eventCount}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
@@ -1368,9 +1368,9 @@ namespace DAQView {
                     <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
                     <td>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
-                    <td>Σ {(fedBuilderSummary.throughput / 1024 / 1024).toFixed(1)}</td>
+                    <td>Σ {(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)}</td>
                     <td>
-                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1024).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1024).toFixed(1)}</td>
+                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)}</td>
                     <td>Δ {fedBuilderSummary.deltaEvents}</td>
                     <td>Σ {FormatUtility.formatSINumber(fedBuilderSummary.sumFragmentsInRU, 1)}</td>
                     <td>Σ {fedBuilderSummary.sumEventsInRU}</td>
