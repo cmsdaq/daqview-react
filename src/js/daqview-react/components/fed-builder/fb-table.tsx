@@ -871,7 +871,7 @@ namespace DAQView {
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
-                                    className={FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}>{(ru.throughput / 1024 / 1024).toFixed(1)}</td>);
+                                    className={FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}>{(ru.throughput / 1000 / 1000).toFixed(1)}</td>);
 
             let sizeClass: string;
             let eventCountClass: string;

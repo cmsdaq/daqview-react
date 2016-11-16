@@ -749,7 +749,7 @@ var DAQView;
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement(RUWarningData, {key: ru['@id'], ru: ru})));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}, (ru.rate / 1000).toFixed(3)));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}, (ru.throughput / 1024 / 1024).toFixed(1)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}, (ru.throughput / 1000 / 1000).toFixed(1)));
             var sizeClass;
             var eventCountClass;
             var fragmentInRuClass;
