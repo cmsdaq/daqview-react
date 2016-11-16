@@ -1213,6 +1213,7 @@ namespace DAQView {
 
             pseudoFEDs.forEach(function (fed: DAQAggregatorSnapshot.FED) {
                 fedData.push(' ');
+                fed.isPseudoFed = true; //this can be used for pseudofed-specific rendering at FEDData level
                 fedData.push(<FEDData key={fed['@id']} fed={fed}/>);
             });
 

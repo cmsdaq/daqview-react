@@ -978,6 +978,7 @@ var DAQView;
             });
             pseudoFEDs.forEach(function (fed) {
                 fedData.push(' ');
+                fed.isPseudoFed = true; //this can be used for pseudofed-specific rendering at FEDData level
                 fedData.push(React.createElement(FEDData, {key: fed['@id'], fed: fed}));
             });
             return (React.createElement("td", null, fedData));

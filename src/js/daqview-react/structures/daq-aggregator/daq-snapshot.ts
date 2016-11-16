@@ -261,6 +261,8 @@ namespace DAQAggregator {
             ruFedWithoutFragments: boolean;
 
             frl_AccSlinkFullSec: number;
+
+            isPseudoFed: boolean; //variable set locally, using context information, for displays reason
         }
 
     }
