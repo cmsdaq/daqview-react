@@ -44,27 +44,35 @@ namespace DAQAggregator {
                     let time: number = new Date().getTime() - startTime;
                     console.log('Time to get snapshot: ' + time + 'ms');
 
-                    let snapshot: Snapshot;
-                    startTime = new Date().getTime();
-                    if (this.snapshotSource.parseSnapshot) {
-                        snapshot = this.snapshotSource.parseSnapshot(snapshotJSON);
-                    } else {
-                        snapshot = new Snapshot(snapshotJSON);
+                    let malformedSnapshot: boolean = false;
+                    if (!snapshotJSON.hasOwnProperty("@id")){
+                        console.log("Malformed snapshot received, parsing and updating won't be launched until next valid snapshot");
+                        console.log(snapshotJSON);
+                        malformedSnapshot = true;
                     }
-                    time = new Date().getTime() - startTime;
-                    console.log('Time to parse snapshot: ' + time + 'ms');
 
-                    startTime = new Date().getTime();
-                    this.setSnapshot(snapshot);
-                    time = new Date().getTime() - startTime;
-                    console.log('Time to update page: ' + time + 'ms');
+                    if (!malformedSnapshot) {
+                        let snapshot: Snapshot;
+                        startTime = new Date().getTime();
+                        if (this.snapshotSource.parseSnapshot) {
+                            snapshot = this.snapshotSource.parseSnapshot(snapshotJSON);
+                        } else {
+                            snapshot = new Snapshot(snapshotJSON);
+                        }
+                        time = new Date().getTime() - startTime;
+                        console.log('Time to parse snapshot: ' + time + 'ms');
+
+                        startTime = new Date().getTime();
+                        this.setSnapshot(snapshot);
+                        time = new Date().getTime() - startTime;
+                        console.log('Time to update page: ' + time + 'ms');
+                    }
 
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
 
-
                 snapshotRequest.fail((function (){
-                    console.log("error in getting remote snapshot...retrying after "+this.snapshotSource.updateInterval+" millis");
+                    console.log("Error in remote snapshot request, retrying after "+this.snapshotSource.updateInterval+" millis");
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
 

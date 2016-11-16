@@ -58,30 +58,31 @@
                     getSourceURL: function () {
 
                         /*
-                        // hack to traverse snapshots in a specific order
-                        currentIndex++;
-                        if (currentIndex > maxIndex) {
-                            currentIndex = 0;
-                        }
-                        */
+                         // hack to traverse snapshots in a specific order
+                         currentIndex++;
+                         if (currentIndex > maxIndex) {
+                         currentIndex = 0;
+                         }
+                         */
 
                         var debugSnapshotSource = false;
 
-                         var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
+                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
                         var timestampDelim = '"';
-                         var currentTime = new Date(new Date().getTime()).toISOString();
+                        var currentTime = new Date(new Date().getTime()).toISOString();
 
-                        if (debugSnapshotSource){
+                        if (debugSnapshotSource) {
                             baseURL = 'http://localhost:3000/mydaqview/api/snapshot?time=';
                             timestampDelim = '';
                         }
 
                         //console.log(baseURL + '"' + currentTime + '"');
-                         return baseURL + timestampDelim + currentTime + timestampDelim;
+                        return baseURL + timestampDelim + currentTime + timestampDelim;
 
                     },
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
+
 
                         //parse original snapshots
                         snapshot = parser.parse.bind(parser)(snapshot);
@@ -101,8 +102,6 @@
                 snapshotProvider.addView(daqView);
                 snapshotProvider.start();
 
-                // quick and dirty hack for basic navigation; possibly solve this with React components in the future
-
                 var controlPauseResume = $('.daqview-control-pause-resume');
                 controlPauseResume.on('click', function () {
                     if (snapshotProvider.isRunning()) {
@@ -113,6 +112,12 @@
                         $(this).prop('src', 'dist/img/pause.png');
                     }
                 });
+
+
+
+                /*
+                 // quick and dirty hack for demo back and forth navigation; possibly solve this with React components in the future
+                 // and use snapshot provider functions instead of local updateSnapshot() impl.
 
                 var updateSnapshot = function () {
                     var url = snapshotSource.getSourceURL();
@@ -153,6 +158,8 @@
                     }
                     updateSnapshot();
                 });
+                 */
+
             }
             catch (exception) {
                 console ? (console.debug ? console.debug(exception) : console.log(exception)) : alert(exception);
