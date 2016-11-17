@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Table help</title>
+    <style type="text/css">
+        <!--
+        body {font-size: small}
+        table {font-size: small}
+        -->
+    </style>
+</head>
+<body bgcolor="#ddddaa">
+<h2>FEDBuilder Table</h2>
+
+There is one major line per FEDBuilder. If the FEDBuilder contains
+FEDs from multiple TTC partitions or from multiple FRLs, then there
+are multiple minor lines in the FEDBuilder-Input part of the table.<br><br>
+
+The first major line shows the FEDBuilder of the Trigger connected to the EVM.<br><br>
+
+Explanation of the columns:
+
+<table border=1>
+    <tr><th rowspan = 9>FED-<br>Builder<br>input<br>(may<br>span<br>multiple<br>lines)</th><TH>SubSys</TH><TD>The name of the subsystem.</TD></tr>
+    <tr><th>TTCP</th><td>Then name of the TTC partition : the TTC partitition number at the Global Trigger.</td></tr>
+    <tr><th>P </th><td> The current TTS state of the TTC partition read from the TCDS partition manager. see F</td></tr>
+    <tr><th>A </th><td> The current TTS state of the APV emulator of the TTC partition read from the TCDS partition manager (only for tracker partitions). see F</td></tr>
+    <tr><th>F </th><td> The current TTS state of the TTC partition read from the (merger) FMM output.<br>
+        <font style="background-color: #33FF33"><b>R</b></font> ... Ready,
+        <font style="background-color: #ffcc00"><b>W</b></font> ... Warning,
+        <font style="background-color: #ff6600"><b>B</b></font> ... Busy,
+        <font style="background-color: #cc0033; color: #000000"><b>E</b></font> ... Error,
+        <font style="background-color: #cc0033; color: #000000"><b>S</b></font> ... Out-Of-Sync,
+        <font style="background-color: #cc0033; color: #000000"><b>I</b></font> ... Invalid,
+        <font style="background-color: #3399ff"><b>D</b></font> ... Disconnected<br>
+
+        The hyperlink leads to the FMMController hyperdaq page.<br><br>
+        'x' ... element does not exist; '-' no monitoring data (masked out)
+    </td></tr>
+    <tr><th>%W</th><td>The percentage of time that this TTC partition spent in TTS warning state (over the last second).</td></tr>
+    <tr><th>%B</th><td>The percentage of time that this TTC partition spent in TTS busy state (over the last second).</td></tr>
+    <tr><th>frlpc</th><td>The name of the FRL PC (excluding the prefix 'frlpc-' and the domain name '.cms').<br>
+        The hyperlink leads to the XDAQ executive containing the FRLController applications.</td></tr>
+    <tr><th>geoSlot:SrcId</th><td>Information about all FEDs in the FEDBuilder for the TTCPartition and FRL PC in this minor line (see below)</td></tr>
+    <tr><th>min Trg</th><td>The lowest number of triggers counted by an FRL in this minor line. <br>
+        not shown if equal to maxTrg for this line.</td></tr>
+    <tr><th>max Trg</th><td>The highest number of triggers counted by an FRL in this minor line. <br>
+        highlighted with yellow background when different to the maxTrg of the Trigger FEDBuilder.</td></tr>
+
+    <tr><th>FB name</th><th>FBName</th><td>The FEDBuilder name : The fedbuilder number (internal to the database)</td></tr>
+
+
+
+    <tr><th rowspan=9>RU/EVM-<br>Info</th><th>RU</th>
+        <td>The host name of the RU or EVM (excluding the prefix 'ru-c2' and the domain name '.cms')<br>
+            The hyperlink leads to the RU or EVM hyperdaq page.</td></tr>
+    <tr><th>warn</th><td>This field is empty unless there's a problem. If there are SrcIds in square brackets,
+        the RU waits for data from the corresponding FEDs. If there is a SrcId with either #bad or #CRC,
+        the RU received the indicated number of events with corrupted data or wrong CRC from the given FED.</td></tr>
+    <tr><th>rate</th><td>Trigger rate in kHz (average over last second)</td></tr>
+    <tr><th>thru</th><td>Throughput in MB/s (average over last second).</td></tr>
+    <tr><th>size</th><td>Super-fragment size in kB (average over last second).</td></tr>
+    <tr><th>#events</th><td>Number of super-fragments built since the start of the run.</td></tr>
+    <tr><th>#frags in RU</th><td>Number of FED fragmens in the EVM/RU. A number &gt;&gt; 1 indicates that the EvB is not keeping up with the input.<br>
+        If the RU is unable to build super-fragments, it displays the FED ids of the missing input fragments.</td></tr>
+    <tr><th>#evts in RU</th><td>Number of super-fragmens in the EVM/RU. A number &gt;&gt; 1 indicates that there is a problem in sending data to the BUs.</td></tr>
+    <tr><th>#requests</th><td>Number of requests from the BUs. Each request corresponds to a fixed number of events. A low number for the EVM (in the first table row) indicates a problem on the BU/FFF. A high number on any RU points to a problem on the corresponding FED builder.</td></tr>
+
+</table>
+
+
+
+
+<h3>The geoSlot:SrcId field</h3>
+
+
+e.g.:
+4:<font style="background-color: #ff6600"><b>B</b><b>637</b></font><font style="background-color: #ff9900; color: #000000"><b>&lt;</b></font>
+, 5:<b>638</b><font style="background-color: #ff9900; color: #000000"><b>&lt;</b></font>
+, 6:<b>639</b><font style="background-color: #ff9900; color: #000000"><b>&lt;</b></font>
+, 7:<b>640</b><font style="background-color: #ff9900; color: #000000"><b>&lt;</b></font><br><br>
+
+
+This field contains compact information about all FEDs in the
+FEDBuilder for a given TTCPartition and FRL PC.  The list contains
+pairs of FRL geoslot and FED information field(s). In case there are
+two FEDs connected to the same FRL, two FED information fields are
+listed after the geoslot.  If only the second input of the FRL is
+used, a dash is displayed in place of the first FED information
+field.<br><br>
+
+A FED information field contains the following information (from left to right): <br>
+<table border = 1>
+    <tr><th>TTS %warn</th><td>The percentage of time in TTS Warning state over the last second.<br></td></tr>
+    <tr><th>TTS %busy</th><td>The percentage of time in TTS Busy state over the last second.<br></td></tr>
+    <tr><th>TTS state </th><td>The current TTS state of the FED. <br>
+        <font style="background-color: #ffcc00"><b>W</b></font> ... Warning,
+        <font style="background-color: #ff6600"><b>B</b></font> ... Busy,
+        <font style="background-color: #cc0033; color: #000000"><b>E</b></font> ... Error,
+        <font style="background-color: #cc0033; color: #000000"><b>S</b></font> ... Out-Of-Sync,
+        <font style="background-color: #cc0033; color: #000000"><b>I</b></font> ... Invalid,
+        <font style="background-color: #3399ff"><b>D</b></font> ... Disconnected<br>
+        This is only displayed if the FED has a TTS output and if the state is _not_ Ready.<br>
+        In order to easier spot the FED, also the FED source ID is highlighted with the TTS state background color.<br>
+        It is displayed in grey if the FMM input for this TTS signal is disabled.<br>
+        The hyperlink leads to the FMMController hyperdaq page. </td></tr>
+    <tr><th>FED source ID</th><td>The (expected) FED source ID. <br>
+        The id displayed in black if the FRL input for this FED is enabled. Otherwise it is displayed in grey.</td></tr>
+    <tr><th>backpressure <font style="background-color: #ff9900; color: #000000"><b>&lt;</b></font></th><td>A backpressure indicator. This is displayed if the FRL currently backpressures the FED.</td></tr>
+    <tr><th>backpressure <font style="background-color: #ff9900; color: #000000"><b>&lt;5.1%</b></font></th><td>A backpressure indicator showing the percentage of time the FED is being backpressured by CDAQ averaged over the update interval of DAQView (few seconds). This is displayed if the FRL gave backpressure to the FED in the last few seconds. </td></tr>
+    <tr><th>FRL link warnings</th><td>Warning information:<br>
+        <ul>
+            <li>The received source Id if different to the expected one.</li>
+            <li>The number of FED CRC errors if not 0</li>
+            <li>The number of SLINK CRC errors if not 0</li>
+        </ul>
+    </td></tr>
+    <tr><td></td></tr>
+</table>
+
+To the right of the FED information field(s), warnings concerning the FRL may be displayed:
+<ul>
+    <li>The myrfb State if different to running</li>
+    <li>The counter of myrinet abd event numbers (if not 0)</li>
+</ul>
+
+
+The geoSlot:SrcId field may also contain information about pseudo-FEDs
+associated to the FEDBuilder.  These are additional TTS links which
+belong to one of the FEDs in the FEDBuilder. These TTS links have a
+source ID but no SLINK.  Status information about these pseudo-FEDs is
+displayed to the right of the geoslot:FED information list.  For
+pserudo-FEDs, there is no geoslot. Pseudo-FED information fields are
+separated by blanks.<br><br>
+
+A pseudo-FED information field contains the following information (from left to right): <br>
+<table border = 1>
+    <tr><th>TTS %warn</th><td>The percentage of time in TTS Warning state over the last second.<br></td></tr>
+    <tr><th>TTS %busy</th><td>The percentage of time in TTS Busy state over the last second.<br></td></tr>
+    <tr><th>TTS state</th><td> the current TTS state of the FED (if different from Ready).<br>
+        <font style="background-color: #ffcc00"><b>W</b></font> ... Warning,
+        <font style="background-color: #ff6600"><b>B</b></font> ... Busy,
+        <font style="background-color: #cc0033; color: #000000"><b>E</b></font> ... Error,
+        <font style="background-color: #cc0033; color: #000000"><b>S</b></font> ... Out-Of-Sync,
+        <font style="background-color: #cc0033; color: #000000"><b>I</b></font> ... Invalid,
+        <font style="background-color: #3399ff"><b>D</b></font> ... Disconnected<br>
+        the hyperlink leads to the FMMController hyperdaq page.</td></tr>
+    <tr><th>FED source ID</th><td> the Source ID of the pseudo-FED.<br>
+        greyed out if the FMM input for the FED is disabled.</td></tr>
+</table>
+
+
+<h3>Job crash indicators</h3>
+
+If a job crash is detected for any type of application, a job crash inidicator is displayed following the hyperlink to the application. <br>
+<font style="background-color: #000000; color: #ffffff"><b>JobCrash:Unexpected Signal 136</b></font> <br>
+
+
+</body>
+</html>

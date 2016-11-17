@@ -1,5 +1,4 @@
 namespace DAQView {
-
     export interface SortFunction {
         presort?: (snapshot: DAQAggregator.Snapshot) => DAQAggregator.Snapshot;
         sort: (snapshot: DAQAggregator.Snapshot) => DAQAggregator.Snapshot;

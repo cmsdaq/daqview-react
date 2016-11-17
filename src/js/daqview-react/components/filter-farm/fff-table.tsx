@@ -500,11 +500,13 @@ namespace DAQView {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
             let bus: DAQAggregatorSnapshot.BU[] = this.props.bus;
             let numBus: number = 0;
+
             let buRows: any[] = [];
             if (bus != null) {
                 numBus = bus.length;
                 bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu}/>));
             }
+            let numBusNoRate:number = numBus - buSummary.busNoRate;
 
             let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
 
@@ -521,7 +523,7 @@ namespace DAQView {
                     <tfoot className="fff-table-foot">
                     <FileBasedFilterFarmTableHeaderRow key="fff-summary-header-row" tableObject={tableObject}
                                                        headers={FFF_TABLE_SUMMARY_HEADERS}/>
-                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus}/>
+                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus } numBusNoRate={numBusNoRate}/>
                     </tfoot>
                 </table>
             );
@@ -537,7 +539,7 @@ namespace DAQView {
             return (
                 <tr className="fff-table-top-header-row">
                     <FileBasedFilterFarmTableHeader additionalClasses="fff-table-help"
-                                                    content={<a href=".">Table Help</a>} colSpan="2"/>
+                                                    content={<a href="ffftablehelp.html" target="_blank">Table Help</a>} colSpan="2"/>
                     <FileBasedFilterFarmTableHeader content="B U I L D E R   U N I T   ( B U )" colSpan="19"/>
                 </tr>
             );
@@ -640,17 +642,15 @@ namespace DAQView {
 
             let hostname: string = bu.hostname.substring(3, bu.hostname.length - 4);
             let rate: number = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
-            let throughput: number = FormatUtility.toFixedNumber(bu.throughput / 1024 / 1024, 1);
-            let sizeMean: number = FormatUtility.toFixedNumber(bu.eventSizeMean / 1024, 1);
-            let sizeStddev: number = FormatUtility.toFixedNumber(bu.eventSizeStddev / 1024, 1);
+            let throughput: number = FormatUtility.toFixedNumber(bu.throughput / 1000 / 1000, 1);
+            let sizeMean: number = FormatUtility.toFixedNumber(bu.eventSizeMean / 1000, 1);
+            let sizeStddev: number = FormatUtility.toFixedNumber(bu.eventSizeStddev / 1000, 1);
             let events: number = bu.numEvents;
             let eventsInBU: number = bu.numEventsInBU;
 
             let requestsSent: number = bu.numRequestsSent;
             let requestsUsed: number = bu.numRequestsUsed;
             let requestsBlocked: number = bu.numRequestsBlocked;
-
-            bu.fuOutputBandwidthInMB = 0;
 
             return (
                 <tr className="fff-table-bu-row">
@@ -674,7 +674,8 @@ namespace DAQView {
                     <td>{bu.currentLumisection}</td>
                     <td>{bu.numLumisectionsForHLT}</td>
                     <td>{bu.numLumisectionsOutHLT}</td>
-                    <td>{bu.fuOutputBandwidthInMB.toFixed(1)}</td>
+                    <td>{bu.fuOutputBandwidthInMB.toFixed(2)}</td>
+
                 </tr>
             );
         }
@@ -682,6 +683,7 @@ namespace DAQView {
 
     interface FileBasedFilterFarmTableBUSummaryRowProperties {
         numBus: number;
+        numBusNoRate: number;
         buSummary: DAQAggregatorSnapshot.BUSummary;
     }
 
@@ -693,14 +695,12 @@ namespace DAQView {
         render() {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
 
-            buSummary.fuOutputBandwidthInMB = 0;
-
             return (
                 <tr className="fff-table-bu-summary-row">
-                    <td>Σ BUs = x / {this.props.numBus}</td>
+                    <td>Σ BUs = {this.props.numBusNoRate} / {this.props.numBus}</td>
                     <td>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
-                    <td>Σ {(buSummary.throughput / 1024 / 1024).toFixed(1)}</td>
-                    <td>{(buSummary.eventSizeMean / 1024).toFixed(1)}±{(buSummary.eventSizeStddev / 1024).toFixed(1)}</td>
+                    <td>Σ {(buSummary.throughput / 1000 / 1000).toFixed(1)}</td>
+                    <td>{(buSummary.eventSizeMean / 1000).toFixed(1)}±{(buSummary.eventSizeStddev / 1000).toFixed(1)}</td>
                     <td>Σ {buSummary.numEvents}</td>
                     <td>Σ {buSummary.numEventsInBU}</td>
                     <td>{buSummary.priority}</td>
@@ -717,7 +717,7 @@ namespace DAQView {
                     <td>{buSummary.currentLumisection}</td>
                     <td>{buSummary.numLumisectionsForHLT}</td>
                     <td>{buSummary.numLumisectionsOutHLT}</td>
-                    <td>{buSummary.fuOutputBandwidthInMB.toFixed(1)}</td>
+                    <td>{buSummary.fuOutputBandwidthInMB.toFixed(2)}</td>
                 </tr>
             );
         }

@@ -641,7 +641,9 @@ namespace DAQView {
     }
 
     const FB_TABLE_BASE_HEADERS: FEDBuilderTableHeaderProperties[] = [
-        {content: 'T'},
+        {content: 'P'},
+        {content: 'A'},
+        {content: 'F'},
         {
             content: '%W',
             sortFunctions: {
@@ -753,6 +755,9 @@ namespace DAQView {
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
             let numRus: number = fedBuilders.length;
+            let numUsedRus: number = numRus - fedBuilderSummary.rusMasked;
+
+
 
             let tableObject: FEDBuilderTable = this.props.tableObject;
 
@@ -763,6 +768,7 @@ namespace DAQView {
                     <colgroup className="fb-table-colgroup-unknown" span="2"/>
                     <thead className="fb-table-head">
                     <FEDBuilderTableTopHeaderRow key="fb-top-header-row"/>
+                    <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row"/>
                     <FEDBuilderTableHeaderRow key="fb-header-row" tableObject={tableObject}
                                               headers={FB_TABLE_TOP_HEADERS}/>
                     </thead>
@@ -771,7 +777,7 @@ namespace DAQView {
                     <FEDBuilderTableHeaderRow key="fb-summary-header-row" tableObject={tableObject}
                                               headers={FB_TABLE_SUMMARY_HEADERS}/>
                     <FEDBuilderTableSummaryRow key="fb-summary-row" fedBuilderSummary={fedBuilderSummary}
-                                               numRus={numRus}/>
+                                               numRus={numRus} numUsedRus={numUsedRus}/>
                     </tfoot>
                 </table>
             );
@@ -865,7 +871,7 @@ namespace DAQView {
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
-                                    className={FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}>{(ru.throughput / 1024 / 1024).toFixed(1)}</td>);
+                                    className={FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}>{(ru.throughput / 1000 / 1000).toFixed(1)}</td>);
 
             let sizeClass: string;
             let eventCountClass: string;
@@ -884,7 +890,7 @@ namespace DAQView {
             }
 
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
-                                    className={sizeClass}>{(ru.superFragmentSizeMean / 1024).toFixed(3)}±{(ru.superFragmentSizeStddev / 1024).toFixed(3)}</td>);
+                                    className={sizeClass}>{(ru.superFragmentSizeMean / 1000).toFixed(3)}±{(ru.superFragmentSizeStddev / 1000).toFixed(3)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={eventCountClass}>{ru.eventCount}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
@@ -918,11 +924,29 @@ namespace DAQView {
         render() {
             return (
                 <tr className="fb-table-top-header-row">
-                    <FEDBuilderTableHeader additionalClasses="fb-table-help" content={<a href=".">Table Help</a>}
+                    <FEDBuilderTableHeader additionalClasses="fb-table-help" content={<a href="fbtablehelp.html" target="_blank">Table Help</a>}
                                            colSpan="2"/>
-                    <FEDBuilderTableHeader content="F E D B U I L D E R" colSpan="7"/>
-                    <FEDBuilderTableHeader content="E V B" colSpan="9"/>
+                    <FEDBuilderTableHeader content="F  E  D  B  U  I  L  D  E  R" colSpan="9"/>
+                    <FEDBuilderTableHeader content="E  V  B" colSpan="9"/>
                 </tr>
+
+            );
+        }
+    }
+
+    class FEDBuilderTableSecondaryHeaderRow extends React.Component<{},{}> {
+        shouldComponentUpdate() {
+            return false;
+        }
+
+        render() {
+            return (
+                <tr className="fb-table-secondary-header-row">
+                    <FEDBuilderTableHeader content="" colSpan="1"/>
+                    <FEDBuilderTableHeader content="T T S" colSpan="3"/>
+                    <FEDBuilderTableHeader content="" colSpan="16"/>
+                </tr>
+
             );
         }
     }
@@ -994,6 +1018,21 @@ namespace DAQView {
                 }
             }
 
+
+            //handlers to be used with onMouseOver and onMouseOut of this element
+            /*
+            let mouseOverFunction: () => void = null;
+            mouseOverFunction = function (){
+
+            };
+
+            let mouseOutFunction: () => void = null;
+            mouseOutFunction = function (){
+
+                //alert("mouseOut"+content);
+            };*/
+
+
             let sortingImage: any = null;
             if (currentSorting != null) {
                 sortingImage = <input type="image" className="fb-table-sort-image"
@@ -1060,9 +1099,19 @@ namespace DAQView {
             let className: string = classNames("fb-table-subfb-row", additionalClasses);
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = subFedBuilder.ttcPartition;
-            let ttsState: string = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '-';
+
+            let ttsState: string = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : 'x';
+
+            let ttsStateTcdsPm: string = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
+            let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
+
             let ttsStateClasses: string = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
+            let ttsStateTcdsPmClasses: string = ttcPartition.tcds_pm_ttsState || ttcPartition.tcds_pm_ttsState != '-'? 'fb-table-subfb-tts-state-' + ttsStateTcdsPm : 'fb-table-subfb-tts-state-none';
+            ttsStateTcdsPmClasses = classNames(ttsStateTcdsPmClasses, 'fb-table-subfb-tts-state');
+            let ttsStateTcdsApvClasses: string = ttcPartition.tcds_apv_pm_ttsState || ttcPartition.tcds_apv_pm_ttsState != '-'? 'fb-table-subfb-tts-state-' + ttsStateTcdsApvPm : 'fb-table-subfb-tts-state-none';
+            ttsStateTcdsApvClasses = classNames(ttsStateTcdsApvClasses, 'fb-table-subfb-tts-state');
+
 
             let minTrig: number = subFedBuilder.minTrig;
             let maxTrig: number = subFedBuilder.maxTrig;
@@ -1070,12 +1119,35 @@ namespace DAQView {
             let minTrigUnequalMaxTrig: boolean = minTrig != maxTrig;
 
             let ttcPartitionTTSStateLink: any = ttsState;
-            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null) {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-') {
                 ttcPartitionTTSStateLink =
                     <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
                        target="_blank">{ttsState}</a>;
             }
-            let ttcPartitionTTSStateDisplay: any = <span className={ttsStateClasses}>{ttcPartitionTTSStateLink}</span>;
+
+            //two vars below should be available from the data model instead of being hardcoded
+            let tcdsControlUrl: string = 'http://tcds-control-cpm.cms:2050';
+            let tcdsControlService: string = 'cpm-pri';
+
+            let ttcPartitionTTSStateTcdsPmLink: any = ttsStateTcdsPm;
+            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-') {  //review this check
+                ttcPartitionTTSStateTcdsPmLink =
+                    <a href={tcdsControlUrl + '/urn:xdaq-application:service='+tcdsControlService}
+                       target="_blank">{ttsStateTcdsPm}</a>;
+            }
+
+            let ttcPartitionTTSStateTcdsApvPmLink: any = ttsStateTcdsApvPm;
+            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-') {  //review this check
+                ttcPartitionTTSStateTcdsApvPmLink =
+                    <a href={tcdsControlUrl + '/urn:xdaq-application:service='+tcdsControlService}
+                       target="_blank">{ttsStateTcdsApvPm}</a>;
+            }
+
+
+
+            let ttcPartitionTTSStateDisplay_F: any = <span className={ttsStateClasses}>{ttcPartitionTTSStateLink}</span>;
+            let ttcPartitionTTSStateDisplay_P: any = <span className={ttsStateTcdsPmClasses}>{ttcPartitionTTSStateTcdsPmLink}</span>;
+            let ttcPartitionTTSStateDisplay_A: any = <span className={ttsStateTcdsApvClasses}>{ttcPartitionTTSStateTcdsApvPmLink}</span>;
 
             let evmMaxTrg: number = this.props.evmMaxTrg;
 
@@ -1106,7 +1178,9 @@ namespace DAQView {
             return (
                 <tr className={className}>
                     <td>{ttcPartition.name}:{ttcPartition.ttcpNr}</td>
-                    <td>{ttcPartitionTTSStateDisplay}</td>
+                    <td>{ttcPartitionTTSStateDisplay_P}</td>
+                    <td>{ttcPartitionTTSStateDisplay_A}</td>
+                    <td>{ttcPartitionTTSStateDisplay_F}</td>
                     <td>{ttcPartition.percentWarning.toFixed(1)}</td>
                     <td>{ttcPartition.percentBusy.toFixed(1)}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
@@ -1139,6 +1213,7 @@ namespace DAQView {
 
             pseudoFEDs.forEach(function (fed: DAQAggregatorSnapshot.FED) {
                 fedData.push(' ');
+                fed.isPseudoFed = true; //this can be used for pseudofed-specific rendering at FEDData level
                 fedData.push(<FEDData key={fed['@id']} fed={fed}/>);
             });
 
@@ -1276,6 +1351,7 @@ namespace DAQView {
 
     interface FEDBuilderTableSummaryRowProperties {
         numRus: number;
+        numUsedRus: number;
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
     }
 
@@ -1286,15 +1362,16 @@ namespace DAQView {
 
         render() {
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
+
             return (
                 <tr className="fb-table-fb-summary-row">
-                    <td colSpan="9"></td>
-                    <td>Σ x / {this.props.numRus}</td>
+                    <td colSpan="11"></td>
+                    <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
                     <td>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
-                    <td>Σ {(fedBuilderSummary.throughput / 1024 / 1024).toFixed(1)}</td>
+                    <td>Σ {(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)}</td>
                     <td>
-                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1024).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1024).toFixed(1)}</td>
+                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)}</td>
                     <td>Δ {fedBuilderSummary.deltaEvents}</td>
                     <td>Σ {FormatUtility.formatSINumber(fedBuilderSummary.sumFragmentsInRU, 1)}</td>
                     <td>Σ {fedBuilderSummary.sumEventsInRU}</td>

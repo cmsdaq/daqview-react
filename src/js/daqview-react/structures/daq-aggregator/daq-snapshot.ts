@@ -48,6 +48,7 @@ namespace DAQAggregator {
 
             fedBuilderSummary: FEDBuilderSummary;
             buSummary: BUSummary;
+
         }
 
         export interface FEDBuilder extends SnapshotElement {
@@ -88,6 +89,8 @@ namespace DAQAggregator {
             numLumisectionsOutHLT: number;
 
             fuOutputBandwidthInMB: number;
+
+            busNoRate: number; //locally calculated
         }
 
         export interface FEDBuilderSummary extends SnapshotElement {
@@ -102,6 +105,8 @@ namespace DAQAggregator {
             sumFragmentsInRU: number;
             sumEventsInRU: number;
             sumRequests: number;
+
+            rusMasked: number; //locally calculated
         }
 
         export interface BU extends SnapshotElement {
@@ -182,9 +187,12 @@ namespace DAQAggregator {
             ttcpNr: number;
             name: string;
             ttsState: string;
+            tcds_pm_ttsState: string;
+            tcds_apv_pm_ttsState: string;
             percentWarning: number;
             percentBusy: number;
             fmm?: FMM;
+            masked: boolean;
         }
 
         export interface FMM extends SnapshotElement {
@@ -253,6 +261,8 @@ namespace DAQAggregator {
             ruFedWithoutFragments: boolean;
 
             frl_AccSlinkFullSec: number;
+
+            isPseudoFed: boolean; //variable set locally, using context information, for displays reason
         }
 
     }

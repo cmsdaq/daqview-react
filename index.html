@@ -47,83 +47,51 @@
                 });
                 var parser = new DAQAggregator.SnapshotParser();
                 var ruWarningsResolver = new DAQAggregator.RUWarnMessageAggregator();
+                var ruMaskedCounter = new DAQAggregator.RUMaskedCounter();
+                var buNoRateCounter = new DAQAggregator.BUNoRateCounter();
 
-                var snapshots = [
-                    1471609242676, 1471609246339, 1471609250001, 1471609253657,
-                    1471609257321, 1471609260996, 1471609264656, 1471609268317,
-                    1471609271992, 1471609275653, 1471609279306, 1471609282959,
-                    1471609286630, 1471609290294, 1471609293971, 1471609297635,
-                    1471609301291, 1471609304957, 1471609308628, 1471609312289,
-                    1471609315958, 1471609319632, 1471609323375, 1471609327034,
-                    1471609330712, 1471609334366, 1471609338085, 1471609341749,
-                    1471609345418, 1471609349076, 1471609352733, 1471609356439,
-                    1471609360097, 1471609363755, 1471609367418, 1471609371086,
-                    1471609374736, 1471609378392, 1471609382119, 1471609385782,
-                    1471609389451, 1471609393112, 1471609396787, 1471609400457,
-                    1471609404118, 1471609407831, 1471609411471, 1471609415136,
-                    1471609418783, 1471609422451, 1471609426114, 1471609429779,
-                    1471609433436, 1471609437092, 1471609440758, 1471609444491,
-                    1471609448156, 1471609451848, 1471609455529, 1471609459230,
-                    1471609462921, 1471609466584, 1471609470246, 1471609473903,
-                    1471609477559, 1471609481281, 1471609484951, 1471609488617,
-                    1471609492278, 1471609495939, 1471609499592, 1471609503255,
-                    1471609506915, 1471609510583, 1471609514326, 1471609518007,
-                    1471609521689, 1471609525373, 1471609529058, 1471609532724,
-                    1471609536382, 1471609540041, 1471609543702, 1471609547365,
-                    1471609551033, 1471609554700, 1471609558384, 1471609562148,
-                    1471609565817, 1471609569481, 1471609573148, 1471609576822,
-                    1471609580490, 1471609584164, 1471609587823, 1471609591530,
-                    1471609595187, 1471609598852, 1471609602506, 1471609606159,
-                    1471609609825, 1471609613481, 1471609617149, 1471609620811,
-                    1471609624478, 1471609628182, 1471609631823, 1471609635478,
-                    1471609639132, 1471609642807, 1471609646522, 1471609650184,
-                    1471609653837, 1471609657492, 1471609661146, 1471609664815,
-                    1471609668478, 1471609672134, 1471609675791, 1471609679523,
-                    1471609683187, 1471609686846, 1471609690508, 1471609694177,
-                    1471609697836, 1471609701495, 1471609705234, 1471609708912,
-                    1471609712575, 1471609716257, 1471609719991, 1471609723645,
-                    1471609727308, 1471609730944, 1471609734592, 1471609738246,
-                    1471609741918, 1471609745551, 1471609749200, 1471609752847,
-                    1471609756505, 1471609760166, 1471609763824, 1471609767483,
-                    1471609771134, 1471609774840, 1471609778501, 1471609782158,
-                    1471609785810, 1471609789462, 1471609793114, 1471609796843,
-                    1471609800522, 1471609804184, 1471609807834, 1471609811492,
-                    1471609815194, 1471609818875, 1471609822538, 1471609826197,
-                    1471609829855, 1471609833522, 1471609837184, 1471609840875,
-                    1471609844540, 1471609848208, 1471609851926, 1471609855581,
-                    1471609859229, 1471609862897, 1471609866547, 1471609870215,
-                    1471609873877, 1471609877534, 1471609881210, 1471609884876,
-                    1471609888537, 1471609892213, 1471609895875, 1471609899533,
-                    1471609903168, 1471609906892, 1471609910553, 1471609914209,
-                    1471609917865, 1471609921540, 1471609925213, 1471609928863,
-                    1471609932522, 1471609936235, 1471609939871, 1471609943525,
-                    1471609947174, 1471609950820, 1471609954476, 1471609958135
-                ];
-                var maxIndex = snapshots.length - 1;
-                var currentIndex = 0;
+                //var maxIndex = snapshots.length - 1;
+                //var currentIndex = 0;
 
                 var snapshotSource = {
-                    updateInterval: 2000,
+                    updateInterval: 1500,
                     getSourceURL: function () {
-                        // hack to traverse snapshots in a specific order
-                        currentIndex++;
-                        if (currentIndex > maxIndex) {
-                            currentIndex = 0;
-                        }
-                        return 'http://pcepcmd62.cern.ch:3000/mydaqview/api/getsnapshotbytimestamp?timestamp=' + snapshots[currentIndex];
 
-                        // return 'http://pcepcmd62.cern.ch:3000/mydaqview/api/getmostrecentprodsnapshot';
-
-                        /* var baseURL = 'http://dev-daq-expert.cern.ch/snapshot?time=';
-                         var currentTime = new Date(new Date().getTime() - (10 * 24 * 3600 * 1000)).toISOString();
-
-                         return baseURL + '"' + currentTime + '"';
+                        /*
+                         // hack to traverse snapshots in a specific order
+                         currentIndex++;
+                         if (currentIndex > maxIndex) {
+                         currentIndex = 0;
+                         }
                          */
+
+                        var debugSnapshotSource = true;
+
+                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
+                        var timestampDelim = '"';
+                        var currentTime = new Date(new Date().getTime()).toISOString();
+
+                        if (debugSnapshotSource) {
+                            baseURL = 'http://localhost:3000/mydaqview/api/snapshot?time=';
+                            timestampDelim = '';
+                        }
+
+                        //console.log(baseURL + '"' + currentTime + '"');
+                        return baseURL + timestampDelim + currentTime + timestampDelim;
+
                     },
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
+
+
+                        //parse original snapshots
                         snapshot = parser.parse.bind(parser)(snapshot);
+
+                        //pass it through chain of preprocessors
                         snapshot = ruWarningsResolver.resolveRUWarnings.bind(ruWarningsResolver)(snapshot);
+                        snapshot = ruMaskedCounter.countMaskedRUs.bind(ruMaskedCounter)(snapshot);
+                        snapshot = buNoRateCounter.countNoRateBUs.bind(buNoRateCounter)(snapshot);
+
                         //DAQAggregator.randomizeSnapshot(snapshot, 20);
                         console.log(snapshot);
                         return snapshot;
@@ -133,8 +101,6 @@
                 var snapshotProvider = new DAQAggregator.SnapshotProvider(snapshotSource);
                 snapshotProvider.addView(daqView);
                 snapshotProvider.start();
-
-                // quick and dirty hack for basic navigation; possibly solve this with React components in the future
 
                 var controlPauseResume = $('.daqview-control-pause-resume');
                 controlPauseResume.on('click', function () {
@@ -146,6 +112,12 @@
                         $(this).prop('src', 'dist/img/pause.png');
                     }
                 });
+
+
+
+                /*
+                 // quick and dirty hack for demo back and forth navigation; possibly solve this with React components in the future
+                 // and use snapshot provider functions instead of local updateSnapshot() impl.
 
                 var updateSnapshot = function () {
                     var url = snapshotSource.getSourceURL();
@@ -186,6 +158,8 @@
                     }
                     updateSnapshot();
                 });
+                 */
+
             }
             catch (exception) {
                 console ? (console.debug ? console.debug(exception) : console.log(exception)) : alert(exception);
@@ -196,14 +170,10 @@
 <body>
 <div id="daqview-react">
     <div id="daqview-control">
-        <input type="image" class="daqview-control-previous" src="dist/img/previous.png" alt="previous snapshot"
-               title="previous snapshot"/>
         &nbsp;
         <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
                title="pause/resume"/>
-        &nbsp;
-        <input type="image" class="daqview-control-next" src="dist/img/next.png" alt="next snapshot"
-               title="next snapshot"/>
+
     </div>
     <br/><br/>
     <div id="daqview-react-metadata-table"></div>
