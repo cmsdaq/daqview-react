@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>DAQ View 2 React</title>
+
+    <link rel="StyleSheet" href="dist/css/daqview.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/metadata/metadata-table.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/fed-builder/fb-table.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/filter-farm/fff-table.css" type="text/css"/>
+
+    <script type="text/javascript" src="dist/lib/jquery/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="dist/lib/classnames/index.js"></script>
+    <script type="text/javascript" src="dist/lib/react/react-with-addons.js"></script>
+    <script type="text/javascript" src="dist/lib/react/react-dom.js"></script>
+
+    <script type="text/javascript" src="dist/js/structures/daq-aggregator/daq-snapshot.js"></script>
+    <script type="text/javascript" src="dist/js/utilities/snapshot-provider.js"></script>
+    <script type="text/javascript" src="dist/js/utilities/daqview-util.js"></script>
+    <script type="text/javascript" src="dist/js/utilities/format-util.js"></script>
+    <script type="text/javascript" src="dist/js/utilities/snapshot-randomizer.js"></script>
+    <script type="text/javascript" src="dist/js/utilities/parser.js"></script>
+    <script type="text/javascript" src="dist/js/components/common/sorting.js"></script>
+    <script type="text/javascript" src="dist/js/components/metadata/metadata-table.js"></script>
+    <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
+    <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
+
+    <script type="text/javascript" src="dist/js/daqview.js"></script>
+
+
+    <script type="text/javascript">
+        var daqView;
+        $(document).ready(function () {
+            try {
+                daqView = new DAQView.DAQViewReact();
+                daqView.createMetadataTable('daqview-react-metadata-table');
+                daqView.createFBTable('daqview-react-fb-table');
+                daqView.createFFFTable('daqview-react-fff-table');
+
+                // HACK: to avoid browser errors when loading local JSON
+                $.ajaxSetup({
+                    beforeSend: function (xhr) {
+                        if (xhr.overrideMimeType) {
+                            xhr.overrideMimeType("application/json");
+                        }
+                    }
+                });
+                var parser = new DAQAggregator.SnapshotParser();
+                var ruWarningsResolver = new DAQAggregator.RUWarnMessageAggregator();
+                var ruMaskedCounter = new DAQAggregator.RUMaskedCounter();
+                var buNoRateCounter = new DAQAggregator.BUNoRateCounter();
+
+                //var maxIndex = snapshots.length - 1;
+                //var currentIndex = 0;
+
+                var snapshotSource = {
+                    updateInterval: 1500,
+                    getSourceURL: function () {
+
+                        /*
+                         // hack to traverse snapshots in a specific order
+                         currentIndex++;
+                         if (currentIndex > maxIndex) {
+                         currentIndex = 0;
+                         }
+                         */
+
+                        var debugSnapshotSource = true;
+
+                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
+                        var timestampDelim = '"';
+                        var currentTime = new Date(new Date().getTime()).toISOString();
+
+                        if (debugSnapshotSource) {
+                            baseURL = 'http://localhost:3000/mydaqview/api/snapshot?time=';
+                            timestampDelim = '';
+                        }
+
+                        //console.log(baseURL + '"' + currentTime + '"');
+                        return baseURL + timestampDelim + currentTime + timestampDelim;
+
+                    },
+                    parseSnapshot: (function (snapshot) {
+                        console.log(snapshot);
+
+
+                        //parse original snapshots
+                        snapshot = parser.parse.bind(parser)(snapshot);
+
+                        //pass it through chain of preprocessors
+                        snapshot = ruWarningsResolver.resolveRUWarnings.bind(ruWarningsResolver)(snapshot);
+                        snapshot = ruMaskedCounter.countMaskedRUs.bind(ruMaskedCounter)(snapshot);
+                        snapshot = buNoRateCounter.countNoRateBUs.bind(buNoRateCounter)(snapshot);
+
+                        //DAQAggregator.randomizeSnapshot(snapshot, 20);
+                        console.log(snapshot);
+                        return snapshot;
+                    }).bind(window)
+                };
+
+                var snapshotProvider = new DAQAggregator.SnapshotProvider(snapshotSource);
+                snapshotProvider.addView(daqView);
+                snapshotProvider.start();
+
+                var controlPauseResume = $('.daqview-control-pause-resume');
+                controlPauseResume.on('click', function () {
+                    if (snapshotProvider.isRunning()) {
+                        snapshotProvider.stop();
+                        $(this).prop('src', 'dist/img/play.png');
+                    } else {
+                        snapshotProvider.start();
+                        $(this).prop('src', 'dist/img/pause.png');
+                    }
+                });
+
+
+
+                /*
+                 // quick and dirty hack for demo back and forth navigation; possibly solve this with React components in the future
+                 // and use snapshot provider functions instead of local updateSnapshot() impl.
+
+                var updateSnapshot = function () {
+                    var url = snapshotSource.getSourceURL();
+                    var snapshotRequest = jQuery.getJSON(url);
+
+                    snapshotRequest.done((function (snapshotJSON) {
+                        var snapshot;
+                        if (snapshotSource.parseSnapshot) {
+                            snapshot = snapshotSource.parseSnapshot(snapshotJSON);
+                        } else {
+                            snapshot = new Snapshot(snapshotJSON);
+                        }
+                        daqView.setSnapshot(snapshot);
+                    }));
+                };
+
+                var controlPrevious = $('.daqview-control-previous');
+                controlPrevious.on('click', function () {
+                    if (snapshotProvider.isRunning()) {
+                        snapshotProvider.stop();
+                        controlPauseResume.prop('src', 'dist/img/play.png');
+                    }
+                    currentIndex -= 2;
+                    if (currentIndex < 0) {
+                        currentIndex = maxIndex;
+                    }
+                    updateSnapshot();
+                });
+
+                var controlNext = $('.daqview-control-next');
+                controlNext.on('click', function () {
+                    if (snapshotProvider.isRunning()) {
+                        snapshotProvider.stop();
+                        controlPauseResume.prop('src', 'dist/img/play.png');
+                    }
+                    if (currentIndex > maxIndex) {
+                        currentIndex = 0;
+                    }
+                    updateSnapshot();
+                });
+                 */
+
+            }
+            catch (exception) {
+                console ? (console.debug ? console.debug(exception) : console.log(exception)) : alert(exception);
+            }
+        });
+    </script>
+</head>
+<body>
+<div id="daqview-react">
+    <div id="daqview-control">
+        &nbsp;
+        <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
+               title="pause/resume"/>
+
+    </div>
+    <br/><br/>
+    <div id="daqview-react-metadata-table"></div>
+    <br/><br/>
+    <div id="daqview-react-fb-table"></div>
+    <br/><br/>
+    <div id="daqview-react-fff-table"></div>
+</div>
+</body>
+</html>

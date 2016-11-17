@@ -1,0 +1,28 @@
+.metadata-table {
+    width: 100%;
+    border-width: 0;
+    border-collapse: collapse;
+}
+
+.metadata-table-head {
+    background-color: #DDDDAA;
+}
+
+.metadata-table-body {
+
+}
+
+.metadata-table-header-row {
+    text-align: left;
+    background-color: #DDDDAA;
+}
+
+.metadata-table-content-row {
+
+}
+
+.metadata-table,
+.metadata-table-body td,
+.metadata-table-header-row th {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
