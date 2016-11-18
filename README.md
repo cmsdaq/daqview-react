@@ -9,6 +9,7 @@ Data are provided by the DAQ Aggregator snapshots in form of JSON files and Reac
 
 ## Todo
 - [ ] add styles: {summary row colours, handle issue with frl enabled yet srcId is 0}
+- [ ] handle special cases at %W, %B TTCP columns, as done in the P,A,F columns => possibly requires DAQAggregator changes
 - [ ] move FED errors from RU warn column into the FED space
 - [ ] add clever polling in snapshot provider => requires support from the API
 - [ ] add additional information (beam mode etc.)
