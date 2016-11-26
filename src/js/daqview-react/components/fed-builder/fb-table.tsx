@@ -1373,7 +1373,7 @@ namespace DAQView {
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean, FBTableNumberFormats.SIZE)}>
                         Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}>Δ {fedBuilderSummary.deltaEvents}</td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}>Σ {FormatUtility.formatSINumber(fedBuilderSummary.sumFragmentsInRU, 1)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}>Σ {fedBuilderSummary.sumFragmentsInRU}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU, FBTableNumberFormats.EVENTS_IN_RU)}>Σ {fedBuilderSummary.sumEventsInRU}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests, FBTableNumberFormats.REQUESTS)}>Σ {fedBuilderSummary.sumRequests}</td>
                 </tr>
