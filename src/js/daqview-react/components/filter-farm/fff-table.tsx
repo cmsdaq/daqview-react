@@ -698,15 +698,15 @@ namespace DAQView {
             return (
                 <tr className="fff-table-bu-summary-row">
                     <td>Σ BUs = {this.props.numBusNoRate} / {this.props.numBus}</td>
-                    <td>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
-                    <td>Σ {(buSummary.throughput / 1000 / 1000).toFixed(1)}</td>
-                    <td>{(buSummary.eventSizeMean / 1000).toFixed(1)}±{(buSummary.eventSizeStddev / 1000).toFixed(1)}</td>
-                    <td>Σ {buSummary.numEvents}</td>
-                    <td>Σ {buSummary.numEventsInBU}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.rate / 1000, FFFTableNumberFormats.RATE)}>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.throughput / 1000 / 1000, FFFTableNumberFormats.THROUGHPUT)}>Σ {(buSummary.throughput / 1000 / 1000).toFixed(1)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.eventSizeMean / 1000, FFFTableNumberFormats.SIZE)}>{(buSummary.eventSizeMean / 1000).toFixed(1)}±{(buSummary.eventSizeStddev / 1000).toFixed(1)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.numEvents, FFFTableNumberFormats.EVENTS)}>Σ {buSummary.numEvents}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.numEventsInBU, FFFTableNumberFormats.EVENTS_IN_BU)}>Σ {buSummary.numEventsInBU}</td>
                     <td>{buSummary.priority}</td>
-                    <td>Σ {buSummary.numRequestsSent}</td>
-                    <td>Σ {buSummary.numRequestsUsed}</td>
-                    <td>Σ {buSummary.numRequestsBlocked}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.numRequestsSent, FFFTableNumberFormats.REQUESTS_SENT)}>Σ {buSummary.numRequestsSent}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.numRequestsUsed, FFFTableNumberFormats.REQUESTS_USED)}>Σ {buSummary.numRequestsUsed}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.numRequestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED)}>Σ {buSummary.numRequestsBlocked}</td>
                     <td>Σ {buSummary.numFUsHLT}</td>
                     <td>Σ {buSummary.numFUsCrashed}</td>
                     <td>Σ {buSummary.numFUsStale}</td>
@@ -722,5 +722,4 @@ namespace DAQView {
             );
         }
     }
-
 }
