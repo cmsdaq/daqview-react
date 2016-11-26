@@ -1368,9 +1368,9 @@ namespace DAQView {
                     <td colSpan="11"></td>
                     <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.rate, FBTableNumberFormats.RATE)}>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput, FBTableNumberFormats.THROUGHPUT)}>Σ {(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean, FBTableNumberFormats.SIZE)}>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput / 1000 / 1000, FBTableNumberFormats.THROUGHPUT)}>Σ {(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean / 1000, FBTableNumberFormats.SIZE)}>
                         Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}>Δ {fedBuilderSummary.deltaEvents}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}>Σ {fedBuilderSummary.sumFragmentsInRU}</td>
