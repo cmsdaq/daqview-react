@@ -1163,6 +1163,15 @@ namespace DAQView {
             let ttcPartitionTTSStateDisplay_P: any = <span className={ttsStateTcdsPmClasses}>{ttcPartitionTTSStateTcdsPmLink}</span>;
             let ttcPartitionTTSStateDisplay_A: any = <span className={ttsStateTcdsApvClasses}>{ttcPartitionTTSStateTcdsApvPmLink}</span>;
 
+
+            let ttcpPercWarn: string = ttcPartition.percentWarning != null ? ttcPartition.percentWarning.toFixed(1) : '-';
+            let ttcpPercBusy: string = ttcPartition.percentWarning != null ? ttcPartition.percentBusy.toFixed(1) : '-';
+
+            if (ttsState === '-' || ttsState === 'x' || ttsState === '?'){
+                ttcpPercWarn = ttsState;
+                ttcpPercBusy = ttsState;
+            }
+
             let evmMaxTrg: number = this.props.evmMaxTrg;
 
             let minTrigDisplayContent: any = '';
@@ -1195,8 +1204,8 @@ namespace DAQView {
                     <td>{ttcPartitionTTSStateDisplay_P}</td>
                     <td>{ttcPartitionTTSStateDisplay_A}</td>
                     <td>{ttcPartitionTTSStateDisplay_F}</td>
-                    <td>{ttcPartition.percentWarning.toFixed(1)}</td>
-                    <td>{ttcPartition.percentBusy.toFixed(1)}</td>
+                    <td>{ttcpPercWarn}</td>
+                    <td>{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
                     <FRLs frls={frls} pseudoFeds={pseudoFeds}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>

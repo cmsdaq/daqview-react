@@ -952,6 +952,12 @@ var DAQView;
             var ttcPartitionTTSStateDisplay_F = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
             var ttcPartitionTTSStateDisplay_P = React.createElement("span", {className: ttsStateTcdsPmClasses}, ttcPartitionTTSStateTcdsPmLink);
             var ttcPartitionTTSStateDisplay_A = React.createElement("span", {className: ttsStateTcdsApvClasses}, ttcPartitionTTSStateTcdsApvPmLink);
+            var ttcpPercWarn = ttcPartition.percentWarning != null ? ttcPartition.percentWarning.toFixed(1) : '-';
+            var ttcpPercBusy = ttcPartition.percentWarning != null ? ttcPartition.percentBusy.toFixed(1) : '-';
+            if (ttsState === '-' || ttsState === 'x' || ttsState === '?') {
+                ttcpPercWarn = ttsState;
+                ttcpPercBusy = ttsState;
+            }
             var evmMaxTrg = this.props.evmMaxTrg;
             var minTrigDisplayContent = '';
             var maxTrigDisplayContent = maxTrig;
@@ -974,7 +980,7 @@ var DAQView;
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", null, ttcPartitionTTSStateDisplay_P), React.createElement("td", null, ttcPartitionTTSStateDisplay_A), React.createElement("td", null, ttcPartitionTTSStateDisplay_F), React.createElement("td", null, ttcPartition.percentWarning.toFixed(1)), React.createElement("td", null, ttcPartition.percentBusy.toFixed(1)), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls, pseudoFeds: pseudoFeds}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", null, ttcPartitionTTSStateDisplay_P), React.createElement("td", null, ttcPartitionTTSStateDisplay_A), React.createElement("td", null, ttcPartitionTTSStateDisplay_F), React.createElement("td", null, ttcpPercWarn), React.createElement("td", null, ttcpPercBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls, pseudoFeds: pseudoFeds}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));
