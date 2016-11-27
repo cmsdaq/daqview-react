@@ -903,7 +903,23 @@ var DAQView;
             var additionalClasses = this.props.additionalClasses;
             var className = classNames("fb-table-subfb-row", additionalClasses);
             var ttcPartition = subFedBuilder.ttcPartition;
-            var ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : 'x';
+            var ttsState = '';
+            if (ttcPartition.topFMMInfo.nullCause) {
+                ttsState = ttcPartition.topFMMInfo.nullCause;
+            }
+            else {
+                if (ttcPartition.fmm) {
+                    if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled') {
+                        ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?';
+                    }
+                    else {
+                        ttsState = '-';
+                    }
+                }
+                else {
+                    ttsState = 'x';
+                }
+            }
             var ttsStateTcdsPm = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
             var ttsStateTcdsApvPm = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
             var ttsStateClasses = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';

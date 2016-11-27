@@ -1100,7 +1100,21 @@ namespace DAQView {
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = subFedBuilder.ttcPartition;
 
-            let ttsState: string = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : 'x';
+
+            let ttsState: string = '';
+            if (ttcPartition.topFMMInfo.nullCause){
+                ttsState = ttcPartition.topFMMInfo.nullCause;
+            }else{
+                if (ttcPartition.fmm){
+                    if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled'){
+                        ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?'
+                    }else{
+                        ttsState = '-';
+                    }
+                }else{
+                    ttsState = 'x';
+                }
+            }
 
             let ttsStateTcdsPm: string = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
             let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';

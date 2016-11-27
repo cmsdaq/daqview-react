@@ -193,12 +193,14 @@ namespace DAQAggregator {
             percentBusy: number;
             fmm?: FMM;
             masked: boolean;
+            topFMMInfo: FMMInfo;
         }
 
         export interface FMM extends SnapshotElement {
             geoslot: number;
             url: string;
             feds?: FED[];
+            stateName: string;
         }
 
         export interface FRLPc extends SnapshotElement {
@@ -263,6 +265,10 @@ namespace DAQAggregator {
             frl_AccSlinkFullSec: number;
 
             isPseudoFed: boolean; //variable set locally, using context information, for displays reason
+        }
+
+        export interface FMMInfo extends SnapshotElement{
+            nullCause: string;
         }
 
     }
