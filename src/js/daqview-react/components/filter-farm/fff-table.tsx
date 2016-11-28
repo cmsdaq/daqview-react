@@ -329,6 +329,11 @@ namespace DAQView {
         export const REQUESTS_BLOCKED: FormatUtility.NumberFormat = {
             baseStyle: 'fff-table-requests-blocked'
         };
+
+        export const BANDWIDTH: FormatUtility.NumberFormat = {
+            baseStyle: 'fff-table-bwout',
+            formats: [{min: 100, max: 1000000, styleSuffix: '-over'}, {styleSuffix: ''}]
+        };
     }
 
     const FFF_TABLE_BASE_HEADERS: FileBasedFilterFarmTableHeaderProperties[] = [
@@ -674,7 +679,7 @@ namespace DAQView {
                     <td>{bu.currentLumisection}</td>
                     <td>{bu.numLumisectionsForHLT}</td>
                     <td>{bu.numLumisectionsOutHLT}</td>
-                    <td>{bu.fuOutputBandwidthInMB.toFixed(2)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(bu.fuOutputBandwidthInMB, FFFTableNumberFormats.BANDWIDTH)}>{bu.fuOutputBandwidthInMB.toFixed(2)}</td>
 
                 </tr>
             );
