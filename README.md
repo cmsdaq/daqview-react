@@ -8,9 +8,9 @@ Data are provided by the DAQ Aggregator snapshots in form of JSON files and Reac
 
 
 ## Todo
-- [ ] add styles: {summary row colours, handle issue with frl enabled yet srcId is 0/check what happens with frlMasked when L0 flashlist is unavailable => takes DAQAggregator debugging}
-- [ ] handle special cases at %W, %B TTCP columns, as done in the P,A,F columns => possibly requires DAQAggregator changes
-- [ ] more resolution to the value of #frags in RU col at FEDBuilder summary
+- [ ] add styles: {handle issue with frl enabled yet srcId is 0/check what happens with frlMasked when L0 flashlist is unavailable => takes DAQAggregator debugging}
+- [x] handle special cases at %W, %B TTCP columns, as done in the P,A,F columns => possibly requires DAQAggregator changes
+- [x] more resolution to the value of #frags in RU col at FEDBuilder summary
 - [ ] move FED errors from RU warn column into the FED space
 - [ ] add clever polling in snapshot provider => requires support from the API
 - [ ] add additional information (beam mode etc.)
