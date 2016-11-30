@@ -3,7 +3,7 @@ namespace DAQView {
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
     import DAQ = DAQAggregator.Snapshot.DAQ;
 
-    export class AboutTable implements DAQView.DAQSnapshotView {
+    export class AboutTable{
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot;
@@ -21,14 +21,14 @@ namespace DAQView {
         }
     }
 
-    interface MetadataTableElementProperties {
+    interface AboutTableElementProperties {
         project: string;
         authors: string;
         organization: string;
         year: number;
     }
 
-    class AboutTableElement extends React.Component<MetadataTableElementProperties,{}> {
+    class AboutTableElement extends React.Component<AboutTableElementProperties,{}> {
         render() {
             return (
                 <table className="about-table">
