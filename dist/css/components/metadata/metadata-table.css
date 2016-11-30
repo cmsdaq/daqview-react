@@ -12,17 +12,18 @@
 
 }
 
-.metadata-table-header-row {
+.metadata-table-header-row th{
     text-align: left;
     background-color: #DDDDAA;
+    border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.metadata-table-content-row {
-
+.metadata-table-content-row td{
+    font-weight: bold;
 }
 
 .metadata-table,
-.metadata-table-body td,
+.metadata-table-content-row td,
 .metadata-table-header-row th {
-    border: 1px solid rgba(0, 0, 0, 0.2);
+
 }
