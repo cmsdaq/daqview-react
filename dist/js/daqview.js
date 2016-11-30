@@ -45,7 +45,7 @@ var DAQView;
             this.createAboutTableImpl(elementName);
         };
         DAQViewReact.prototype.createAboutTableImpl = function (elementName) {
-            var newTable = new DAQView.FileBasedFilterFarmTable(elementName);
+            var newTable = new DAQView.AboutTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }

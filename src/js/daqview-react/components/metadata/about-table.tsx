@@ -3,7 +3,7 @@ namespace DAQView {
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
     import DAQ = DAQAggregator.Snapshot.DAQ;
 
-    export class AboutTable{
+    export class AboutTable implements DAQView.DAQSnapshotView{
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot;
@@ -13,7 +13,8 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot) {
-            let aboutTableRootElement: any = <AboutTableElement project={"DAQView - React.js"}
+            this.snapshot = snapshot; //extra 'about' info could in the future be loaded from snapshot (e.g. DAQAggregator version linked to snapshot)
+            let aboutTableRootElement: any = <AboutTableElement       project={"DAQView - React.js"}
                                                                       authors={"Michail Vougioukas, Philipp Brummer"}
                                                                       organization={"CERN CMS DAQ Group"}
                                                                       year={2016}/>;

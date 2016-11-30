@@ -58,7 +58,7 @@ namespace DAQView {
         }
 
         public createAboutTableImpl(elementName: string) {
-            let newTable = new FileBasedFilterFarmTable(elementName);
+            let newTable = new AboutTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }

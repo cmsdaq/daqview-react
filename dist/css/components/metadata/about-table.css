@@ -1,7 +1,8 @@
 .about-table {
-    width: 100%;
+    width: 30%;
     border-width: 0;
     border-collapse: collapse;
+
 }
 
 .about-table-head {
@@ -16,12 +17,12 @@
 
 }
 
-.about-table-content-row {
-
+.about-table-content-row td{
+    font-size: x-small;
+    font-style: italic;
 }
 
 .about-table,
-.about-table-body td,
 .about-table-header-row th {
 
 }
