@@ -1,0 +1,27 @@
+.about-table {
+    width: 100%;
+    border-width: 0;
+    border-collapse: collapse;
+}
+
+.about-table-head {
+    background-color: #DDDDAA;
+}
+
+.about-table-body {
+
+}
+
+.about-table-header-row {
+
+}
+
+.about-table-content-row {
+
+}
+
+.about-table,
+.about-table-body td,
+.about-table-header-row th {
+
+}

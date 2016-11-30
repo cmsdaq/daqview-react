@@ -52,5 +52,17 @@ namespace DAQView {
             }
             this.snapshotViews[elementName] = newTable;
         }
+
+        public createAboutTable(elementName: string){
+            this.createAboutTableImpl(elementName);
+        }
+
+        public createAboutTableImpl(elementName: string) {
+            let newTable = new FileBasedFilterFarmTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        }
     }
 }

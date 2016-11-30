@@ -41,6 +41,16 @@ var DAQView;
             }
             this.snapshotViews[elementName] = newTable;
         };
+        DAQViewReact.prototype.createAboutTable = function (elementName) {
+            this.createAboutTableImpl(elementName);
+        };
+        DAQViewReact.prototype.createAboutTableImpl = function (elementName) {
+            var newTable = new DAQView.FileBasedFilterFarmTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        };
         return DAQViewReact;
     }());
     DAQView.DAQViewReact = DAQViewReact;
