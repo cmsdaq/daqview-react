@@ -39,8 +39,8 @@ namespace DAQAggregator {
 
             daqState: string;
             levelZeroState: string;
-            // lhcMachineMode: string;
-            // lhcBeamMode: string;
+            lhcMachineMode: string;
+            lhcBeamMode: string;
 
             fedBuilders: FEDBuilder[];
             bus?: BU[];

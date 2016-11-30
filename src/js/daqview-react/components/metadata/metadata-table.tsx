@@ -20,7 +20,9 @@ namespace DAQView {
                                                                       dpSetPath={daq.dpsetPath}
                                                                       snapshotTimestamp={daq.lastUpdate}
                                                                       lv0State={daq.levelZeroState}
-                                                                      daqState={daq.daqState}/>;
+                                                                      daqState={daq.daqState}
+                                                                      machineState={daq.lhcMachineMode}
+                                                                      beamState={daq.lhcBeamMode}/>;
             ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
         }
     }
@@ -33,6 +35,8 @@ namespace DAQView {
         lv0State?: string;
         lv0StateTimestamp?: number;
         daqState?: string;
+        machineState?: string;
+        beamState?: string;
     }
 
     class MetadataTableElement extends React.Component<MetadataTableElementProperties,{}> {
@@ -45,6 +49,8 @@ namespace DAQView {
                         <th>LV0 state</th>
                         <th>LV0 state entry time</th>
                         <th>DAQ state</th>
+                        <th>Machine state</th>
+                        <th>Beam state</th>
                         <th>Session ID</th>
                         <th>DAQ configuration</th>
                         <th>Snapshot timestamp</th>
@@ -56,6 +62,8 @@ namespace DAQView {
                         <td>{this.props.lv0State}</td>
                         <td>{this.props.lv0StateTimestamp ? this.props.lv0StateTimestamp : 'Unknown'}</td>
                         <td>{this.props.daqState}</td>
+                        <td>{this.props.machineState}</td>
+                        <td>{this.props.beamState}</td>
                         <td>{this.props.sessionId}</td>
                         <td>{this.props.dpSetPath}</td>
                         <td>{new Date(this.props.snapshotTimestamp).toLocaleString()}</td>
