@@ -22,6 +22,10 @@ namespace DAQView {
         }
 
         public createMetadataTable(elementName: string) {
+            this.createMetadataTableImpl(elementName);
+        }
+
+        private createMetadataTableImpl(elementName: string) {
             let newTable = new MetadataTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
@@ -33,7 +37,7 @@ namespace DAQView {
             this.createFEDBuilderTable(elementName);
         }
 
-        public createFEDBuilderTable(elementName: string) {
+        private createFEDBuilderTable(elementName: string) {
             let newTable = new FEDBuilderTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
@@ -45,7 +49,7 @@ namespace DAQView {
             this.createFileBasedFilterFarmTable(elementName);
         }
 
-        public createFileBasedFilterFarmTable(elementName: string) {
+        private createFileBasedFilterFarmTable(elementName: string) {
             let newTable = new FileBasedFilterFarmTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
@@ -57,7 +61,7 @@ namespace DAQView {
             this.createAboutTableImpl(elementName);
         }
 
-        public createAboutTableImpl(elementName: string) {
+        private createAboutTableImpl(elementName: string) {
             let newTable = new AboutTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
@@ -69,7 +73,7 @@ namespace DAQView {
             this.createReplacementForLoaderImpl(elementName);
         }
 
-        public createReplacementForLoaderImpl(elementName: string){
+        private createReplacementForLoaderImpl(elementName: string){
             let newTable = new LoaderReplacement(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);

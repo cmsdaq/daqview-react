@@ -15,6 +15,9 @@ var DAQView;
             DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].setSnapshot(snapshot); });
         };
         DAQViewReact.prototype.createMetadataTable = function (elementName) {
+            this.createMetadataTableImpl(elementName);
+        };
+        DAQViewReact.prototype.createMetadataTableImpl = function (elementName) {
             var newTable = new DAQView.MetadataTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
