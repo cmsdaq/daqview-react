@@ -18,6 +18,7 @@
     "src/js/daqview-react/components/common/sorting",
     "src/js/daqview-react/components/metadata/metadata-table.tsx",
     "src/js/daqview-react/components/metadata/about-table.tsx",
+    "src/js/daqview-react/components/metadata/loader-replacement.tsx",
     "src/js/daqview-react/components/fed-builder/fb-table.tsx",
     "src/js/daqview-react/components/filter-farm/fff-table.tsx",
     "src/js/daqview-react/utilities/daqview-util.ts",

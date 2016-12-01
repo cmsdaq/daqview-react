@@ -64,5 +64,17 @@ namespace DAQView {
             }
             this.snapshotViews[elementName] = newTable;
         }
+
+        public createReplacementForLoader(elementName: string){
+            this.createReplacementForLoaderImpl(elementName);
+        }
+
+        public createReplacementForLoaderImpl(elementName: string){
+            let newTable = new LoaderReplacement(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        }
     }
 }

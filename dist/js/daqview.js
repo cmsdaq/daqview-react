@@ -51,6 +51,16 @@ var DAQView;
             }
             this.snapshotViews[elementName] = newTable;
         };
+        DAQViewReact.prototype.createReplacementForLoader = function (elementName) {
+            this.createReplacementForLoaderImpl(elementName);
+        };
+        DAQViewReact.prototype.createReplacementForLoaderImpl = function (elementName) {
+            var newTable = new DAQView.LoaderReplacement(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        };
         return DAQViewReact;
     }());
     DAQView.DAQViewReact = DAQViewReact;

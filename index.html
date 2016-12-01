@@ -11,6 +11,7 @@
     <link rel="StyleSheet" href="dist/css/components/fed-builder/fb-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/filter-farm/fff-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/about-table.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/metadata/loader.css" type="text/css"/>
 
     <script type="text/javascript" src="dist/lib/jquery/jquery-3.0.0.min.js"></script>
     <script type="text/javascript" src="dist/lib/classnames/index.js"></script>
@@ -26,6 +27,7 @@
     <script type="text/javascript" src="dist/js/components/common/sorting.js"></script>
     <script type="text/javascript" src="dist/js/components/metadata/metadata-table.js"></script>
     <script type="text/javascript" src="dist/js/components/metadata/about-table.js"></script>
+    <script type="text/javascript" src="dist/js/components/metadata/loader-replacement.js"></script>
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
 
@@ -41,6 +43,7 @@
                 daqView.createFBTable('daqview-react-fb-table');
                 daqView.createFFFTable('daqview-react-fff-table');
                 daqView.createAboutTable('daqview-react-about-table');
+                daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
 
                 // HACK: to avoid browser errors when loading local JSON
                 $.ajaxSetup({
@@ -188,6 +191,9 @@
     <div id="daqview-react-fff-table"></div>
     <br/><br/>
     <div id="daqview-react-about-table"></div>
+    <div id="loaderWrapper"><br/><div class="loader"></div></div>
+
+
 </div>
 </body>
 </html>
