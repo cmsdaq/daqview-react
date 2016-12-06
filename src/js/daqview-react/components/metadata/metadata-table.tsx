@@ -53,7 +53,8 @@ namespace DAQView {
                         <th>Beam state</th>
                         <th>Session ID</th>
                         <th>DAQ configuration</th>
-                        <th>Snapshot timestamp</th>
+                        <th>Snapshot timestamp (local)</th>
+                        <th>Snapshot timestamp (UTC)</th>
                     </tr>
                     </thead>
                     <tbody className="metadata-table-body">
@@ -66,7 +67,8 @@ namespace DAQView {
                         <td>{this.props.beamState}</td>
                         <td>{this.props.sessionId}</td>
                         <td>{this.props.dpSetPath}</td>
-                        <td>{new Date(this.props.snapshotTimestamp).toLocaleString()}</td>
+                        <td>{new Date(this.props.snapshotTimestamp).toString()}</td>
+                        <td>{new Date(this.props.snapshotTimestamp).toUTCString()}</td>
                     </tr>
                     </tbody>
                 </table>
