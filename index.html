@@ -64,6 +64,9 @@
                 var counter = 0;
                 var timeStampAtNov30 = 1480501829039;
 
+                //use local aggregator data source (for development)
+                var debugSnapshotSource = false;
+
                 var snapshotSource = {
                     updateInterval: 1500,
                     getSourceURL: function () {
@@ -76,7 +79,7 @@
                          }
                          */
 
-                        var debugSnapshotSource = false;
+
 
                         var baseURL = 'http://daq-expert-dev.cms:8080/DAQExpert/snapshot?time=';
                         var timestampDelim = '"';
@@ -87,6 +90,22 @@
                         //simulated timestamp that counts from Nov 30 2016 for development in EYETS (6 days of aggregated data)
                         var currentTime = new Date(timeStampAtNov30+(counter*this.updateInterval)).toISOString();
                         counter++;
+
+                        if (debugSnapshotSource) {
+                            baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
+                            timestampDelim = '';
+                        }
+
+                        console.log(baseURL + '"' + currentTime + '"');
+                        return baseURL + timestampDelim + currentTime + timestampDelim;
+
+                    },
+                    getSourceURLForGotoRequests: function () {
+
+                        var baseURL = 'http://daq-expert-dev.cms:8080/DAQExpert/snapshot?time=';
+                        var timestampDelim = '"';
+
+                        var currentTime = $('#daqview-go-to-time-input').val();
 
                         if (debugSnapshotSource) {
                             baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
@@ -110,7 +129,7 @@
                         snapshot = buNoRateCounter.countNoRateBUs.bind(buNoRateCounter)(snapshot);
 
                         //DAQAggregator.randomizeSnapshot(snapshot, 20);
-                        console.log(snapshot);
+                        //console.log(snapshot);
                         return snapshot;
                     }).bind(window)
                 };
@@ -121,13 +140,38 @@
 
                 var controlPauseResume = $('.daqview-control-pause-resume');
                 controlPauseResume.on('click', function () {
-                    if (snapshotProvider.isRunning()) {
-                        snapshotProvider.stop();
-                        $(this).prop('src', 'dist/img/play.png');
-                    } else {
+
+                        //the provider will also stop itself if a go-to-time request is received
+                        //this button's appearance is set accordingly (displays 'play') by the event handler of the go-to-time button
+
+                        if (snapshotProvider.isRunning()) {
+                            snapshotProvider.stop();
+                            $(this).prop('src', 'dist/img/play.png');
+                        } else {
+                            //if pause was due to a go-to-time request, then restarting also resets mode to realtime
+                            if (!snapshotProvider.inRealTimePolling){
+                                snapshotProvider.switchToRealTime();
+                            }
+                            snapshotProvider.start();
+
+                            $(this).prop('src', 'dist/img/pause.png');
+                        }
+
+                });
+
+                var controlGoToTime = $('.daqview-go-to-time');
+                controlGoToTime.on('click', function (){
+                    snapshotProvider.switchToGotoTimeRequests();
+                    snapshotProvider.provideOneMoreSnapshotAndStop();
+
+                    //useful when requesting a go-to-time timestamp in daqview=paused state
+                    if (!snapshotProvider.isRunning()){
                         snapshotProvider.start();
-                        $(this).prop('src', 'dist/img/pause.png');
                     }
+
+                    //updating play/pause button, because point queries essentially stop real-time monitoring
+                    //the provider will stop itself once a gototime request is received (after providing this last snapshot)
+                    $('.daqview-control-pause-resume').prop('src', 'dist/img/play.png');
                 });
 
 
@@ -186,11 +230,16 @@
 </head>
 <body>
 <div id="daqview-react">
-    <div id="daqview-control">
+    <div id="daqview-time-navigation">
 
+            <input type="text" placeholder="please respect format" value="2016-11-30T10:38:26.039Z" id="daqview-go-to-time-input">
+            <input type="submit" value="Go to time" class="daqview-go-to-time">
+
+        <p>Please use provided format (ISO) and UTC time:<br/>e.g. 2016-11-30T10:38:26.039Z</p>
+    </div>
+    <div id="daqview-control">
         <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
                title="pause/resume"/>
-
     </div>
     <br/><br/>
     <div id="daqview-react-metadata-table"></div>

@@ -5,6 +5,8 @@ namespace DAQAggregator {
     export class SnapshotProvider implements DAQSnapshotView {
         private snapshotSource: SnapshotSource;
         private running: boolean = false;
+        private inRealTimePolling: boolean = true;
+        private instructionToStop:boolean = false;
 
         private views: DAQSnapshotView[] = [];
 
@@ -24,6 +26,10 @@ namespace DAQAggregator {
             return this.running;
         }
 
+        public isInRealTimePolling(): boolean {
+            return this.inRealTimePolling;
+        }
+
         public start() {
             if (this.running) {
                 return;
@@ -36,6 +42,20 @@ namespace DAQAggregator {
                 }
 
                 let url: string = this.snapshotSource.getSourceURL();
+
+                if (!this.inRealTimePolling){
+                    url = this.snapshotSource.getSourceURLForGotoRequests();
+                    console.log('In go-to-time snapshot provider mode');
+                }else{
+                    console.log('In real-time snapshot provider mode');
+                }
+
+                //at this point, this will stop the provider after completing the current snapshot request and daqview update
+                if (this.instructionToStop){
+                    this.stop();
+                    this.instructionToStop = false; //reset value immediately: it only needs to be true once and then be clean for later usages of the method
+                }
+
 
                 let startTime: number = new Date().getTime();
                 let snapshotRequest = jQuery.getJSON(url);
@@ -80,13 +100,23 @@ namespace DAQAggregator {
             }).bind(this);
 
 
-
-
             setTimeout(updateFunction, this.snapshotSource.updateInterval);
         }
 
         public stop() {
             this.running = false;
+        }
+
+        public switchToRealTime(){
+            this.inRealTimePolling = true;
+        }
+
+        public switchToGotoTimeRequests(){
+            this.inRealTimePolling = false;
+        }
+
+        public provideOneMoreSnapshotAndStop(){
+            this.instructionToStop = true;
         }
     }
 

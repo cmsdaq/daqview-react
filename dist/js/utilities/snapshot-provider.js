@@ -3,6 +3,8 @@ var DAQAggregator;
     var SnapshotProvider = (function () {
         function SnapshotProvider(snapshotSource) {
             this.running = false;
+            this.inRealTimePolling = true;
+            this.instructionToStop = false;
             this.views = [];
             this.snapshotSource = snapshotSource;
         }
@@ -15,6 +17,9 @@ var DAQAggregator;
         SnapshotProvider.prototype.isRunning = function () {
             return this.running;
         };
+        SnapshotProvider.prototype.isInRealTimePolling = function () {
+            return this.inRealTimePolling;
+        };
         SnapshotProvider.prototype.start = function () {
             if (this.running) {
                 return;
@@ -25,6 +30,18 @@ var DAQAggregator;
                     return;
                 }
                 var url = this.snapshotSource.getSourceURL();
+                if (!this.inRealTimePolling) {
+                    url = this.snapshotSource.getSourceURLForGotoRequests();
+                    console.log('In go-to-time snapshot provider mode');
+                }
+                else {
+                    console.log('In real-time snapshot provider mode');
+                }
+                //at this point, this will stop the provider after completing the current snapshot request and daqview update
+                if (this.instructionToStop) {
+                    this.stop();
+                    this.instructionToStop = false; //reset value immediately: it only needs to be true once and then be clean for later usages of the method
+                }
                 var startTime = new Date().getTime();
                 var snapshotRequest = jQuery.getJSON(url);
                 snapshotRequest.done((function (snapshotJSON) {
@@ -63,6 +80,15 @@ var DAQAggregator;
         };
         SnapshotProvider.prototype.stop = function () {
             this.running = false;
+        };
+        SnapshotProvider.prototype.switchToRealTime = function () {
+            this.inRealTimePolling = true;
+        };
+        SnapshotProvider.prototype.switchToGotoTimeRequests = function () {
+            this.inRealTimePolling = false;
+        };
+        SnapshotProvider.prototype.provideOneMoreSnapshotAndStop = function () {
+            this.instructionToStop = true;
         };
         return SnapshotProvider;
     }());

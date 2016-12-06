@@ -22,6 +22,12 @@ html, body {
     text-align: center;
 }
 
+#daqview-time-navigation {
+    font-weight: lighter;
+    font-size: small;
+    font-style: italic;
+}
+
 .daqview-control-previous,
 .daqview-control-pause-resume ,
 .daqview-control-next {
