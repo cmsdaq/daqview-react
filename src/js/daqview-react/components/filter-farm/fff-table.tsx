@@ -17,6 +17,7 @@ namespace DAQView {
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot = null;
+        private drawPausedComponent: boolean = false;
         private sortFunction: SortFunction = {
             presort: this.INITIAL_PRESORT_FUNCTION,
             sort: this.INITIAL_SORT_FUNCTION
@@ -50,11 +51,12 @@ namespace DAQView {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
             if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                 return;
             }
             this.snapshot = snapshot;
+            this.drawPausedComponent = drawPausedComponent;
             this.updateSnapshot();
         }
 

@@ -17,8 +17,9 @@ namespace DAQView {
         constructor() {
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot) {
-            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot));
+        //calls specific setSnapshot() definition of each daqview component type
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedPage: boolean) {
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage));
         }
 
         public createMetadataTable(elementName: string) {

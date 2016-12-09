@@ -7,13 +7,16 @@ namespace DAQView {
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot;
+        private drawPausedComponent: boolean = false;
 
         constructor(htmlRootElementName: string) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
             this.snapshot = snapshot;
+            this.drawPausedComponent = drawPausedComponent;
+
             let loaderReplacementRootElement: any = <LoaderReplacementElement
                                                         placeholder={""}/>;
             ReactDOM.render(loaderReplacementRootElement, this.htmlRootElement);

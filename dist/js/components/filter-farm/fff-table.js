@@ -14,6 +14,7 @@ var DAQView;
             this.INITIAL_SORT_FUNCTION = FFFTableSortFunctions.BU_HOSTNAME_ASC;
             this.INITIAL_PRESORT_FUNCTION = FFFTableSortFunctions.NONE;
             this.snapshot = null;
+            this.drawPausedComponent = false;
             this.sortFunction = {
                 presort: this.INITIAL_PRESORT_FUNCTION,
                 sort: this.INITIAL_SORT_FUNCTION
@@ -43,11 +44,12 @@ var DAQView;
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot) {
+        FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot, drawPausedComponent) {
             if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                 return;
             }
             this.snapshot = snapshot;
+            this.drawPausedComponent = drawPausedComponent;
             this.updateSnapshot();
         };
         FileBasedFilterFarmTable.prototype.updateSnapshot = function () {

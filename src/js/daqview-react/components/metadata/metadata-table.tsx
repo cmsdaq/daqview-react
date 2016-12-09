@@ -7,14 +7,17 @@ namespace DAQView {
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot;
+        private drawPausedComponent: boolean = false;
 
         constructor(htmlRootElementName: string) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
             this.snapshot = snapshot;
+            this.drawPausedComponent = drawPausedComponent;
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+
             let metadataTableRootElement: any = <MetadataTableElement runNumber={daq.runNumber}
                                                                       sessionId={daq.sessionId}
                                                                       dpSetPath={daq.dpsetPath}
@@ -22,7 +25,8 @@ namespace DAQView {
                                                                       lv0State={daq.levelZeroState}
                                                                       daqState={daq.daqState}
                                                                       machineState={daq.lhcMachineMode}
-                                                                      beamState={daq.lhcBeamMode}/>;
+                                                                      beamState={daq.lhcBeamMode}
+                                                                    drawPausedComponent={drawPausedComponent}/>;
             ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
         }
     }
@@ -37,6 +41,7 @@ namespace DAQView {
         daqState?: string;
         machineState?: string;
         beamState?: string;
+        drawPausedComponent: boolean;
     }
 
     class MetadataTableElement extends React.Component<MetadataTableElementProperties,{}> {

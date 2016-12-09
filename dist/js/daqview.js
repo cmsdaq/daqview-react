@@ -10,9 +10,10 @@ var DAQView;
         function DAQViewReact() {
             this.snapshotViews = {};
         }
-        DAQViewReact.prototype.setSnapshot = function (snapshot) {
+        //calls specific setSnapshot() definition of each daqview component type
+        DAQViewReact.prototype.setSnapshot = function (snapshot, drawPausedPage) {
             var _this = this;
-            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].setSnapshot(snapshot); });
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage); });
         };
         DAQViewReact.prototype.createMetadataTable = function (elementName) {
             this.createMetadataTableImpl(elementName);

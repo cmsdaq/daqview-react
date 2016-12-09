@@ -52,7 +52,7 @@
 }
 
 .fb-table-header {
-    background-color: #DDDDAA;
+    background-color: #C8C5C5;
 }
 
 .fb-table-foot {
@@ -133,20 +133,32 @@
 
 }
 
-.fb-table-fb-row:nth-of-type(even) {
+.fb-table-fb-row-running:nth-of-type(even) {
     background-color: #DDDDAA;
 }
 
-.fb-table-fb-row:nth-of-type(odd) {
+.fb-table-fb-row-running:nth-of-type(odd) {
+    background-color:  #F5F2F2 ;
+}
 
+.fb-table-fb-row-paused:nth-of-type(even) {
+    background-color: #FFFFFF;
+}
+
+.fb-table-fb-row-paused:nth-of-type(odd) {
+    background-color:  #F5F2F2 ;
 }
 
 .fb-table-subfb-row {
 
 }
 
-.fb-table-fb-summary-row {
+.fb-table-fb-summary-row-running {
     background-color: #DDDDAA;
+}
+
+.fb-table-fb-summary-row-paused {
+    background-color: #FFFFFF;
 }
 
 .fb-table-subfb-tts-state,

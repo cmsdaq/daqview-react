@@ -5,7 +5,7 @@
 }
 
 .metadata-table-head {
-    background-color: #DDDDAA;
+    background-color: #C8C5C5;
 }
 
 .metadata-table-body {
@@ -14,7 +14,7 @@
 
 .metadata-table-header-row th{
     text-align: left;
-    background-color: #DDDDAA;
+    background-color: #C8C5C5;
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
 

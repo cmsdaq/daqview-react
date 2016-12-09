@@ -7,12 +7,14 @@ var DAQView;
 (function (DAQView) {
     var MetadataTable = (function () {
         function MetadataTable(htmlRootElementName) {
+            this.drawPausedComponent = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        MetadataTable.prototype.setSnapshot = function (snapshot) {
+        MetadataTable.prototype.setSnapshot = function (snapshot, drawPausedComponent) {
             this.snapshot = snapshot;
+            this.drawPausedComponent = drawPausedComponent;
             var daq = snapshot.getDAQ();
-            var metadataTableRootElement = React.createElement(MetadataTableElement, {runNumber: daq.runNumber, sessionId: daq.sessionId, dpSetPath: daq.dpsetPath, snapshotTimestamp: daq.lastUpdate, lv0State: daq.levelZeroState, daqState: daq.daqState, machineState: daq.lhcMachineMode, beamState: daq.lhcBeamMode});
+            var metadataTableRootElement = React.createElement(MetadataTableElement, {runNumber: daq.runNumber, sessionId: daq.sessionId, dpSetPath: daq.dpsetPath, snapshotTimestamp: daq.lastUpdate, lv0State: daq.levelZeroState, daqState: daq.daqState, machineState: daq.lhcMachineMode, beamState: daq.lhcBeamMode, drawPausedComponent: drawPausedComponent});
             ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
         };
         return MetadataTable;

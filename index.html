@@ -35,7 +35,7 @@
 
 
     <script type="text/javascript">
-        var daqView;
+        var daqView; //daqView is an object containing an array of the created views (page components)
         $(document).ready(function () {
             try {
                 daqView = new DAQView.DAQViewReact();
@@ -145,7 +145,7 @@
                         //this button's appearance is set accordingly (displays 'play') by the event handler of the go-to-time button
 
                         if (snapshotProvider.isRunning()) {
-                            snapshotProvider.stop();
+                            snapshotProvider.provideOneMoreSnapshotAndStop(0); //calling with arg 0 will just redraw previous snapshot with the paused_page color scheme, then stop updating
                             $(this).prop('src', 'dist/img/play.png');
                         } else {
                             //if pause was due to a go-to-time request, then restarting also resets mode to realtime
@@ -162,7 +162,7 @@
                 var controlGoToTime = $('.daqview-go-to-time');
                 controlGoToTime.on('click', function (){
                     snapshotProvider.switchToGotoTimeRequests();
-                    snapshotProvider.provideOneMoreSnapshotAndStop();
+                    snapshotProvider.provideOneMoreSnapshotAndStop(1); //calling with arg 1 will draw the requested snapshot with the paused_page color scheme, then stop updating
 
                     //useful when requesting a go-to-time timestamp in daqview=paused state
                     if (!snapshotProvider.isRunning()){
