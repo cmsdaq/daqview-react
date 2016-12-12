@@ -62,13 +62,13 @@
                 //var currentIndex = 0;
 
                 var counter = 0;
-                var timeStampAtNov30 = 1480501829039;
+                var timeStampAtNov30 = 1480678707956;
 
                 //use local aggregator data source (for development)
                 var debugSnapshotSource = false;
 
                 var snapshotSource = {
-                    updateInterval: 1500,
+                    updateInterval: 2000,
                     getSourceURL: function () {
 
                         /*
@@ -87,7 +87,7 @@
                         //production timestamp
                         //var currentTime = new Date(new Date().getTime()).toISOString();
 
-                        //simulated timestamp that counts from Nov 30 2016 for development in EYETS (6 days of aggregated data)
+                        //simulated timestamp that counts from Dec 2 2016 for development in EYETS (3 days of aggregated data)
                         var currentTime = new Date(timeStampAtNov30+(counter*this.updateInterval)).toISOString();
                         counter++;
 
@@ -232,10 +232,10 @@
 <div id="daqview-react">
     <div id="daqview-time-navigation">
 
-            <input type="text" placeholder="please respect format" value="2016-11-30T10:38:26.039Z" id="daqview-go-to-time-input">
+            <input type="text" placeholder="please respect format" value="2016-12-03T10:38:26.039Z" id="daqview-go-to-time-input">
             <input type="submit" value="Go to time" class="daqview-go-to-time">
 
-        <p>Please use provided format (ISO) and UTC time:<br/>e.g. 2016-11-30T10:38:26.039Z</p>
+        <p>Please use provided format (ISO) and UTC time:<br/>e.g. 2016-12-03T10:38:26.039Z</p>
     </div>
     <div id="daqview-control">
         <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
