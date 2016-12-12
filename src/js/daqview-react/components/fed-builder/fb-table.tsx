@@ -1430,7 +1430,7 @@ namespace DAQView {
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let fbSummaryRowClass: string = drawPausedComponent ? "fb-table-fb-summary-row-paused" : "fb-table-fb-summary-row-running";
-            console.log(fbSummaryRowClass);
+
             return (
                 <tr className={fbSummaryRowClass}>
                     <td colSpan="11"></td>

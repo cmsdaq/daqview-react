@@ -53,7 +53,12 @@ namespace DAQView {
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
             if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
-                return;
+                console.log("duplicate snapshot detected");
+                if (!drawPausedComponent) {
+                    return;
+                }else {
+                    console.log("...but requested pause, so do one more rendering");
+                }
             }
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
@@ -63,9 +68,11 @@ namespace DAQView {
         private updateSnapshot() {
             let sortedSnapshot: DAQAggregatorSnapshot = this.sort(this.snapshot);
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
+            let drawPausedComponent: boolean = this.drawPausedComponent;
             let fileBasedFilterFarmTableRootElement: any = <FileBasedFilterFarmTableElement tableObject={this}
                                                                                             bus={daq.bus}
-                                                                                            buSummary={daq.buSummary}/>;
+                                                                                            buSummary={daq.buSummary}
+                                                                                            drawPausedComponent={drawPausedComponent}/>;
             ReactDOM.render(fileBasedFilterFarmTableRootElement, this.htmlRootElement);
         }
 
@@ -499,6 +506,7 @@ namespace DAQView {
         tableObject: FileBasedFilterFarmTable;
         bus: DAQAggregatorSnapshot.BU[];
         buSummary: DAQAggregatorSnapshot.BUSummary;
+        drawPausedComponent: boolean;
     }
 
     class FileBasedFilterFarmTableElement extends React.Component<FileBasedFilterFarmTableElementProperties,{}> {
@@ -508,10 +516,11 @@ namespace DAQView {
             let bus: DAQAggregatorSnapshot.BU[] = this.props.bus;
             let numBus: number = 0;
 
+            let drawPausedComponents: boolean = this.props.drawPausedComponent;
             let buRows: any[] = [];
             if (bus != null) {
                 numBus = bus.length;
-                bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu}/>));
+                bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu} drawPausedComponent={drawPausedComponents}/>));
             }
             let numBusNoRate:number = numBus - buSummary.busNoRate;
 
@@ -520,34 +529,39 @@ namespace DAQView {
             return (
                 <table className="fff-table">
                     <thead className="fff-table-head">
-                    <FileBasedFilterFarmTableTopHeaderRow key="fff-top-header-row"/>
+                    <FileBasedFilterFarmTableTopHeaderRow key="fff-top-header-row" drawPausedComponent={drawPausedComponents}/>
                     <FileBasedFilterFarmTableHeaderRow key="fff-header-row" tableObject={tableObject}
-                                                       headers={FFF_TABLE_TOP_HEADERS}/>
+                                                       headers={FFF_TABLE_TOP_HEADERS} drawPausedComponent={drawPausedComponents}/>
                     </thead>
                     <tbody className="fff-table-body">
                     {buRows}
                     </tbody>
                     <tfoot className="fff-table-foot">
                     <FileBasedFilterFarmTableHeaderRow key="fff-summary-header-row" tableObject={tableObject}
-                                                       headers={FFF_TABLE_SUMMARY_HEADERS}/>
-                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus } numBusNoRate={numBusNoRate}/>
+                                                       headers={FFF_TABLE_SUMMARY_HEADERS} drawPausedComponent={drawPausedComponents}/>
+                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus } numBusNoRate={numBusNoRate} drawPausedComponent={drawPausedComponents}/>
                     </tfoot>
                 </table>
             );
         }
     }
 
-    class FileBasedFilterFarmTableTopHeaderRow extends React.Component<{},{}> {
+    interface FileBasedFilterFarmTableTopHeaderRowProperties {
+        drawPausedComponent: boolean;
+    }
+
+    class FileBasedFilterFarmTableTopHeaderRow extends React.Component<FileBasedFilterFarmTableTopHeaderRowProperties,{}> {
         shouldComponentUpdate() {
             return false;
         }
 
         render() {
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
             return (
                 <tr className="fff-table-top-header-row">
                     <FileBasedFilterFarmTableHeader additionalClasses="fff-table-help"
-                                                    content={<a href="ffftablehelp.html" target="_blank">Table Help</a>} colSpan="2"/>
-                    <FileBasedFilterFarmTableHeader content="B U I L D E R   U N I T   ( B U )" colSpan="19"/>
+                                                    content={<a href="ffftablehelp.html" target="_blank">Table Help</a>} colSpan="2" drawPausedComponent={drawPausedComponent}/>
+                    <FileBasedFilterFarmTableHeader content="B U I L D E R   U N I T   ( B U )" colSpan="19" drawPausedComponent={drawPausedComponent}/>
                 </tr>
             );
         }
@@ -556,10 +570,12 @@ namespace DAQView {
     interface FileBasedFilterFarmTableHeaderRowProperties {
         headers: FileBasedFilterFarmTableHeaderProperties[];
         tableObject: FileBasedFilterFarmTable;
+        drawPausedComponent: boolean;
     }
 
     class FileBasedFilterFarmTableHeaderRow extends React.Component<FileBasedFilterFarmTableHeaderRowProperties,{}> {
         render() {
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let tableObject: FileBasedFilterFarmTable = this.props.tableObject;
 
             let children: any[] = [];
@@ -586,6 +602,7 @@ namespace DAQView {
         tableObject?: FileBasedFilterFarmTable;
         sorting?: Sorting;
         sortFunctions?: { [key: string]: SortFunction };
+        drawPausedComponent?: boolean;
     }
 
     class FileBasedFilterFarmTableHeader extends React.Component<FileBasedFilterFarmTableHeaderProperties,{}> {
@@ -594,6 +611,7 @@ namespace DAQView {
         }
 
         render() {
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let content: string = this.props.content;
             let colSpan: string = this.props.colSpan;
             let additionalClasses: string | string[] = this.props.additionalClasses;
@@ -636,14 +654,18 @@ namespace DAQView {
 
     interface FileBasedFilterFarmTableBURowProperties {
         bu: DAQAggregatorSnapshot.BU;
+        drawPausedComponent: boolean;
     }
 
     class FileBasedFilterFarmTableBURow extends React.Component<FileBasedFilterFarmTableBURowProperties,{}> {
         shouldComponentUpdate(nextProps: FileBasedFilterFarmTableBURowProperties) {
-            return !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
+            return true; //this can be optimized
+            //return !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
         }
 
         render() {
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
+
             let bu: DAQAggregatorSnapshot.BU = this.props.bu;
             let buUrl: string = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
 
@@ -659,8 +681,10 @@ namespace DAQView {
             let requestsUsed: number = bu.numRequestsUsed;
             let requestsBlocked: number = bu.numRequestsBlocked;
 
+            let fffBuRowClass: string = drawPausedComponent? "fff-table-bu-row-paused" : "fff-table-bu-row-running";
+            console.log(fffBuRowClass+" (row class)");
             return (
-                <tr className="fff-table-bu-row">
+                <tr className={fffBuRowClass}>
                     <td><a href={buUrl} target="_blank">{hostname}</a></td>
                     <td className={FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE)}>{rate}</td>
                     <td className={FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT)}>{throughput}</td>
@@ -692,18 +716,22 @@ namespace DAQView {
         numBus: number;
         numBusNoRate: number;
         buSummary: DAQAggregatorSnapshot.BUSummary;
+        drawPausedComponent: boolean;
     }
 
     class FileBasedFilterFarmTableBUSummaryRow extends React.Component<FileBasedFilterFarmTableBUSummaryRowProperties,{}> {
         shouldComponentUpdate(nextProps: FileBasedFilterFarmTableBUSummaryRowProperties) {
-            return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary));
+            return true; //this can be optimized
+            //return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary));
         }
 
         render() {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
-
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
+            let fffBuSummaryRowClass: string = drawPausedComponent ? "fff-table-bu-summary-row-paused" : "fff-table-bu-summary-row-running";
+            console.log(fffBuSummaryRowClass+" (summary row class)");
             return (
-                <tr className="fff-table-bu-summary-row">
+                <tr className={fffBuSummaryRowClass}>
                     <td>Σ BUs = {this.props.numBusNoRate} / {this.props.numBus}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.rate / 1000, FFFTableNumberFormats.RATE)}>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.throughput / 1000 / 1000, FFFTableNumberFormats.THROUGHPUT)}>Σ {(buSummary.throughput / 1000 / 1000).toFixed(1)}</td>
