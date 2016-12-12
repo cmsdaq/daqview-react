@@ -682,7 +682,7 @@ namespace DAQView {
             let requestsBlocked: number = bu.numRequestsBlocked;
 
             let fffBuRowClass: string = drawPausedComponent? "fff-table-bu-row-paused" : "fff-table-bu-row-running";
-            console.log(fffBuRowClass+" (row class)");
+
             return (
                 <tr className={fffBuRowClass}>
                     <td><a href={buUrl} target="_blank">{hostname}</a></td>
@@ -729,7 +729,7 @@ namespace DAQView {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let fffBuSummaryRowClass: string = drawPausedComponent ? "fff-table-bu-summary-row-paused" : "fff-table-bu-summary-row-running";
-            console.log(fffBuSummaryRowClass+" (summary row class)");
+
             return (
                 <tr className={fffBuSummaryRowClass}>
                     <td>Σ BUs = {this.props.numBusNoRate} / {this.props.numBus}</td>
