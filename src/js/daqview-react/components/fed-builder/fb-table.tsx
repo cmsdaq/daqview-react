@@ -1421,7 +1421,7 @@ namespace DAQView {
 
     class FEDBuilderTableSummaryRow extends React.Component<FEDBuilderTableSummaryRowProperties,{}> {
         shouldComponentUpdate(nextProps: FEDBuilderTableSummaryRowProperties) {
-            return true;
+            return true; //this can be optimized
             //return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
         }
 

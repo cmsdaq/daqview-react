@@ -1113,7 +1113,7 @@ var DAQView;
             _super.apply(this, arguments);
         }
         FEDBuilderTableSummaryRow.prototype.shouldComponentUpdate = function (nextProps) {
-            return true;
+            return true; //this can be optimized
             //return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
         };
         FEDBuilderTableSummaryRow.prototype.render = function () {
