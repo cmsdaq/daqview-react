@@ -2,17 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>DAQ View 2 React</title>
+    <title>DAQView - React.js</title>
+
+    <link rel="icon" type="image/png" href="dist/img/cms_logo.png">
 
     <link rel="StyleSheet" href="dist/css/daqview.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/metadata-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/fed-builder/fb-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/filter-farm/fff-table.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/metadata/about-table.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/metadata/loader.css" type="text/css"/>
 
     <script type="text/javascript" src="dist/lib/jquery/jquery-3.0.0.min.js"></script>
     <script type="text/javascript" src="dist/lib/classnames/index.js"></script>
-    <script type="text/javascript" src="dist/lib/react/react-with-addons.js"></script>
-    <script type="text/javascript" src="dist/lib/react/react-dom.js"></script>
+    <script type="text/javascript" src="dist/lib/react/react.min.js"></script>
+    <script type="text/javascript" src="dist/lib/react/react-dom.min.js"></script>
 
     <script type="text/javascript" src="dist/js/structures/daq-aggregator/daq-snapshot.js"></script>
     <script type="text/javascript" src="dist/js/utilities/snapshot-provider.js"></script>
@@ -22,6 +26,8 @@
     <script type="text/javascript" src="dist/js/utilities/parser.js"></script>
     <script type="text/javascript" src="dist/js/components/common/sorting.js"></script>
     <script type="text/javascript" src="dist/js/components/metadata/metadata-table.js"></script>
+    <script type="text/javascript" src="dist/js/components/metadata/about-table.js"></script>
+    <script type="text/javascript" src="dist/js/components/metadata/loader-replacement.js"></script>
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
 
@@ -29,13 +35,15 @@
 
 
     <script type="text/javascript">
-        var daqView;
+        var daqView; //daqView is an object containing an array of the created views (page components)
         $(document).ready(function () {
             try {
                 daqView = new DAQView.DAQViewReact();
                 daqView.createMetadataTable('daqview-react-metadata-table');
                 daqView.createFBTable('daqview-react-fb-table');
                 daqView.createFFFTable('daqview-react-fff-table');
+                daqView.createAboutTable('daqview-react-about-table');
+                daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
 
                 // HACK: to avoid browser errors when loading local JSON
                 $.ajaxSetup({
@@ -53,8 +61,14 @@
                 //var maxIndex = snapshots.length - 1;
                 //var currentIndex = 0;
 
+                var counter = 0;
+                var timeStampAtNov30 = 1480678707956;
+
+                //use local aggregator data source (for development)
+                var debugSnapshotSource = false;
+
                 var snapshotSource = {
-                    updateInterval: 1500,
+                    updateInterval: 2000,
                     getSourceURL: function () {
 
                         /*
@@ -65,14 +79,36 @@
                          }
                          */
 
-                        var debugSnapshotSource = true;
 
-                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
+
+                        var baseURL = 'http://daq-expert-dev.cms:8080/DAQExpert/snapshot?time=';
                         var timestampDelim = '"';
-                        var currentTime = new Date(new Date().getTime()).toISOString();
+
+                        //production timestamp
+                        //var currentTime = new Date(new Date().getTime()).toISOString();
+
+                        //simulated timestamp that counts from Dec 2 2016 for development in EYETS (3 days of aggregated data)
+                        var currentTime = new Date(timeStampAtNov30+(counter*this.updateInterval)).toISOString();
+                        counter++;
 
                         if (debugSnapshotSource) {
-                            baseURL = 'http://localhost:3000/mydaqview/api/snapshot?time=';
+                            baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
+                            timestampDelim = '';
+                        }
+
+                        console.log(baseURL + '"' + currentTime + '"');
+                        return baseURL + timestampDelim + currentTime + timestampDelim;
+
+                    },
+                    getSourceURLForGotoRequests: function () {
+
+                        var baseURL = 'http://daq-expert-dev.cms:8080/DAQExpert/snapshot?time=';
+                        var timestampDelim = '"';
+
+                        var currentTime = $('#daqview-go-to-time-input').val();
+
+                        if (debugSnapshotSource) {
+                            baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
                             timestampDelim = '';
                         }
 
@@ -93,7 +129,7 @@
                         snapshot = buNoRateCounter.countNoRateBUs.bind(buNoRateCounter)(snapshot);
 
                         //DAQAggregator.randomizeSnapshot(snapshot, 20);
-                        console.log(snapshot);
+                        //console.log(snapshot);
                         return snapshot;
                     }).bind(window)
                 };
@@ -104,13 +140,38 @@
 
                 var controlPauseResume = $('.daqview-control-pause-resume');
                 controlPauseResume.on('click', function () {
-                    if (snapshotProvider.isRunning()) {
-                        snapshotProvider.stop();
-                        $(this).prop('src', 'dist/img/play.png');
-                    } else {
+
+                        //the provider will also stop itself if a go-to-time request is received
+                        //this button's appearance is set accordingly (displays 'play') by the event handler of the go-to-time button
+
+                        if (snapshotProvider.isRunning()) {
+                            snapshotProvider.provideOneMoreSnapshotAndStop(0); //calling with arg 0 will just redraw previous snapshot with the paused_page color scheme, then stop updating
+                            $(this).prop('src', 'dist/img/play.png');
+                        } else {
+                            //if pause was due to a go-to-time request, then restarting also resets mode to realtime
+                            if (!snapshotProvider.inRealTimePolling){
+                                snapshotProvider.switchToRealTime();
+                            }
+                            snapshotProvider.start();
+
+                            $(this).prop('src', 'dist/img/pause.png');
+                        }
+
+                });
+
+                var controlGoToTime = $('.daqview-go-to-time');
+                controlGoToTime.on('click', function (){
+                    snapshotProvider.switchToGotoTimeRequests();
+                    snapshotProvider.provideOneMoreSnapshotAndStop(1); //calling with arg 1 will draw the requested snapshot with the paused_page color scheme, then stop updating
+
+                    //useful when requesting a go-to-time timestamp in daqview=paused state
+                    if (!snapshotProvider.isRunning()){
                         snapshotProvider.start();
-                        $(this).prop('src', 'dist/img/pause.png');
                     }
+
+                    //updating play/pause button, because point queries essentially stop real-time monitoring
+                    //the provider will stop itself once a gototime request is received (after providing this last snapshot)
+                    $('.daqview-control-pause-resume').prop('src', 'dist/img/play.png');
                 });
 
 
@@ -169,11 +230,16 @@
 </head>
 <body>
 <div id="daqview-react">
+    <div id="daqview-time-navigation">
+
+            <input type="text" placeholder="please respect format" value="2016-12-03T10:38:26.039Z" id="daqview-go-to-time-input">
+            <input type="submit" value="Go to time" class="daqview-go-to-time">
+
+        <p>Please use provided format (ISO) and UTC time:<br/>e.g. 2016-12-03T10:38:26.039Z</p>
+    </div>
     <div id="daqview-control">
-        &nbsp;
         <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
                title="pause/resume"/>
-
     </div>
     <br/><br/>
     <div id="daqview-react-metadata-table"></div>
@@ -181,6 +247,11 @@
     <div id="daqview-react-fb-table"></div>
     <br/><br/>
     <div id="daqview-react-fff-table"></div>
+    <br/><br/>
+    <div id="daqview-react-about-table"></div>
+    <div id="loaderWrapper"><br/><div class="loader"></div></div>
+
+
 </div>
 </body>
 </html>

@@ -7,20 +7,26 @@ namespace DAQView {
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot;
+        private drawPausedComponent: boolean = false;
 
         constructor(htmlRootElementName: string) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
             this.snapshot = snapshot;
+            this.drawPausedComponent = drawPausedComponent;
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+
             let metadataTableRootElement: any = <MetadataTableElement runNumber={daq.runNumber}
                                                                       sessionId={daq.sessionId}
                                                                       dpSetPath={daq.dpsetPath}
                                                                       snapshotTimestamp={daq.lastUpdate}
                                                                       lv0State={daq.levelZeroState}
-                                                                      daqState={daq.daqState}/>;
+                                                                      daqState={daq.daqState}
+                                                                      machineState={daq.lhcMachineMode}
+                                                                      beamState={daq.lhcBeamMode}
+                                                                    drawPausedComponent={drawPausedComponent}/>;
             ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
         }
     }
@@ -33,6 +39,9 @@ namespace DAQView {
         lv0State?: string;
         lv0StateTimestamp?: number;
         daqState?: string;
+        machineState?: string;
+        beamState?: string;
+        drawPausedComponent: boolean;
     }
 
     class MetadataTableElement extends React.Component<MetadataTableElementProperties,{}> {
@@ -45,9 +54,12 @@ namespace DAQView {
                         <th>LV0 state</th>
                         <th>LV0 state entry time</th>
                         <th>DAQ state</th>
+                        <th>Machine state</th>
+                        <th>Beam state</th>
                         <th>Session ID</th>
                         <th>DAQ configuration</th>
-                        <th>Snapshot timestamp</th>
+                        <th>Snapshot timestamp (local)</th>
+                        <th>Snapshot timestamp (UTC)</th>
                     </tr>
                     </thead>
                     <tbody className="metadata-table-body">
@@ -56,9 +68,12 @@ namespace DAQView {
                         <td>{this.props.lv0State}</td>
                         <td>{this.props.lv0StateTimestamp ? this.props.lv0StateTimestamp : 'Unknown'}</td>
                         <td>{this.props.daqState}</td>
+                        <td>{this.props.machineState}</td>
+                        <td>{this.props.beamState}</td>
                         <td>{this.props.sessionId}</td>
                         <td>{this.props.dpSetPath}</td>
-                        <td>{new Date(this.props.snapshotTimestamp).toLocaleString()}</td>
+                        <td>{new Date(this.props.snapshotTimestamp).toString()}</td>
+                        <td>{new Date(this.props.snapshotTimestamp).toUTCString()}</td>
                     </tr>
                     </tbody>
                 </table>

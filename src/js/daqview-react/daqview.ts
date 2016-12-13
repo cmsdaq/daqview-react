@@ -17,11 +17,16 @@ namespace DAQView {
         constructor() {
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot) {
-            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot));
+        //calls specific setSnapshot() definition of each daqview component type
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedPage: boolean) {
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage));
         }
 
         public createMetadataTable(elementName: string) {
+            this.createMetadataTableImpl(elementName);
+        }
+
+        private createMetadataTableImpl(elementName: string) {
             let newTable = new MetadataTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
@@ -33,7 +38,7 @@ namespace DAQView {
             this.createFEDBuilderTable(elementName);
         }
 
-        public createFEDBuilderTable(elementName: string) {
+        private createFEDBuilderTable(elementName: string) {
             let newTable = new FEDBuilderTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
@@ -45,8 +50,32 @@ namespace DAQView {
             this.createFileBasedFilterFarmTable(elementName);
         }
 
-        public createFileBasedFilterFarmTable(elementName: string) {
+        private createFileBasedFilterFarmTable(elementName: string) {
             let newTable = new FileBasedFilterFarmTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        }
+
+        public createAboutTable(elementName: string){
+            this.createAboutTableImpl(elementName);
+        }
+
+        private createAboutTableImpl(elementName: string) {
+            let newTable = new AboutTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        }
+
+        public createReplacementForLoader(elementName: string){
+            this.createReplacementForLoaderImpl(elementName);
+        }
+
+        private createReplacementForLoaderImpl(elementName: string){
+            let newTable = new LoaderReplacement(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }

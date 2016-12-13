@@ -10,11 +10,15 @@ var DAQView;
         function DAQViewReact() {
             this.snapshotViews = {};
         }
-        DAQViewReact.prototype.setSnapshot = function (snapshot) {
+        //calls specific setSnapshot() definition of each daqview component type
+        DAQViewReact.prototype.setSnapshot = function (snapshot, drawPausedPage) {
             var _this = this;
-            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].setSnapshot(snapshot); });
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage); });
         };
         DAQViewReact.prototype.createMetadataTable = function (elementName) {
+            this.createMetadataTableImpl(elementName);
+        };
+        DAQViewReact.prototype.createMetadataTableImpl = function (elementName) {
             var newTable = new DAQView.MetadataTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
@@ -36,6 +40,26 @@ var DAQView;
         };
         DAQViewReact.prototype.createFileBasedFilterFarmTable = function (elementName) {
             var newTable = new DAQView.FileBasedFilterFarmTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        };
+        DAQViewReact.prototype.createAboutTable = function (elementName) {
+            this.createAboutTableImpl(elementName);
+        };
+        DAQViewReact.prototype.createAboutTableImpl = function (elementName) {
+            var newTable = new DAQView.AboutTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        };
+        DAQViewReact.prototype.createReplacementForLoader = function (elementName) {
+            this.createReplacementForLoaderImpl(elementName);
+        };
+        DAQViewReact.prototype.createReplacementForLoaderImpl = function (elementName) {
+            var newTable = new DAQView.LoaderReplacement(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }

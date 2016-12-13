@@ -45,23 +45,35 @@
 }
 
 .fff-table-header {
-    background-color: #DDDDAA;
+    background-color: #C8C5C5;
 }
 
 .fff-table-bu-row {
 
 }
 
-.fff-table-bu-row:nth-of-type(even) {
+.fff-table-bu-row-running:nth-of-type(even) {
     background-color: #DDDDAA;
 }
 
-.fff-table-bu-row:nth-of-type(odd) {
-
+.fff-table-bu-row-running:nth-of-type(odd) {
+    background-color: #F5F2F2;
 }
 
-.fff-table-bu-summary-row {
+.fff-table-bu-row-paused:nth-of-type(even) {
+    background-color: #FFFFFF;
+}
+
+.fff-table-bu-row-paused:nth-of-type(odd) {
+    background-color: #F5F2F2;
+}
+
+.fff-table-bu-summary-row-running {
     background-color: #DDDDAA;
+}
+
+.fff-table-bu-summary-row-paused {
+    background-color: #FFFFFF;
 }
 
 .fff-table-rate {
@@ -117,6 +129,13 @@
 }
 
 .fff-table-requests-blocked {
+    color: #FF0000;
+}
+
+.fff-table-bwout {
+}
+
+.fff-table-bwout-over {
     color: #FF0000;
 }
 

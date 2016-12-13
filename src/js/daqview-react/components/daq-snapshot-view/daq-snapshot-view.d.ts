@@ -6,7 +6,8 @@ declare namespace DAQView {
     
     export interface DAQSnapshotView {
 
-        setSnapshot(snapshot: DAQAggregatorSnapshot): void;
+        //not all views need a pointer to the snapshot, it could make sense to overload setSnapshot()
+        setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean): void;
 
     }
 

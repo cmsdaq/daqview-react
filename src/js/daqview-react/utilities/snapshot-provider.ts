@@ -5,6 +5,11 @@ namespace DAQAggregator {
     export class SnapshotProvider implements DAQSnapshotView {
         private snapshotSource: SnapshotSource;
         private running: boolean = false;
+        private inRealTimePolling: boolean = true;
+        private instructionToStop:boolean = false;
+        private drawPausedPage: boolean = false;
+        private previousUrl: string = "";
+        private pauseCallerType: number = 0; //by default all pause calls are asssumed to be originated from the real time mode
 
         private views: DAQSnapshotView[] = [];
 
@@ -16,12 +21,16 @@ namespace DAQAggregator {
             this.views.push(view);
         }
 
-        public setSnapshot(snapshot: Snapshot) {
-            this.views.forEach(view => view.setSnapshot(snapshot));
+        public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean) {
+            this.views.forEach(view => view.setSnapshot(snapshot, drawPausedPage));
         }
 
         public isRunning(): boolean {
             return this.running;
+        }
+
+        public isInRealTimePolling(): boolean {
+            return this.inRealTimePolling;
         }
 
         public start() {
@@ -35,7 +44,35 @@ namespace DAQAggregator {
                     return;
                 }
 
+                //retrieves previous url for local use, before updating its value is updated
+                let previousUrlTemp: string = this.previousUrl;
+
                 let url: string = this.snapshotSource.getSourceURL();
+
+                if (!this.inRealTimePolling){
+                    url = this.snapshotSource.getSourceURLForGotoRequests();
+                    console.log('In go-to-time snapshot provider mode');
+                }else{
+                    console.log('In real-time snapshot provider mode');
+                }
+
+                //updates global previousUrl holder with this call's url
+                this.previousUrl = url;
+
+
+                //at this point, this will stop the provider after completing the current snapshot request and daqview update
+                if (this.instructionToStop){
+                    this.stop();
+                    this.instructionToStop = false; //reset value immediately: it only needs to be true once and then be clean for later usages of the method
+                    this.drawPausedPage = true; //triggers page draw with pause color scheme
+
+                    /*retain previous snapshot if instruction to stop has been called from real-time mode,
+                    otherwise draw requested snaphost if instruction to stop is a result of a go-to-time request*/
+                    if (this.pauseCallerType == 0){
+                        url = previousUrlTemp;
+                    }
+                }
+
 
                 let startTime: number = new Date().getTime();
                 let snapshotRequest = jQuery.getJSON(url);
@@ -63,7 +100,11 @@ namespace DAQAggregator {
                         console.log('Time to parse snapshot: ' + time + 'ms');
 
                         startTime = new Date().getTime();
-                        this.setSnapshot(snapshot);
+                        this.setSnapshot(snapshot, this.drawPausedPage);
+
+                        //reset value after use
+                        this.drawPausedPage = false;
+
                         time = new Date().getTime() - startTime;
                         console.log('Time to update page: ' + time + 'ms');
                     }
@@ -80,13 +121,26 @@ namespace DAQAggregator {
             }).bind(this);
 
 
-
-
             setTimeout(updateFunction, this.snapshotSource.updateInterval);
         }
 
+        //this method will immediately stop page updating (including both values and graphics)
         public stop() {
             this.running = false;
+        }
+
+        public switchToRealTime(){
+            this.inRealTimePolling = true;
+        }
+
+        public switchToGotoTimeRequests(){
+            this.inRealTimePolling = false;
+        }
+
+        /*arg 0 if called from a real time updating context, arg 1 if called from a go-to-time-and-pause context*/
+        public provideOneMoreSnapshotAndStop(callerType: number){
+            this.pauseCallerType = callerType;
+            this.instructionToStop = true;
         }
     }
 
