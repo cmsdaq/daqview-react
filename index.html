@@ -43,7 +43,7 @@
                 daqView.createFBTable('daqview-react-fb-table');
                 daqView.createFFFTable('daqview-react-fff-table');
                 daqView.createAboutTable('daqview-react-about-table');
-                daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
+                //daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
 
                 // HACK: to avoid browser errors when loading local JSON
                 $.ajaxSetup({
@@ -248,8 +248,7 @@
     <br/><br/>
     <div id="daqview-react-fff-table"></div>
     <br/><br/>
-    <div id="daqview-react-about-table"></div>
-    <div id="loaderWrapper"><br/><div class="loader"></div></div>
+    <div id="daqview-react-about-table"><div class="loader"></div></div>
 
 
 </div>
