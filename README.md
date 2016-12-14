@@ -17,6 +17,6 @@ Data are provided by the DAQ Aggregator snapshots in form of JSON files and Reac
 - [x] when paused, page-wide colour change should occur to attract shifter's attention
 - [ ] add page-wide styles and/or notifications to draw the shifter's attention to a problem
 - [x] add navigation option by time
-- [ ] add other navigation options (display snapshot by run, session, time, next/previous snapshot) => requires server-side API
+- [ ] add other navigation options (display snapshot by run, session, next/previous snapshot) => requires server-side API
 
 - [x] switch back to production React before deploying
