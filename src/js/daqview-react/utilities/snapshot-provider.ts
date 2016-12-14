@@ -107,6 +107,9 @@ namespace DAQAggregator {
 
                         time = new Date().getTime() - startTime;
                         console.log('Time to update page: ' + time + 'ms');
+
+                        window.history.replaceState(null,null, "dyndefault?time="+(new Date(snapshot.getUpdateTimestamp()).toISOString()));
+
                     }
 
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
