@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 ///<reference path="daq-snapshot.ts"/>
 
 declare namespace DAQAggregator {

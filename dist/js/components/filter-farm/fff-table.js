@@ -1,10 +1,14 @@
-///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
-///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
+///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
 ///<reference path="../../utilities/format-util.ts"/>
 var DAQView;
 (function (DAQView) {

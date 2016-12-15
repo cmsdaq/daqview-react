@@ -1,3 +1,7 @@
+/**
+ * @author Michail Vougioukas
+ */
+
 namespace DAQAggregator {
 
     import RU = DAQAggregator.Snapshot.RU;

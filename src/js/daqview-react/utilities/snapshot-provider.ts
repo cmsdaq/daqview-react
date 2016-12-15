@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 namespace DAQAggregator {
 
     import DAQSnapshotView = DAQView.DAQSnapshotView;

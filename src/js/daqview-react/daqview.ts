@@ -1,9 +1,7 @@
-///<reference path="structures/daq-aggregator/daq-snapshot.ts"/>
-///<reference path="structures/daq-aggregator/daq-snapshot-source.d.ts"/>
-///<reference path="components/daq-snapshot-view/daq-snapshot-view.d.ts"/>
-///<reference path="components/fed-builder/fb-table.tsx"/>
-///<reference path="components/filter-farm/fff-table.tsx"/>
-///<reference path="utilities/daqview-util.ts"/>
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
 
 namespace DAQView {
 

@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 ///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
 ///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
 
