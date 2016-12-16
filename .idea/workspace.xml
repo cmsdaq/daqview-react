@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="">
+    <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="doc(): restore mistakenly deleted reference path comments">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/daqview.js" afterPath="$PROJECT_DIR$/dist/js/daqview.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/daqview.ts" afterPath="$PROJECT_DIR$/src/js/daqview-react/daqview.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/utilities/snapshot-provider.js" afterPath="$PROJECT_DIR$/dist/js/utilities/snapshot-provider.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts" afterPath="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts" />
     </list>
     <ignored path="daqview-react.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,11 +45,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="daqview.ts" pinned="false" current-in-tab="true">
+      <file leaf-file-name="daqview.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/daqview.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="40" selection-start-line="6" selection-start-column="40" selection-end-line="6" selection-end-column="40" />
+            <state relative-caret-position="150">
+              <caret line="10" column="48" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="281">
+              <caret line="172" column="61" selection-start-line="172" selection-start-column="61" selection-end-line="172" selection-end-column="61" />
               <folding />
             </state>
           </provider>
@@ -67,8 +78,8 @@
       <file leaf-file-name="snapshot-provider.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="3" />
+            <state relative-caret-position="420">
+              <caret line="116" column="0" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -79,16 +90,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
               <caret line="7" column="37" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="loader-replacement.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/metadata/loader-replacement.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="29" selection-start-line="1" selection-start-column="29" selection-end-line="1" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -109,16 +110,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="315">
               <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="about-table.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/metadata/about-table.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="29" selection-start-line="1" selection-start-column="29" selection-end-line="1" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -154,12 +145,10 @@
         <option value="$PROJECT_DIR$/dist/css/components/metadata/metadata-table.css" />
         <option value="$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/fbtablehelp.html" />
         <option value="$PROJECT_DIR$/ffftablehelp.html" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/daqview-util.ts" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/gui-util.ts" />
-        <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot-source.d.ts" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/parser.ts" />
@@ -173,6 +162,8 @@
         <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/format-util.ts" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-randomizer.ts" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/daqview.ts" />
+        <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -183,9 +174,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1596" />
+    <option name="x" value="1916" />
     <option name="y" value="25" />
-    <option name="width" value="1608" />
+    <option name="width" value="1928" />
     <option name="height" value="1146" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -213,7 +204,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -472,6 +462,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -561,14 +552,8 @@
       <workItem from="1478864838532" duration="59697000" />
       <workItem from="1480093263479" duration="142000" />
       <workItem from="1480094394143" duration="45547000" />
-      <workItem from="1480936330524" duration="70296000" />
-    </task>
-    <task id="LOCAL-00007" summary="fix(): handling of malformed snapshot reception">
-      <created>1479306621365</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1479306621365</updated>
+      <workItem from="1480936330524" duration="70550000" />
+      <workItem from="1481879000920" duration="8750000" />
     </task>
     <task id="LOCAL-00008" summary="fix(): bugfix for always zero BW out in F3 table and update in decimal places">
       <created>1479315560017</created>
@@ -906,24 +891,30 @@
       <option name="project" value="LOCAL" />
       <updated>1481817616696</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="doc(): restore mistakenly deleted reference path comments">
+      <created>1481818020919</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1481818020919</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="256295000" />
+    <option name="totallyTimeSpent" value="265299000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1596" y="25" width="1608" height="1146" extended-state="6" />
+    <frame x="1916" y="25" width="1928" height="1146" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14901961" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18549423" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18743344" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3304008" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28529412" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2381258" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23801917" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -932,6 +923,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3304008" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -947,7 +939,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="docs(): README update" />
     <MESSAGE value="chore(): snapshot source update" />
     <MESSAGE value="feat(): metadata update" />
     <MESSAGE value="refactor(): commenting out unnecessary addon" />
@@ -972,7 +963,8 @@
     <MESSAGE value="feat(): display current snapshot's stringified DateTime in the address bar after rendering" />
     <MESSAGE value="doc(): to-do list update" />
     <MESSAGE value="doc(): author annotations" />
-    <option name="LAST_COMMIT_MESSAGE" value="doc(): author annotations" />
+    <MESSAGE value="doc(): restore mistakenly deleted reference path comments" />
+    <option name="LAST_COMMIT_MESSAGE" value="doc(): restore mistakenly deleted reference path comments" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -994,13 +986,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/EcmaScript.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="364" column="0" selection-start-line="364" selection-start-column="0" selection-end-line="364" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="205">
@@ -1019,7 +1004,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="27" column="37" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1043,7 +1027,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-34581">
           <caret line="170" column="8" selection-start-line="170" selection-start-column="8" selection-end-line="170" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1079,7 +1062,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1087,7 +1069,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1143,7 +1124,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
           <caret line="1104" column="65" selection-start-line="1104" selection-start-column="65" selection-end-line="1104" selection-end-column="65" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1183,7 +1163,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1191,15 +1170,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="19" column="70" selection-start-line="19" selection-start-column="70" selection-end-line="19" selection-end-column="70" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="57" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1207,7 +1177,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="15" selection-start-line="2" selection-start-column="15" selection-end-line="2" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1215,7 +1184,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1223,9 +1191,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1233,7 +1198,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="14" column="12" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1241,7 +1205,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1249,9 +1212,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1259,7 +1219,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1267,7 +1226,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="3" selection-start-line="3" selection-start-column="3" selection-end-line="3" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1275,7 +1233,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="3" selection-start-line="3" selection-start-column="3" selection-end-line="3" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1283,7 +1240,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1291,7 +1247,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
           <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1299,7 +1254,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1367,18 +1321,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts">
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/daqview.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="3" />
+        <state relative-caret-position="150">
+          <caret line="10" column="48" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/daqview.ts">
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="40" selection-start-line="6" selection-start-column="40" selection-end-line="6" selection-end-column="40" />
+        <state relative-caret-position="420">
+          <caret line="116" column="0" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/EcmaScript.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="910" column="3" selection-start-line="910" selection-start-column="3" selection-end-line="910" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="172" column="61" selection-start-line="172" selection-start-column="61" selection-end-line="172" selection-end-column="61" />
           <folding />
         </state>
       </provider>
