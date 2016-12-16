@@ -55,8 +55,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="401">
-              <caret line="183" column="0" selection-start-line="183" selection-start-column="0" selection-end-line="183" selection-end-column="0" />
+            <state relative-caret-position="371">
+              <caret line="181" column="40" selection-start-line="181" selection-start-column="40" selection-end-line="181" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -550,14 +550,7 @@
       <workItem from="1480093263479" duration="142000" />
       <workItem from="1480094394143" duration="45547000" />
       <workItem from="1480936330524" duration="70550000" />
-      <workItem from="1481879000920" duration="9098000" />
-    </task>
-    <task id="LOCAL-00009" summary="fix(): Underestimation of RU throughput due to dividing by 1024 instead of by 1000">
-      <created>1479321601966</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1479321601966</updated>
+      <workItem from="1481879000920" duration="9135000" />
     </task>
     <task id="LOCAL-00010" summary="fix(): Underestimation of FEDBuilder summary throughput and size due to dividing by 1024 instead of by 1000">
       <created>1479323815125</created>
@@ -895,11 +888,18 @@
       <option name="project" value="LOCAL" />
       <updated>1481893652613</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="doc(): workspace.xml">
+      <created>1481893914381</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1481893914381</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="265647000" />
+    <option name="totallyTimeSpent" value="265684000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1916" y="25" width="1928" height="1146" extended-state="6" />
@@ -936,7 +936,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(): metadata update" />
     <MESSAGE value="refactor(): commenting out unnecessary addon" />
     <MESSAGE value="fix(): AboutTable refactoring and fixes" />
     <MESSAGE value="feat(): LHC machine and beam modes in metadata table" />
@@ -961,7 +960,8 @@
     <MESSAGE value="doc(): author annotations" />
     <MESSAGE value="doc(): restore mistakenly deleted reference path comments" />
     <MESSAGE value="feat(): client-side dynamic URL support" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(): client-side dynamic URL support" />
+    <MESSAGE value="doc(): workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="doc(): workspace.xml" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1345,8 +1345,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="183" column="0" selection-start-line="183" selection-start-column="0" selection-end-line="183" selection-end-column="0" />
+        <state relative-caret-position="371">
+          <caret line="181" column="40" selection-start-line="181" selection-start-column="40" selection-end-line="181" selection-end-column="40" />
           <folding />
         </state>
       </provider>
