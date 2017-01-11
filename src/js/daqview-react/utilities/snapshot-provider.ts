@@ -114,6 +114,7 @@ namespace DAQAggregator {
                         console.log('Time to update page: ' + time + 'ms');
 
                         window.history.replaceState(null,null, "?time="+(new Date(snapshot.getUpdateTimestamp()).toISOString()));
+                        document.title = "DAQView ["+(new Date(snapshot.getUpdateTimestamp()).toISOString())+"]";
 
                     }
 

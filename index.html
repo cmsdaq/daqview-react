@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>DAQView - React.js</title>
+    <title>DAQView</title>
 
     <link rel="icon" type="image/png" href="dist/img/cms_logo.png">
 
@@ -68,7 +68,7 @@
                     updateInterval: 2000,
                     getSourceURL: function () {
 
-                        var baseURL = 'http://daq-expert-dev.cms:8080/DAQExpert/snapshot?time='; //data source URL
+                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time='; //data source URL
                         var timestampDelim = '"';
 
                         //production timestamp
@@ -89,7 +89,7 @@
                     },
                     getSourceURLForGotoRequests: function () {
 
-                        var baseURL = 'http://daq-expert-dev.cms:8080/DAQExpert/snapshot?time=';
+                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
                         var timestampDelim = '"';
 
                         var currentTime = $('#daqview-go-to-time-input').val();
