@@ -18,8 +18,8 @@ var DAQAggregator;
         SnapshotProvider.prototype.addView = function (view) {
             this.views.push(view);
         };
-        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage) {
-            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage); });
+        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, url) {
+            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, url); });
         };
         SnapshotProvider.prototype.isRunning = function () {
             return this.running;
@@ -82,7 +82,7 @@ var DAQAggregator;
                         time = new Date().getTime() - startTime;
                         console.log('Time to parse snapshot: ' + time + 'ms');
                         startTime = new Date().getTime();
-                        this.setSnapshot(snapshot, this.drawPausedPage);
+                        this.setSnapshot(snapshot, this.drawPausedPage, url);
                         //reset value after use
                         this.drawPausedPage = false;
                         time = new Date().getTime() - startTime;

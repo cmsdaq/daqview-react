@@ -14,6 +14,7 @@
     <link rel="StyleSheet" href="dist/css/components/filter-farm/fff-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/about-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/loader.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/common/snapshot-modal.css" type="text/css"/>
 
     <script type="text/javascript" src="dist/lib/jquery/jquery-3.0.0.min.js"></script>
     <script type="text/javascript" src="dist/lib/classnames/index.js"></script>
@@ -30,6 +31,7 @@
     <script type="text/javascript" src="dist/js/components/metadata/metadata-table.js"></script>
     <script type="text/javascript" src="dist/js/components/metadata/about-table.js"></script>
     <script type="text/javascript" src="dist/js/components/metadata/loader-replacement.js"></script>
+    <script type="text/javascript" src="dist/js/components/common/snapshot-modal.js"></script>
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
     <script type="text/javascript" src="dist/js/daqview.js"></script>
@@ -43,6 +45,7 @@
                 daqView.createFBTable('daqview-react-fb-table');
                 daqView.createFFFTable('daqview-react-fff-table');
                 daqView.createAboutTable('daqview-react-about-table');
+                daqView.createSnapshotModal('daqview-react-snapshot-modal');
                 //daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
 
                 // HACK: to avoid browser errors when loading local JSON
@@ -199,15 +202,27 @@
 </head>
 <body>
 <div id="daqview-react">
-    <div id="daqview-time-navigation">
-            <input type="text" placeholder="please respect format" value="2016-12-03T10:38:26.039Z" id="daqview-go-to-time-input">
-            <input type="submit" value="Go to time" class="daqview-go-to-time">
-        <p>Please use provided format (ISO) and UTC time:<br/>e.g. 2016-12-03T10:38:26.039Z</p>
-    </div>
-    <div id="daqview-control">
-        <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
-               title="pause/resume"/>
-    </div>
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%">
+                <div id="daqview-time-navigation">
+                <input type="text" placeholder="please respect format" value="2016-12-03T10:38:26.039Z" id="daqview-go-to-time-input">
+                <input type="submit" value="Go to time" class="daqview-go-to-time">
+                <p>Please use provided format (ISO) and UTC time:<br/>e.g. 2016-12-03T10:38:26.039Z</p>
+                </div>
+            </td>
+            <td style="width:60%">
+                <div id="daqview-control">
+                <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
+                       title="pause/resume"/>
+            </div>
+            </td>
+            <td style="width:20%" align="right" valign="bottom"><div id="daqview-react-snapshot-modal"></div></td>
+        </tr>
+        </table>
+
+
+
     <br/><br/>
     <div id="daqview-react-metadata-table"></div>
     <br/><br/>

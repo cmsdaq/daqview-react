@@ -26,8 +26,8 @@ namespace DAQAggregator {
             this.views.push(view);
         }
 
-        public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean) {
-            this.views.forEach(view => view.setSnapshot(snapshot, drawPausedPage));
+        public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean, url: string) {
+            this.views.forEach(view => view.setSnapshot(snapshot, drawPausedPage, url));
         }
 
         public isRunning(): boolean {
@@ -105,7 +105,7 @@ namespace DAQAggregator {
                         console.log('Time to parse snapshot: ' + time + 'ms');
 
                         startTime = new Date().getTime();
-                        this.setSnapshot(snapshot, this.drawPausedPage);
+                        this.setSnapshot(snapshot, this.drawPausedPage, url);
 
                         //reset value after use
                         this.drawPausedPage = false;
