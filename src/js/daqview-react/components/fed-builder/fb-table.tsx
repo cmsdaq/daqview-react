@@ -884,7 +884,7 @@ namespace DAQView {
 
             let ruMasked: boolean = ru.masked;
             let ruHostname: string = ru.hostname;
-            let ruName: string = ruHostname.substring(3, ruHostname.length - 4);
+            let ruName: string = ruHostname.split(".")[0];
             let ruUrl: string = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
 
             let fedBuilderData: any[] = [];
@@ -1134,7 +1134,7 @@ namespace DAQView {
             let subFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder = this.props.subFedBuilder;
             let frlPc: DAQAggregatorSnapshot.FRLPc = subFedBuilder.frlPc;
             let frlPcHostname: string = frlPc.hostname;
-            let frlPcName: string = frlPcHostname.substring(6, frlPcHostname.length - 4);
+            let frlPcName: string = frlPcHostname.split(".")[0];
             let frlPcUrl: string = 'http://' + frlPcHostname + ':11100';
             let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
             let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
