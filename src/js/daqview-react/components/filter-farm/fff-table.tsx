@@ -672,7 +672,7 @@ namespace DAQView {
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
 
             let bu: DAQAggregatorSnapshot.BU = this.props.bu;
-            let buUrl: string = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
+            let buUrl: string = 'http://' + bu.hostname + ':'+bu.port+'/urn:xdaq-application:service=bu';
 
             let hostname: string = bu.hostname.split(".")[0];
             let rate: number = FormatUtility.toFixedNumber(bu.rate / 1000, 3);

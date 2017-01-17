@@ -69,10 +69,12 @@
 }
 
 .fff-table-bu-summary-row-running {
+    font-weight: bold;
     background-color: #DDDDAA;
 }
 
 .fff-table-bu-summary-row-paused {
+    font-weight: bold;
     background-color: #FFFFFF;
 }
 

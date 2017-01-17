@@ -66,6 +66,7 @@
 
                 //use local aggregator data source (for development)
                 var debugSnapshotSource = true;
+                var developmentPlayback = false;
 
                 var snapshotSource = {
                     updateInterval: 2000,
@@ -78,8 +79,11 @@
                         var currentTime = new Date(new Date().getTime()).toISOString();
 
                         //simulated timestamp that counts from Dec 2 2016 for development in EYETS (3 days of aggregated data)
-                        //var currentTime = new Date(timeStampAtDec2+(counter*this.updateInterval)).toISOString();
-                        counter++;
+                        if (developmentPlayback) {
+                            currentTime = new Date(timeStampAtDec2 + (counter * this.updateInterval)).toISOString();
+                            counter++;
+                        }
+
 
                         if (debugSnapshotSource) {
                             baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';

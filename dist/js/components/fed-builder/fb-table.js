@@ -757,8 +757,9 @@ var DAQView;
             var ru = fedBuilder.ru;
             var ruMasked = ru.masked;
             var ruHostname = ru.hostname;
+            var ruPort = ru.port;
             var ruName = ruHostname.split(".")[0];
-            var ruUrl = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+            var ruUrl = 'http://' + ruHostname + ':' + ruPort + '/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
             var fedBuilderData = [];
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
@@ -917,8 +918,9 @@ var DAQView;
             var subFedBuilder = this.props.subFedBuilder;
             var frlPc = subFedBuilder.frlPc;
             var frlPcHostname = frlPc.hostname;
+            var frlPcPort = frlPc.port;
             var frlPcName = frlPcHostname.split(".")[0];
-            var frlPcUrl = 'http://' + frlPcHostname + ':11100';
+            var frlPcUrl = 'http://' + frlPcHostname + ':' + frlPcPort;
             var frls = subFedBuilder.frls;
             var pseudoFeds = subFedBuilder.feds;
             var additionalClasses = this.props.additionalClasses;
@@ -1040,9 +1042,13 @@ var DAQView;
             var firstFed = feds[0];
             var firstFedDisplay = firstFed ? React.createElement(FEDData, {key: firstFed['@id'], fed: firstFed}) : '-';
             var secondFed = feds[1];
-            var secondFedDisplay = secondFed ? React.createElement(FEDData, {key: secondFed['@id'], fed: secondFed}) : '';
+            var secondFedDisplay = secondFed ? React.createElement(FEDData, {key: secondFed['@id'], fed: secondFed}) : '-';
+            var thirdFed = feds[2];
+            var thirdFedDisplay = thirdFed ? React.createElement(FEDData, {key: thirdFed['@id'], fed: thirdFed}) : '-';
+            var fourthFed = feds[3];
+            var fourthFedDisplay = fourthFed ? React.createElement(FEDData, {key: fourthFed['@id'], fed: fourthFed}) : '';
             var firstFrl = this.props.firstFrl;
-            return (React.createElement("span", null, firstFrl ? '' : ', ', frl.geoSlot, ":", firstFedDisplay, secondFed ? ',' : '', secondFedDisplay));
+            return (React.createElement("span", null, firstFrl ? '' : ', ', frl.geoSlot, ":", firstFedDisplay, secondFed ? ',' : '', secondFedDisplay, thirdFed ? ',' : '', thirdFedDisplay, fourthFed ? ',' : '', fourthFedDisplay));
         };
         return FRL;
     }(React.Component));
@@ -1100,7 +1106,7 @@ var DAQView;
             var percentBackpressureDisplay = percentBackpressure > 0 ?
                 React.createElement("span", {className: "fb-table-fed-percent-backpressure"}, '<', percentWarning.toFixed(1), "%") : '';
             var unexpectedSourceIdDisplay = '';
-            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId) {
+            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId && receivedSourceId != 0) {
                 unexpectedSourceIdDisplay =
                     React.createElement("span", {className: "fb-table-fed-received-source-id"}, "rcvSrcId:", receivedSourceId);
             }

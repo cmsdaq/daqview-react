@@ -884,8 +884,9 @@ namespace DAQView {
 
             let ruMasked: boolean = ru.masked;
             let ruHostname: string = ru.hostname;
+            let ruPort: number = ru.port;
             let ruName: string = ruHostname.split(".")[0];
-            let ruUrl: string = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+            let ruUrl: string = 'http://' + ruHostname + ':'+ruPort+'/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
 
             let fedBuilderData: any[] = [];
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
@@ -1134,8 +1135,9 @@ namespace DAQView {
             let subFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder = this.props.subFedBuilder;
             let frlPc: DAQAggregatorSnapshot.FRLPc = subFedBuilder.frlPc;
             let frlPcHostname: string = frlPc.hostname;
+            let frlPcPort: number = frlPc.port;
             let frlPcName: string = frlPcHostname.split(".")[0];
-            let frlPcUrl: string = 'http://' + frlPcHostname + ':11100';
+            let frlPcUrl: string = 'http://' + frlPcHostname + ':'+frlPcPort;
             let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
             let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
 
@@ -1304,13 +1306,18 @@ namespace DAQView {
             let firstFed: DAQAggregatorSnapshot.FED = feds[0];
             let firstFedDisplay: any = firstFed ? <FEDData key={firstFed['@id']} fed={firstFed}/> : '-';
             let secondFed: DAQAggregatorSnapshot.FED = feds[1];
-            let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed}/> : '';
+            let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed}/> : '-';
+            let thirdFed: DAQAggregatorSnapshot.FED = feds[2];
+            let thirdFedDisplay: any = thirdFed ? <FEDData key={thirdFed['@id']} fed={thirdFed}/> : '-';
+            let fourthFed: DAQAggregatorSnapshot.FED = feds[3];
+            let fourthFedDisplay: any = fourthFed ? <FEDData key={fourthFed['@id']} fed={fourthFed}/> : '';
+
 
             let firstFrl: boolean = this.props.firstFrl;
 
             return (
                 <span>
-                    {firstFrl ? '' : ', '}{frl.geoSlot}:{firstFedDisplay}{secondFed ? ',' : ''}{secondFedDisplay}
+                    {firstFrl ? '' : ', '}{frl.geoSlot}:{firstFedDisplay}{secondFed ? ',' : ''}{secondFedDisplay}{thirdFed ? ',' : ''}{thirdFedDisplay}{fourthFed ? ',' : ''}{fourthFedDisplay}
                 </span>
             );
         }
@@ -1387,7 +1394,7 @@ namespace DAQView {
                 <span className="fb-table-fed-percent-backpressure">{'<'}{percentWarning.toFixed(1)}%</span> : '';
 
             let unexpectedSourceIdDisplay: any = '';
-            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId) {
+            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId && receivedSourceId != 0) {
                 unexpectedSourceIdDisplay =
                     <span className="fb-table-fed-received-source-id">rcvSrcId:{receivedSourceId}</span>;
             }

@@ -116,6 +116,7 @@ namespace DAQAggregator {
 
         export interface BU extends SnapshotElement {
             hostname: string;
+            port: number;
 
             rate: number;
             throughput: number;
@@ -152,6 +153,7 @@ namespace DAQAggregator {
 
         export interface RU extends SnapshotElement {
             hostname: string;
+            port: number;
             isEVM: boolean;
             masked: boolean;
             // instance: number;
@@ -210,6 +212,7 @@ namespace DAQAggregator {
 
         export interface FRLPc extends SnapshotElement {
             hostname: string;
+            port: number;
             // masked: boolean;
             // frls?: FRL[];
             // crashed: boolean;

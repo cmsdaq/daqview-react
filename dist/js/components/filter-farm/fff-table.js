@@ -580,7 +580,7 @@ var DAQView;
         FileBasedFilterFarmTableBURow.prototype.render = function () {
             var drawPausedComponent = this.props.drawPausedComponent;
             var bu = this.props.bu;
-            var buUrl = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
+            var buUrl = 'http://' + bu.hostname + ':' + bu.port + '/urn:xdaq-application:service=bu';
             var hostname = bu.hostname.split(".")[0];
             var rate = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
             var throughput = FormatUtility.toFixedNumber(bu.throughput / 1000 / 1000, 1);
