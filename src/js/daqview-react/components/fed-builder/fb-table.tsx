@@ -1306,9 +1306,9 @@ namespace DAQView {
             let firstFed: DAQAggregatorSnapshot.FED = feds[0];
             let firstFedDisplay: any = firstFed ? <FEDData key={firstFed['@id']} fed={firstFed}/> : '-';
             let secondFed: DAQAggregatorSnapshot.FED = feds[1];
-            let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed}/> : '-';
+            let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed}/> : '';
             let thirdFed: DAQAggregatorSnapshot.FED = feds[2];
-            let thirdFedDisplay: any = thirdFed ? <FEDData key={thirdFed['@id']} fed={thirdFed}/> : '-';
+            let thirdFedDisplay: any = thirdFed ? <FEDData key={thirdFed['@id']} fed={thirdFed}/> : '';
             let fourthFed: DAQAggregatorSnapshot.FED = feds[3];
             let fourthFedDisplay: any = fourthFed ? <FEDData key={fourthFed['@id']} fed={fourthFed}/> : '';
 
