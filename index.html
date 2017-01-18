@@ -61,12 +61,54 @@
                 var ruMaskedCounter = new DAQAggregator.RUMaskedCounter();
                 var buNoRateCounter = new DAQAggregator.BUNoRateCounter();
 
+                //URL query part parser, to be used for the first page load URL
+                var queryString = function () {
+                    // This function is anonymous, is executed immediately and
+                    // the return value is assigned to QueryString!
+                    var query_string = {};
+                    var query = window.location.search.substring(1);
+                    var vars = query.split("&");
+                    for (var i=0;i<vars.length;i++) {
+                        var pair = vars[i].split("=");
+                        // If first entry with this name
+                        if (typeof query_string[pair[0]] === "undefined") {
+                            query_string[pair[0]] = decodeURIComponent(pair[1]);
+                            // If second entry with this name
+                        } else if (typeof query_string[pair[0]] === "string") {
+                            var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+                            query_string[pair[0]] = arr;
+                            // If third or later entry with this name
+                        } else {
+                            query_string[pair[0]].push(decodeURIComponent(pair[1]));
+                        }
+                    }
+                    return query_string;
+                }();
+
+                //if setup parameter is found, set data source accordingly
+                var daqSetup = queryString.setup;
+                if (typeof queryString.setup != 'undefined'){
+                    console.log("page loaded with 'setup' parameter(s): "+queryString.setup);
+                    daqSetup = queryString.setup;
+                }else{
+                    daqSetup = 'cdaq'; //default value for setup
+                }
+
                 var counter = 0;
                 var timeStampAtDec2 = 1480678707956;
 
                 //use local aggregator data source (for development)
-                var debugSnapshotSource = true;
+                var debugSnapshotSource = false;
                 var developmentPlayback = false;
+
+                if (daqSetup == "cdaq"){
+                    debugSnapshotSource = false;
+                    developmentPlayback = true; //change this after EYETS
+                }
+                if (daqSetup == "daqval"){
+                    debugSnapshotSource = true;
+                    developmentPlayback = false; //change this after EYETS
+                }
 
                 var snapshotSource = {
                     updateInterval: 2000,
@@ -109,6 +151,9 @@
                         //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
                         //console.log("data source is:"+baseURL + '"' + currentTime + '"');
                         return ret;
+                    },
+                    getRequestSetup: function() {
+                        return daqSetup;
                     },
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
@@ -164,30 +209,6 @@
                     //the provider will stop itself once a gototime request is received (after providing this last snapshot)
                     $('.daqview-control-pause-resume').prop('src', 'dist/img/play.png');
                 });
-
-                //URL query part parser, to be used for the first page load URL
-                var queryString = function () {
-                    // This function is anonymous, is executed immediately and
-                    // the return value is assigned to QueryString!
-                    var query_string = {};
-                    var query = window.location.search.substring(1);
-                    var vars = query.split("&");
-                    for (var i=0;i<vars.length;i++) {
-                        var pair = vars[i].split("=");
-                        // If first entry with this name
-                        if (typeof query_string[pair[0]] === "undefined") {
-                            query_string[pair[0]] = decodeURIComponent(pair[1]);
-                            // If second entry with this name
-                        } else if (typeof query_string[pair[0]] === "string") {
-                            var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
-                            query_string[pair[0]] = arr;
-                            // If third or later entry with this name
-                        } else {
-                            query_string[pair[0]].push(decodeURIComponent(pair[1]));
-                        }
-                    }
-                    return query_string;
-                }();
 
                 //if time parameter is found, then this request should return a static display at the requested timestamp
                 if (typeof queryString.time != 'undefined'){

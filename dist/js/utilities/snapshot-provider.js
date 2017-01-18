@@ -87,7 +87,7 @@ var DAQAggregator;
                         this.drawPausedPage = false;
                         time = new Date().getTime() - startTime;
                         console.log('Time to update page: ' + time + 'ms');
-                        window.history.replaceState(null, null, "?time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
+                        window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
                         document.title = "DAQView [" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "]";
                     }
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
