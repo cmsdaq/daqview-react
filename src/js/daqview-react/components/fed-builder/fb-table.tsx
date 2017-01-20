@@ -1146,10 +1146,15 @@ namespace DAQView {
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = subFedBuilder.ttcPartition;
 
-
             let ttsState: string = '';
+            let ttsStateTcdsPm: string = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
+            let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
+
+
             if (ttcPartition.topFMMInfo.nullCause){
                 ttsState = ttcPartition.topFMMInfo.nullCause;
+                ttsStateTcdsPm = ttcPartition.topFMMInfo.nullCause;
+                ttsStateTcdsApvPm = ttcPartition.topFMMInfo.nullCause;
             }else{
                 if (ttcPartition.fmm){
                     if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled'){
@@ -1162,8 +1167,7 @@ namespace DAQView {
                 }
             }
 
-            let ttsStateTcdsPm: string = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
-            let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
+
 
             let ttsStateClasses: string = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
@@ -1214,9 +1218,14 @@ namespace DAQView {
             let ttcpPercWarn: string = ttcPartition.percentWarning != null ? ttcPartition.percentWarning.toFixed(1) : '-';
             let ttcpPercBusy: string = ttcPartition.percentWarning != null ? ttcPartition.percentBusy.toFixed(1) : '-';
 
+            //on special cases of ttsState, percentages cannot be retrieved, therefore assign them the special state
             if (ttsState === '-' || ttsState === 'x' || ttsState === '?'){
                 ttcpPercWarn = ttsState;
                 ttcpPercBusy = ttsState;
+            }
+            if (ttcPartition.topFMMInfo.nullCause){
+                ttcpPercWarn = ttcPartition.topFMMInfo.nullCause;
+                ttcpPercBusy = ttcPartition.topFMMInfo.nullCause;
             }
 
             let evmMaxTrg: number = this.props.evmMaxTrg;

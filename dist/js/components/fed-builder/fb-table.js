@@ -927,8 +927,12 @@ var DAQView;
             var className = classNames("fb-table-subfb-row", additionalClasses);
             var ttcPartition = subFedBuilder.ttcPartition;
             var ttsState = '';
+            var ttsStateTcdsPm = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
+            var ttsStateTcdsApvPm = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
             if (ttcPartition.topFMMInfo.nullCause) {
                 ttsState = ttcPartition.topFMMInfo.nullCause;
+                ttsStateTcdsPm = ttcPartition.topFMMInfo.nullCause;
+                ttsStateTcdsApvPm = ttcPartition.topFMMInfo.nullCause;
             }
             else {
                 if (ttcPartition.fmm) {
@@ -943,8 +947,6 @@ var DAQView;
                     ttsState = 'x';
                 }
             }
-            var ttsStateTcdsPm = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
-            var ttsStateTcdsApvPm = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
             var ttsStateClasses = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
             var ttsStateTcdsPmClasses = ttcPartition.tcds_pm_ttsState || ttcPartition.tcds_pm_ttsState != '-' ? 'fb-table-subfb-tts-state-' + ttsStateTcdsPm : 'fb-table-subfb-tts-state-none';
@@ -978,9 +980,14 @@ var DAQView;
             var ttcPartitionTTSStateDisplay_A = React.createElement("span", {className: ttsStateTcdsApvClasses}, ttcPartitionTTSStateTcdsApvPmLink);
             var ttcpPercWarn = ttcPartition.percentWarning != null ? ttcPartition.percentWarning.toFixed(1) : '-';
             var ttcpPercBusy = ttcPartition.percentWarning != null ? ttcPartition.percentBusy.toFixed(1) : '-';
+            //on special cases of ttsState, percentages cannot be retrieved, therefore assign them the special state
             if (ttsState === '-' || ttsState === 'x' || ttsState === '?') {
                 ttcpPercWarn = ttsState;
                 ttcpPercBusy = ttsState;
+            }
+            if (ttcPartition.topFMMInfo.nullCause) {
+                ttcpPercWarn = ttcPartition.topFMMInfo.nullCause;
+                ttcpPercBusy = ttcPartition.topFMMInfo.nullCause;
             }
             var evmMaxTrg = this.props.evmMaxTrg;
             var minTrigDisplayContent = '';
