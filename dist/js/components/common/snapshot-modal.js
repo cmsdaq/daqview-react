@@ -22,9 +22,16 @@ var DAQView;
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             this.url = url;
-            var daq = snapshot.getDAQ();
-            var snapshotModalRootElement = React.createElement(SnapshotModalElement, {snapshot: snapshot, url: url});
-            ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
+            if (!snapshot) {
+                var msg = "";
+                var errRootElement = React.createElement(ErrorElement, {message: msg});
+                ReactDOM.render(errRootElement, this.htmlRootElement);
+            }
+            else {
+                var daq = snapshot.getDAQ();
+                var snapshotModalRootElement = React.createElement(SnapshotModalElement, {snapshot: snapshot, url: url});
+                ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
+            }
         };
         return SnapshotModal;
     }());
@@ -38,5 +45,15 @@ var DAQView;
             return (React.createElement("a", {href: this.props.url, target: "_blank"}, React.createElement("button", null, "See raw DAQ snapshot")));
         };
         return SnapshotModalElement;
+    }(React.Component));
+    var ErrorElement = (function (_super) {
+        __extends(ErrorElement, _super);
+        function ErrorElement() {
+            _super.apply(this, arguments);
+        }
+        ErrorElement.prototype.render = function () {
+            return (React.createElement("div", null, this.props.message));
+        };
+        return ErrorElement;
     }(React.Component));
 })(DAQView || (DAQView = {}));

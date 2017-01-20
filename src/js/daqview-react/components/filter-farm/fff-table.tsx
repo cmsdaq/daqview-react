@@ -57,17 +57,23 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
-            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
-                console.log("duplicate snapshot detected");
-                if (!drawPausedComponent) {
-                    return;
-                }else {
-                    console.log("...but requested pause, so do one more rendering");
+            if (!snapshot){
+                let msg: string = "";
+                let errRootElement: any = <ErrorElement message={msg}/>;
+                ReactDOM.render(errRootElement, this.htmlRootElement);
+            }else {
+                if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                    console.log("duplicate snapshot detected");
+                    if (!drawPausedComponent) {
+                        return;
+                    } else {
+                        console.log("...but requested pause, so do one more rendering");
+                    }
                 }
+                this.snapshot = snapshot;
+                this.drawPausedComponent = drawPausedComponent;
+                this.updateSnapshot();
             }
-            this.snapshot = snapshot;
-            this.drawPausedComponent = drawPausedComponent;
-            this.updateSnapshot();
         }
 
         private updateSnapshot() {
@@ -110,6 +116,18 @@ namespace DAQView {
                 return null;
             }
             return this.currentSorting[headerName];
+        }
+    }
+
+    interface ErrorElementProperties {
+        message: string;
+    }
+
+    class ErrorElement extends React.Component<ErrorElementProperties,{}> {
+        render() {
+            return (
+                <div>{this.props.message}</div>
+            );
         }
     }
 

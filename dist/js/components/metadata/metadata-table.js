@@ -17,9 +17,16 @@ var DAQView;
         MetadataTable.prototype.setSnapshot = function (snapshot, drawPausedComponent) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
-            var daq = snapshot.getDAQ();
-            var metadataTableRootElement = React.createElement(MetadataTableElement, {runNumber: daq.runNumber, sessionId: daq.sessionId, dpSetPath: daq.dpsetPath, snapshotTimestamp: daq.lastUpdate, lv0State: daq.levelZeroState, daqState: daq.daqState, machineState: daq.lhcMachineMode, beamState: daq.lhcBeamMode, drawPausedComponent: drawPausedComponent});
-            ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
+            if (!snapshot) {
+                var msg = "Monitoring data unavailable: Please wait and do not pause DAQView (if you are here for the real-time mode) or choose another timestamp (if you are here for navigating back in time)";
+                var errRootElement = React.createElement(ErrorElement, {message: msg});
+                ReactDOM.render(errRootElement, this.htmlRootElement);
+            }
+            else {
+                var daq = snapshot.getDAQ();
+                var metadataTableRootElement = React.createElement(MetadataTableElement, {runNumber: daq.runNumber, sessionId: daq.sessionId, dpSetPath: daq.dpsetPath, snapshotTimestamp: daq.lastUpdate, lv0State: daq.levelZeroState, daqState: daq.daqState, machineState: daq.lhcMachineMode, beamState: daq.lhcBeamMode, drawPausedComponent: drawPausedComponent});
+                ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
+            }
         };
         return MetadataTable;
     }());
@@ -33,5 +40,15 @@ var DAQView;
             return (React.createElement("table", {className: "metadata-table"}, React.createElement("thead", {className: "metadata-table-head"}, React.createElement("tr", {className: "metadata-table-header-row"}, React.createElement("th", null, "Run"), React.createElement("th", null, "LV0 state"), React.createElement("th", null, "LV0 state entry time"), React.createElement("th", null, "DAQ state"), React.createElement("th", null, "Machine state"), React.createElement("th", null, "Beam state"), React.createElement("th", null, "Session ID"), React.createElement("th", null, "DAQ configuration"), React.createElement("th", null, "Snapshot timestamp (local)"), React.createElement("th", null, "Snapshot timestamp (UTC)"))), React.createElement("tbody", {className: "metadata-table-body"}, React.createElement("tr", {className: "metadata-table-content-row"}, React.createElement("td", null, this.props.runNumber), React.createElement("td", null, this.props.lv0State), React.createElement("td", null, this.props.lv0StateTimestamp ? this.props.lv0StateTimestamp : 'Unknown'), React.createElement("td", null, this.props.daqState), React.createElement("td", null, this.props.machineState), React.createElement("td", null, this.props.beamState), React.createElement("td", null, this.props.sessionId), React.createElement("td", null, this.props.dpSetPath), React.createElement("td", null, new Date(this.props.snapshotTimestamp).toString()), React.createElement("td", null, new Date(this.props.snapshotTimestamp).toUTCString())))));
         };
         return MetadataTableElement;
+    }(React.Component));
+    var ErrorElement = (function (_super) {
+        __extends(ErrorElement, _super);
+        function ErrorElement() {
+            _super.apply(this, arguments);
+        }
+        ErrorElement.prototype.render = function () {
+            return (React.createElement("table", {className: "metadata-table"}, React.createElement("thead", {className: "metadata-table-head"}, React.createElement("tr", {className: "metadata-error-table-header-row"}, React.createElement("th", null, this.props.message))), React.createElement("tbody", {className: "metadata-table-body"}, React.createElement("tr", {className: "metadata-table-content-row"}, React.createElement("td", null)))));
+        };
+        return ErrorElement;
     }(React.Component));
 })(DAQView || (DAQView = {}));

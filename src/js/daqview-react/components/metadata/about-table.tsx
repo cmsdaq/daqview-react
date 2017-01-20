@@ -18,7 +18,7 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
-            this.snapshot = snapshot; //extra 'about' info could in the future be loaded from snapshot (e.g. DAQAggregator version linked to snapshot)
+            this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
 
             let aboutTableRootElement: any = <AboutTableElement       project={"DAQView"}

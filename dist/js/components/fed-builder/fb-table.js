@@ -41,18 +41,25 @@ var DAQView;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
         FEDBuilderTable.prototype.setSnapshot = function (snapshot, drawPausedComponent) {
-            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
-                console.log("duplicate snapshot detected");
-                if (!drawPausedComponent) {
-                    return;
-                }
-                else {
-                    console.log("...but requested pause, so do one more rendering");
-                }
+            if (!snapshot) {
+                var msg = "";
+                var errRootElement = React.createElement(ErrorElement, {message: msg});
+                ReactDOM.render(errRootElement, this.htmlRootElement);
             }
-            this.snapshot = FBTableSortFunctions.STATIC(snapshot);
-            this.drawPausedComponent = drawPausedComponent;
-            this.updateSnapshot();
+            else {
+                if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                    console.log("duplicate snapshot detected");
+                    if (!drawPausedComponent) {
+                        return;
+                    }
+                    else {
+                        console.log("...but requested pause, so do one more rendering");
+                    }
+                }
+                this.snapshot = FBTableSortFunctions.STATIC(snapshot);
+                this.drawPausedComponent = drawPausedComponent;
+                this.updateSnapshot();
+            }
         };
         FEDBuilderTable.prototype.updateSnapshot = function () {
             var sortedSnapshot = this.sort(this.snapshot);
@@ -88,6 +95,16 @@ var DAQView;
         return FEDBuilderTable;
     }());
     DAQView.FEDBuilderTable = FEDBuilderTable;
+    var ErrorElement = (function (_super) {
+        __extends(ErrorElement, _super);
+        function ErrorElement() {
+            _super.apply(this, arguments);
+        }
+        ErrorElement.prototype.render = function () {
+            return (React.createElement("div", null, this.props.message));
+        };
+        return ErrorElement;
+    }(React.Component));
     var FBTableNumberFormats;
     (function (FBTableNumberFormats) {
         FBTableNumberFormats.RATE = {

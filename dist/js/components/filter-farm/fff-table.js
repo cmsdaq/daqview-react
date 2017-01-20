@@ -49,18 +49,25 @@ var DAQView;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
         FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot, drawPausedComponent) {
-            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
-                console.log("duplicate snapshot detected");
-                if (!drawPausedComponent) {
-                    return;
-                }
-                else {
-                    console.log("...but requested pause, so do one more rendering");
-                }
+            if (!snapshot) {
+                var msg = "";
+                var errRootElement = React.createElement(ErrorElement, {message: msg});
+                ReactDOM.render(errRootElement, this.htmlRootElement);
             }
-            this.snapshot = snapshot;
-            this.drawPausedComponent = drawPausedComponent;
-            this.updateSnapshot();
+            else {
+                if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                    console.log("duplicate snapshot detected");
+                    if (!drawPausedComponent) {
+                        return;
+                    }
+                    else {
+                        console.log("...but requested pause, so do one more rendering");
+                    }
+                }
+                this.snapshot = snapshot;
+                this.drawPausedComponent = drawPausedComponent;
+                this.updateSnapshot();
+            }
         };
         FileBasedFilterFarmTable.prototype.updateSnapshot = function () {
             var sortedSnapshot = this.sort(this.snapshot);
@@ -99,6 +106,16 @@ var DAQView;
         return FileBasedFilterFarmTable;
     }());
     DAQView.FileBasedFilterFarmTable = FileBasedFilterFarmTable;
+    var ErrorElement = (function (_super) {
+        __extends(ErrorElement, _super);
+        function ErrorElement() {
+            _super.apply(this, arguments);
+        }
+        ErrorElement.prototype.render = function () {
+            return (React.createElement("div", null, this.props.message));
+        };
+        return ErrorElement;
+    }(React.Component));
     var FFFTableSortFunctions;
     (function (FFFTableSortFunctions) {
         function NONE(snapshot) {

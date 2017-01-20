@@ -91,6 +91,10 @@ namespace DAQAggregator {
                         console.log("Malformed snapshot received, parsing and updating won't be launched until next valid snapshot");
                         console.log(snapshotJSON);
                         malformedSnapshot = true;
+                        let snapshot: Snapshot;
+                        this.setSnapshot(snapshot, this.drawPausedPage, url); //maybe also pass message to setSnapshot
+                        //reset value after use
+                        this.drawPausedPage = false;
                     }
 
                     if (!malformedSnapshot) {
@@ -123,7 +127,10 @@ namespace DAQAggregator {
 
                 snapshotRequest.fail((function (){
                     console.log("Error in remote snapshot request, retrying after "+this.snapshotSource.updateInterval+" millis");
-
+                    let snapshot: Snapshot;
+                    this.setSnapshot(snapshot, this.drawPausedPage, url);
+                    //reset value after use
+                    this.drawPausedPage = false;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
 
