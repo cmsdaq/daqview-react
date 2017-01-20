@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 ///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
 
 declare namespace DAQView {
@@ -7,7 +12,7 @@ declare namespace DAQView {
     export interface DAQSnapshotView {
 
         //not all views need a pointer to the snapshot, it could make sense to overload setSnapshot()
-        setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean): void;
+        setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, url: string): void;
 
     }
 

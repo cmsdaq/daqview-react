@@ -110,7 +110,7 @@
 }
 
 .fb-table-ru-events-zero {
-    color: #666666;
+    color: #008800;
 }
 
 .fb-table-ru-fragments-in-ru {
@@ -154,10 +154,12 @@
 }
 
 .fb-table-fb-summary-row-running {
+    font-weight: bold;
     background-color: #DDDDAA;
 }
 
 .fb-table-fb-summary-row-paused {
+    font-weight: bold;
     background-color: #FFFFFF;
 }
 

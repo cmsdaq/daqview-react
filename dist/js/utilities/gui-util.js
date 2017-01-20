@@ -1,3 +1,7 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
 var DAQViewGUIUtility;
 (function (DAQViewGUIUtility) {
     function getParametersFromCurrentRequestURL() {

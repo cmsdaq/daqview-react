@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 ///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
 ///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
 
@@ -52,17 +57,23 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
-            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
-                console.log("duplicate snapshot detected");
-                if (!drawPausedComponent) {
-                    return;
-                }else {
-                    console.log("...but requested pause, so do one more rendering");
+            if (!snapshot){
+                let msg: string = "";
+                let errRootElement: any = <ErrorElement message={msg}/>;
+                ReactDOM.render(errRootElement, this.htmlRootElement);
+            }else {
+                if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                    console.log("duplicate snapshot detected");
+                    if (!drawPausedComponent) {
+                        return;
+                    } else {
+                        console.log("...but requested pause, so do one more rendering");
+                    }
                 }
+                this.snapshot = snapshot;
+                this.drawPausedComponent = drawPausedComponent;
+                this.updateSnapshot();
             }
-            this.snapshot = snapshot;
-            this.drawPausedComponent = drawPausedComponent;
-            this.updateSnapshot();
         }
 
         private updateSnapshot() {
@@ -105,6 +116,18 @@ namespace DAQView {
                 return null;
             }
             return this.currentSorting[headerName];
+        }
+    }
+
+    interface ErrorElementProperties {
+        message: string;
+    }
+
+    class ErrorElement extends React.Component<ErrorElementProperties,{}> {
+        render() {
+            return (
+                <div>{this.props.message}</div>
+            );
         }
     }
 
@@ -667,9 +690,9 @@ namespace DAQView {
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
 
             let bu: DAQAggregatorSnapshot.BU = this.props.bu;
-            let buUrl: string = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
+            let buUrl: string = 'http://' + bu.hostname + ':'+bu.port+'/urn:xdaq-application:service=bu';
 
-            let hostname: string = bu.hostname.substring(3, bu.hostname.length - 4);
+            let hostname: string = bu.hostname.split(".")[0];
             let rate: number = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
             let throughput: number = FormatUtility.toFixedNumber(bu.throughput / 1000 / 1000, 1);
             let sizeMean: number = FormatUtility.toFixedNumber(bu.eventSizeMean / 1000, 1);

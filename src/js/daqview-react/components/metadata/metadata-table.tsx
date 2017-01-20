@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 namespace DAQView {
 
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
@@ -16,9 +21,16 @@ namespace DAQView {
         public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
-            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
 
-            let metadataTableRootElement: any = <MetadataTableElement runNumber={daq.runNumber}
+            if (!snapshot){
+                let msg: string = "Monitoring data unavailable: Please wait and do not pause DAQView (if you are here for the real-time mode) or choose another timestamp (if you are here for navigating back in time)";
+                let errRootElement: any = <ErrorElement message={msg}/>;
+                ReactDOM.render(errRootElement, this.htmlRootElement);
+            }else{
+
+                let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+
+                let metadataTableRootElement: any = <MetadataTableElement runNumber={daq.runNumber}
                                                                       sessionId={daq.sessionId}
                                                                       dpSetPath={daq.dpsetPath}
                                                                       snapshotTimestamp={daq.lastUpdate}
@@ -27,9 +39,11 @@ namespace DAQView {
                                                                       machineState={daq.lhcMachineMode}
                                                                       beamState={daq.lhcBeamMode}
                                                                     drawPausedComponent={drawPausedComponent}/>;
-            ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
+                ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
+            }
         }
     }
+
 
     interface MetadataTableElementProperties {
         runNumber: number;
@@ -74,6 +88,29 @@ namespace DAQView {
                         <td>{this.props.dpSetPath}</td>
                         <td>{new Date(this.props.snapshotTimestamp).toString()}</td>
                         <td>{new Date(this.props.snapshotTimestamp).toUTCString()}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            );
+        }
+    }
+
+    interface ErrorElementProperties {
+        message: string;
+    }
+
+    class ErrorElement extends React.Component<ErrorElementProperties,{}> {
+        render() {
+            return (
+                <table className="metadata-table">
+                    <thead className="metadata-table-head">
+                    <tr className="metadata-error-table-header-row">
+                        <th>{this.props.message}</th>
+                    </tr>
+                    </thead>
+                    <tbody className="metadata-table-body">
+                    <tr className="metadata-table-content-row">
+                        <td></td>
                     </tr>
                     </tbody>
                 </table>

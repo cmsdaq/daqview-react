@@ -1,10 +1,14 @@
-///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
-///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
+///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
 ///<reference path="../../utilities/format-util.ts"/>
 var DAQView;
 (function (DAQView) {
@@ -45,18 +49,25 @@ var DAQView;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
         FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot, drawPausedComponent) {
-            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
-                console.log("duplicate snapshot detected");
-                if (!drawPausedComponent) {
-                    return;
-                }
-                else {
-                    console.log("...but requested pause, so do one more rendering");
-                }
+            if (!snapshot) {
+                var msg = "";
+                var errRootElement = React.createElement(ErrorElement, {message: msg});
+                ReactDOM.render(errRootElement, this.htmlRootElement);
             }
-            this.snapshot = snapshot;
-            this.drawPausedComponent = drawPausedComponent;
-            this.updateSnapshot();
+            else {
+                if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                    console.log("duplicate snapshot detected");
+                    if (!drawPausedComponent) {
+                        return;
+                    }
+                    else {
+                        console.log("...but requested pause, so do one more rendering");
+                    }
+                }
+                this.snapshot = snapshot;
+                this.drawPausedComponent = drawPausedComponent;
+                this.updateSnapshot();
+            }
         };
         FileBasedFilterFarmTable.prototype.updateSnapshot = function () {
             var sortedSnapshot = this.sort(this.snapshot);
@@ -95,6 +106,16 @@ var DAQView;
         return FileBasedFilterFarmTable;
     }());
     DAQView.FileBasedFilterFarmTable = FileBasedFilterFarmTable;
+    var ErrorElement = (function (_super) {
+        __extends(ErrorElement, _super);
+        function ErrorElement() {
+            _super.apply(this, arguments);
+        }
+        ErrorElement.prototype.render = function () {
+            return (React.createElement("div", null, this.props.message));
+        };
+        return ErrorElement;
+    }(React.Component));
     var FFFTableSortFunctions;
     (function (FFFTableSortFunctions) {
         function NONE(snapshot) {
@@ -576,8 +597,8 @@ var DAQView;
         FileBasedFilterFarmTableBURow.prototype.render = function () {
             var drawPausedComponent = this.props.drawPausedComponent;
             var bu = this.props.bu;
-            var buUrl = 'http://' + bu.hostname + ':11100/urn:xdaq-application:service=bu';
-            var hostname = bu.hostname.substring(3, bu.hostname.length - 4);
+            var buUrl = 'http://' + bu.hostname + ':' + bu.port + '/urn:xdaq-application:service=bu';
+            var hostname = bu.hostname.split(".")[0];
             var rate = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
             var throughput = FormatUtility.toFixedNumber(bu.throughput / 1000 / 1000, 1);
             var sizeMean = FormatUtility.toFixedNumber(bu.eventSizeMean / 1000, 1);

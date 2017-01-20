@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 ///<reference path="structures/daq-aggregator/daq-snapshot.ts"/>
 ///<reference path="structures/daq-aggregator/daq-snapshot-source.d.ts"/>
 ///<reference path="components/daq-snapshot-view/daq-snapshot-view.d.ts"/>
@@ -18,8 +23,20 @@ namespace DAQView {
         }
 
         //calls specific setSnapshot() definition of each daqview component type
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedPage: boolean) {
-            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage));
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedPage: boolean, url: string) {
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage, url));
+        }
+
+        public createSnapshotModal(elementName: string) {
+            this.createSnapshotModalImpl(elementName);
+        }
+
+        private createSnapshotModalImpl(elementName: string) {
+            let newTable = new SnapshotModal(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
         }
 
         public createMetadataTable(elementName: string) {

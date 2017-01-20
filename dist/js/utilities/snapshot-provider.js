@@ -1,3 +1,7 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
 var DAQAggregator;
 (function (DAQAggregator) {
     var SnapshotProvider = (function () {
@@ -14,8 +18,8 @@ var DAQAggregator;
         SnapshotProvider.prototype.addView = function (view) {
             this.views.push(view);
         };
-        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage) {
-            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage); });
+        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, url) {
+            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, url); });
         };
         SnapshotProvider.prototype.isRunning = function () {
             return this.running;
@@ -65,6 +69,10 @@ var DAQAggregator;
                         console.log("Malformed snapshot received, parsing and updating won't be launched until next valid snapshot");
                         console.log(snapshotJSON);
                         malformedSnapshot = true;
+                        var snapshot = void 0;
+                        this.setSnapshot(snapshot, this.drawPausedPage, url); //maybe also pass message to setSnapshot
+                        //reset value after use
+                        this.drawPausedPage = false;
                     }
                     if (!malformedSnapshot) {
                         var snapshot = void 0;
@@ -78,16 +86,22 @@ var DAQAggregator;
                         time = new Date().getTime() - startTime;
                         console.log('Time to parse snapshot: ' + time + 'ms');
                         startTime = new Date().getTime();
-                        this.setSnapshot(snapshot, this.drawPausedPage);
+                        this.setSnapshot(snapshot, this.drawPausedPage, url);
                         //reset value after use
                         this.drawPausedPage = false;
                         time = new Date().getTime() - startTime;
                         console.log('Time to update page: ' + time + 'ms');
+                        window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
+                        document.title = "DAQView [" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "]";
                     }
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
                 snapshotRequest.fail((function () {
                     console.log("Error in remote snapshot request, retrying after " + this.snapshotSource.updateInterval + " millis");
+                    var snapshot;
+                    this.setSnapshot(snapshot, this.drawPausedPage, url);
+                    //reset value after use
+                    this.drawPausedPage = false;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
             }).bind(this);

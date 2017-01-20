@@ -1,8 +1,10 @@
+<!-- @authors: Michail Vougioukas and Philipp Brummer -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>DAQView - React.js</title>
+    <title>DAQView</title>
 
     <link rel="icon" type="image/png" href="dist/img/cms_logo.png">
 
@@ -12,6 +14,7 @@
     <link rel="StyleSheet" href="dist/css/components/filter-farm/fff-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/about-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/loader.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/common/snapshot-modal.css" type="text/css"/>
 
     <script type="text/javascript" src="dist/lib/jquery/jquery-3.0.0.min.js"></script>
     <script type="text/javascript" src="dist/lib/classnames/index.js"></script>
@@ -28,11 +31,10 @@
     <script type="text/javascript" src="dist/js/components/metadata/metadata-table.js"></script>
     <script type="text/javascript" src="dist/js/components/metadata/about-table.js"></script>
     <script type="text/javascript" src="dist/js/components/metadata/loader-replacement.js"></script>
+    <script type="text/javascript" src="dist/js/components/common/snapshot-modal.js"></script>
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
-
     <script type="text/javascript" src="dist/js/daqview.js"></script>
-
 
     <script type="text/javascript">
         var daqView; //daqView is an object containing an array of the created views (page components)
@@ -43,7 +45,9 @@
                 daqView.createFBTable('daqview-react-fb-table');
                 daqView.createFFFTable('daqview-react-fff-table');
                 daqView.createAboutTable('daqview-react-about-table');
-                daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
+                daqView.createSnapshotModal('daqview-react-snapshot-modal');
+
+                //daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
 
                 // HACK: to avoid browser errors when loading local JSON
                 $.ajaxSetup({
@@ -58,51 +62,84 @@
                 var ruMaskedCounter = new DAQAggregator.RUMaskedCounter();
                 var buNoRateCounter = new DAQAggregator.BUNoRateCounter();
 
-                //var maxIndex = snapshots.length - 1;
-                //var currentIndex = 0;
+                //URL query part parser, to be used for the first page load URL
+                var queryString = function () {
+                    // This function is anonymous, is executed immediately and
+                    // the return value is assigned to QueryString!
+                    var query_string = {};
+                    var query = window.location.search.substring(1);
+                    var vars = query.split("&");
+                    for (var i=0;i<vars.length;i++) {
+                        var pair = vars[i].split("=");
+                        // If first entry with this name
+                        if (typeof query_string[pair[0]] === "undefined") {
+                            query_string[pair[0]] = decodeURIComponent(pair[1]);
+                            // If second entry with this name
+                        } else if (typeof query_string[pair[0]] === "string") {
+                            var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+                            query_string[pair[0]] = arr;
+                            // If third or later entry with this name
+                        } else {
+                            query_string[pair[0]].push(decodeURIComponent(pair[1]));
+                        }
+                    }
+                    return query_string;
+                }();
+
+                //if setup parameter is found, set data source accordingly
+                var daqSetup = queryString.setup;
+                if (typeof queryString.setup != 'undefined'){
+                    console.log("page loaded with 'setup' parameter(s): "+queryString.setup);
+                    daqSetup = queryString.setup;
+                }else{
+                    daqSetup = 'cdaq'; //default value for setup
+                }
 
                 var counter = 0;
-                var timeStampAtNov30 = 1480678707956;
+                var timeStampAtDec2 = 1480678707956;
 
                 //use local aggregator data source (for development)
                 var debugSnapshotSource = false;
+                var developmentPlayback = false;
+
+                if (daqSetup == "cdaq"){
+                    debugSnapshotSource = false;
+                    developmentPlayback = true; //change this after EYETS
+                }
+                if (daqSetup == "daqval"){
+                    debugSnapshotSource = true;
+                    developmentPlayback = false; //change this after EYETS
+                }
 
                 var snapshotSource = {
                     updateInterval: 2000,
                     getSourceURL: function () {
 
-                        /*
-                         // hack to traverse snapshots in a specific order
-                         currentIndex++;
-                         if (currentIndex > maxIndex) {
-                         currentIndex = 0;
-                         }
-                         */
-
-
-
-                        var baseURL = 'http://daq-expert-dev.cms:8080/DAQExpert/snapshot?time=';
+                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time='; //data source URL
                         var timestampDelim = '"';
 
                         //production timestamp
-                        //var currentTime = new Date(new Date().getTime()).toISOString();
+                        var currentTime = new Date(new Date().getTime()).toISOString();
 
                         //simulated timestamp that counts from Dec 2 2016 for development in EYETS (3 days of aggregated data)
-                        var currentTime = new Date(timeStampAtNov30+(counter*this.updateInterval)).toISOString();
-                        counter++;
+                        if (developmentPlayback) {
+                            currentTime = new Date(timeStampAtDec2 + (counter * this.updateInterval)).toISOString();
+                            counter++;
+                        }
+
 
                         if (debugSnapshotSource) {
                             baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
                             timestampDelim = '';
                         }
-
-                        console.log(baseURL + '"' + currentTime + '"');
-                        return baseURL + timestampDelim + currentTime + timestampDelim;
-
+                        var ret = baseURL + timestampDelim + currentTime + timestampDelim;
+                        //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
+                        //console.log("data source is:"+baseURL + '"' + currentTime + '"');
+                        return ret;
                     },
                     getSourceURLForGotoRequests: function () {
 
-                        var baseURL = 'http://daq-expert-dev.cms:8080/DAQExpert/snapshot?time=';
+                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
                         var timestampDelim = '"';
 
                         var currentTime = $('#daqview-go-to-time-input').val();
@@ -111,14 +148,16 @@
                             baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
                             timestampDelim = '';
                         }
-
-                        //console.log(baseURL + '"' + currentTime + '"');
-                        return baseURL + timestampDelim + currentTime + timestampDelim;
-
+                        var ret = baseURL + timestampDelim + currentTime + timestampDelim;
+                        //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
+                        //console.log("data source is:"+baseURL + '"' + currentTime + '"');
+                        return ret;
+                    },
+                    getRequestSetup: function() {
+                        return daqSetup;
                     },
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
-
 
                         //parse original snapshots
                         snapshot = parser.parse.bind(parser)(snapshot);
@@ -128,8 +167,7 @@
                         snapshot = ruMaskedCounter.countMaskedRUs.bind(ruMaskedCounter)(snapshot);
                         snapshot = buNoRateCounter.countNoRateBUs.bind(buNoRateCounter)(snapshot);
 
-                        //DAQAggregator.randomizeSnapshot(snapshot, 20);
-                        //console.log(snapshot);
+                        //DAQAggregator.randomizeSnapshot(snapshot, 20); //randomizes snapshot values
                         return snapshot;
                     }).bind(window)
                 };
@@ -156,7 +194,6 @@
 
                             $(this).prop('src', 'dist/img/pause.png');
                         }
-
                 });
 
                 var controlGoToTime = $('.daqview-go-to-time');
@@ -174,53 +211,14 @@
                     $('.daqview-control-pause-resume').prop('src', 'dist/img/play.png');
                 });
 
+                //if time parameter is found, then this request should return a static display at the requested timestamp
+                if (typeof queryString.time != 'undefined'){
+                    console.log("page loaded with 'time' parameter(s): "+queryString.time);
+                    $('#daqview-go-to-time-input').val(queryString.time);
+                    $('.daqview-go-to-time').click();
+                }
 
-
-                /*
-                 // quick and dirty hack for demo back and forth navigation; possibly solve this with React components in the future
-                 // and use snapshot provider functions instead of local updateSnapshot() impl.
-
-                var updateSnapshot = function () {
-                    var url = snapshotSource.getSourceURL();
-                    var snapshotRequest = jQuery.getJSON(url);
-
-                    snapshotRequest.done((function (snapshotJSON) {
-                        var snapshot;
-                        if (snapshotSource.parseSnapshot) {
-                            snapshot = snapshotSource.parseSnapshot(snapshotJSON);
-                        } else {
-                            snapshot = new Snapshot(snapshotJSON);
-                        }
-                        daqView.setSnapshot(snapshot);
-                    }));
-                };
-
-                var controlPrevious = $('.daqview-control-previous');
-                controlPrevious.on('click', function () {
-                    if (snapshotProvider.isRunning()) {
-                        snapshotProvider.stop();
-                        controlPauseResume.prop('src', 'dist/img/play.png');
-                    }
-                    currentIndex -= 2;
-                    if (currentIndex < 0) {
-                        currentIndex = maxIndex;
-                    }
-                    updateSnapshot();
-                });
-
-                var controlNext = $('.daqview-control-next');
-                controlNext.on('click', function () {
-                    if (snapshotProvider.isRunning()) {
-                        snapshotProvider.stop();
-                        controlPauseResume.prop('src', 'dist/img/play.png');
-                    }
-                    if (currentIndex > maxIndex) {
-                        currentIndex = 0;
-                    }
-                    updateSnapshot();
-                });
-                 */
-
+                //hook_for_the_server_to_trigger_static_display_timestamp__PLEASE_DO_NOT_REMOVE
             }
             catch (exception) {
                 console ? (console.debug ? console.debug(exception) : console.log(exception)) : alert(exception);
@@ -230,17 +228,26 @@
 </head>
 <body>
 <div id="daqview-react">
-    <div id="daqview-time-navigation">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%">
+                <div id="daqview-time-navigation">
+                <input type="text" placeholder="please respect format" value="2016-12-03T10:38:26.039Z" id="daqview-go-to-time-input">
+                <input type="submit" value="Go to time" class="daqview-go-to-time">
+                <p>Please use provided format (ISO) and UTC time:<br/>e.g. 2016-12-03T10:38:26.039Z</p>
+                </div>
+            </td>
+            <td style="width:60%">
+                <div id="daqview-control">
+                <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
+                       title="pause/resume"/>
+            </div>
+            </td>
+            <td style="width:20%" align="right" valign="bottom"><div id="daqview-react-snapshot-modal"></div></td>
+        </tr>
+        </table>
 
-            <input type="text" placeholder="please respect format" value="2016-12-03T10:38:26.039Z" id="daqview-go-to-time-input">
-            <input type="submit" value="Go to time" class="daqview-go-to-time">
 
-        <p>Please use provided format (ISO) and UTC time:<br/>e.g. 2016-12-03T10:38:26.039Z</p>
-    </div>
-    <div id="daqview-control">
-        <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
-               title="pause/resume"/>
-    </div>
     <br/><br/>
     <div id="daqview-react-metadata-table"></div>
     <br/><br/>
@@ -248,9 +255,7 @@
     <br/><br/>
     <div id="daqview-react-fff-table"></div>
     <br/><br/>
-    <div id="daqview-react-about-table"></div>
-    <div id="loaderWrapper"><br/><div class="loader"></div></div>
-
+    <div id="daqview-react-about-table"><div class="loader"></div></div>
 
 </div>
 </body>

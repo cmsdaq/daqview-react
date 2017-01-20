@@ -1,3 +1,7 @@
+/**
+ * @author Michail Vougioukas
+ */
+
 namespace DAQView {
 
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;

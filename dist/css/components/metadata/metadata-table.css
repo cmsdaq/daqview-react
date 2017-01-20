@@ -27,3 +27,10 @@
 .metadata-table-header-row th {
 
 }
+
+.metadata-error-table-header-row th{
+    text-align: center;
+    font-size: larger;
+    background-color: #C8C5C5;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}

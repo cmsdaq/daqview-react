@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 ///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
 ///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
 
@@ -48,18 +53,24 @@ namespace DAQView {
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
 
-            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
-                console.log("duplicate snapshot detected");
-                if (!drawPausedComponent) {
-                    return;
-                }else {
-                    console.log("...but requested pause, so do one more rendering");
+            if (!snapshot){
+                let msg: string = "";
+                let errRootElement: any = <ErrorElement message={msg}/>;
+                ReactDOM.render(errRootElement, this.htmlRootElement);
+            }else {
+                if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                    console.log("duplicate snapshot detected");
+                    if (!drawPausedComponent) {
+                        return;
+                    } else {
+                        console.log("...but requested pause, so do one more rendering");
+                    }
                 }
-            }
 
-            this.snapshot = FBTableSortFunctions.STATIC(snapshot);
-            this.drawPausedComponent = drawPausedComponent;
-            this.updateSnapshot();
+                this.snapshot = FBTableSortFunctions.STATIC(snapshot);
+                this.drawPausedComponent = drawPausedComponent;
+                this.updateSnapshot();
+            }
         }
 
         private updateSnapshot() {
@@ -99,6 +110,18 @@ namespace DAQView {
 
         public getCurrentSorting(headerName: string) {
             return this.currentSorting[headerName];
+        }
+    }
+
+    interface ErrorElementProperties {
+        message: string;
+    }
+
+    class ErrorElement extends React.Component<ErrorElementProperties,{}> {
+        render() {
+            return (
+                <div>{this.props.message}</div>
+            );
         }
     }
 
@@ -879,8 +902,9 @@ namespace DAQView {
 
             let ruMasked: boolean = ru.masked;
             let ruHostname: string = ru.hostname;
-            let ruName: string = ruHostname.substring(3, ruHostname.length - 4);
-            let ruUrl: string = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+            let ruPort: number = ru.port;
+            let ruName: string = ruHostname.split(".")[0];
+            let ruUrl: string = 'http://' + ruHostname + ':'+ruPort+'/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
 
             let fedBuilderData: any[] = [];
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
@@ -1129,8 +1153,9 @@ namespace DAQView {
             let subFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder = this.props.subFedBuilder;
             let frlPc: DAQAggregatorSnapshot.FRLPc = subFedBuilder.frlPc;
             let frlPcHostname: string = frlPc.hostname;
-            let frlPcName: string = frlPcHostname.substring(6, frlPcHostname.length - 4);
-            let frlPcUrl: string = 'http://' + frlPcHostname + ':11100';
+            let frlPcPort: number = frlPc.port;
+            let frlPcName: string = frlPcHostname.split(".")[0];
+            let frlPcUrl: string = 'http://' + frlPcHostname + ':'+frlPcPort;
             let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
             let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
 
@@ -1139,10 +1164,15 @@ namespace DAQView {
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = subFedBuilder.ttcPartition;
 
-
             let ttsState: string = '';
+            let ttsStateTcdsPm: string = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
+            let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
+
+
             if (ttcPartition.topFMMInfo.nullCause){
                 ttsState = ttcPartition.topFMMInfo.nullCause;
+                ttsStateTcdsPm = ttcPartition.topFMMInfo.nullCause;
+                ttsStateTcdsApvPm = ttcPartition.topFMMInfo.nullCause;
             }else{
                 if (ttcPartition.fmm){
                     if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled'){
@@ -1155,8 +1185,7 @@ namespace DAQView {
                 }
             }
 
-            let ttsStateTcdsPm: string = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
-            let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
+
 
             let ttsStateClasses: string = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
@@ -1207,9 +1236,14 @@ namespace DAQView {
             let ttcpPercWarn: string = ttcPartition.percentWarning != null ? ttcPartition.percentWarning.toFixed(1) : '-';
             let ttcpPercBusy: string = ttcPartition.percentWarning != null ? ttcPartition.percentBusy.toFixed(1) : '-';
 
+            //on special cases of ttsState, percentages cannot be retrieved, therefore assign them the special state
             if (ttsState === '-' || ttsState === 'x' || ttsState === '?'){
                 ttcpPercWarn = ttsState;
                 ttcpPercBusy = ttsState;
+            }
+            if (ttcPartition.topFMMInfo.nullCause){
+                ttcpPercWarn = ttcPartition.topFMMInfo.nullCause;
+                ttcpPercBusy = ttcPartition.topFMMInfo.nullCause;
             }
 
             let evmMaxTrg: number = this.props.evmMaxTrg;
@@ -1300,12 +1334,17 @@ namespace DAQView {
             let firstFedDisplay: any = firstFed ? <FEDData key={firstFed['@id']} fed={firstFed}/> : '-';
             let secondFed: DAQAggregatorSnapshot.FED = feds[1];
             let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed}/> : '';
+            let thirdFed: DAQAggregatorSnapshot.FED = feds[2];
+            let thirdFedDisplay: any = thirdFed ? <FEDData key={thirdFed['@id']} fed={thirdFed}/> : '';
+            let fourthFed: DAQAggregatorSnapshot.FED = feds[3];
+            let fourthFedDisplay: any = fourthFed ? <FEDData key={fourthFed['@id']} fed={fourthFed}/> : '';
+
 
             let firstFrl: boolean = this.props.firstFrl;
 
             return (
                 <span>
-                    {firstFrl ? '' : ', '}{frl.geoSlot}:{firstFedDisplay}{secondFed ? ',' : ''}{secondFedDisplay}
+                    {firstFrl ? '' : ', '}{frl.geoSlot}:{firstFedDisplay}{secondFed ? ',' : ''}{secondFedDisplay}{thirdFed ? ',' : ''}{thirdFedDisplay}{fourthFed ? ',' : ''}{fourthFedDisplay}
                 </span>
             );
         }
@@ -1382,7 +1421,7 @@ namespace DAQView {
                 <span className="fb-table-fed-percent-backpressure">{'<'}{percentWarning.toFixed(1)}%</span> : '';
 
             let unexpectedSourceIdDisplay: any = '';
-            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId) {
+            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId && receivedSourceId != 0) {
                 unexpectedSourceIdDisplay =
                     <span className="fb-table-fed-received-source-id">rcvSrcId:{receivedSourceId}</span>;
             }

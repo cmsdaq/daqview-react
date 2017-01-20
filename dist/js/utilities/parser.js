@@ -1,3 +1,6 @@
+/**
+ * @author Michail Vougioukas
+ */
 var DAQAggregator;
 (function (DAQAggregator) {
     var SnapshotParser = (function () {

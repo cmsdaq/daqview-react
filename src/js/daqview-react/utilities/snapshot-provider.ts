@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 namespace DAQAggregator {
 
     import DAQSnapshotView = DAQView.DAQSnapshotView;
@@ -21,8 +26,8 @@ namespace DAQAggregator {
             this.views.push(view);
         }
 
-        public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean) {
-            this.views.forEach(view => view.setSnapshot(snapshot, drawPausedPage));
+        public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean, url: string) {
+            this.views.forEach(view => view.setSnapshot(snapshot, drawPausedPage, url));
         }
 
         public isRunning(): boolean {
@@ -86,6 +91,10 @@ namespace DAQAggregator {
                         console.log("Malformed snapshot received, parsing and updating won't be launched until next valid snapshot");
                         console.log(snapshotJSON);
                         malformedSnapshot = true;
+                        let snapshot: Snapshot;
+                        this.setSnapshot(snapshot, this.drawPausedPage, url); //maybe also pass message to setSnapshot
+                        //reset value after use
+                        this.drawPausedPage = false;
                     }
 
                     if (!malformedSnapshot) {
@@ -100,13 +109,17 @@ namespace DAQAggregator {
                         console.log('Time to parse snapshot: ' + time + 'ms');
 
                         startTime = new Date().getTime();
-                        this.setSnapshot(snapshot, this.drawPausedPage);
+                        this.setSnapshot(snapshot, this.drawPausedPage, url);
 
                         //reset value after use
                         this.drawPausedPage = false;
 
                         time = new Date().getTime() - startTime;
                         console.log('Time to update page: ' + time + 'ms');
+
+                        window.history.replaceState(null,null, "?setup="+this.snapshotSource.getRequestSetup()+"&time="+(new Date(snapshot.getUpdateTimestamp()).toISOString()));
+                        document.title = "DAQView ["+(new Date(snapshot.getUpdateTimestamp()).toISOString())+"]";
+
                     }
 
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
@@ -114,6 +127,10 @@ namespace DAQAggregator {
 
                 snapshotRequest.fail((function (){
                     console.log("Error in remote snapshot request, retrying after "+this.snapshotSource.updateInterval+" millis");
+                    let snapshot: Snapshot;
+                    this.setSnapshot(snapshot, this.drawPausedPage, url);
+                    //reset value after use
+                    this.drawPausedPage = false;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
 

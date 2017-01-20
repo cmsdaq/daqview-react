@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 namespace DAQViewGUIUtility {
 
     export function getParametersFromCurrentRequestURL(): {[key: string]: string} {

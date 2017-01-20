@@ -1,3 +1,7 @@
+/**
+ * @author Philipp Brummer
+ */
+
 namespace DAQView {
     export interface SortFunction {
         presort?: (snapshot: DAQAggregator.Snapshot) => DAQAggregator.Snapshot;

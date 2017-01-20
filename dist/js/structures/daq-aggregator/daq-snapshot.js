@@ -1,3 +1,7 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
 var DAQAggregator;
 (function (DAQAggregator) {
     var Snapshot = (function () {

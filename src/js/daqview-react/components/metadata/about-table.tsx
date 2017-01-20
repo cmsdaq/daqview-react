@@ -1,3 +1,7 @@
+/**
+ * @author Michail Vougioukas
+ */
+
 namespace DAQView {
 
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
@@ -14,13 +18,13 @@ namespace DAQView {
         }
 
         public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
-            this.snapshot = snapshot; //extra 'about' info could in the future be loaded from snapshot (e.g. DAQAggregator version linked to snapshot)
+            this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
 
-            let aboutTableRootElement: any = <AboutTableElement       project={"DAQView - React.js"}
+            let aboutTableRootElement: any = <AboutTableElement       project={"DAQView"}
                                                                       authors={"Michail Vougioukas, Philipp Brummer"}
                                                                       organization={"CERN CMS DAQ Group"}
-                                                                      year={2016}/>;
+                                                                      year={"2016-2017"}/>;
             ReactDOM.render(aboutTableRootElement, this.htmlRootElement);
         }
     }
@@ -29,7 +33,7 @@ namespace DAQView {
         project: string;
         authors: string;
         organization: string;
-        year: number;
+        year: string;
     }
 
     class AboutTableElement extends React.Component<AboutTableElementProperties,{}> {
