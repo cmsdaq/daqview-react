@@ -25,6 +25,8 @@ namespace DAQView {
 
         private snapshot: DAQAggregatorSnapshot = null;
         private drawPausedComponent: boolean = false;
+        private drawZeroDataFlowComponent: boolean = false;
+
         private sortFunction: SortFunction = {
             presort: this.INITIAL_PRESORT_FUNCTION,
             sort: this.INITIAL_SORT_FUNCTION
@@ -51,7 +53,7 @@ namespace DAQView {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, url:string) {
 
             if (!snapshot){
                 let msg: string = "";
@@ -60,15 +62,16 @@ namespace DAQView {
             }else {
                 if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                     console.log("duplicate snapshot detected");
-                    if (!drawPausedComponent) {
+                    if ((!drawPausedComponent) || (!drawZeroDataFlowComponent)) {
                         return;
                     } else {
-                        console.log("...but requested pause, so do one more rendering");
+                        console.log("...but page color has to change, so do render");
                     }
                 }
 
                 this.snapshot = FBTableSortFunctions.STATIC(snapshot);
                 this.drawPausedComponent = drawPausedComponent;
+                this.drawZeroDataFlowComponent = drawZeroDataFlowComponent;
                 this.updateSnapshot();
             }
         }
@@ -77,10 +80,13 @@ namespace DAQView {
             let sortedSnapshot: DAQAggregatorSnapshot = this.sort(this.snapshot);
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
             let drawPausedComponent: boolean = this.drawPausedComponent;
+            let drawZeroDataFlowComponent: boolean = this.drawZeroDataFlowComponent;
+
             let fedBuilderTableRootElement: any = <FEDBuilderTableElement tableObject={this}
                                                                           fedBuilders={daq.fedBuilders}
                                                                           fedBuilderSummary={daq.fedBuilderSummary}
-                                                                        drawPausedComponent={drawPausedComponent}/>
+                                                                        drawPausedComponent={drawPausedComponent}
+                                                                          drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         }
 
@@ -766,6 +772,7 @@ namespace DAQView {
         fedBuilders: DAQAggregatorSnapshot.FEDBuilder[];
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
         drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class FEDBuilderTableElement extends React.Component<FEDBuilderTableElementProperties,{}> {
@@ -773,6 +780,8 @@ namespace DAQView {
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = this.props.fedBuilders;
 
             let drawPausedComponents: boolean = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponents: boolean = this.props.drawZeroDataFlowComponent;
+
 
             let evmMaxTrg: number = null;
             //can similarly invent and pass down the evm minTrg here, for comparison at innermost levels
@@ -788,7 +797,8 @@ namespace DAQView {
             fedBuilders.forEach(function (fedBuilder) {
                 fedBuilderRows.push(<FEDBuilderRow key={fedBuilder['@id']} fedBuilder={fedBuilder}
                                                    evmMaxTrg={evmMaxTrg}
-                                                drawPausedComponent={drawPausedComponents}/>);
+                                                drawPausedComponent={drawPausedComponents}
+                                                   drawZeroDataFlowComponent={drawZeroDataFlowComponents}/>);
             });
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
@@ -815,7 +825,7 @@ namespace DAQView {
                     <FEDBuilderTableHeaderRow key="fb-summary-header-row" tableObject={tableObject}
                                               headers={FB_TABLE_SUMMARY_HEADERS} drawPausedComponent={drawPausedComponents}/>
                     <FEDBuilderTableSummaryRow key="fb-summary-row" fedBuilderSummary={fedBuilderSummary}
-                                               numRus={numRus} numUsedRus={numUsedRus} drawPausedComponent={drawPausedComponents}/>
+                                               numRus={numRus} numUsedRus={numUsedRus} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}/>
                     </tfoot>
                 </table>
             );
@@ -827,6 +837,7 @@ namespace DAQView {
         evmMaxTrg: number;
         additionalClasses?: string | string[];
         drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
     }
 
     interface RUWarningDataProperties {
@@ -892,6 +903,7 @@ namespace DAQView {
         render() {
 
             let drawPausedComponent = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
 
             let fedBuilder: DAQAggregatorSnapshot.FEDBuilder = this.props.fedBuilder;
 
@@ -944,6 +956,11 @@ namespace DAQView {
                                     className={requestsClass}>{ru.requests}</td>);
 
             let fbRowClass: string = drawPausedComponent? "fb-table-fb-row-paused" : "fb-table-fb-row-running";
+
+            if (drawZeroDataFlowComponent){
+                fbRowClass = "fb-table-fb-row-ratezero";
+            }
+
             let fbRowClassName: string = classNames(fbRowClass, this.props.additionalClasses);
 
             let children: any = [];
@@ -1457,6 +1474,7 @@ namespace DAQView {
         numUsedRus: number;
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
         drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class FEDBuilderTableSummaryRow extends React.Component<FEDBuilderTableSummaryRowProperties,{}> {
@@ -1468,7 +1486,12 @@ namespace DAQView {
         render() {
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             let fbSummaryRowClass: string = drawPausedComponent ? "fb-table-fb-summary-row-paused" : "fb-table-fb-summary-row-running";
+
+            if (drawZeroDataFlowComponent){
+                fbSummaryRowClass = "fb-table-fb-row-ratezero";
+            }
 
             return (
                 <tr className={fbSummaryRowClass}>

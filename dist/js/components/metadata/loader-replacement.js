@@ -13,7 +13,7 @@ var DAQView;
             this.drawPausedComponent = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        LoaderReplacement.prototype.setSnapshot = function (snapshot, drawPausedComponent) {
+        LoaderReplacement.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, url) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             var loaderReplacementRootElement = React.createElement(LoaderReplacementElement, {placeholder: ""});

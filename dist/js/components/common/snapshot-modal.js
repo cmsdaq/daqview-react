@@ -18,7 +18,7 @@ var DAQView;
             this.url = "";
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        SnapshotModal.prototype.setSnapshot = function (snapshot, drawPausedComponent, url) {
+        SnapshotModal.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, url) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             this.url = url;
