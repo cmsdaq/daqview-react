@@ -133,6 +133,14 @@
 
 }
 
+.fb-table-fb-row-ratezero:nth-of-type(even) {
+    background-color: #EF4A50;
+}
+
+.fb-table-fb-row-ratezero:nth-of-type(odd) {
+    background-color:  #F5F2F2 ;
+}
+
 .fb-table-fb-row-running:nth-of-type(even) {
     background-color: #DDDDAA;
 }
@@ -151,6 +159,11 @@
 
 .fb-table-subfb-row {
 
+}
+
+.fb-table-fb-summary-row-ratezero {
+    font-weight: bold;
+    background-color: #EF4A50;
 }
 
 .fb-table-fb-summary-row-running {

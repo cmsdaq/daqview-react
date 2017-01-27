@@ -52,6 +52,14 @@
 
 }
 
+.fff-table-bu-row-ratezero:nth-of-type(even) {
+    background-color: #EF4A50;
+}
+
+.fff-table-bu-row-ratezero:nth-of-type(odd) {
+    background-color: #F5F2F2;
+}
+
 .fff-table-bu-row-running:nth-of-type(even) {
     background-color: #DDDDAA;
 }
@@ -66,6 +74,11 @@
 
 .fff-table-bu-row-paused:nth-of-type(odd) {
     background-color: #F5F2F2;
+}
+
+.fff-table-bu-summary-row-ratezero {
+    font-weight: bold;
+    background-color: #EF4A50;
 }
 
 .fff-table-bu-summary-row-running {
@@ -138,6 +151,7 @@
 }
 
 .fff-table-bwout-over {
+    font-weight: bold;
     color: #FF0000;
 }
 

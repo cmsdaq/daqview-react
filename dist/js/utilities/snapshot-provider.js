@@ -18,8 +18,8 @@ var DAQAggregator;
         SnapshotProvider.prototype.addView = function (view) {
             this.views.push(view);
         };
-        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, url) {
-            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, url); });
+        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, drawZeroDataFlowComponent, url) {
+            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, url); });
         };
         SnapshotProvider.prototype.isRunning = function () {
             return this.running;
@@ -86,7 +86,19 @@ var DAQAggregator;
                         time = new Date().getTime() - startTime;
                         console.log('Time to parse snapshot: ' + time + 'ms');
                         startTime = new Date().getTime();
-                        this.setSnapshot(snapshot, this.drawPausedPage, url);
+                        //discover if data flow rate is zero
+                        var drawDataFlowIsZero_1 = false;
+                        var daq = snapshot.getDAQ();
+                        if (daq.fedBuilderSummary.rate == 0) {
+                            daq.fedBuilders.forEach(function (fedBuilder) {
+                                if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
+                                    if (fedBuilder.ru.stateName === "Enabled") {
+                                        drawDataFlowIsZero_1 = true;
+                                    }
+                                }
+                            });
+                        }
+                        this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero_1, url);
                         //reset value after use
                         this.drawPausedPage = false;
                         time = new Date().getTime() - startTime;
@@ -99,7 +111,7 @@ var DAQAggregator;
                 snapshotRequest.fail((function () {
                     console.log("Error in remote snapshot request, retrying after " + this.snapshotSource.updateInterval + " millis");
                     var snapshot;
-                    this.setSnapshot(snapshot, this.drawPausedPage, url);
+                    this.setSnapshot(snapshot, this.drawPausedPage, false, url);
                     //reset value after use
                     this.drawPausedPage = false;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
@@ -121,6 +133,20 @@ var DAQAggregator;
         SnapshotProvider.prototype.provideOneMoreSnapshotAndStop = function (callerType) {
             this.pauseCallerType = callerType;
             this.instructionToStop = true;
+        };
+        SnapshotProvider.prototype.checkIfDataFlowIsStopped = function (snapshot) {
+            var daq = snapshot.getDAQ();
+            if (daq.fedBuilderSummary.rate > 0) {
+                return false;
+            }
+            daq.fedBuilders.forEach(function (fedBuilder) {
+                if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
+                    if (fedBuilder.ru.stateName === "Enabled") {
+                        return true;
+                    }
+                }
+            });
+            return false;
         };
         return SnapshotProvider;
     }());

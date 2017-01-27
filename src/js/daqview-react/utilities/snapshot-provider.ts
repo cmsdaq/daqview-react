@@ -6,6 +6,8 @@
 namespace DAQAggregator {
 
     import DAQSnapshotView = DAQView.DAQSnapshotView;
+    import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
+    import DAQ = DAQAggregator.Snapshot.DAQ;
 
     export class SnapshotProvider implements DAQSnapshotView {
         private snapshotSource: SnapshotSource;
@@ -26,8 +28,9 @@ namespace DAQAggregator {
             this.views.push(view);
         }
 
-        public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean, url: string) {
-            this.views.forEach(view => view.setSnapshot(snapshot, drawPausedPage, url));
+        public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean, drawZeroDataFlowComponent:boolean, url: string) {
+
+            this.views.forEach(view => view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, url));
         }
 
         public isRunning(): boolean {
@@ -109,7 +112,23 @@ namespace DAQAggregator {
                         console.log('Time to parse snapshot: ' + time + 'ms');
 
                         startTime = new Date().getTime();
-                        this.setSnapshot(snapshot, this.drawPausedPage, url);
+
+                        //discover if data flow rate is zero
+                        let drawDataFlowIsZero: boolean = false;
+
+                        let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+                        if (daq.fedBuilderSummary.rate==0){
+                            daq.fedBuilders.forEach(function (fedBuilder) {
+                                if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
+                                    if (fedBuilder.ru.stateName === "Enabled") {
+                                        drawDataFlowIsZero = true;
+                                    }
+                                }
+                            });
+                        }
+
+
+                        this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero, url);
 
                         //reset value after use
                         this.drawPausedPage = false;
@@ -128,12 +147,11 @@ namespace DAQAggregator {
                 snapshotRequest.fail((function (){
                     console.log("Error in remote snapshot request, retrying after "+this.snapshotSource.updateInterval+" millis");
                     let snapshot: Snapshot;
-                    this.setSnapshot(snapshot, this.drawPausedPage, url);
+                    this.setSnapshot(snapshot, this.drawPausedPage, false, url);
                     //reset value after use
                     this.drawPausedPage = false;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
-
 
             }).bind(this);
 
@@ -158,6 +176,21 @@ namespace DAQAggregator {
         public provideOneMoreSnapshotAndStop(callerType: number){
             this.pauseCallerType = callerType;
             this.instructionToStop = true;
+        }
+
+        public checkIfDataFlowIsStopped(snapshot: Snapshot): boolean{
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            if (daq.fedBuilderSummary.rate>0){
+                return false;
+            }
+            daq.fedBuilders.forEach(function (fedBuilder) {
+                if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
+                    if (fedBuilder.ru.stateName === "Enabled") {
+                        return true;
+                    }
+                }
+            });
+            return false;
         }
     }
 

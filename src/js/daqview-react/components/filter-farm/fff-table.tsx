@@ -23,6 +23,8 @@ namespace DAQView {
 
         private snapshot: DAQAggregatorSnapshot = null;
         private drawPausedComponent: boolean = false;
+        private drawZeroDataFlowComponent: boolean = false;
+
         private sortFunction: SortFunction = {
             presort: this.INITIAL_PRESORT_FUNCTION,
             sort: this.INITIAL_SORT_FUNCTION
@@ -56,7 +58,7 @@ namespace DAQView {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, url:string) {
             if (!snapshot){
                 let msg: string = "";
                 let errRootElement: any = <ErrorElement message={msg}/>;
@@ -64,14 +66,15 @@ namespace DAQView {
             }else {
                 if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                     console.log("duplicate snapshot detected");
-                    if (!drawPausedComponent) {
+                    if ((!drawPausedComponent) || (!drawZeroDataFlowComponent)) {
                         return;
                     } else {
-                        console.log("...but requested pause, so do one more rendering");
+                        console.log("...but page color has to change, so do render");
                     }
                 }
                 this.snapshot = snapshot;
                 this.drawPausedComponent = drawPausedComponent;
+                this.drawZeroDataFlowComponent = drawZeroDataFlowComponent;
                 this.updateSnapshot();
             }
         }
@@ -80,10 +83,12 @@ namespace DAQView {
             let sortedSnapshot: DAQAggregatorSnapshot = this.sort(this.snapshot);
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
             let drawPausedComponent: boolean = this.drawPausedComponent;
+            let drawZeroDataFlowComponent: boolean = this.drawZeroDataFlowComponent;
             let fileBasedFilterFarmTableRootElement: any = <FileBasedFilterFarmTableElement tableObject={this}
                                                                                             bus={daq.bus}
                                                                                             buSummary={daq.buSummary}
-                                                                                            drawPausedComponent={drawPausedComponent}/>;
+                                                                                            drawPausedComponent={drawPausedComponent}
+                                                                                            drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>;
             ReactDOM.render(fileBasedFilterFarmTableRootElement, this.htmlRootElement);
         }
 
@@ -530,6 +535,7 @@ namespace DAQView {
         bus: DAQAggregatorSnapshot.BU[];
         buSummary: DAQAggregatorSnapshot.BUSummary;
         drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class FileBasedFilterFarmTableElement extends React.Component<FileBasedFilterFarmTableElementProperties,{}> {
@@ -540,10 +546,11 @@ namespace DAQView {
             let numBus: number = 0;
 
             let drawPausedComponents: boolean = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponents: boolean = this.props.drawZeroDataFlowComponent;
             let buRows: any[] = [];
             if (bus != null) {
                 numBus = bus.length;
-                bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu} drawPausedComponent={drawPausedComponents}/>));
+                bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}/>));
             }
             let numBusNoRate:number = numBus - buSummary.busNoRate;
 
@@ -562,7 +569,7 @@ namespace DAQView {
                     <tfoot className="fff-table-foot">
                     <FileBasedFilterFarmTableHeaderRow key="fff-summary-header-row" tableObject={tableObject}
                                                        headers={FFF_TABLE_SUMMARY_HEADERS} drawPausedComponent={drawPausedComponents}/>
-                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus } numBusNoRate={numBusNoRate} drawPausedComponent={drawPausedComponents}/>
+                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus } numBusNoRate={numBusNoRate} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}/>
                     </tfoot>
                 </table>
             );
@@ -678,6 +685,7 @@ namespace DAQView {
     interface FileBasedFilterFarmTableBURowProperties {
         bu: DAQAggregatorSnapshot.BU;
         drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class FileBasedFilterFarmTableBURow extends React.Component<FileBasedFilterFarmTableBURowProperties,{}> {
@@ -688,6 +696,7 @@ namespace DAQView {
 
         render() {
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
 
             let bu: DAQAggregatorSnapshot.BU = this.props.bu;
             let buUrl: string = 'http://' + bu.hostname + ':'+bu.port+'/urn:xdaq-application:service=bu';
@@ -705,6 +714,10 @@ namespace DAQView {
             let requestsBlocked: number = bu.numRequestsBlocked;
 
             let fffBuRowClass: string = drawPausedComponent? "fff-table-bu-row-paused" : "fff-table-bu-row-running";
+
+            if (drawZeroDataFlowComponent){
+                fffBuRowClass = "fff-table-bu-row-ratezero";
+            }
 
             return (
                 <tr className={fffBuRowClass}>
@@ -740,6 +753,7 @@ namespace DAQView {
         numBusNoRate: number;
         buSummary: DAQAggregatorSnapshot.BUSummary;
         drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class FileBasedFilterFarmTableBUSummaryRow extends React.Component<FileBasedFilterFarmTableBUSummaryRowProperties,{}> {
@@ -751,7 +765,12 @@ namespace DAQView {
         render() {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             let fffBuSummaryRowClass: string = drawPausedComponent ? "fff-table-bu-summary-row-paused" : "fff-table-bu-summary-row-running";
+
+            if (drawZeroDataFlowComponent){
+                fffBuSummaryRowClass = "fff-table-bu-summary-row-ratezero";
+            }
 
             return (
                 <tr className={fffBuSummaryRowClass}>

@@ -14,7 +14,7 @@ var DAQView;
             this.drawPausedComponent = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        MetadataTable.prototype.setSnapshot = function (snapshot, drawPausedComponent) {
+        MetadataTable.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, url) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             if (!snapshot) {

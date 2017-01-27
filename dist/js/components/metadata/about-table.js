@@ -13,7 +13,7 @@ var DAQView;
             this.drawPausedComponent = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        AboutTable.prototype.setSnapshot = function (snapshot, drawPausedComponent) {
+        AboutTable.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, url) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             var aboutTableRootElement = React.createElement(AboutTableElement, {project: "DAQView", authors: "Michail Vougioukas, Philipp Brummer", organization: "CERN CMS DAQ Group", year: "2016-2017"});
