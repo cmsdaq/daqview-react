@@ -59,8 +59,8 @@ namespace DAQAggregator {
         }
 
         export interface TCDSGlobalInfo extends SnapshotElement {
-            tcdsControllerContext : string;
-            tcdsControllerServiceName : string;
+            tcdsControllerContext? : string;
+            tcdsControllerServiceName? : string;
         }
 
         export interface FEDBuilder extends SnapshotElement {
