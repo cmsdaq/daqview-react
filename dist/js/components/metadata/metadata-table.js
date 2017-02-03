@@ -18,7 +18,7 @@ var DAQView;
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             if (!snapshot) {
-                var msg = "Monitoring data unavailable: Please wait and do not pause DAQView (if you are here for the real-time mode) or choose another timestamp (if you are here for navigating back in time)";
+                var msg = "Monitoring data unavailable for this request";
                 var errRootElement = React.createElement(ErrorElement, {message: msg});
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }
