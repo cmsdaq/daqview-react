@@ -24,7 +24,7 @@ namespace DAQView {
 
             if (!snapshot){
                 let msg: string = "Monitoring data unavailable for this request: ";
-                let errRootElement: any = <ErrorElement message={msg} details={url}/>;
+                let errRootElement: any = <ErrorElement message={msg} details={""}/>;
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }else{
 

@@ -19,7 +19,7 @@ var DAQView;
             this.drawPausedComponent = drawPausedComponent;
             if (!snapshot) {
                 var msg = "Monitoring data unavailable for this request: ";
-                var errRootElement = React.createElement(ErrorElement, {message: msg, details: url});
+                var errRootElement = React.createElement(ErrorElement, {message: msg, details: ""});
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }
             else {
