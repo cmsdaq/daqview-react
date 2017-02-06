@@ -54,7 +54,7 @@ namespace DAQAggregator {
             fedBuilderSummary: FEDBuilderSummary;
             buSummary: BUSummary;
 
-            tcdsGlobalInfo: TCDSGlobalInfo;
+            tcdsGlobalInfo?: TCDSGlobalInfo;
 
         }
 
