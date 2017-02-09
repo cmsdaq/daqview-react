@@ -98,24 +98,21 @@
                 var counter = 0;
                 var timeStampAtDec2 = 1480678707956;
 
-                //use local aggregator data source (for development)
-                var debugSnapshotSource = false;
+               // var debugSnapshotSource = false;
                 var developmentPlayback = false;
 
-                if (daqSetup == "cdaq"){
-                    debugSnapshotSource = false;
+                if (daqSetup == "playbackcdaq"){
+                    //debugSnapshotSource = false;
+
+                    daqSetup = 'cdaq'; //revert to cdaq, but in dev eyets 16 playback mode (only real-time)
                     developmentPlayback = true; //change this after EYETS
-                }
-                if (daqSetup == "daqval"){
-                    debugSnapshotSource = true;
-                    developmentPlayback = false; //change this after EYETS
                 }
 
                 var snapshotSource = {
                     updateInterval: 2000,
                     getSourceURL: function () {
 
-                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time='; //data source URL
+                        var baseURL = 'http://pcepcmd62.cern.ch:8080/daqview-react-server/getsnapshot?setup='+daqSetup+'&time='; //data source URL
                         var timestampDelim = '"';
 
                         //production timestamp
@@ -127,11 +124,12 @@
                             counter++;
                         }
 
-
+                        /*
                         if (debugSnapshotSource) {
                             baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
                             timestampDelim = '';
-                        }
+                        }*/
+
                         var ret = baseURL + timestampDelim + currentTime + timestampDelim;
                         //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
                         //console.log("data source is:"+baseURL + '"' + currentTime + '"');
@@ -139,15 +137,17 @@
                     },
                     getSourceURLForGotoRequests: function () {
 
-                        var baseURL = 'http://daq-expert.cms:8080/DAQExpert/snapshot?time=';
+                        var baseURL = 'http://pcepcmd62.cern.ch:8080/daqview-react-server/getsnapshot?setup='+daqSetup+'&time=';
                         var timestampDelim = '"';
 
                         var currentTime = $('#daqview-go-to-time-input').val();
 
+                        /*
                         if (debugSnapshotSource) {
                             baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
                             timestampDelim = '';
-                        }
+                        }*/
+
                         var ret = baseURL + timestampDelim + currentTime + timestampDelim;
                         //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
                         //console.log("data source is:"+baseURL + '"' + currentTime + '"');

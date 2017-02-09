@@ -23,8 +23,8 @@ namespace DAQView {
             this.drawPausedComponent = drawPausedComponent;
 
             if (!snapshot){
-                let msg: string = "Monitoring data unavailable: Please wait and do not pause DAQView (if you are here for the real-time mode) or choose another timestamp (if you are here for navigating back in time)";
-                let errRootElement: any = <ErrorElement message={msg}/>;
+                let msg: string = "Monitoring data unavailable for this request: ";
+                let errRootElement: any = <ErrorElement message={msg} details={""}/>;
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }else{
 
@@ -97,6 +97,7 @@ namespace DAQView {
 
     interface ErrorElementProperties {
         message: string;
+        details: string;
     }
 
     class ErrorElement extends React.Component<ErrorElementProperties,{}> {
@@ -109,8 +110,8 @@ namespace DAQView {
                     </tr>
                     </thead>
                     <tbody className="metadata-table-body">
-                    <tr className="metadata-table-content-row">
-                        <td></td>
+                    <tr className="metadata-error-table-content-row">
+                        <td>{this.props.details}</td>
                     </tr>
                     </tbody>
                 </table>

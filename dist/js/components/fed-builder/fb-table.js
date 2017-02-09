@@ -68,7 +68,9 @@ var DAQView;
             var daq = sortedSnapshot.getDAQ();
             var drawPausedComponent = this.drawPausedComponent;
             var drawZeroDataFlowComponent = this.drawZeroDataFlowComponent;
-            var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {tableObject: this, fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary, drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent});
+            var tcdsControllerUrl = daq.tcdsGlobalInfo? daq.tcdsGlobalInfo.tcdsControllerContext : "";
+            var tcdsControllerServiceName = daq.tcdsGlobalInfo?  daq.tcdsGlobalInfo.tcdsControllerServiceName : "";
+            var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {tableObject: this, fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary, drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, tcdsControllerUrl: tcdsControllerUrl, tcdsControllerServiceName: tcdsControllerServiceName});
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         };
         FEDBuilderTable.prototype.setSortFunction = function (sortFunctions) {
@@ -698,6 +700,8 @@ var DAQView;
             var fedBuilders = this.props.fedBuilders;
             var drawPausedComponents = this.props.drawPausedComponent;
             var drawZeroDataFlowComponents = this.props.drawZeroDataFlowComponent;
+            var tcdsControllerUrl = this.props.tcdsControllerUrl;
+            var tcdsControllerServiceName = this.props.tcdsControllerServiceName;
             var evmMaxTrg = null;
             //can similarly invent and pass down the evm minTrg here, for comparison at innermost levels
             fedBuilders.forEach(function (fedBuilder) {
@@ -709,7 +713,7 @@ var DAQView;
             });
             var fedBuilderRows = [];
             fedBuilders.forEach(function (fedBuilder) {
-                fedBuilderRows.push(React.createElement(FEDBuilderRow, {key: fedBuilder['@id'], fedBuilder: fedBuilder, evmMaxTrg: evmMaxTrg, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents}));
+                fedBuilderRows.push(React.createElement(FEDBuilderRow, {key: fedBuilder['@id'], fedBuilder: fedBuilder, evmMaxTrg: evmMaxTrg, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, tcdsControllerUrl: tcdsControllerUrl, tcdsControllerServiceName: tcdsControllerServiceName}));
             });
             var fedBuilderSummary = this.props.fedBuilderSummary;
             var numRus = fedBuilders.length;
@@ -815,7 +819,7 @@ var DAQView;
             var fbRowClassName = classNames(fbRowClass, this.props.additionalClasses);
             var children = [];
             var count = 0;
-            subFedBuilders.forEach(function (subFedBuilder) { return children.push(React.createElement(SubFEDBuilderRow, {evmMaxTrg: _this.props.evmMaxTrg, subFedBuilder: subFedBuilder, additionalContent: ++count == 1 ? fedBuilderData : null})); });
+            subFedBuilders.forEach(function (subFedBuilder) { return children.push(React.createElement(SubFEDBuilderRow, {evmMaxTrg: _this.props.evmMaxTrg, subFedBuilder: subFedBuilder, additionalContent: ++count == 1 ? fedBuilderData : null, tcdsControllerUrl: _this.props.tcdsControllerUrl, tcdsControllerServiceName: _this.props.tcdsControllerServiceName})); });
             return (React.createElement("tbody", {className: fbRowClassName}, children));
         };
         return FEDBuilderRow;
@@ -988,17 +992,17 @@ var DAQView;
                     React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsState);
             }
             //two vars below should be available from the data model instead of being hardcoded
-            var tcdsControlUrl = 'http://tcds-control-cpm.cms:2050';
-            var tcdsControlService = 'cpm-pri';
+            var tcdsControllerUrl = this.props.tcdsControllerUrl;
+            var tcdsControllerServiceName = this.props.tcdsControllerServiceName;
             var ttcPartitionTTSStateTcdsPmLink = ttsStateTcdsPm;
             if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttcPartition.tcds_pm_ttsState != 'x') {
                 ttcPartitionTTSStateTcdsPmLink =
-                    React.createElement("a", {href: tcdsControlUrl + '/urn:xdaq-application:service=' + tcdsControlService, target: "_blank"}, ttsStateTcdsPm);
+                    React.createElement("a", {href: tcdsControllerUrl + '/urn:xdaq-application:service=' + tcdsControllerServiceName, target: "_blank"}, ttsStateTcdsPm);
             }
             var ttcPartitionTTSStateTcdsApvPmLink = ttsStateTcdsApvPm;
             if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x') {
                 ttcPartitionTTSStateTcdsApvPmLink =
-                    React.createElement("a", {href: tcdsControlUrl + '/urn:xdaq-application:service=' + tcdsControlService, target: "_blank"}, ttsStateTcdsApvPm);
+                    React.createElement("a", {href: tcdsControllerUrl + '/urn:xdaq-application:service=' + tcdsControllerServiceName, target: "_blank"}, ttsStateTcdsApvPm);
             }
             var ttcPartitionTTSStateDisplay_F = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
             var ttcPartitionTTSStateDisplay_P = React.createElement("span", {className: ttsStateTcdsPmClasses}, ttcPartitionTTSStateTcdsPmLink);

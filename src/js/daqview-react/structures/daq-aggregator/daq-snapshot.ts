@@ -54,6 +54,13 @@ namespace DAQAggregator {
             fedBuilderSummary: FEDBuilderSummary;
             buSummary: BUSummary;
 
+            tcdsGlobalInfo?: TCDSGlobalInfo;
+
+        }
+
+        export interface TCDSGlobalInfo extends SnapshotElement {
+            tcdsControllerContext? : string;
+            tcdsControllerServiceName? : string;
         }
 
         export interface FEDBuilder extends SnapshotElement {

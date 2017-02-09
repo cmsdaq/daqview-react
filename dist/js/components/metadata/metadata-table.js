@@ -18,8 +18,8 @@ var DAQView;
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             if (!snapshot) {
-                var msg = "Monitoring data unavailable: Please wait and do not pause DAQView (if you are here for the real-time mode) or choose another timestamp (if you are here for navigating back in time)";
-                var errRootElement = React.createElement(ErrorElement, {message: msg});
+                var msg = "Monitoring data unavailable for this request: ";
+                var errRootElement = React.createElement(ErrorElement, {message: msg, details: ""});
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }
             else {
@@ -47,7 +47,7 @@ var DAQView;
             _super.apply(this, arguments);
         }
         ErrorElement.prototype.render = function () {
-            return (React.createElement("table", {className: "metadata-table"}, React.createElement("thead", {className: "metadata-table-head"}, React.createElement("tr", {className: "metadata-error-table-header-row"}, React.createElement("th", null, this.props.message))), React.createElement("tbody", {className: "metadata-table-body"}, React.createElement("tr", {className: "metadata-table-content-row"}, React.createElement("td", null)))));
+            return (React.createElement("table", {className: "metadata-table"}, React.createElement("thead", {className: "metadata-table-head"}, React.createElement("tr", {className: "metadata-error-table-header-row"}, React.createElement("th", null, this.props.message))), React.createElement("tbody", {className: "metadata-table-body"}, React.createElement("tr", {className: "metadata-error-table-content-row"}, React.createElement("td", null, this.props.details)))));
         };
         return ErrorElement;
     }(React.Component));

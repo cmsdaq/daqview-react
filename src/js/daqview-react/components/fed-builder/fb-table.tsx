@@ -82,11 +82,16 @@ namespace DAQView {
             let drawPausedComponent: boolean = this.drawPausedComponent;
             let drawZeroDataFlowComponent: boolean = this.drawZeroDataFlowComponent;
 
+            let tcdsControllerUrl :string = daq.tcdsGlobalInfo.tcdsControllerContext;
+            let tcdsControllerServiceName :string  = daq.tcdsGlobalInfo.tcdsControllerServiceName;
+
             let fedBuilderTableRootElement: any = <FEDBuilderTableElement tableObject={this}
                                                                           fedBuilders={daq.fedBuilders}
                                                                           fedBuilderSummary={daq.fedBuilderSummary}
                                                                         drawPausedComponent={drawPausedComponent}
-                                                                          drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>
+                                                                          drawZeroDataFlowComponent={drawZeroDataFlowComponent}
+                                                                        tcdsControllerUrl={tcdsControllerUrl}
+                                                                        tcdsControllerServiceName={tcdsControllerServiceName}/>
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         }
 
@@ -773,6 +778,8 @@ namespace DAQView {
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
+        tcdsControllerUrl: string;
+        tcdsControllerServiceName: string;
     }
 
     class FEDBuilderTableElement extends React.Component<FEDBuilderTableElementProperties,{}> {
@@ -782,6 +789,8 @@ namespace DAQView {
             let drawPausedComponents: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponents: boolean = this.props.drawZeroDataFlowComponent;
 
+            let tcdsControllerUrl: string = this.props.tcdsControllerUrl;
+            let tcdsControllerServiceName: string = this.props.tcdsControllerServiceName;
 
             let evmMaxTrg: number = null;
             //can similarly invent and pass down the evm minTrg here, for comparison at innermost levels
@@ -798,7 +807,9 @@ namespace DAQView {
                 fedBuilderRows.push(<FEDBuilderRow key={fedBuilder['@id']} fedBuilder={fedBuilder}
                                                    evmMaxTrg={evmMaxTrg}
                                                 drawPausedComponent={drawPausedComponents}
-                                                   drawZeroDataFlowComponent={drawZeroDataFlowComponents}/>);
+                                                   drawZeroDataFlowComponent={drawZeroDataFlowComponents}
+                                                    tcdsControllerUrl={tcdsControllerUrl}
+                                                    tcdsControllerServiceName={tcdsControllerServiceName}/>);
             });
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
@@ -838,6 +849,8 @@ namespace DAQView {
         additionalClasses?: string | string[];
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
+        tcdsControllerUrl: string;
+        tcdsControllerServiceName: string;
     }
 
     interface RUWarningDataProperties {
@@ -967,7 +980,9 @@ namespace DAQView {
             let count: number = 0;
             subFedBuilders.forEach(subFedBuilder => children.push(<SubFEDBuilderRow evmMaxTrg={this.props.evmMaxTrg}
                                                                                     subFedBuilder={subFedBuilder}
-                                                                                    additionalContent={++count == 1 ? fedBuilderData : null}/>));
+                                                                                    additionalContent={++count == 1 ? fedBuilderData : null}
+                                                                                    tcdsControllerUrl={this.props.tcdsControllerUrl}
+                                                                                    tcdsControllerServiceName={this.props.tcdsControllerServiceName}/>));
             return (
                 <tbody className={fbRowClassName}>
                 {children}
@@ -1163,6 +1178,8 @@ namespace DAQView {
         evmMaxTrg?: number;
         additionalContent?: any[];
         additionalClasses?: string | string[];
+        tcdsControllerUrl: string;
+        tcdsControllerServiceName: string;
     }
 
     class SubFEDBuilderRow extends React.Component<SubFEDBuilderRowProperties,{}> {
@@ -1226,20 +1243,20 @@ namespace DAQView {
             }
 
             //two vars below should be available from the data model instead of being hardcoded
-            let tcdsControlUrl: string = 'http://tcds-control-cpm.cms:2050';
-            let tcdsControlService: string = 'cpm-pri';
+            let tcdsControllerUrl: string = this.props.tcdsControllerUrl;
+            let tcdsControllerServiceName: string = this.props.tcdsControllerServiceName;
 
             let ttcPartitionTTSStateTcdsPmLink: any = ttsStateTcdsPm;
             if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttcPartition.tcds_pm_ttsState != 'x') {  //review this check
                 ttcPartitionTTSStateTcdsPmLink =
-                    <a href={tcdsControlUrl + '/urn:xdaq-application:service='+tcdsControlService}
+                    <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
                        target="_blank">{ttsStateTcdsPm}</a>;
             }
 
             let ttcPartitionTTSStateTcdsApvPmLink: any = ttsStateTcdsApvPm;
             if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x') {  //review this check
                 ttcPartitionTTSStateTcdsApvPmLink =
-                    <a href={tcdsControlUrl + '/urn:xdaq-application:service='+tcdsControlService}
+                    <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
                        target="_blank">{ttsStateTcdsApvPm}</a>;
             }
 
