@@ -991,16 +991,15 @@ var DAQView;
                 ttcPartitionTTSStateLink =
                     React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsState);
             }
-            //two vars below should be available from the data model instead of being hardcoded
             var tcdsControllerUrl = this.props.tcdsControllerUrl;
             var tcdsControllerServiceName = this.props.tcdsControllerServiceName;
             var ttcPartitionTTSStateTcdsPmLink = ttsStateTcdsPm;
-            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttcPartition.tcds_pm_ttsState != 'x') {
+            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttcPartition.tcds_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0, 2) != 'no') {
                 ttcPartitionTTSStateTcdsPmLink =
                     React.createElement("a", {href: tcdsControllerUrl + '/urn:xdaq-application:service=' + tcdsControllerServiceName, target: "_blank"}, ttsStateTcdsPm);
             }
             var ttcPartitionTTSStateTcdsApvPmLink = ttsStateTcdsApvPm;
-            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x') {
+            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0, 2) != 'no') {
                 ttcPartitionTTSStateTcdsApvPmLink =
                     React.createElement("a", {href: tcdsControllerUrl + '/urn:xdaq-application:service=' + tcdsControllerServiceName, target: "_blank"}, ttsStateTcdsApvPm);
             }

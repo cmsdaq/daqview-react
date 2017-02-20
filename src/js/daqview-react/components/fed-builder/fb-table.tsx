@@ -1242,19 +1242,18 @@ namespace DAQView {
                        target="_blank">{ttsState}</a>;
             }
 
-            //two vars below should be available from the data model instead of being hardcoded
             let tcdsControllerUrl: string = this.props.tcdsControllerUrl;
             let tcdsControllerServiceName: string = this.props.tcdsControllerServiceName;
 
             let ttcPartitionTTSStateTcdsPmLink: any = ttsStateTcdsPm;
-            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttcPartition.tcds_pm_ttsState != 'x') {  //review this check
+            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttcPartition.tcds_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
                 ttcPartitionTTSStateTcdsPmLink =
                     <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
                        target="_blank">{ttsStateTcdsPm}</a>;
             }
 
             let ttcPartitionTTSStateTcdsApvPmLink: any = ttsStateTcdsApvPm;
-            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x') {  //review this check
+            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
                 ttcPartitionTTSStateTcdsApvPmLink =
                     <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
                        target="_blank">{ttsStateTcdsApvPm}</a>;
