@@ -112,7 +112,7 @@
                     updateInterval: 2000,
                     getSourceURL: function () {
 
-                        var baseURL = 'http://pcepcmd62.cern.ch:8080/DAQSnapshotService/getsnapshot?setup='+daqSetup+'&time='; //data source URL
+                        var baseURL = 'http://pcepcmd62.cern.ch:8080/DAQSnapshotService/getsnapshot?setup='+daqSetup; //data source URL
                         var timestampDelim = '"';
 
                         //production timestamp
@@ -130,14 +130,14 @@
                             timestampDelim = '';
                         }*/
 
-                        var ret = baseURL + timestampDelim + currentTime + timestampDelim;
+                        var ret = baseURL; //+ timestampDelim + currentTime + timestampDelim;
                         //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
                         //console.log("data source is:"+baseURL + '"' + currentTime + '"');
                         return ret;
                     },
                     getSourceURLForGotoRequests: function () {
 
-                        var baseURL = 'http://pcepcmd62.cern.ch:8080/DAQSnapshotService/getsnapshot?setup='+daqSetup+'&time=';
+                        var baseURL = 'http://pcepcmd62.cern.ch:8080/DAQSnapshotService/getsnapshot?setup='+daqSetup;
                         var timestampDelim = '"';
 
                         var currentTime = $('#daqview-go-to-time-input').val();
@@ -148,7 +148,7 @@
                             timestampDelim = '';
                         }*/
 
-                        var ret = baseURL + timestampDelim + currentTime + timestampDelim;
+                        var ret = baseURL; //+ timestampDelim + currentTime + timestampDelim;
                         //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
                         //console.log("data source is:"+baseURL + '"' + currentTime + '"');
                         return ret;
