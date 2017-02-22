@@ -42,7 +42,7 @@
             try {
                 daqView = new DAQView.DAQViewReact();
                 daqView.createMetadataTable('daqview-react-metadata-table');
-                daqView.createFBTable('daqview-react-fb-table');
+
                 daqView.createFFFTable('daqview-react-fff-table');
                 daqView.createAboutTable('daqview-react-about-table');
                 daqView.createSnapshotModal('daqview-react-snapshot-modal');
@@ -125,10 +125,10 @@
                         }
 
                         /*
-                        if (debugSnapshotSource) {
-                            baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
-                            timestampDelim = '';
-                        }*/
+                         if (debugSnapshotSource) {
+                         baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
+                         timestampDelim = '';
+                         }*/
 
                         var ret = baseURL; //+ timestampDelim + currentTime + timestampDelim;
                         //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
@@ -143,10 +143,10 @@
                         var currentTime = $('#daqview-go-to-time-input').val();
 
                         /*
-                        if (debugSnapshotSource) {
-                            baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
-                            timestampDelim = '';
-                        }*/
+                         if (debugSnapshotSource) {
+                         baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
+                         timestampDelim = '';
+                         }*/
 
                         var ret = baseURL + timestampDelim + currentTime + timestampDelim;
                         //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
@@ -250,8 +250,6 @@
 
     <br/><br/>
     <div id="daqview-react-metadata-table"></div>
-    <br/><br/>
-    <div id="daqview-react-fb-table"></div>
     <br/><br/>
     <div id="daqview-react-fff-table"></div>
     <br/><br/>
