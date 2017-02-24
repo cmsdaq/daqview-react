@@ -90,7 +90,8 @@ namespace DAQAggregator {
                     console.log('Time to get snapshot: ' + time + 'ms');
 
                     let malformedSnapshot: boolean = false;
-                    if (!snapshotJSON.hasOwnProperty("@id")){
+
+                    if ((snapshotJSON == null)||(!snapshotJSON.hasOwnProperty("@id"))){
                         console.log("Malformed snapshot received, parsing and updating won't be launched until next valid snapshot");
                         console.log(snapshotJSON);
                         malformedSnapshot = true;

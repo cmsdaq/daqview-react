@@ -65,7 +65,7 @@ var DAQAggregator;
                     var time = new Date().getTime() - startTime;
                     console.log('Time to get snapshot: ' + time + 'ms');
                     var malformedSnapshot = false;
-                    if (!snapshotJSON.hasOwnProperty("@id")) {
+                    if ((snapshotJSON == null) || (!snapshotJSON.hasOwnProperty("@id"))) {
                         console.log("Malformed snapshot received, parsing and updating won't be launched until next valid snapshot");
                         console.log(snapshotJSON);
                         malformedSnapshot = true;
