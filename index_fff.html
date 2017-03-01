@@ -35,6 +35,7 @@
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
     <script type="text/javascript" src="dist/js/daqview.js"></script>
+    <script type="text/javascript" src="snapshot-source.js"></script>
 
     <script type="text/javascript">
         var daqView; //daqView is an object containing an array of the created views (page components)
@@ -112,7 +113,7 @@
                     updateInterval: 1500,
                     getSourceURL: function () {
 
-                        var baseURL = 'http://pcepcmd62.cern.ch:8080/DAQSnapshotService/getsnapshot?setup='+daqSetup; //data source URL
+                        var baseURL = snapshotSources.url+'?setup='+daqSetup; //data source URL
                         var timestampDelim = '"';
 
                         //production timestamp
@@ -137,7 +138,7 @@
                     },
                     getSourceURLForGotoRequests: function () {
 
-                        var baseURL = 'http://pcepcmd62.cern.ch:8080/DAQSnapshotService/getsnapshot?setup='+daqSetup+'&time=';
+                        var baseURL = snapshotSources.url+'?setup='+daqSetup+'&time=';
                         var timestampDelim = '"';
 
                         var currentTime = $('#daqview-go-to-time-input').val();
