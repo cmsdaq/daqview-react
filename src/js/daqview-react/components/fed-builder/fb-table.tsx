@@ -1433,6 +1433,10 @@ namespace DAQView {
                 ttsStateDisplay = fedTTSStateLink;
             }
 
+            if (fed.fmmMasked || fed.frlMasked){
+                ttsStateDisplay = '';
+            }
+
             let ttsStateClass: string;
             let fedIdClasses: string = 'fb-table-fed-id';
 
@@ -1445,7 +1449,7 @@ namespace DAQView {
             }
 
             if (fed.fmmMasked === true) {
-                ttsStateClass = 'fb-table-fed-tts-state-ffm-masked';
+                ttsStateClass = 'fb-table-fed-tts-state-fmm-masked';
             }
 
             let ttsStateClasses: string = classNames('fb-table-fed-tts-state', ttsStateClass);

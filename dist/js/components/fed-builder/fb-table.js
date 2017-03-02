@@ -1125,6 +1125,9 @@ var DAQView;
                 fedTTSStateLink = React.createElement("a", {href: fed.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsStateDisplay);
                 ttsStateDisplay = fedTTSStateLink;
             }
+            if (fed.fmmMasked || fed.frlMasked) {
+                ttsStateDisplay = '';
+            }
             var ttsStateClass;
             var fedIdClasses = 'fb-table-fed-id';
             ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
@@ -1135,7 +1138,7 @@ var DAQView;
                 fedIdClasses = classNames(fedIdClasses, ttsStateClass);
             }
             if (fed.fmmMasked === true) {
-                ttsStateClass = 'fb-table-fed-tts-state-ffm-masked';
+                ttsStateClass = 'fb-table-fed-tts-state-fmm-masked';
             }
             var ttsStateClasses = classNames('fb-table-fed-tts-state', ttsStateClass);
             var percentBackpressureDisplay = percentBackpressure > 0 ?
