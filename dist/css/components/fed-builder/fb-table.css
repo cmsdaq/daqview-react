@@ -60,6 +60,7 @@
 }
 
 .fb-table-ru-rate {
+    text-align: right;
     font-weight: bold;
 }
 
@@ -72,6 +73,7 @@
 }
 
 .fb-table-ru-throughput {
+    text-align: right;
     font-weight: bold;
 }
 
@@ -84,6 +86,7 @@
 }
 
 .fb-table-ru-size {
+    text-align: right;
     font-weight: bold;
     color: #0000FF;
 }
@@ -106,22 +109,27 @@
 }
 
 .fb-table-ru-events-nonzero {
+    text-align: right;
     color: #008800;
 }
 
 .fb-table-ru-events-zero {
+    text-align: right;
     color: #008800;
 }
 
 .fb-table-ru-fragments-in-ru {
+    text-align: right;
     color: #FF0000;
 }
 
 .fb-table-ru-events-in-ru {
+    text-align: right;
     color: #FF0000;
 }
 
 .fb-table-ru-requests {
+    text-align: right;
     color: #FF0000;
 }
 
