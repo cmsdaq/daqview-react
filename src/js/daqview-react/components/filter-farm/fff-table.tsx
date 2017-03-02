@@ -66,10 +66,10 @@ namespace DAQView {
             }else {
                 if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                     console.log("duplicate snapshot detected");
-                    if ((!drawPausedComponent) || (!drawZeroDataFlowComponent)) {
-                        return;
-                    } else {
+                    if (drawPausedComponent || drawZeroDataFlowComponent) {
                         console.log("...but page color has to change, so do render");
+                    } else {
+                        return;
                     }
                 }
                 this.snapshot = snapshot;

@@ -106,9 +106,8 @@
                     //debugSnapshotSource = false;
 
                     daqSetup = 'cdaq'; //revert to cdaq, but in dev eyets 16 playback mode (only real-time)
-                    developmentPlayback = true; //change this after EYETS
+                    developmentPlayback = true;
                 }
-
 
 
                 var snapshotSource = {
@@ -127,15 +126,8 @@
                             counter++;
                         }
 
-                        /*
-                        if (debugSnapshotSource) {
-                            baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
-                            timestampDelim = '';
-                        }*/
 
                         var ret = baseURL; //+ timestampDelim + currentTime + timestampDelim;
-                        //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
-                        //console.log("data source is:"+baseURL + '"' + currentTime + '"');
                         return ret;
                     },
                     getSourceURLForGotoRequests: function () {
@@ -145,15 +137,8 @@
 
                         var currentTime = $('#daqview-go-to-time-input').val();
 
-                        /*
-                        if (debugSnapshotSource) {
-                            baseURL = 'http://pcepcmd62.cern.ch:3000/mydaqview/api/snapshot?time=';
-                            timestampDelim = '';
-                        }*/
 
                         var ret = baseURL + timestampDelim + currentTime + timestampDelim;
-                        //window.history.replaceState(null,null, "dyndefault?time="+currentTime);
-                        //console.log("data source is:"+baseURL + '"' + currentTime + '"');
                         return ret;
                     },
                     getRequestSetup: function() {
@@ -221,7 +206,6 @@
                     $('.daqview-go-to-time').click();
                 }
 
-                //hook_for_the_server_to_trigger_static_display_timestamp__PLEASE_DO_NOT_REMOVE
             }
             catch (exception) {
                 console ? (console.debug ? console.debug(exception) : console.log(exception)) : alert(exception);

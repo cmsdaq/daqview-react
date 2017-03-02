@@ -50,11 +50,11 @@ var DAQView;
             else {
                 if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                     console.log("duplicate snapshot detected");
-                    if ((!drawPausedComponent) || (!drawZeroDataFlowComponent)) {
-                        return;
+                    if (drawPausedComponent || drawZeroDataFlowComponent) {
+                        console.log("...but page color has to change, so do render");
                     }
                     else {
-                        console.log("...but page color has to change, so do render");
+                        return;
                     }
                 }
                 this.snapshot = FBTableSortFunctions.STATIC(snapshot);

@@ -28,6 +28,7 @@ var DAQAggregator;
             return this.inRealTimePolling;
         };
         SnapshotProvider.prototype.start = function () {
+            console.log(("Snapshot provided start() at: " + new Date().toISOString()));
             if (this.running) {
                 return;
             }
@@ -38,7 +39,7 @@ var DAQAggregator;
                 }
                 //retrieves previous url for local use, before updating its value is updated
                 var previousUrlTemp = this.previousUrl;
-                var url = this.snapshotSource.getSourceURL();
+                var url = this.snapshotSource.getSourceURL(); //url to snapshot source, not to daqview (must be compatible with server's expected format)
                 if (!this.inRealTimePolling) {
                     url = this.snapshotSource.getSourceURLForGotoRequests();
                     console.log('In go-to-time snapshot provider mode');
@@ -46,10 +47,11 @@ var DAQAggregator;
                 else {
                     console.log('In real-time snapshot provider mode');
                 }
-                //updates global previousUrl holder with this call's url
-                this.previousUrl = url;
+                //updates global previousUrl holder with this call's url and current timestamp (only to be used with possible subsequent go-to-time request)
+                this.previousUrl = url + "&time=\"" + (new Date().toISOString()) + "\""; //quotes for server url compatibility
                 //at this point, this will stop the provider after completing the current snapshot request and daqview update
                 if (this.instructionToStop) {
+                    console.log('Instructed to stop');
                     this.stop();
                     this.instructionToStop = false; //reset value immediately: it only needs to be true once and then be clean for later usages of the method
                     this.drawPausedPage = true; //triggers page draw with pause color scheme
@@ -57,6 +59,10 @@ var DAQAggregator;
                     otherwise draw requested snaphost if instruction to stop is a result of a go-to-time request*/
                     if (this.pauseCallerType == 0) {
                         url = previousUrlTemp;
+                        console.log('Paused in real-time mode');
+                    }
+                    else {
+                        console.log('Paused after point time query');
                     }
                 }
                 var startTime = new Date().getTime();
@@ -70,7 +76,7 @@ var DAQAggregator;
                         console.log(snapshotJSON);
                         malformedSnapshot = true;
                         var snapshot = void 0;
-                        this.setSnapshot(snapshot, this.drawPausedPage, url); //maybe also pass message to setSnapshot
+                        this.setSnapshot(snapshot, this.drawPausedPage, url); //maybe also pass message to setSnapshot?
                         //reset value after use
                         this.drawPausedPage = false;
                     }
@@ -98,13 +104,19 @@ var DAQAggregator;
                                 }
                             });
                         }
-                        this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero_1, url);
+                        //updates daqview url
+                        window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
+                        document.title = "DAQView [" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "]";
+                        //in case of point time queries (eg. after pause or goto-time command, the time is already appended in the URL)
+                        var urlToSnapshot = url.indexOf("time") > -1 ? url : url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
+                        console.log("drawPaused@provider? " + this.drawPausedPage);
+                        this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero_1, urlToSnapshot); //passes snapshot source url to be used for the "see raw snapshot" button
+                        //in case there is a parsed snapshot, update pointer to previous snapshot with the more precise timestamp retrieved by the snapshot itself
+                        this.previousUrl = url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
                         //reset value after use
                         this.drawPausedPage = false;
                         time = new Date().getTime() - startTime;
                         console.log('Time to update page: ' + time + 'ms');
-                        window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
-                        document.title = "DAQView [" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "]";
                     }
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
