@@ -822,9 +822,8 @@ namespace DAQView {
 
             return (
                 <table className="fb-table">
-                    <colgroup className="fb-table-colgroup-fedbuilder" span="9"/>
+                    <colgroup className="fb-table-colgroup-fedbuilder" span="11"/>
                     <colgroup className="fb-table-colgroup-evb" span="9"/>
-                    <colgroup className="fb-table-colgroup-unknown" span="2"/>
                     <thead className="fb-table-head">
                     <FEDBuilderTableTopHeaderRow key="fb-top-header-row" drawPausedComponent={drawPausedComponents}/>
                     <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row" drawPausedComponent={drawPausedComponents}/>
@@ -1218,8 +1217,6 @@ namespace DAQView {
                     ttsState = 'x';
                 }
             }
-
-
 
             let ttsStateClasses: string = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
