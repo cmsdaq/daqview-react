@@ -147,8 +147,11 @@
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
 
-                        //parse original snapshots
+                        //parse original snapshot
                         snapshot = parser.parse.bind(parser)(snapshot);
+                        if (snapshot == null){
+                            return null;
+                        }
 
                         //pass it through chain of preprocessors
                         snapshot = ruWarningsResolver.resolveRUWarnings.bind(ruWarningsResolver)(snapshot);

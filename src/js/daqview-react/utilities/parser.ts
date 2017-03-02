@@ -15,14 +15,21 @@ namespace DAQAggregator {
 
         private big_map: {[key: string]: any} = {};
         private level: number = 1;
+        private replacerRecursions = 0;
 
         public parse(snapshot: {}): Snapshot {
-
+            this.replacerRecursions = 0;
             this.explore(snapshot);
 
             for (var key in this.big_map) {
                 this.scanAndReplace(this.big_map[key]);
             }
+
+            if(this.replacerRecursions>25000){
+                console.log("Too much recursion imminent...parser aborted proactively");
+                return null;
+            }
+
             return new Snapshot(this.big_map['DAQ']);
         }
 
@@ -87,6 +94,15 @@ namespace DAQAggregator {
         }
 
         scanAndReplace(obj: {[key: string]: any}): void {
+            this.replacerRecursions++;
+
+            /*this allows for a snapshot with up to 5 times more elements than the typical snapshot in late 2016,
+            if this is reached, then probably there is something wrong with the snapshot, causing infinite recursion over elements...
+             */
+            if(this.replacerRecursions>25000){
+                return;
+            }
+
             for (var key in obj) { // iterate, `key` is the property key
                 var elem = obj[key]; // `obj[key]` is the value
 
