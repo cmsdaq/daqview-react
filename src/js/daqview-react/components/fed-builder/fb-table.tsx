@@ -1507,7 +1507,7 @@ namespace DAQView {
             let fbSummaryRowClass: string = drawPausedComponent ? "fb-table-fb-summary-row-paused" : "fb-table-fb-summary-row-running";
 
             if (drawZeroDataFlowComponent){
-                fbSummaryRowClass = "fb-table-fb-row-ratezero";
+                fbSummaryRowClass = "fb-table-fb-summary-row-ratezero";
             }
 
             return (
