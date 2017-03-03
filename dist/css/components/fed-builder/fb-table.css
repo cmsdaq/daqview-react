@@ -43,6 +43,10 @@
 
 }
 
+.fb-table-bu-row-counter {
+    text-align: right;
+}
+
 .fb-table-top-header-row {
     text-align: center;
 }
@@ -134,6 +138,7 @@
 }
 
 .fb-table-ru-masked {
+    text-align: right;
     color: #666666;
 }
 

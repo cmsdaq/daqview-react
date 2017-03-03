@@ -1308,8 +1308,8 @@ namespace DAQView {
                     <td>{ttcPartitionTTSStateDisplay_P}</td>
                     <td>{ttcPartitionTTSStateDisplay_A}</td>
                     <td>{ttcPartitionTTSStateDisplay_F}</td>
-                    <td>{ttcpPercWarn}</td>
-                    <td>{ttcpPercBusy}</td>
+                    <td className="fb-table-bu-row-counter">{ttcpPercWarn}</td>
+                    <td className="fb-table-bu-row-counter">{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
                     <FRLs frls={frls} pseudoFeds={pseudoFeds}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>

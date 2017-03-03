@@ -722,26 +722,26 @@ namespace DAQView {
             return (
                 <tr className={fffBuRowClass}>
                     <td><a href={buUrl} target="_blank">{hostname}</a></td>
-                    <td className={FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE)}>{rate}</td>
-                    <td className={FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT)}>{throughput}</td>
-                    <td className={FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE)}>{sizeMean}±{sizeStddev}</td>
-                    <td className={FormatUtility.getClassNameForNumber(events, FFFTableNumberFormats.EVENTS)}>{events}</td>
-                    <td className={FormatUtility.getClassNameForNumber(eventsInBU, FFFTableNumberFormats.EVENTS_IN_BU)}>{eventsInBU}</td>
-                    <td>{bu.priority}</td>
-                    <td className={FormatUtility.getClassNameForNumber(requestsSent, FFFTableNumberFormats.REQUESTS_SENT)}>{requestsSent}</td>
-                    <td className={FormatUtility.getClassNameForNumber(requestsUsed, FFFTableNumberFormats.REQUESTS_USED)}>{requestsUsed}</td>
-                    <td className={FormatUtility.getClassNameForNumber(requestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED)}>{requestsBlocked}</td>
-                    <td>{bu.numFUsHLT}</td>
-                    <td>{bu.numFUsCrashed}</td>
-                    <td>{bu.numFUsStale}</td>
-                    <td>{bu.numFUsCloud}</td>
-                    <td>{(bu.ramDiskUsage).toFixed(1)}% of {bu.ramDiskTotal.toFixed(1)}GB</td>
-                    <td>{bu.numFiles}</td>
-                    <td>{bu.numLumisectionsWithFiles}</td>
-                    <td>{bu.currentLumisection}</td>
-                    <td>{bu.numLumisectionsForHLT}</td>
-                    <td>{bu.numLumisectionsOutHLT}</td>
-                    <td className={FormatUtility.getClassNameForNumber(bu.fuOutputBandwidthInMB, FFFTableNumberFormats.BANDWIDTH)}>{bu.fuOutputBandwidthInMB.toFixed(2)}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE))}>{rate}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT))}>{throughput}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean}±{sizeStddev}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(events, FFFTableNumberFormats.EVENTS))}>{events}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(eventsInBU, FFFTableNumberFormats.EVENTS_IN_BU))}>{eventsInBU}</td>
+                    <td className="fff-table-bu-row-counter">{bu.priority}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(requestsSent, FFFTableNumberFormats.REQUESTS_SENT))}>{requestsSent}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(requestsUsed, FFFTableNumberFormats.REQUESTS_USED))}>{requestsUsed}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(requestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED))}>{requestsBlocked}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numFUsHLT}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numFUsCrashed}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numFUsStale}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numFUsCloud}</td>
+                    <td className="fff-table-bu-row-counter">{(bu.ramDiskUsage).toFixed(1)}% of {bu.ramDiskTotal.toFixed(1)}GB</td>
+                    <td className="fff-table-bu-row-counter">{bu.numFiles}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numLumisectionsWithFiles}</td>
+                    <td className="fff-table-bu-row-counter">{bu.currentLumisection}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numLumisectionsForHLT}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numLumisectionsOutHLT}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(bu.fuOutputBandwidthInMB, FFFTableNumberFormats.BANDWIDTH))}>{bu.fuOutputBandwidthInMB.toFixed(2)}</td>
 
                 </tr>
             );

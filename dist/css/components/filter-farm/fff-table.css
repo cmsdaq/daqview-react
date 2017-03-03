@@ -52,6 +52,10 @@
 
 }
 
+.fff-table-bu-row-counter {
+    text-align: right;
+}
+
 .fff-table-bu-row-ratezero:nth-of-type(even) {
     background-color: #EF4A50;
 }
