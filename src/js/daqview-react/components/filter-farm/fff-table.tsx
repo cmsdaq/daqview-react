@@ -799,7 +799,7 @@ namespace DAQView {
             }
 
             return (
-                <tr className={fffBuSummaryRowClass}>
+                <tr className={classNames(fffBuSummaryRowClass, "fff-table-bu-row-counter")}>
                     <td>Σ BUs = {this.props.numBusNoRate} / {this.props.numBus}</td>
                     <td></td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.rate / 1000, FFFTableNumberFormats.RATE)}>Σ {(buSummary.rate / 1000).toFixed(3)}</td>

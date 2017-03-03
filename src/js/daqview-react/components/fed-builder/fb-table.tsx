@@ -1308,8 +1308,8 @@ namespace DAQView {
                     <td>{ttcPartitionTTSStateDisplay_P}</td>
                     <td>{ttcPartitionTTSStateDisplay_A}</td>
                     <td>{ttcPartitionTTSStateDisplay_F}</td>
-                    <td className="fb-table-bu-row-counter">{ttcpPercWarn}</td>
-                    <td className="fb-table-bu-row-counter">{ttcpPercBusy}</td>
+                    <td className="fb-table-fb-row-counter">{ttcpPercWarn}</td>
+                    <td className="fb-table-fb-row-counter">{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
                     <FRLs frls={frls} pseudoFeds={pseudoFeds}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
@@ -1511,7 +1511,7 @@ namespace DAQView {
             }
 
             return (
-                <tr className={fbSummaryRowClass}>
+                <tr className={classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}>
                     <td colSpan="11"></td>
                     <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
