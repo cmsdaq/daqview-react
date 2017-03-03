@@ -164,3 +164,16 @@
     height: 8px;
     margin: 0 0.2em 0 0.2em;
 }
+
+.fff-table-bu-state-error {
+    font-weight: bold;
+    background-color: #CC0033;
+}
+
+.fff-table-bu-state-warn {
+    background-color: #cc726e;
+}
+
+.fff-table-bu-state-normal {
+
+}

@@ -125,6 +125,8 @@ namespace DAQAggregator {
             hostname: string;
             port: number;
 
+            stateName: string;
+
             rate: number;
             throughput: number;
 

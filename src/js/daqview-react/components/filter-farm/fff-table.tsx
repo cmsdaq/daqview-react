@@ -375,6 +375,9 @@ namespace DAQView {
 
     const FFF_TABLE_BASE_HEADERS: FileBasedFilterFarmTableHeaderProperties[] = [
         {
+            content: ''
+        },
+        {
             content: 'rate (kHz)',
             sortFunctions: {
                 Ascending: {sort: FFFTableSortFunctions.BU_RATE_ASC},
@@ -524,6 +527,9 @@ namespace DAQView {
                 Ascending: {presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_ASC},
                 Descending: {presort: FFFTableSortFunctions.NONE, sort: FFFTableSortFunctions.BU_HOSTNAME_DESC}
             }
+        },
+        {
+            content: ''
         }
     );
 
@@ -591,7 +597,7 @@ namespace DAQView {
                 <tr className="fff-table-top-header-row">
                     <FileBasedFilterFarmTableHeader additionalClasses="fff-table-help"
                                                     content={<a href="ffftablehelp.html" target="_blank">Table Help</a>} colSpan="2" drawPausedComponent={drawPausedComponent}/>
-                    <FileBasedFilterFarmTableHeader content="B U I L D E R   U N I T   ( B U )" colSpan="19" drawPausedComponent={drawPausedComponent}/>
+                    <FileBasedFilterFarmTableHeader content="B U I L D E R   U N I T   ( B U )" colSpan="20" drawPausedComponent={drawPausedComponent}/>
                 </tr>
             );
         }
@@ -701,6 +707,25 @@ namespace DAQView {
             let bu: DAQAggregatorSnapshot.BU = this.props.bu;
             let buUrl: string = 'http://' + bu.hostname + ':'+bu.port+'/urn:xdaq-application:service=bu';
 
+            let buState: string  = '';
+            let buStateClass = 'fff-table-bu-state-normal';
+
+            if (bu.stateName){
+
+                buState = bu.stateName;
+
+                if (buState === 'Halted' || buState === 'Ready' || buState === 'Enabled' || buState === ''){
+                    buState = '';
+                }else{
+                    buStateClass = 'fff-table-bu-state-warn';
+                }
+
+                if (buState === 'Failed' || buState === 'Error'){
+                    buStateClass = 'fff-table-bu-state-error';
+                }
+            }
+
+
             let hostname: string = bu.hostname.split(".")[0];
             let rate: number = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
             let throughput: number = FormatUtility.toFixedNumber(bu.throughput / 1000 / 1000, 1);
@@ -722,6 +747,7 @@ namespace DAQView {
             return (
                 <tr className={fffBuRowClass}>
                     <td><a href={buUrl} target="_blank">{hostname}</a></td>
+                    <td className={buStateClass}>{buState}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE))}>{rate}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT))}>{throughput}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean}±{sizeStddev}</td>
@@ -775,6 +801,7 @@ namespace DAQView {
             return (
                 <tr className={fffBuSummaryRowClass}>
                     <td>Σ BUs = {this.props.numBusNoRate} / {this.props.numBus}</td>
+                    <td></td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.rate / 1000, FFFTableNumberFormats.RATE)}>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.throughput / 1000 / 1000, FFFTableNumberFormats.THROUGHPUT)}>Σ {(buSummary.throughput / 1000 / 1000).toFixed(1)}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.eventSizeMean / 1000, FFFTableNumberFormats.SIZE)}>{(buSummary.eventSizeMean / 1000).toFixed(1)}±{(buSummary.eventSizeStddev / 1000).toFixed(1)}</td>
