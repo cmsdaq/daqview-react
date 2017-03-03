@@ -23,7 +23,7 @@ namespace DAQView {
             this.drawPausedComponent = drawPausedComponent;
 
             if (!snapshot){
-                let msg: string = "Monitoring data unavailable: wait or try different request";
+                let msg: string = "Monitoring data unavailable: "+url;
                 let errRootElement: any = <ErrorElement message={msg} details={""}/>;
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }else{

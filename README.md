@@ -8,15 +8,4 @@ Data are provided by the DAQ Aggregator snapshots in form of JSON files and Reac
 
 
 ## Todo
-- [x] add and update styles {handle issue with frl enabled yet srcId is 0/check what happens with frlMasked when L0 flashlist is unavailable => takes DAQAggregator debugging}
-- [x] handle special cases at %W, %B TTCP columns, as done in the P,A,F columns => possibly requires DAQAggregator changes
-- [x] more resolution to the value of #frags in RU col at FEDBuilder summary
-- [ ] move FED errors from RU warn column into the FED space
-- [ ] add clever polling in snapshot provider
-- [x] add additional information (beam mode etc.)
-- [x] when paused, page-wide colour change should occur to attract shifter's attention
-- [ ] add page-wide styles and/or notifications to draw the shifter's attention to a problem
-- [x] add navigation option by time
 - [ ] add other navigation options (display snapshot by run, session, next/previous snapshot) => requires server-side API
-
-- [x] switch back to production React before deploying

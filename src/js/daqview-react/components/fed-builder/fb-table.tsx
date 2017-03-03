@@ -62,10 +62,10 @@ namespace DAQView {
             }else {
                 if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                     console.log("duplicate snapshot detected");
-                    if ((!drawPausedComponent) || (!drawZeroDataFlowComponent)) {
-                        return;
-                    } else {
+                    if (drawPausedComponent || drawZeroDataFlowComponent) {
                         console.log("...but page color has to change, so do render");
+                    } else {
+                        return;
                     }
                 }
 
@@ -822,9 +822,8 @@ namespace DAQView {
 
             return (
                 <table className="fb-table">
-                    <colgroup className="fb-table-colgroup-fedbuilder" span="9"/>
+                    <colgroup className="fb-table-colgroup-fedbuilder" span="11"/>
                     <colgroup className="fb-table-colgroup-evb" span="9"/>
-                    <colgroup className="fb-table-colgroup-unknown" span="2"/>
                     <thead className="fb-table-head">
                     <FEDBuilderTableTopHeaderRow key="fb-top-header-row" drawPausedComponent={drawPausedComponents}/>
                     <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row" drawPausedComponent={drawPausedComponents}/>
@@ -1219,8 +1218,6 @@ namespace DAQView {
                 }
             }
 
-
-
             let ttsStateClasses: string = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
             let ttsStateTcdsPmClasses: string = ttcPartition.tcds_pm_ttsState || ttcPartition.tcds_pm_ttsState != '-'? 'fb-table-subfb-tts-state-' + ttsStateTcdsPm : 'fb-table-subfb-tts-state-none';
@@ -1311,8 +1308,8 @@ namespace DAQView {
                     <td>{ttcPartitionTTSStateDisplay_P}</td>
                     <td>{ttcPartitionTTSStateDisplay_A}</td>
                     <td>{ttcPartitionTTSStateDisplay_F}</td>
-                    <td>{ttcpPercWarn}</td>
-                    <td>{ttcpPercBusy}</td>
+                    <td className="fb-table-fb-row-counter">{ttcpPercWarn}</td>
+                    <td className="fb-table-fb-row-counter">{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
                     <FRLs frls={frls} pseudoFeds={pseudoFeds}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
@@ -1433,6 +1430,10 @@ namespace DAQView {
                 ttsStateDisplay = fedTTSStateLink;
             }
 
+            if (fed.fmmMasked || fed.frlMasked){
+                ttsStateDisplay = '';
+            }
+
             let ttsStateClass: string;
             let fedIdClasses: string = 'fb-table-fed-id';
 
@@ -1445,7 +1446,7 @@ namespace DAQView {
             }
 
             if (fed.fmmMasked === true) {
-                ttsStateClass = 'fb-table-fed-tts-state-ffm-masked';
+                ttsStateClass = 'fb-table-fed-tts-state-fmm-masked';
             }
 
             let ttsStateClasses: string = classNames('fb-table-fed-tts-state', ttsStateClass);
@@ -1510,7 +1511,7 @@ namespace DAQView {
             }
 
             return (
-                <tr className={fbSummaryRowClass}>
+                <tr className={classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}>
                     <td colSpan="11"></td>
                     <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
@@ -1526,5 +1527,6 @@ namespace DAQView {
             );
         }
     }
+
 
 }

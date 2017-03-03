@@ -43,6 +43,10 @@
 
 }
 
+.fb-table-fb-row-counter {
+    text-align: right;
+}
+
 .fb-table-top-header-row {
     text-align: center;
 }
@@ -52,7 +56,7 @@
 }
 
 .fb-table-header {
-    background-color: #C8C5C5;
+    background-color: #DDDDAA;
 }
 
 .fb-table-foot {
@@ -60,6 +64,7 @@
 }
 
 .fb-table-ru-rate {
+    text-align: right;
     font-weight: bold;
 }
 
@@ -72,6 +77,7 @@
 }
 
 .fb-table-ru-throughput {
+    text-align: right;
     font-weight: bold;
 }
 
@@ -84,6 +90,7 @@
 }
 
 .fb-table-ru-size {
+    text-align: right;
     font-weight: bold;
     color: #0000FF;
 }
@@ -106,26 +113,32 @@
 }
 
 .fb-table-ru-events-nonzero {
+    text-align: right;
     color: #008800;
 }
 
 .fb-table-ru-events-zero {
+    text-align: right;
     color: #008800;
 }
 
 .fb-table-ru-fragments-in-ru {
+    text-align: right;
     color: #FF0000;
 }
 
 .fb-table-ru-events-in-ru {
+    text-align: right;
     color: #FF0000;
 }
 
 .fb-table-ru-requests {
+    text-align: right;
     color: #FF0000;
 }
 
 .fb-table-ru-masked {
+    text-align: right;
     color: #666666;
 }
 
@@ -236,7 +249,7 @@
     background-color: #3399FF;
 }
 
-.fb-table-fed-tts-state-ffm-masked {
+.fb-table-fed-tts-state-fmm-masked {
     color: gray;
 }
 
