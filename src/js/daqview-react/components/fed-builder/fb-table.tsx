@@ -1307,11 +1307,11 @@ namespace DAQView {
             return (
                 <tr className={className}>
                     <td>{ttcPartition.name}:{ttcPartition.ttcpNr}</td>
-                    <td>{ttcPartitionTTSStateDisplay_P}</td>
-                    <td>{ttcPartitionTTSStateDisplay_A}</td>
-                    <td>{ttcPartitionTTSStateDisplay_F}</td>
-                    <td className="fb-table-fb-row-counter">{ttcpPercWarn}</td>
-                    <td className="fb-table-fb-row-counter">{ttcpPercBusy}</td>
+                    <td className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_P}</td>
+                    <td className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_A}</td>
+                    <td className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_F}</td>
+                    <td className="fb-table-subfb-tts-perc">{ttcpPercWarn}</td>
+                    <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
                     <FRLs frls={frls} pseudoFeds={pseudoFeds}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
