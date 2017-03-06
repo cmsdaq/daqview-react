@@ -957,8 +957,6 @@ namespace DAQView {
                 requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
             }
 
-            ru.superFragmentSizeMean = 1150;
-
             let superFragmentSizePrecision: number = (ru.superFragmentSizeMean > 1000) ? 1 : 3;
 
 

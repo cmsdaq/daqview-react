@@ -808,7 +808,6 @@ var DAQView;
                 eventsInRuClass = FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
                 requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
             }
-            ru.superFragmentSizeMean = 1150;
             var superFragmentSizePrecision = (ru.superFragmentSizeMean > 1000) ? 1 : 3;
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: sizeClass}, (ru.superFragmentSizeMean / 1000).toFixed(superFragmentSizePrecision), "±", (ru.superFragmentSizeStddev / 1000).toFixed(superFragmentSizePrecision)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: eventCountClass}, ru.eventCount));
