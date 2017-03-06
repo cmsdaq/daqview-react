@@ -1133,7 +1133,7 @@ var DAQView;
             var ttsStateClass;
             var fedIdClasses = 'fb-table-fed-id';
             ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
-            if (fed.frlMasked === true) {
+            if (fed.frlMasked === true || (!fed.hasSLINK && fed.fmmMasked)) {
                 fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
             }
             else if (ttsStateClass != null) {
