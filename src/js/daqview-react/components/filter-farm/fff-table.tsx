@@ -748,9 +748,9 @@ namespace DAQView {
                 <tr className={fffBuRowClass}>
                     <td><a href={buUrl} target="_blank">{hostname}</a></td>
                     <td className={buStateClass}>{buState}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE))}>{rate}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT))}>{throughput}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean}±{sizeStddev}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE))}>{rate.toFixed(3)}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT))}>{throughput.toFixed(1)}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean.toFixed(3)}±{sizeStddev.toFixed(3)}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(events, FFFTableNumberFormats.EVENTS))}>{events}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(eventsInBU, FFFTableNumberFormats.EVENTS_IN_BU))}>{eventsInBU}</td>
                     <td className="fff-table-bu-row-counter">{bu.priority}</td>
@@ -804,7 +804,7 @@ namespace DAQView {
                     <td></td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.rate / 1000, FFFTableNumberFormats.RATE)}>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.throughput / 1000 / 1000, FFFTableNumberFormats.THROUGHPUT)}>Σ {(buSummary.throughput / 1000 / 1000).toFixed(1)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.eventSizeMean / 1000, FFFTableNumberFormats.SIZE)}>{(buSummary.eventSizeMean / 1000).toFixed(1)}±{(buSummary.eventSizeStddev / 1000).toFixed(1)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.eventSizeMean / 1000, FFFTableNumberFormats.SIZE)}>{(buSummary.eventSizeMean / 1000).toFixed(3)}±{(buSummary.eventSizeStddev / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.numEvents, FFFTableNumberFormats.EVENTS)}>Σ {buSummary.numEvents}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.numEventsInBU, FFFTableNumberFormats.EVENTS_IN_BU)}>Σ {buSummary.numEventsInBU}</td>
                     <td>{buSummary.priority}</td>
