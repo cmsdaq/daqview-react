@@ -785,6 +785,7 @@ var DAQView;
             var ruHostname = ru.hostname;
             var ruPort = ru.port;
             var ruName = ruHostname.split(".")[0];
+            ruName = ruName.indexOf('ru') == 0 ? ruName.substring(3) : ruName;
             var ruUrl = 'http://' + ruHostname + ':' + ruPort + '/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
             var fedBuilderData = [];
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
@@ -949,6 +950,7 @@ var DAQView;
             var frlPcHostname = frlPc.hostname;
             var frlPcPort = frlPc.port;
             var frlPcName = frlPcHostname.split(".")[0];
+            frlPcName = frlPcName.indexOf('frlpc') == 0 ? frlPcName.substring(6) : frlPcName;
             var frlPcUrl = 'http://' + frlPcHostname + ':' + frlPcPort;
             var frls = subFedBuilder.frls;
             var pseudoFeds = subFedBuilder.feds;
@@ -1173,7 +1175,7 @@ var DAQView;
             if (drawZeroDataFlowComponent) {
                 fbSummaryRowClass = "fb-table-fb-summary-row-ratezero";
             }
-            return (React.createElement("tr", {className: classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}, React.createElement("td", {colSpan: "11"}), React.createElement("td", null, "Σ ", this.props.numUsedRus, " / ", this.props.numRus), React.createElement("td", null), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}, (fedBuilderSummary.rate / 1000).toFixed(3)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput / 1000 / 1000, FBTableNumberFormats.THROUGHPUT)}, "Σ ", (fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean / 1000, FBTableNumberFormats.SIZE)}, "Σ ", (fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1), "±", (fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}, "Δ ", fedBuilderSummary.deltaEvents), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}, "Σ ", fedBuilderSummary.sumFragmentsInRU), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU, FBTableNumberFormats.EVENTS_IN_RU)}, "Σ ", fedBuilderSummary.sumEventsInRU), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests, FBTableNumberFormats.REQUESTS)}, "Σ ", fedBuilderSummary.sumRequests)));
+            return (React.createElement("tr", {className: classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}, React.createElement("td", {colSpan: "11"}), React.createElement("td", null, "Σ ", this.props.numUsedRus, " / ", this.props.numRus), React.createElement("td", null), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}, (fedBuilderSummary.rate / 1000).toFixed(3)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput / 1000 / 1000, FBTableNumberFormats.THROUGHPUT)}, "Σ ", (fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean / 1000, FBTableNumberFormats.SIZE)}, "Σ ", (fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(3), "±", (fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(3)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}, "Δ ", fedBuilderSummary.deltaEvents), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}, "Σ ", fedBuilderSummary.sumFragmentsInRU), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU, FBTableNumberFormats.EVENTS_IN_RU)}, "Σ ", fedBuilderSummary.sumEventsInRU), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests, FBTableNumberFormats.REQUESTS)}, "Σ ", fedBuilderSummary.sumRequests)));
         };
         return FEDBuilderTableSummaryRow;
     }(React.Component));

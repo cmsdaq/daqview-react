@@ -928,6 +928,7 @@ namespace DAQView {
             let ruHostname: string = ru.hostname;
             let ruPort: number = ru.port;
             let ruName: string = ruHostname.split(".")[0];
+            ruName = ruName.indexOf('ru')==0 ? ruName.substring(3) : ruName;
             let ruUrl: string = 'http://' + ruHostname + ':'+ruPort+'/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
 
             let fedBuilderData: any[] = [];
@@ -1188,6 +1189,7 @@ namespace DAQView {
             let frlPcHostname: string = frlPc.hostname;
             let frlPcPort: number = frlPc.port;
             let frlPcName: string = frlPcHostname.split(".")[0];
+            frlPcName = frlPcName.indexOf('frlpc')==0 ? frlPcName.substring(6) : frlPcName;
             let frlPcUrl: string = 'http://' + frlPcHostname + ':'+frlPcPort;
             let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
             let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
@@ -1518,7 +1520,7 @@ namespace DAQView {
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput / 1000 / 1000, FBTableNumberFormats.THROUGHPUT)}>Σ {(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean / 1000, FBTableNumberFormats.SIZE)}>
-                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)}</td>
+                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(3)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}>Δ {fedBuilderSummary.deltaEvents}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}>Σ {fedBuilderSummary.sumFragmentsInRU}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU, FBTableNumberFormats.EVENTS_IN_RU)}>Σ {fedBuilderSummary.sumEventsInRU}</td>
