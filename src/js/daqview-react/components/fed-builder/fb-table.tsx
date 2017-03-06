@@ -957,8 +957,13 @@ namespace DAQView {
                 requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
             }
 
+            ru.superFragmentSizeMean = 1150;
+
+            let superFragmentSizePrecision: number = (ru.superFragmentSizeMean > 1000) ? 1 : 3;
+
+
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
-                                    className={sizeClass}>{(ru.superFragmentSizeMean / 1000).toFixed(3)}±{(ru.superFragmentSizeStddev / 1000).toFixed(3)}</td>);
+                                    className={sizeClass}>{(ru.superFragmentSizeMean / 1000).toFixed(superFragmentSizePrecision)}±{(ru.superFragmentSizeStddev / 1000).toFixed(superFragmentSizePrecision)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={eventCountClass}>{ru.eventCount}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
