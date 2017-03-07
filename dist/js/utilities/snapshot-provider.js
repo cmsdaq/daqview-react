@@ -113,7 +113,8 @@ var DAQAggregator;
                             }
                             //discover if data is stale
                             var dataTime = new Date(daq.lastUpdate).getTime();
-                            //    let serverResponseTime: number = snapshotRequest.getAllResponseHeaders().search();
+                            //let serverResponseTime: number = snapshotRequest.getAllResponseHeaders();
+                            //parse out and compare response header timestamp with snapshot timestamp (ONLY when in real time polling mode, otherwise false positive)
                             //updates daqview url
                             window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
                             document.title = "DAQView [" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "]";

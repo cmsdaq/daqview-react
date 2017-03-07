@@ -804,12 +804,16 @@ namespace DAQView {
 
             let fedBuilderRows: any[] = [];
             fedBuilders.forEach(function (fedBuilder) {
+                let index: number = fedBuilderRows.length;
+                let oddRow: boolean = (index % 2 == 1)? true : false;
+
                 fedBuilderRows.push(<FEDBuilderRow key={fedBuilder['@id']} fedBuilder={fedBuilder}
                                                    evmMaxTrg={evmMaxTrg}
                                                 drawPausedComponent={drawPausedComponents}
                                                    drawZeroDataFlowComponent={drawZeroDataFlowComponents}
                                                     tcdsControllerUrl={tcdsControllerUrl}
-                                                    tcdsControllerServiceName={tcdsControllerServiceName}/>);
+                                                    tcdsControllerServiceName={tcdsControllerServiceName}
+                                                    oddRow={oddRow}/>);
             });
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
@@ -850,6 +854,7 @@ namespace DAQView {
         drawZeroDataFlowComponent: boolean;
         tcdsControllerUrl: string;
         tcdsControllerServiceName: string;
+        oddRow: boolean;
     }
 
     interface RUWarningDataProperties {
@@ -917,6 +922,8 @@ namespace DAQView {
             let drawPausedComponent = this.props.drawPausedComponent;
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
 
+            let oddRow: boolean = this.props.oddRow;
+
             let fedBuilder: DAQAggregatorSnapshot.FEDBuilder = this.props.fedBuilder;
 
             let subFedBuilders: DAQAggregatorSnapshot.SubFEDBuilder[] = fedBuilder.subFedbuilders;
@@ -955,6 +962,22 @@ namespace DAQView {
                 fragmentInRuClass = FormatUtility.getClassNameForNumber(ru.fragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU);
                 eventsInRuClass = FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
                 requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
+            }
+
+            //invert color when DAQ is stuck, because red colors are missed
+            if (drawZeroDataFlowComponent && oddRow) {
+
+                let escapeRedField: string = 'fb-table-ru-red-column-escape';
+
+                if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru'){
+                    fragmentInRuClass = escapeRedField;
+                }
+                if (eventsInRuClass === 'fb-table-ru-events-in-ru'){
+                    eventsInRuClass = escapeRedField;
+                }
+                if (requestsClass === 'fb-table-ru-requests'){
+                    requestsClass = escapeRedField;
+                }
             }
 
             let superFragmentSizePrecision: number = (ru.superFragmentSizeMean > 1000) ? 1 : 3;
@@ -1532,8 +1555,25 @@ namespace DAQView {
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             let fbSummaryRowClass: string = drawPausedComponent ? "fb-table-fb-summary-row-paused" : "fb-table-fb-summary-row-running";
 
+
+            let fragmentInRuClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU);
+            let eventsInRuClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
+            let requestsClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests, FBTableNumberFormats.REQUESTS);
+
             if (drawZeroDataFlowComponent){
                 fbSummaryRowClass = "fb-table-fb-summary-row-ratezero";
+
+                let escapeRedField: string = 'fb-table-ru-red-column-escape';
+
+                if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru'){
+                    fragmentInRuClass = escapeRedField;
+                }
+                if (eventsInRuClass === 'fb-table-ru-events-in-ru'){
+                    eventsInRuClass = escapeRedField;
+                }
+                if (requestsClass === 'fb-table-ru-requests'){
+                    requestsClass = escapeRedField;
+                }
             }
 
             return (
@@ -1546,9 +1586,9 @@ namespace DAQView {
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean / 1000, FBTableNumberFormats.SIZE)}>
                         Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(3)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}>Δ {fedBuilderSummary.deltaEvents}</td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU)}>Σ {fedBuilderSummary.sumFragmentsInRU}</td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU, FBTableNumberFormats.EVENTS_IN_RU)}>Σ {fedBuilderSummary.sumEventsInRU}</td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests, FBTableNumberFormats.REQUESTS)}>Σ {fedBuilderSummary.sumRequests}</td>
+                    <td className={fragmentInRuClass}>Σ {fedBuilderSummary.sumFragmentsInRU}</td>
+                    <td className={eventsInRuClass}>Σ {fedBuilderSummary.sumEventsInRU}</td>
+                    <td className={requestsClass}>Σ {fedBuilderSummary.sumRequests}</td>
                 </tr>
             );
         }

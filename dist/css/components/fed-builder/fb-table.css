@@ -325,3 +325,8 @@
     height: 8px;
     margin: 0 0.2em 0 0.2em;
 }
+
+.fb-table-ru-red-column-escape{
+    color: #FFFFFF;
+    text-align: right;
+}

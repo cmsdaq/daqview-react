@@ -177,3 +177,8 @@
 .fff-table-bu-state-normal {
 
 }
+
+.fff-table-bu-red-column-escape{
+    color: #FFFFFF;
+    text-align: right;
+}

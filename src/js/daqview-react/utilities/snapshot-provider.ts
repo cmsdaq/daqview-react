@@ -146,7 +146,8 @@ namespace DAQAggregator {
 
                             //discover if data is stale
                             let dataTime: number = new Date(daq.lastUpdate).getTime();
-                        //    let serverResponseTime: number = snapshotRequest.getAllResponseHeaders().search();
+                            //let serverResponseTime: number = snapshotRequest.getAllResponseHeaders();
+                            //parse out and compare response header timestamp with snapshot timestamp (ONLY when in real time polling mode, otherwise false positive)
 
 
 
