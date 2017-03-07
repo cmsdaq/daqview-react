@@ -144,6 +144,11 @@ namespace DAQAggregator {
                                 });
                             }
 
+                            //discover if data is stale
+                            let dataTime: number = new Date(daq.lastUpdate).getTime();
+                        //    let serverResponseTime: number = snapshotRequest.getAllResponseHeaders().search();
+
+
 
                             //updates daqview url
                             window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));

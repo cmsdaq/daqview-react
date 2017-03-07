@@ -299,6 +299,11 @@
     background-color: #FFFF00;
 }
 
+.fb-table-fed-min-trig {
+    background-color: #FFFF00;
+    font-style: italic;
+}
+
 .fb-table-subfb-min-trig-equal {
     color: #008800;
 }

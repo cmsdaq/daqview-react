@@ -111,6 +111,9 @@ var DAQAggregator;
                                     }
                                 });
                             }
+                            //discover if data is stale
+                            var dataTime = new Date(daq.lastUpdate).getTime();
+                            //    let serverResponseTime: number = snapshotRequest.getAllResponseHeaders().search();
                             //updates daqview url
                             window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
                             document.title = "DAQView [" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "]";

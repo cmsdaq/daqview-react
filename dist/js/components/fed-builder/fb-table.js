@@ -1042,7 +1042,7 @@ var DAQView;
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_P), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_A), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_F), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercWarn), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls, pseudoFeds: pseudoFeds}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_P), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_A), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_F), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercWarn), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls, minTrig: minTrigDisplayContent, pseudoFeds: pseudoFeds}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));
@@ -1053,17 +1053,18 @@ var DAQView;
         }
         FRLs.prototype.render = function () {
             var frls = this.props.frls;
+            var minTrigDisplayContent = this.props.minTrig;
             var pseudoFEDs = this.props.pseudoFeds;
             var fedData = [];
             var firstFrl = true;
             frls.forEach(function (frl) {
-                fedData.push(React.createElement(FRL, {key: frl['@id'], frl: frl, firstFrl: firstFrl}));
+                fedData.push(React.createElement(FRL, {key: frl['@id'], frl: frl, firstFrl: firstFrl, minTrig: minTrigDisplayContent}));
                 firstFrl = false;
             });
             pseudoFEDs.forEach(function (fed) {
                 fedData.push(' ');
                 fed.isPseudoFed = true; //this can be used for pseudofed-specific rendering at FEDData level
-                fedData.push(React.createElement(FEDData, {key: fed['@id'], fed: fed}));
+                fedData.push(React.createElement(FEDData, {key: fed['@id'], fed: fed, minTrig: minTrigDisplayContent}));
             });
             return (React.createElement("td", null, fedData));
         };
@@ -1076,15 +1077,16 @@ var DAQView;
         }
         FRL.prototype.render = function () {
             var frl = this.props.frl;
+            var minTrigDisplayContent = this.props.minTrig;
             var feds = frl.feds;
             var firstFed = feds[0];
-            var firstFedDisplay = firstFed ? React.createElement(FEDData, {key: firstFed['@id'], fed: firstFed}) : '-';
+            var firstFedDisplay = firstFed ? React.createElement(FEDData, {key: firstFed['@id'], fed: firstFed, minTrig: minTrigDisplayContent}) : '-';
             var secondFed = feds[1];
-            var secondFedDisplay = secondFed ? React.createElement(FEDData, {key: secondFed['@id'], fed: secondFed}) : '';
+            var secondFedDisplay = secondFed ? React.createElement(FEDData, {key: secondFed['@id'], fed: secondFed, minTrig: minTrigDisplayContent}) : '';
             var thirdFed = feds[2];
-            var thirdFedDisplay = thirdFed ? React.createElement(FEDData, {key: thirdFed['@id'], fed: thirdFed}) : '';
+            var thirdFedDisplay = thirdFed ? React.createElement(FEDData, {key: thirdFed['@id'], fed: thirdFed, minTrig: minTrigDisplayContent}) : '';
             var fourthFed = feds[3];
-            var fourthFedDisplay = fourthFed ? React.createElement(FEDData, {key: fourthFed['@id'], fed: fourthFed}) : '';
+            var fourthFedDisplay = fourthFed ? React.createElement(FEDData, {key: fourthFed['@id'], fed: fourthFed, minTrig: minTrigDisplayContent}) : '';
             var firstFrl = this.props.firstFrl;
             return (React.createElement("span", null, firstFrl ? '' : ', ', frl.geoSlot, ":", firstFedDisplay, secondFed ? ',' : '', secondFedDisplay, thirdFed ? ',' : '', thirdFedDisplay, fourthFed ? ',' : '', fourthFedDisplay));
         };
@@ -1110,6 +1112,13 @@ var DAQView;
         };
         FEDData.prototype.render = function () {
             var fed = this.props.fed;
+            var trigNum = fed.eventCounter;
+            var minTrigDisplayContent = this.props.minTrig;
+            var trigNumDisplay = '';
+            if (trigNum.toString() == minTrigDisplayContent) {
+                trigNumDisplay = 'minTrg';
+            }
+            var minTrigClassNames = classNames('fb-table-fed-min-trig');
             var percentWarning = fed.percentWarning;
             var percentBusy = fed.percentBusy;
             var ttsState = fed.ttsState ? fed.ttsState.substring(0, 1) : '';
@@ -1155,7 +1164,7 @@ var DAQView;
                 React.createElement("span", {className: "fb-table-fed-crc-errors"}, "#FCRC=", fedCRCErrors) : '';
             var slinkCRCErrorDisplay = slinkCRCErrors > 0 ?
                 React.createElement("span", {className: "fb-table-slink-crc-errors"}, "#SCRC=", slinkCRCErrors) : '';
-            return (React.createElement("span", {className: "fb-table-fed"}, percentWarningDisplay, percentBusyDisplay, React.createElement("span", {className: ttsStateClasses}, ttsStateDisplay), React.createElement("span", {className: fedIdClasses}, expectedSourceId), percentBackpressureDisplay, unexpectedSourceIdDisplay, fedCRCErrorDisplay, slinkCRCErrorDisplay));
+            return (React.createElement("span", {className: "fb-table-fed"}, percentWarningDisplay, percentBusyDisplay, React.createElement("span", {className: ttsStateClasses}, ttsStateDisplay), React.createElement("span", {className: fedIdClasses}, expectedSourceId), React.createElement("span", {className: minTrigClassNames}, trigNumDisplay), percentBackpressureDisplay, unexpectedSourceIdDisplay, fedCRCErrorDisplay, slinkCRCErrorDisplay));
         };
         return FEDData;
     }(React.Component));
