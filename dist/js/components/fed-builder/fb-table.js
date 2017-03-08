@@ -983,16 +983,21 @@ var DAQView;
                 ttsStateTcdsApvPm = ttcPartition.topFMMInfo.nullCause;
             }
             else {
-                if (ttcPartition.fmm) {
-                    if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled') {
-                        ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?';
-                    }
-                    else {
-                        ttsState = '-';
-                    }
+                if (ttcPartition.masked) {
+                    ttsState = '-';
                 }
                 else {
-                    ttsState = 'x';
+                    if (ttcPartition.fmm) {
+                        if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled') {
+                            ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?';
+                        }
+                        else {
+                            ttsState = '-';
+                        }
+                    }
+                    else {
+                        ttsState = 'x';
+                    }
                 }
             }
             var ttsStateClasses = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';

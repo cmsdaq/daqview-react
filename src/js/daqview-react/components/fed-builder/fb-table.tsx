@@ -1235,14 +1235,18 @@ namespace DAQView {
                 ttsStateTcdsPm = ttcPartition.topFMMInfo.nullCause;
                 ttsStateTcdsApvPm = ttcPartition.topFMMInfo.nullCause;
             }else{
-                if (ttcPartition.fmm){
-                    if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled'){
-                        ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?'
-                    }else{
-                        ttsState = '-';
+                if (ttcPartition.masked){
+                    ttsState = '-';
+                }else {
+                    if (ttcPartition.fmm) {
+                        if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled') {
+                            ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?'
+                        } else {
+                            ttsState = '-';
+                        }
+                    } else {
+                        ttsState = 'x';
                     }
-                }else{
-                    ttsState = 'x';
                 }
             }
 
