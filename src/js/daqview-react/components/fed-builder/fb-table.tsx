@@ -1267,7 +1267,7 @@ namespace DAQView {
             let maxTrigGreaterThanZero: boolean = maxTrig > 0;
 
             let ttcPartitionTTSStateLink: any = ttsState;
-            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x') {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0,2) != 'no') {
                 ttcPartitionTTSStateLink =
                     <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
                        target="_blank">{ttsState}</a>;

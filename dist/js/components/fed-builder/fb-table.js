@@ -1013,7 +1013,7 @@ var DAQView;
             var minTrigUnequalMaxTrig = minTrig != maxTrig;
             var maxTrigGreaterThanZero = maxTrig > 0;
             var ttcPartitionTTSStateLink = ttsState;
-            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x') {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0, 2) != 'no') {
                 ttcPartitionTTSStateLink =
                     React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsState);
             }

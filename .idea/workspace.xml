@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="fix(): hide ttcp masked state">
+    <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" afterPath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
@@ -67,8 +67,8 @@
       <file leaf-file-name="fb-table.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="1206" column="29" selection-start-line="1206" selection-start-column="29" selection-end-line="1206" selection-end-column="29" />
+            <state relative-caret-position="421">
+              <caret line="1273" column="13" selection-start-line="1273" selection-start-column="13" selection-end-line="1273" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -87,8 +87,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="670">
-              <caret line="212" column="31" selection-start-line="212" selection-start-column="31" selection-end-line="212" selection-end-column="31" />
+            <state relative-caret-position="355">
+              <caret line="191" column="64" selection-start-line="191" selection-start-column="64" selection-end-line="191" selection-end-column="64" />
               <folding>
                 <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#td#0;n#tr#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -768,14 +768,7 @@
       <workItem from="1488529174196" duration="18575000" />
       <workItem from="1488813502647" duration="28844000" />
       <workItem from="1488972898739" duration="2360000" />
-      <workItem from="1489404058563" duration="1243000" />
-    </task>
-    <task id="LOCAL-00047" summary="refactor(): removing debug printers">
-      <created>1481545307056</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1481545307056</updated>
+      <workItem from="1489404058563" duration="2857000" />
     </task>
     <task id="LOCAL-00048" summary="feat(): updates in data source simulation for development during EYETS">
       <created>1481547265275</created>
@@ -1113,11 +1106,18 @@
       <option name="project" value="LOCAL" />
       <updated>1488974571170</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="fix(): hiding state info for masked out partitions">
+      <created>1489405934103</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1489405934103</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="422194000" />
+    <option name="totallyTimeSpent" value="423808000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1916" y="25" width="1928" height="1146" extended-state="6" />
@@ -1128,19 +1128,19 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28529412" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2087327" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28529412" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32962963" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1155,7 +1155,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(): dynamic tcds controller link with new information from the model" />
     <MESSAGE value="fix(): flexible with new model fields, to ensure backwards snapshot compatibility" />
     <MESSAGE value="fix(): adaptations to the snapshot request links following release of the snapshot service" />
     <MESSAGE value="doc(): error message" />
@@ -1180,7 +1179,8 @@
     <MESSAGE value="feat(): highlighting FED which causes min trig" />
     <MESSAGE value="fix(): escaping red counters when background is red" />
     <MESSAGE value="fix(): hide ttcp masked state" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(): hide ttcp masked state" />
+    <MESSAGE value="fix(): hiding state info for masked out partitions" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(): hiding state info for masked out partitions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1461,6 +1461,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="108" column="25" selection-start-line="108" selection-start-column="25" selection-end-line="108" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1544,8 +1545,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="670">
-          <caret line="212" column="31" selection-start-line="212" selection-start-column="31" selection-end-line="212" selection-end-column="31" />
+        <state relative-caret-position="355">
+          <caret line="191" column="64" selection-start-line="191" selection-start-column="64" selection-end-line="191" selection-end-column="64" />
           <folding>
             <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#td#0;n#tr#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1557,8 +1558,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="1206" column="29" selection-start-line="1206" selection-start-column="29" selection-end-line="1206" selection-end-column="29" />
+        <state relative-caret-position="421">
+          <caret line="1273" column="13" selection-start-line="1273" selection-start-column="13" selection-end-line="1273" selection-end-column="13" />
           <folding />
         </state>
       </provider>
