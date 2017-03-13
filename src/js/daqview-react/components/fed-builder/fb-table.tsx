@@ -1237,6 +1237,8 @@ namespace DAQView {
             }else{
                 if (ttcPartition.masked){
                     ttsState = '-';
+                    ttsStateTcdsPm = '-';
+                    ttsStateTcdsApvPm = '-';
                 }else {
                     if (ttcPartition.fmm) {
                         if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled') {
@@ -1275,14 +1277,14 @@ namespace DAQView {
             let tcdsControllerServiceName: string = this.props.tcdsControllerServiceName;
 
             let ttcPartitionTTSStateTcdsPmLink: any = ttsStateTcdsPm;
-            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttcPartition.tcds_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
+            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttsStateTcdsPm != '-' && ttcPartition.tcds_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
                 ttcPartitionTTSStateTcdsPmLink =
                     <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
                        target="_blank">{ttsStateTcdsPm}</a>;
             }
 
             let ttcPartitionTTSStateTcdsApvPmLink: any = ttsStateTcdsApvPm;
-            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
+            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttsStateTcdsApvPm != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
                 ttcPartitionTTSStateTcdsApvPmLink =
                     <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
                        target="_blank">{ttsStateTcdsApvPm}</a>;

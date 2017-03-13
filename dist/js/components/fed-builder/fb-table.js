@@ -985,6 +985,8 @@ var DAQView;
             else {
                 if (ttcPartition.masked) {
                     ttsState = '-';
+                    ttsStateTcdsPm = '-';
+                    ttsStateTcdsApvPm = '-';
                 }
                 else {
                     if (ttcPartition.fmm) {
@@ -1018,12 +1020,12 @@ var DAQView;
             var tcdsControllerUrl = this.props.tcdsControllerUrl;
             var tcdsControllerServiceName = this.props.tcdsControllerServiceName;
             var ttcPartitionTTSStateTcdsPmLink = ttsStateTcdsPm;
-            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttcPartition.tcds_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0, 2) != 'no') {
+            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttsStateTcdsPm != '-' && ttcPartition.tcds_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0, 2) != 'no') {
                 ttcPartitionTTSStateTcdsPmLink =
                     React.createElement("a", {href: tcdsControllerUrl + '/urn:xdaq-application:service=' + tcdsControllerServiceName, target: "_blank"}, ttsStateTcdsPm);
             }
             var ttcPartitionTTSStateTcdsApvPmLink = ttsStateTcdsApvPm;
-            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0, 2) != 'no') {
+            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttsStateTcdsApvPm != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0, 2) != 'no') {
                 ttcPartitionTTSStateTcdsApvPmLink =
                     React.createElement("a", {href: tcdsControllerUrl + '/urn:xdaq-application:service=' + tcdsControllerServiceName, target: "_blank"}, ttsStateTcdsApvPm);
             }
