@@ -56,7 +56,11 @@
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
+@keyframes pulse {
+    to { background-color: #ffbe11; }
+}
+
 .metadata-table-stale-page {
     font-weight: bold;
-    background-color: #ffbe11;
+    animation: pulse 500ms alternate infinite;
 }
