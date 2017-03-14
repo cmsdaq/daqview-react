@@ -57,7 +57,15 @@ input[type=submit] {
     border-radius: 0;
     height: auto;
     width: auto;
-    background-color: #fff4fd;
+    background-color: #d7dfff;
     align: center;
     vertical-align: center;
+}
+
+.daqview-external-link{
+    border: 1px dotted #999;
+    border-radius: 0;
+    height: auto;
+    width: auto;
+    background-color: #d7dfff;
 }

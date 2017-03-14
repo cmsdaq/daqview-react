@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snapshot-source.js" afterPath="$PROJECT_DIR$/snapshot-source.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/css/daqview.css" afterPath="$PROJECT_DIR$/dist/css/daqview.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
     </list>
     <ignored path="daqview-react.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,8 +37,8 @@
       <file leaf-file-name="daqview.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/css/daqview.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="670">
-              <caret line="48" column="1" selection-start-line="48" selection-start-column="1" selection-end-line="48" selection-end-column="1" />
+            <state relative-caret-position="202">
+              <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -56,8 +57,8 @@
       <file leaf-file-name="snapshot-modal.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="556">
-              <caret line="42" column="9" selection-start-line="42" selection-start-column="9" selection-end-line="42" selection-end-column="9" />
+            <state relative-caret-position="721">
+              <caret line="53" column="20" selection-start-line="53" selection-start-column="20" selection-end-line="53" selection-end-column="130" />
               <folding />
             </state>
           </provider>
@@ -66,8 +67,8 @@
       <file leaf-file-name="metadata-table.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/metadata/metadata-table.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="64" column="44" selection-start-line="64" selection-start-column="44" selection-end-line="64" selection-end-column="44" />
+            <state relative-caret-position="660">
+              <caret line="82" column="52" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -86,8 +87,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1372">
-              <caret line="126" column="25" selection-start-line="126" selection-start-column="25" selection-end-line="126" selection-end-column="25" />
+            <state relative-caret-position="464">
+              <caret line="226" column="53" selection-start-line="226" selection-start-column="53" selection-end-line="226" selection-end-column="53" />
               <folding>
                 <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -98,8 +99,8 @@
       <file leaf-file-name="snapshot-modal.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/css/components/common/snapshot-modal.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+            <state relative-caret-position="60">
+              <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -174,8 +175,6 @@
         <option value="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot-source.d.ts" />
         <option value="$PROJECT_DIR$/dist/css/components/common/snapshot-modal.css" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx" />
-        <option value="$PROJECT_DIR$/dist/css/daqview.css" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
@@ -183,6 +182,8 @@
         <option value="$PROJECT_DIR$/dist/css/components/metadata/metadata-table.css" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/metadata/metadata-table.tsx" />
         <option value="$PROJECT_DIR$/snapshot-source.js" />
+        <option value="$PROJECT_DIR$/dist/css/daqview.css" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -782,14 +783,7 @@
       <workItem from="1488529174196" duration="18575000" />
       <workItem from="1488813502647" duration="28844000" />
       <workItem from="1488972898739" duration="2360000" />
-      <workItem from="1489404058563" duration="30284000" />
-    </task>
-    <task id="LOCAL-00053" summary="doc(): to-do list update">
-      <created>1481729849559</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1481729849559</updated>
+      <workItem from="1489404058563" duration="32530000" />
     </task>
     <task id="LOCAL-00054" summary="doc(): to-do list update">
       <created>1481732654575</created>
@@ -1127,11 +1121,18 @@
       <option name="project" value="LOCAL" />
       <updated>1489510472985</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="chore(): config">
+      <created>1489510746664</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1489510746664</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="451235000" />
+    <option name="totallyTimeSpent" value="453481000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="0" width="1928" height="1203" extended-state="6" />
@@ -1169,7 +1170,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix(): pause/resume functionality after changing to getLatestSnapshot requests" />
     <MESSAGE value="fix(): snapshot error handling and messages" />
     <MESSAGE value="feat(): hide fed state for masked out feds (+fix in typo of CSS classes)" />
     <MESSAGE value="fix(): column grouping" />
@@ -1194,7 +1194,8 @@
     <MESSAGE value="feat(): page wide notification for stale snapshot" />
     <MESSAGE value="feat(): animation for stale snapshot" />
     <MESSAGE value="fix(): hiding stale snapshot notification when in paused mode" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(): hiding stale snapshot notification when in paused mode" />
+    <MESSAGE value="chore(): config" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore(): config" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1517,18 +1518,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dist/css/daqview.css">
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="670">
-          <caret line="48" column="1" selection-start-line="48" selection-start-column="1" selection-end-line="48" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/css/components/common/snapshot-modal.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+        <state relative-caret-position="721">
+          <caret line="53" column="20" selection-start-line="53" selection-start-column="20" selection-end-line="53" selection-end-column="130" />
           <folding />
         </state>
       </provider>
@@ -1541,18 +1534,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx">
+    <entry file="file://$PROJECT_DIR$/dist/css/components/common/snapshot-modal.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="556">
-          <caret line="42" column="9" selection-start-line="42" selection-start-column="9" selection-end-line="42" selection-end-column="9" />
+        <state relative-caret-position="60">
+          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/css/daqview.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/metadata/metadata-table.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="64" column="44" selection-start-line="64" selection-start-column="44" selection-end-line="64" selection-end-column="44" />
+        <state relative-caret-position="660">
+          <caret line="82" column="52" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
           <folding />
         </state>
       </provider>
@@ -1567,8 +1568,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1372">
-          <caret line="126" column="25" selection-start-line="126" selection-start-column="25" selection-end-line="126" selection-end-column="25" />
+        <state relative-caret-position="464">
+          <caret line="226" column="53" selection-start-line="226" selection-start-column="53" selection-end-line="226" selection-end-column="53" />
           <folding>
             <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
