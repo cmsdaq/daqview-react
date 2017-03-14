@@ -18,7 +18,7 @@ var DAQView;
             this.url = "";
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        SnapshotModal.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, url) {
+        SnapshotModal.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             this.url = url;
@@ -42,7 +42,7 @@ var DAQView;
             _super.apply(this, arguments);
         }
         SnapshotModalElement.prototype.render = function () {
-            return (React.createElement("a", {href: this.props.url, target: "_blank"}, React.createElement("button", null, "See raw DAQ snapshot")));
+            return (React.createElement("a", {href: this.props.url, target: "_blank"}, React.createElement("button", {className: "button-snapshot"}, "See raw DAQ snapshot")));
         };
         return SnapshotModalElement;
     }(React.Component));

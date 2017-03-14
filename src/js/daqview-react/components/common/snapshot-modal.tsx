@@ -23,7 +23,7 @@ namespace DAQView {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             this.url = url;
@@ -51,7 +51,7 @@ namespace DAQView {
     class SnapshotModalElement extends React.Component<SnapshotModalElementProperties,{}> {
         render() {
             return (
-                    <a href={this.props.url} target="_blank"><button>See raw DAQ snapshot</button></a>
+                    <a href={this.props.url} target="_blank"><button className="button-snapshot">See raw DAQ snapshot</button></a>
         );
         }
     }

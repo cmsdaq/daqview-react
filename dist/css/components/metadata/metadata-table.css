@@ -55,3 +55,8 @@
     background-color: #C8C5C5;
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
+
+.metadata-table-stale-page {
+    font-weight: bold;
+    background-color: #ffbe11;
+}

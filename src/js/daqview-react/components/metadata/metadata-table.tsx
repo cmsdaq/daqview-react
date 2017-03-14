@@ -13,14 +13,16 @@ namespace DAQView {
 
         private snapshot: DAQAggregatorSnapshot;
         private drawPausedComponent: boolean = false;
+        private drawStaleSnapshot: boolean = false;
 
         constructor(htmlRootElementName: string) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
+            this.drawStaleSnapshot = drawStaleSnapshot;
 
             if (!snapshot){
                 let msg: string = "Monitoring data unavailable: "+url;
@@ -38,7 +40,8 @@ namespace DAQView {
                                                                       daqState={daq.daqState}
                                                                       machineState={daq.lhcMachineMode}
                                                                       beamState={daq.lhcBeamMode}
-                                                                    drawPausedComponent={drawPausedComponent}/>;
+                                                                    drawPausedComponent={drawPausedComponent}
+                                                                    drawStaleSnapshot={drawStaleSnapshot}/>;
                 ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
             }
         }
@@ -56,10 +59,15 @@ namespace DAQView {
         machineState?: string;
         beamState?: string;
         drawPausedComponent: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     class MetadataTableElement extends React.Component<MetadataTableElementProperties,{}> {
+
         render() {
+
+            let timestampClass: string = this.props.drawStaleSnapshot ? 'metadata-table-stale-page' : '';
+
             return (
                 <table className="metadata-table">
                     <thead className="metadata-table-head">
@@ -86,8 +94,8 @@ namespace DAQView {
                         <td>{this.props.beamState}</td>
                         <td>{this.props.sessionId}</td>
                         <td>{this.props.dpSetPath}</td>
-                        <td>{new Date(this.props.snapshotTimestamp).toString()}</td>
-                        <td>{new Date(this.props.snapshotTimestamp).toUTCString()}</td>
+                        <td className={timestampClass}>{new Date(this.props.snapshotTimestamp).toString()}</td>
+                        <td className={timestampClass}>{new Date(this.props.snapshotTimestamp).toUTCString()}</td>
                     </tr>
                     </tbody>
                 </table>

@@ -26,6 +26,7 @@ namespace DAQView {
         private snapshot: DAQAggregatorSnapshot = null;
         private drawPausedComponent: boolean = false;
         private drawZeroDataFlowComponent: boolean = false;
+        private drawStaleSnapshot: boolean = false;
 
         private sortFunction: SortFunction = {
             presort: this.INITIAL_PRESORT_FUNCTION,
@@ -53,7 +54,7 @@ namespace DAQView {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
 
             if (!snapshot){
                 let msg: string = "";
@@ -62,7 +63,7 @@ namespace DAQView {
             }else {
                 if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                     console.log("duplicate snapshot detected");
-                    if (drawPausedComponent || drawZeroDataFlowComponent) {
+                    if (drawPausedComponent || drawZeroDataFlowComponent || drawStaleSnapshot) {
                         console.log("...but page color has to change, so do render");
                     } else {
                         return;
@@ -72,6 +73,7 @@ namespace DAQView {
                 this.snapshot = FBTableSortFunctions.STATIC(snapshot);
                 this.drawPausedComponent = drawPausedComponent;
                 this.drawZeroDataFlowComponent = drawZeroDataFlowComponent;
+                this.drawStaleSnapshot = drawStaleSnapshot;
                 this.updateSnapshot();
             }
         }
@@ -81,6 +83,7 @@ namespace DAQView {
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
             let drawPausedComponent: boolean = this.drawPausedComponent;
             let drawZeroDataFlowComponent: boolean = this.drawZeroDataFlowComponent;
+            let drawStaleSnapshot: boolean = this.drawStaleSnapshot;
 
             let tcdsControllerUrl :string = daq.tcdsGlobalInfo.tcdsControllerContext;
             let tcdsControllerServiceName :string  = daq.tcdsGlobalInfo.tcdsControllerServiceName;
@@ -88,10 +91,11 @@ namespace DAQView {
             let fedBuilderTableRootElement: any = <FEDBuilderTableElement tableObject={this}
                                                                           fedBuilders={daq.fedBuilders}
                                                                           fedBuilderSummary={daq.fedBuilderSummary}
-                                                                        drawPausedComponent={drawPausedComponent}
+                                                                          drawPausedComponent={drawPausedComponent}
                                                                           drawZeroDataFlowComponent={drawZeroDataFlowComponent}
-                                                                        tcdsControllerUrl={tcdsControllerUrl}
-                                                                        tcdsControllerServiceName={tcdsControllerServiceName}/>
+                                                                          tcdsControllerUrl={tcdsControllerUrl}
+                                                                          tcdsControllerServiceName={tcdsControllerServiceName}
+                                                                            drawStaleSnapshot={drawStaleSnapshot}/>
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         }
 
@@ -780,6 +784,7 @@ namespace DAQView {
         drawZeroDataFlowComponent: boolean;
         tcdsControllerUrl: string;
         tcdsControllerServiceName: string;
+        drawStaleSnapshot: boolean;
     }
 
     class FEDBuilderTableElement extends React.Component<FEDBuilderTableElementProperties,{}> {
@@ -788,6 +793,7 @@ namespace DAQView {
 
             let drawPausedComponents: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponents: boolean = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
 
             let tcdsControllerUrl: string = this.props.tcdsControllerUrl;
             let tcdsControllerServiceName: string = this.props.tcdsControllerServiceName;
@@ -809,11 +815,12 @@ namespace DAQView {
 
                 fedBuilderRows.push(<FEDBuilderRow key={fedBuilder['@id']} fedBuilder={fedBuilder}
                                                    evmMaxTrg={evmMaxTrg}
-                                                drawPausedComponent={drawPausedComponents}
+                                                   drawPausedComponent={drawPausedComponents}
                                                    drawZeroDataFlowComponent={drawZeroDataFlowComponents}
-                                                    tcdsControllerUrl={tcdsControllerUrl}
-                                                    tcdsControllerServiceName={tcdsControllerServiceName}
-                                                    oddRow={oddRow}/>);
+                                                   tcdsControllerUrl={tcdsControllerUrl}
+                                                   tcdsControllerServiceName={tcdsControllerServiceName}
+                                                   oddRow={oddRow}
+                                                    drawStaleSnapshot={drawStaleSnapshot}/>);
             });
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
@@ -839,7 +846,8 @@ namespace DAQView {
                     <FEDBuilderTableHeaderRow key="fb-summary-header-row" tableObject={tableObject}
                                               headers={FB_TABLE_SUMMARY_HEADERS} drawPausedComponent={drawPausedComponents}/>
                     <FEDBuilderTableSummaryRow key="fb-summary-row" fedBuilderSummary={fedBuilderSummary}
-                                               numRus={numRus} numUsedRus={numUsedRus} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}/>
+                                               numRus={numRus} numUsedRus={numUsedRus} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}
+                                                drawStaleSnapshot={drawStaleSnapshot}/>
                     </tfoot>
                 </table>
             );
@@ -855,6 +863,7 @@ namespace DAQView {
         tcdsControllerUrl: string;
         tcdsControllerServiceName: string;
         oddRow: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     interface RUWarningDataProperties {
@@ -921,6 +930,7 @@ namespace DAQView {
 
             let drawPausedComponent = this.props.drawPausedComponent;
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
 
             let oddRow: boolean = this.props.oddRow;
 
@@ -998,6 +1008,10 @@ namespace DAQView {
 
             if (drawZeroDataFlowComponent){
                 fbRowClass = "fb-table-fb-row-ratezero";
+            }
+
+            if (drawStaleSnapshot && (!drawPausedComponent)){
+                fbRowClass = 'fb-table-fb-row-stale-page-row';
             }
 
             let fbRowClassName: string = classNames(fbRowClass, this.props.additionalClasses);
@@ -1142,16 +1156,16 @@ namespace DAQView {
 
             //handlers to be used with onMouseOver and onMouseOut of this element
             /*
-            let mouseOverFunction: () => void = null;
-            mouseOverFunction = function (){
+             let mouseOverFunction: () => void = null;
+             mouseOverFunction = function (){
 
-            };
+             };
 
-            let mouseOutFunction: () => void = null;
-            mouseOutFunction = function (){
+             let mouseOutFunction: () => void = null;
+             mouseOutFunction = function (){
 
-                //alert("mouseOut"+content);
-            };*/
+             //alert("mouseOut"+content);
+             };*/
 
 
             let sortingImage: any = null;
@@ -1547,6 +1561,7 @@ namespace DAQView {
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     class FEDBuilderTableSummaryRow extends React.Component<FEDBuilderTableSummaryRowProperties,{}> {
@@ -1559,6 +1574,7 @@ namespace DAQView {
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
             let fbSummaryRowClass: string = drawPausedComponent ? "fb-table-fb-summary-row-paused" : "fb-table-fb-summary-row-running";
 
 
@@ -1566,20 +1582,27 @@ namespace DAQView {
             let eventsInRuClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
             let requestsClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests, FBTableNumberFormats.REQUESTS);
 
-            if (drawZeroDataFlowComponent){
+            if (drawZeroDataFlowComponent) {
                 fbSummaryRowClass = "fb-table-fb-summary-row-ratezero";
 
-                let escapeRedField: string = 'fb-table-ru-red-column-escape';
+                if (!drawStaleSnapshot) {
 
-                if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru'){
-                    fragmentInRuClass = escapeRedField;
+                    let escapeRedField: string = 'fb-table-ru-red-column-escape';
+
+                    if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru') {
+                        fragmentInRuClass = escapeRedField;
+                    }
+                    if (eventsInRuClass === 'fb-table-ru-events-in-ru') {
+                        eventsInRuClass = escapeRedField;
+                    }
+                    if (requestsClass === 'fb-table-ru-requests') {
+                        requestsClass = escapeRedField;
+                    }
                 }
-                if (eventsInRuClass === 'fb-table-ru-events-in-ru'){
-                    eventsInRuClass = escapeRedField;
-                }
-                if (requestsClass === 'fb-table-ru-requests'){
-                    requestsClass = escapeRedField;
-                }
+            }
+
+            if (drawStaleSnapshot){
+                fbSummaryRowClass = 'fb-table-fb-summary-row-stale-page';
             }
 
             return (

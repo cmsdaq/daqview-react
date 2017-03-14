@@ -18,8 +18,8 @@ var DAQAggregator;
         SnapshotProvider.prototype.addView = function (view) {
             this.views.push(view);
         };
-        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, drawZeroDataFlowComponent, url) {
-            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, url); });
+        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url); });
         };
         SnapshotProvider.prototype.isRunning = function () {
             return this.running;
@@ -111,17 +111,27 @@ var DAQAggregator;
                                     }
                                 });
                             }
-                            //discover if data is stale
+                            //discover if snapshot is stale
+                            var drawStaleSnapshot = false;
                             var dataTime = new Date(daq.lastUpdate).getTime();
-                            //let serverResponseTime: number = snapshotRequest.getAllResponseHeaders();
-                            //parse out and compare response header timestamp with snapshot timestamp (ONLY when in real time polling mode, otherwise false positive)
+                            this.snapshotSource.currentSnapshotTimestamp = dataTime;
+                            var serverResponseTime = new Date(snapshotRequest.getResponseHeader("Date")).getTime();
+                            var diff = serverResponseTime - dataTime;
+                            var thres = 5000; //in ms
+                            console.log("Time diff between snapshot timestamp and response (in ms): " + diff);
+                            if ((diff > thres)) {
+                                drawStaleSnapshot = true;
+                            }
+                            else {
+                                drawStaleSnapshot = false;
+                            }
                             //updates daqview url
                             window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
                             document.title = "DAQView [" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "]";
                             //in case of point time queries (eg. after pause or goto-time command, the time is already appended in the URL)
                             var urlToSnapshot = url.indexOf("time") > -1 ? url : url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
                             console.log("drawPaused@provider? " + this.drawPausedPage);
-                            this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero_1, urlToSnapshot); //passes snapshot source url to be used for the "see raw snapshot" button
+                            this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero_1, drawStaleSnapshot, urlToSnapshot); //passes snapshot source url to be used for the "see raw snapshot" button
                             //in case there is a parsed snapshot, update pointer to previous snapshot with the more precise timestamp retrieved by the snapshot itself
                             this.previousUrl = url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
                         }

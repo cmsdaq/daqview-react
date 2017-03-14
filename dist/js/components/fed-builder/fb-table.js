@@ -20,6 +20,7 @@ var DAQView;
             this.snapshot = null;
             this.drawPausedComponent = false;
             this.drawZeroDataFlowComponent = false;
+            this.drawStaleSnapshot = false;
             this.sortFunction = {
                 presort: this.INITIAL_PRESORT_FUNCTION,
                 sort: this.INITIAL_SORT_FUNCTION
@@ -41,7 +42,7 @@ var DAQView;
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        FEDBuilderTable.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, url) {
+        FEDBuilderTable.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
             if (!snapshot) {
                 var msg = "";
                 var errRootElement = React.createElement(ErrorElement, {message: msg});
@@ -50,7 +51,7 @@ var DAQView;
             else {
                 if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                     console.log("duplicate snapshot detected");
-                    if (drawPausedComponent || drawZeroDataFlowComponent) {
+                    if (drawPausedComponent || drawZeroDataFlowComponent || drawStaleSnapshot) {
                         console.log("...but page color has to change, so do render");
                     }
                     else {
@@ -60,6 +61,7 @@ var DAQView;
                 this.snapshot = FBTableSortFunctions.STATIC(snapshot);
                 this.drawPausedComponent = drawPausedComponent;
                 this.drawZeroDataFlowComponent = drawZeroDataFlowComponent;
+                this.drawStaleSnapshot = drawStaleSnapshot;
                 this.updateSnapshot();
             }
         };
@@ -68,9 +70,10 @@ var DAQView;
             var daq = sortedSnapshot.getDAQ();
             var drawPausedComponent = this.drawPausedComponent;
             var drawZeroDataFlowComponent = this.drawZeroDataFlowComponent;
+            var drawStaleSnapshot = this.drawStaleSnapshot;
             var tcdsControllerUrl = daq.tcdsGlobalInfo.tcdsControllerContext;
             var tcdsControllerServiceName = daq.tcdsGlobalInfo.tcdsControllerServiceName;
-            var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {tableObject: this, fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary, drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, tcdsControllerUrl: tcdsControllerUrl, tcdsControllerServiceName: tcdsControllerServiceName});
+            var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {tableObject: this, fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary, drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, tcdsControllerUrl: tcdsControllerUrl, tcdsControllerServiceName: tcdsControllerServiceName, drawStaleSnapshot: drawStaleSnapshot});
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         };
         FEDBuilderTable.prototype.setSortFunction = function (sortFunctions) {
@@ -700,6 +703,7 @@ var DAQView;
             var fedBuilders = this.props.fedBuilders;
             var drawPausedComponents = this.props.drawPausedComponent;
             var drawZeroDataFlowComponents = this.props.drawZeroDataFlowComponent;
+            var drawStaleSnapshot = this.props.drawStaleSnapshot;
             var tcdsControllerUrl = this.props.tcdsControllerUrl;
             var tcdsControllerServiceName = this.props.tcdsControllerServiceName;
             var evmMaxTrg = null;
@@ -715,13 +719,13 @@ var DAQView;
             fedBuilders.forEach(function (fedBuilder) {
                 var index = fedBuilderRows.length;
                 var oddRow = (index % 2 == 1) ? true : false;
-                fedBuilderRows.push(React.createElement(FEDBuilderRow, {key: fedBuilder['@id'], fedBuilder: fedBuilder, evmMaxTrg: evmMaxTrg, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, tcdsControllerUrl: tcdsControllerUrl, tcdsControllerServiceName: tcdsControllerServiceName, oddRow: oddRow}));
+                fedBuilderRows.push(React.createElement(FEDBuilderRow, {key: fedBuilder['@id'], fedBuilder: fedBuilder, evmMaxTrg: evmMaxTrg, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, tcdsControllerUrl: tcdsControllerUrl, tcdsControllerServiceName: tcdsControllerServiceName, oddRow: oddRow, drawStaleSnapshot: drawStaleSnapshot}));
             });
             var fedBuilderSummary = this.props.fedBuilderSummary;
             var numRus = fedBuilders.length;
             var numUsedRus = numRus - fedBuilderSummary.rusMasked;
             var tableObject = this.props.tableObject;
-            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "11"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "9"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, {key: "fb-top-header-row", drawPausedComponent: drawPausedComponents}), React.createElement(FEDBuilderTableSecondaryHeaderRow, {key: "fb-secondary-header-row", drawPausedComponent: drawPausedComponents}), React.createElement(FEDBuilderTableHeaderRow, {key: "fb-header-row", tableObject: tableObject, headers: FB_TABLE_TOP_HEADERS, drawPausedComponent: drawPausedComponents})), fedBuilderRows, React.createElement("tfoot", {className: "fb-table-foot"}, React.createElement(FEDBuilderTableHeaderRow, {key: "fb-summary-header-row", tableObject: tableObject, headers: FB_TABLE_SUMMARY_HEADERS, drawPausedComponent: drawPausedComponents}), React.createElement(FEDBuilderTableSummaryRow, {key: "fb-summary-row", fedBuilderSummary: fedBuilderSummary, numRus: numRus, numUsedRus: numUsedRus, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents}))));
+            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "11"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "9"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, {key: "fb-top-header-row", drawPausedComponent: drawPausedComponents}), React.createElement(FEDBuilderTableSecondaryHeaderRow, {key: "fb-secondary-header-row", drawPausedComponent: drawPausedComponents}), React.createElement(FEDBuilderTableHeaderRow, {key: "fb-header-row", tableObject: tableObject, headers: FB_TABLE_TOP_HEADERS, drawPausedComponent: drawPausedComponents})), fedBuilderRows, React.createElement("tfoot", {className: "fb-table-foot"}, React.createElement(FEDBuilderTableHeaderRow, {key: "fb-summary-header-row", tableObject: tableObject, headers: FB_TABLE_SUMMARY_HEADERS, drawPausedComponent: drawPausedComponents}), React.createElement(FEDBuilderTableSummaryRow, {key: "fb-summary-row", fedBuilderSummary: fedBuilderSummary, numRus: numRus, numUsedRus: numUsedRus, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, drawStaleSnapshot: drawStaleSnapshot}))));
         };
         return FEDBuilderTableElement;
     }(React.Component));
@@ -779,6 +783,7 @@ var DAQView;
             var _this = this;
             var drawPausedComponent = this.props.drawPausedComponent;
             var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            var drawStaleSnapshot = this.props.drawStaleSnapshot;
             var oddRow = this.props.oddRow;
             var fedBuilder = this.props.fedBuilder;
             var subFedBuilders = fedBuilder.subFedbuilders;
@@ -833,6 +838,9 @@ var DAQView;
             var fbRowClass = drawPausedComponent ? "fb-table-fb-row-paused" : "fb-table-fb-row-running";
             if (drawZeroDataFlowComponent) {
                 fbRowClass = "fb-table-fb-row-ratezero";
+            }
+            if (drawStaleSnapshot && (!drawPausedComponent)) {
+                fbRowClass = 'fb-table-fb-row-stale-page-row';
             }
             var fbRowClassName = classNames(fbRowClass, this.props.additionalClasses);
             var children = [];
@@ -920,16 +928,16 @@ var DAQView;
             }
             //handlers to be used with onMouseOver and onMouseOut of this element
             /*
-            let mouseOverFunction: () => void = null;
-            mouseOverFunction = function (){
+             let mouseOverFunction: () => void = null;
+             mouseOverFunction = function (){
 
-            };
+             };
 
-            let mouseOutFunction: () => void = null;
-            mouseOutFunction = function (){
+             let mouseOutFunction: () => void = null;
+             mouseOutFunction = function (){
 
-                //alert("mouseOut"+content);
-            };*/
+             //alert("mouseOut"+content);
+             };*/
             var sortingImage = null;
             if (currentSorting != null) {
                 sortingImage = React.createElement("input", {type: "image", className: "fb-table-sort-image", src: 'dist/img/' + currentSorting.getImagePath(), alt: currentSorting.toString(), title: "Sort", onClick: clickFunction});
@@ -1204,22 +1212,28 @@ var DAQView;
             var fedBuilderSummary = this.props.fedBuilderSummary;
             var drawPausedComponent = this.props.drawPausedComponent;
             var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            var drawStaleSnapshot = this.props.drawStaleSnapshot;
             var fbSummaryRowClass = drawPausedComponent ? "fb-table-fb-summary-row-paused" : "fb-table-fb-summary-row-running";
             var fragmentInRuClass = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU);
             var eventsInRuClass = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
             var requestsClass = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests, FBTableNumberFormats.REQUESTS);
             if (drawZeroDataFlowComponent) {
                 fbSummaryRowClass = "fb-table-fb-summary-row-ratezero";
-                var escapeRedField = 'fb-table-ru-red-column-escape';
-                if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru') {
-                    fragmentInRuClass = escapeRedField;
+                if (!drawStaleSnapshot) {
+                    var escapeRedField = 'fb-table-ru-red-column-escape';
+                    if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru') {
+                        fragmentInRuClass = escapeRedField;
+                    }
+                    if (eventsInRuClass === 'fb-table-ru-events-in-ru') {
+                        eventsInRuClass = escapeRedField;
+                    }
+                    if (requestsClass === 'fb-table-ru-requests') {
+                        requestsClass = escapeRedField;
+                    }
                 }
-                if (eventsInRuClass === 'fb-table-ru-events-in-ru') {
-                    eventsInRuClass = escapeRedField;
-                }
-                if (requestsClass === 'fb-table-ru-requests') {
-                    requestsClass = escapeRedField;
-                }
+            }
+            if (drawStaleSnapshot) {
+                fbSummaryRowClass = 'fb-table-fb-summary-row-stale-page';
             }
             return (React.createElement("tr", {className: classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}, React.createElement("td", {colSpan: "11"}), React.createElement("td", null, "Σ ", this.props.numUsedRus, " / ", this.props.numRus), React.createElement("td", null), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}, (fedBuilderSummary.rate / 1000).toFixed(3)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput / 1000 / 1000, FBTableNumberFormats.THROUGHPUT)}, "Σ ", (fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean / 1000, FBTableNumberFormats.SIZE)}, "Σ ", (fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(3), "±", (fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(3)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}, "Δ ", fedBuilderSummary.deltaEvents), React.createElement("td", {className: fragmentInRuClass}, "Σ ", fedBuilderSummary.sumFragmentsInRU), React.createElement("td", {className: eventsInRuClass}, "Σ ", fedBuilderSummary.sumEventsInRU), React.createElement("td", {className: requestsClass}, "Σ ", fedBuilderSummary.sumRequests)));
         };

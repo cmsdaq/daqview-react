@@ -49,7 +49,7 @@ var DAQView;
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, url) {
+        FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
             if (!snapshot) {
                 var msg = "";
                 var errRootElement = React.createElement(ErrorElement, {message: msg});
