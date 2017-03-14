@@ -66,7 +66,7 @@ namespace DAQView {
 
         render() {
 
-            let timestampClass: string = this.props.drawStaleSnapshot ? 'metadata-table-stale-page' : '';
+            let timestampClass: string = this.props.drawStaleSnapshot && (!this.props.drawPausedComponent)? 'metadata-table-stale-page' : '';
 
             return (
                 <table className="metadata-table">
