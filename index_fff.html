@@ -143,6 +143,7 @@
                     getRequestSetup: function() {
                         return daqSetup;
                     },
+                    currentSnapshotTimestamp: -1,
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
 
@@ -208,30 +209,69 @@
                     $('.daqview-go-to-time').click();
                 }
 
+                var controlPlus = $('.daqview-go-to-time-add');
+                var controlMinus = $('.daqview-go-to-time-subtract');
+
+                controlPlus.on('click', function(){
+                    var newDateTargetInMillis = snapshotSource.currentSnapshotTimestamp + 1000*($('#daqview-nav-step-input').val());
+                    var newDateTargetFormatted = new Date(newDateTargetInMillis).toISOString();
+                    $('#daqview-go-to-time-input').val(newDateTargetFormatted); //pointer to id
+                    $('.daqview-go-to-time').click(); //pointer to class
+                });
+
+                controlMinus.on('click', function(){
+                    var newDateTargetInMillis = snapshotSource.currentSnapshotTimestamp - 1000*($('#daqview-nav-step-input').val());
+                    var newDateTargetFormatted = new Date(newDateTargetInMillis).toISOString();
+                    $('#daqview-go-to-time-input').val(newDateTargetFormatted);
+                    $('.daqview-go-to-time').click();
+                });
+
+                //setting values in links of the upper left corner
+                $('#dvhomelink').attr("href",daqviewLinks.controller);
+                $('#dvalllink').attr("href",daqviewLinks.base_all+"?setup="+daqSetup);
+                $('#dvfblink').attr("href",daqviewLinks.base_fb+"?setup="+daqSetup);
+
             }
             catch (exception) {
                 console ? (console.debug ? console.debug(exception) : console.log(exception)) : alert(exception);
             }
         });
+
     </script>
 </head>
 <body>
 <div id="daqview-react">
     <table style="width:100%">
         <tr>
-            <td style="width:20%">
-                <div id="daqview-time-navigation">
-                    <input type="text" placeholder="please respect format" value="2016-12-03T10:38:26.039Z" id="daqview-go-to-time-input">
-                    <input type="submit" value="Go to time" class="daqview-go-to-time">
-                </div>
+            <td width="20%" align="left" valign="center">
+                <a href="" id="dvhomelink" target="_blank"><button class="daqview-external-link">DAQView Home</button></a>
+                <a href="" id="dvalllink" target="_blank"><button class="daqview-external-link">All Tables</button></a>
+                <a href="" id="dvfblink" target="_blank"><button class="daqview-external-link">FB Table</button></a>
             </td>
-            <td style="width:60%">
+            <td width="20%" align="right" valign="center">
                 <div id="daqview-control">
                     <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
                            title="pause/resume"/>
                 </div>
             </td>
-            <td style="width:20%" align="right" valign="bottom"><div id="daqview-react-snapshot-modal"></div></td>
+            <td width="20%" align="center" valign="center">
+
+                <div id="daqview-time-navigation-prevnext">
+                    <input type="image" class="daqview-go-to-time-subtract" src="dist/img/previous.png" alt="minus-time"
+                           title="minus-time"/>
+                    <input type="text" placeholder="sec" value="3" id="daqview-nav-step-input" class="daqview-nav-step-input-class">
+                    <input type="image" class="daqview-go-to-time-add" src="dist/img/next.png" alt="plus-time"
+                           title="plus-time"/>
+
+                </div>
+            </td>
+            <td width="20%" align="center" valign="center">
+                <div id="daqview-time-navigation-goto">
+                    <input type="text" placeholder="please respect ISO format" value="2017-03-14T09:15:26.932Z" id="daqview-go-to-time-input">
+                    <input type="submit" value="Go to time" class="daqview-go-to-time">
+                </div>
+            </td>
+            <td width="20%" align="right" valign="bottom"><div id="daqview-react-snapshot-modal"></div></td>
         </tr>
     </table>
     <div id="daqview-react-metadata-table"></div>
