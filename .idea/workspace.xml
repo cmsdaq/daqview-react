@@ -3,30 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/css/components/common/snapshot-modal.css" afterPath="$PROJECT_DIR$/dist/css/components/common/snapshot-modal.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css" afterPath="$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/css/components/metadata/metadata-table.css" afterPath="$PROJECT_DIR$/dist/css/components/metadata/metadata-table.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/css/daqview.css" afterPath="$PROJECT_DIR$/dist/css/daqview.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/common/snapshot-modal.js" afterPath="$PROJECT_DIR$/dist/js/components/common/snapshot-modal.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css" afterPath="$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" afterPath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/filter-farm/fff-table.js" afterPath="$PROJECT_DIR$/dist/js/components/filter-farm/fff-table.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/metadata/about-table.js" afterPath="$PROJECT_DIR$/dist/js/components/metadata/about-table.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/metadata/loader-replacement.js" afterPath="$PROJECT_DIR$/dist/js/components/metadata/loader-replacement.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/metadata/metadata-table.js" afterPath="$PROJECT_DIR$/dist/js/components/metadata/metadata-table.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/daqview.js" afterPath="$PROJECT_DIR$/dist/js/daqview.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/utilities/snapshot-provider.js" afterPath="$PROJECT_DIR$/dist/js/utilities/snapshot-provider.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snapshot-source.js" afterPath="$PROJECT_DIR$/snapshot-source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/daq-snapshot-view/daq-snapshot-view.d.ts" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/daq-snapshot-view/daq-snapshot-view.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/metadata/about-table.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/metadata/about-table.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/metadata/loader-replacement.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/metadata/loader-replacement.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/metadata/metadata-table.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/metadata/metadata-table.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/daqview.ts" afterPath="$PROJECT_DIR$/src/js/daqview-react/daqview.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot-source.d.ts" afterPath="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot-source.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts" afterPath="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts" />
     </list>
     <ignored path="daqview-react.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,14 +27,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="191">
-              <caret line="237" column="7" selection-start-line="237" selection-start-column="7" selection-end-line="237" selection-end-column="7" />
+            <state relative-caret-position="311">
+              <caret line="245" column="58" selection-start-line="245" selection-start-column="58" selection-end-line="245" selection-end-column="58" />
               <folding>
                 <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="snapshot-randomizer.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-randomizer.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -68,69 +59,71 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="snapshot-modal.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dist/css/components/common/snapshot-modal.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="snapshot-modal.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="470">
-              <caret line="40" column="76" selection-start-line="40" selection-start-column="76" selection-end-line="40" selection-end-column="76" />
+            <state relative-caret-position="395">
+              <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fb-table.tsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="metadata-table.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/metadata/metadata-table.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="630">
+              <caret line="86" column="59" selection-start-line="86" selection-start-column="59" selection-end-line="86" selection-end-column="59" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fb-table.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="626">
+              <caret line="188" column="0" selection-start-line="188" selection-start-column="0" selection-end-line="191" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fb-table.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="1015" column="0" selection-start-line="1015" selection-start-column="0" selection-end-line="1015" selection-end-column="0" />
+            <state relative-caret-position="495">
+              <caret line="72" column="17" selection-start-line="72" selection-start-column="17" selection-end-line="72" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="next.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dist/img/next.png">
-          <provider selected="true" editor-type-id="images">
-            <state />
+      <file leaf-file-name="fff-table.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="625">
+              <caret line="90" column="1" selection-start-line="90" selection-start-column="1" selection-end-line="90" selection-end-column="36" />
+              <folding />
+            </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="previous.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dist/img/previous.png">
-          <provider selected="true" editor-type-id="images">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="play.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dist/img/play.png">
-          <provider selected="true" editor-type-id="images">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pause.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dist/img/pause.png">
-          <provider selected="true" editor-type-id="images">
-            <state />
+      <file leaf-file-name="fff-table.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="567">
+              <caret line="81" column="9" selection-start-line="81" selection-start-column="9" selection-end-line="81" selection-end-column="9" />
+              <folding />
+            </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="snapshot-provider.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="605">
-              <caret line="224" column="42" selection-start-line="224" selection-start-column="42" selection-end-line="224" selection-end-column="42" />
+            <state relative-caret-position="349">
+              <caret line="158" column="57" selection-start-line="158" selection-start-column="57" selection-end-line="158" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -177,12 +170,10 @@
         <option value="$PROJECT_DIR$/index_fb.html" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css" />
         <option value="$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css" />
         <option value="$PROJECT_DIR$/snapshot-source.js" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/daq-snapshot-view/daq-snapshot-view.d.ts" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/daqview.ts" />
-        <option value="$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/metadata/about-table.tsx" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/metadata/loader-replacement.tsx" />
         <option value="$PROJECT_DIR$/dist/css/components/metadata/metadata-table.css" />
@@ -190,10 +181,12 @@
         <option value="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot-source.d.ts" />
         <option value="$PROJECT_DIR$/dist/css/components/common/snapshot-modal.css" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx" />
-        <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts" />
-        <option value="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
         <option value="$PROJECT_DIR$/dist/css/daqview.css" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css" />
+        <option value="$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx" />
+        <option value="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
+        <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts" />
       </list>
     </option>
   </component>
@@ -794,14 +787,7 @@
       <workItem from="1488529174196" duration="18575000" />
       <workItem from="1488813502647" duration="28844000" />
       <workItem from="1488972898739" duration="2360000" />
-      <workItem from="1489404058563" duration="27201000" />
-    </task>
-    <task id="LOCAL-00049" summary="doc(): to-do list update">
-      <created>1481554073288</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1481554073288</updated>
+      <workItem from="1489404058563" duration="28507000" />
     </task>
     <task id="LOCAL-00050" summary="enhancement(): replacing loader with About table, to reduce number of components">
       <created>1481646973972</created>
@@ -1139,18 +1125,25 @@
       <option name="project" value="LOCAL" />
       <updated>1489413560533</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="feat(): time-based navigation back and forth">
+      <created>1489505210120</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1489505210120</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="448152000" />
+    <option name="totallyTimeSpent" value="449458000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1916" y="25" width="1928" height="1146" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14901961" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15069222" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15069222" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1181,7 +1174,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix(): adaptations to the snapshot request links following release of the snapshot service" />
     <MESSAGE value="doc(): error message" />
     <MESSAGE value="feat(): more info in snapshot error message" />
     <MESSAGE value="doc(): error msg" />
@@ -1206,7 +1198,8 @@
     <MESSAGE value="fix(): hide ttcp masked state" />
     <MESSAGE value="fix(): hiding state info for masked out partitions" />
     <MESSAGE value="fix(): delinkify FMM state when is special value" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(): delinkify FMM state when is special value" />
+    <MESSAGE value="feat(): time-based navigation back and forth" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(): time-based navigation back and forth" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1405,14 +1398,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-randomizer.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index_fb.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3330">
@@ -1429,26 +1414,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2085">
-          <caret line="139" column="1" selection-start-line="139" selection-start-column="1" selection-end-line="139" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/snapshot-source.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="3" selection-start-line="3" selection-start-column="3" selection-end-line="3" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="35" column="40" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
           <folding />
         </state>
       </provider>
@@ -1485,26 +1454,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="626">
-          <caret line="188" column="0" selection-start-line="188" selection-start-column="0" selection-end-line="191" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dist/css/components/metadata/metadata-table.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
           <caret line="14" column="23" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/metadata/metadata-table.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="75" column="42" selection-start-line="75" selection-start-column="42" selection-end-line="75" selection-end-column="42" />
           <folding />
         </state>
       </provider>
@@ -1545,30 +1498,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="470">
-          <caret line="40" column="76" selection-start-line="40" selection-start-column="76" selection-end-line="40" selection-end-column="76" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="605">
-          <caret line="224" column="42" selection-start-line="224" selection-start-column="42" selection-end-line="224" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="1015" column="0" selection-start-line="1015" selection-start-column="0" selection-end-line="1015" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dist/css/daqview.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="645">
@@ -1579,11 +1508,75 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="237" column="7" selection-start-line="237" selection-start-column="7" selection-end-line="237" selection-end-column="7" />
+        <state relative-caret-position="311">
+          <caret line="245" column="58" selection-start-line="245" selection-start-column="58" selection-end-line="245" selection-end-column="58" />
           <folding>
             <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="395">
+          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/metadata/metadata-table.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="86" column="59" selection-start-line="86" selection-start-column="59" selection-end-line="86" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="626">
+          <caret line="188" column="0" selection-start-line="188" selection-start-column="0" selection-end-line="191" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="625">
+          <caret line="90" column="1" selection-start-line="90" selection-start-column="1" selection-end-line="90" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="567">
+          <caret line="81" column="9" selection-start-line="81" selection-start-column="9" selection-end-line="81" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-randomizer.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="349">
+          <caret line="158" column="57" selection-start-line="158" selection-start-column="57" selection-end-line="158" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="72" column="17" selection-start-line="72" selection-start-column="17" selection-end-line="72" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -56,6 +56,14 @@
     text-align: right;
 }
 
+.fff-table-bu-row-stale-page-row:nth-of-type(even) {
+    background-color: #ffbe11;
+}
+
+.fff-table-bu-row-stale-page-row:nth-of-type(odd) {
+    background-color:  #F5F2F2 ;
+}
+
 .fff-table-bu-row-ratezero:nth-of-type(even) {
     background-color: #EF4A50;
 }
@@ -78,6 +86,11 @@
 
 .fff-table-bu-row-paused:nth-of-type(odd) {
     background-color: #F5F2F2;
+}
+
+.fff-table-bu-summary-row-stale-page {
+    font-weight: bold;
+    background-color: #ffbe11;
 }
 
 .fff-table-bu-summary-row-ratezero {

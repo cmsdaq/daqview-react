@@ -28,6 +28,8 @@ namespace DAQView {
         private drawZeroDataFlowComponent: boolean = false;
         private drawStaleSnapshot: boolean = false;
 
+        private previousPauseState: boolean = false;
+
         private sortFunction: SortFunction = {
             presort: this.INITIAL_PRESORT_FUNCTION,
             sort: this.INITIAL_SORT_FUNCTION
@@ -1601,7 +1603,7 @@ namespace DAQView {
                 }
             }
 
-            if (drawStaleSnapshot){
+            if (drawStaleSnapshot && (!drawPausedComponent)){
                 fbSummaryRowClass = 'fb-table-fb-summary-row-stale-page';
             }
 

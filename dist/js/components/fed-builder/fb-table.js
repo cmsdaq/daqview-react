@@ -21,6 +21,7 @@ var DAQView;
             this.drawPausedComponent = false;
             this.drawZeroDataFlowComponent = false;
             this.drawStaleSnapshot = false;
+            this.previousPauseState = false;
             this.sortFunction = {
                 presort: this.INITIAL_PRESORT_FUNCTION,
                 sort: this.INITIAL_SORT_FUNCTION
@@ -1232,7 +1233,7 @@ var DAQView;
                     }
                 }
             }
-            if (drawStaleSnapshot) {
+            if (drawStaleSnapshot && (!drawPausedComponent)) {
                 fbSummaryRowClass = 'fb-table-fb-summary-row-stale-page';
             }
             return (React.createElement("tr", {className: classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}, React.createElement("td", {colSpan: "11"}), React.createElement("td", null, "Σ ", this.props.numUsedRus, " / ", this.props.numRus), React.createElement("td", null), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}, (fedBuilderSummary.rate / 1000).toFixed(3)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput / 1000 / 1000, FBTableNumberFormats.THROUGHPUT)}, "Σ ", (fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean / 1000, FBTableNumberFormats.SIZE)}, "Σ ", (fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(3), "±", (fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(3)), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}, "Δ ", fedBuilderSummary.deltaEvents), React.createElement("td", {className: fragmentInRuClass}, "Σ ", fedBuilderSummary.sumFragmentsInRU), React.createElement("td", {className: eventsInRuClass}, "Σ ", fedBuilderSummary.sumEventsInRU), React.createElement("td", {className: requestsClass}, "Σ ", fedBuilderSummary.sumRequests)));

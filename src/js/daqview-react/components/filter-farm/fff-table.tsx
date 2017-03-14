@@ -24,6 +24,7 @@ namespace DAQView {
         private snapshot: DAQAggregatorSnapshot = null;
         private drawPausedComponent: boolean = false;
         private drawZeroDataFlowComponent: boolean = false;
+        private drawStaleSnapshot: boolean = false;
 
         private sortFunction: SortFunction = {
             presort: this.INITIAL_PRESORT_FUNCTION,
@@ -66,7 +67,7 @@ namespace DAQView {
             }else {
                 if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                     console.log("duplicate snapshot detected");
-                    if (drawPausedComponent || drawZeroDataFlowComponent) {
+                    if (drawPausedComponent || drawZeroDataFlowComponent || drawStaleSnapshot) {
                         console.log("...but page color has to change, so do render");
                     } else {
                         return;
@@ -75,6 +76,7 @@ namespace DAQView {
                 this.snapshot = snapshot;
                 this.drawPausedComponent = drawPausedComponent;
                 this.drawZeroDataFlowComponent = drawZeroDataFlowComponent;
+                this.drawStaleSnapshot = drawStaleSnapshot;
                 this.updateSnapshot();
             }
         }
@@ -84,11 +86,13 @@ namespace DAQView {
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
             let drawPausedComponent: boolean = this.drawPausedComponent;
             let drawZeroDataFlowComponent: boolean = this.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.drawStaleSnapshot;
             let fileBasedFilterFarmTableRootElement: any = <FileBasedFilterFarmTableElement tableObject={this}
                                                                                             bus={daq.bus}
                                                                                             buSummary={daq.buSummary}
                                                                                             drawPausedComponent={drawPausedComponent}
-                                                                                            drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>;
+                                                                                            drawZeroDataFlowComponent={drawZeroDataFlowComponent}
+                                                                                            drawStaleSnapshot={drawStaleSnapshot}/>;
             ReactDOM.render(fileBasedFilterFarmTableRootElement, this.htmlRootElement);
         }
 
@@ -542,6 +546,7 @@ namespace DAQView {
         buSummary: DAQAggregatorSnapshot.BUSummary;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     class FileBasedFilterFarmTableElement extends React.Component<FileBasedFilterFarmTableElementProperties,{}> {
@@ -553,6 +558,8 @@ namespace DAQView {
 
             let drawPausedComponents: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponents: boolean = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
+
             let buRows: any[] = [];
             if (bus != null) {
                 numBus = bus.length;
@@ -560,7 +567,7 @@ namespace DAQView {
                     let index: number = buRows.length;
                     let oddRow: boolean = (index % 2 == 1)? true : false;
 
-                    buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents} oddRow={oddRow}/>);
+                    buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents} oddRow={oddRow} drawStaleSnapshot={drawStaleSnapshot}/>);
                 })
             }
             let numBusNoRate:number = numBus - buSummary.busNoRate;
@@ -580,7 +587,7 @@ namespace DAQView {
                     <tfoot className="fff-table-foot">
                     <FileBasedFilterFarmTableHeaderRow key="fff-summary-header-row" tableObject={tableObject}
                                                        headers={FFF_TABLE_SUMMARY_HEADERS} drawPausedComponent={drawPausedComponents}/>
-                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus} numBusNoRate={numBusNoRate} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}/>
+                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus} numBusNoRate={numBusNoRate} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents} drawStaleSnapshot={drawStaleSnapshot}/>
                     </tfoot>
                 </table>
             );
@@ -698,6 +705,7 @@ namespace DAQView {
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
         oddRow:boolean;
+        drawStaleSnapshot:boolean;
     }
 
     class FileBasedFilterFarmTableBURow extends React.Component<FileBasedFilterFarmTableBURowProperties,{}> {
@@ -709,6 +717,7 @@ namespace DAQView {
         render() {
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
 
             let oddRow: boolean  = this.props.oddRow;
 
@@ -780,6 +789,10 @@ namespace DAQView {
                 fffBuRowClass = "fff-table-bu-row-ratezero";
             }
 
+            if (drawStaleSnapshot && (!drawPausedComponent)){
+                fffBuRowClass = 'fff-table-bu-row-stale-page-row';
+            }
+
             return (
                 <tr className={fffBuRowClass}>
                     <td><a href={buUrl} target="_blank">{hostname}</a></td>
@@ -816,6 +829,7 @@ namespace DAQView {
         buSummary: DAQAggregatorSnapshot.BUSummary;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     class FileBasedFilterFarmTableBUSummaryRow extends React.Component<FileBasedFilterFarmTableBUSummaryRowProperties,{}> {
@@ -828,6 +842,7 @@ namespace DAQView {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
             let fffBuSummaryRowClass: string = drawPausedComponent ? "fff-table-bu-summary-row-paused" : "fff-table-bu-summary-row-running";
 
 
@@ -839,20 +854,27 @@ namespace DAQView {
             if (drawZeroDataFlowComponent){
                 fffBuSummaryRowClass = "fff-table-bu-summary-row-ratezero";
 
-                let escapeRedField: string = 'fff-table-bu-red-column-escape';
+                if (!drawStaleSnapshot) {
+                    let escapeRedField: string = 'fff-table-bu-red-column-escape';
 
-                if (eventsInBuClass === 'fff-table-events-in-bu') {
-                    eventsInBuClass = escapeRedField;
+                    if (eventsInBuClass === 'fff-table-events-in-bu') {
+                        eventsInBuClass = escapeRedField;
+                    }
+                    if (requestsSentClass === 'fff-table-requests-sent') {
+                        requestsSentClass = escapeRedField;
+                    }
+                    if (requestsUsedClass === 'fff-table-requests-used') {
+                        requestsUsedClass = escapeRedField;
+                    }
+                    if (requestsBlockedClass === 'fff-table-requests-blocked') {
+                        requestsBlockedClass = escapeRedField;
+                    }
                 }
-                if (requestsSentClass === 'fff-table-requests-sent') {
-                    requestsSentClass = escapeRedField;
-                }
-                if (requestsUsedClass === 'fff-table-requests-used') {
-                    requestsUsedClass = escapeRedField;
-                }
-                if (requestsBlockedClass === 'fff-table-requests-blocked') {
-                    requestsBlockedClass = escapeRedField;
-                }
+            }
+
+
+            if (drawStaleSnapshot && (!drawPausedComponent)){
+                fffBuSummaryRowClass = 'fff-table-bu-summary-row-stale-page';
             }
 
             return (
