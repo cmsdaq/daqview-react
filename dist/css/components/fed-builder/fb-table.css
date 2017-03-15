@@ -63,6 +63,10 @@
 
 }
 
+.fb-table-subfb-tts-perc {
+    text-align: center;
+}
+
 .fb-table-ru-rate {
     text-align: right;
     font-weight: bold;
@@ -146,6 +150,14 @@
 
 }
 
+.fb-table-fb-row-stale-page-row:nth-of-type(even) {
+    background-color: #ffbe11;
+}
+
+.fb-table-fb-row-stale-page-row:nth-of-type(odd) {
+    background-color:  #F5F2F2 ;
+}
+
 .fb-table-fb-row-ratezero:nth-of-type(even) {
     background-color: #EF4A50;
 }
@@ -172,6 +184,11 @@
 
 .fb-table-subfb-row {
 
+}
+
+.fb-table-fb-summary-row-stale-page {
+    font-weight: bold;
+    background-color: #ffbe11;
 }
 
 .fb-table-fb-summary-row-ratezero {
@@ -292,7 +309,12 @@
 }
 
 .fb-table-subfb-min-trig-unequal {
+    background-color: #ffff00;
+}
+
+.fb-table-fed-min-trig {
     background-color: #FFFF00;
+    font-style: italic;
 }
 
 .fb-table-subfb-min-trig-equal {
@@ -315,4 +337,9 @@
     width: 8px;
     height: 8px;
     margin: 0 0.2em 0 0.2em;
+}
+
+.fb-table-ru-red-column-escape{
+    color: #FFFFFF;
+    text-align: right;
 }

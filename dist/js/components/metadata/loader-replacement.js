@@ -13,11 +13,14 @@ var DAQView;
             this.drawPausedComponent = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        LoaderReplacement.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, url) {
+        LoaderReplacement.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             var loaderReplacementRootElement = React.createElement(LoaderReplacementElement, {placeholder: ""});
             ReactDOM.render(loaderReplacementRootElement, this.htmlRootElement);
+        };
+        //to be called before setSnapshot
+        LoaderReplacement.prototype.prePassElementSpecificData = function (args) {
         };
         return LoaderReplacement;
     }());

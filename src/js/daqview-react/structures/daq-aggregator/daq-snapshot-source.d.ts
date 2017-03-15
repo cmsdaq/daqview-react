@@ -12,7 +12,9 @@ declare namespace DAQAggregator {
         getSourceURL: () => string;
         getSourceURLForGotoRequests: () => string;
         getRequestSetup: () => string;
-        parseSnapshot?: (snapshot: any) => Snapshot;
+        parseSnapshot?: (snapshot: any) => Snapshot
+        currentSnapshotTimestamp: number;
+        runInfoTimelineLink: () => string;
 
     }
 

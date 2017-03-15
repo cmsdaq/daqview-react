@@ -13,14 +13,18 @@ namespace DAQView {
 
         private snapshot: DAQAggregatorSnapshot;
         private drawPausedComponent: boolean = false;
+        private drawStaleSnapshot: boolean = false;
+
+        private runInfoTimelineLink: string = '';
 
         constructor(htmlRootElementName: string) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
+            this.drawStaleSnapshot = drawStaleSnapshot;
 
             if (!snapshot){
                 let msg: string = "Monitoring data unavailable: "+url;
@@ -38,9 +42,16 @@ namespace DAQView {
                                                                       daqState={daq.daqState}
                                                                       machineState={daq.lhcMachineMode}
                                                                       beamState={daq.lhcBeamMode}
-                                                                    drawPausedComponent={drawPausedComponent}/>;
+                                                                    drawPausedComponent={drawPausedComponent}
+                                                                    drawStaleSnapshot={drawStaleSnapshot}
+                                                                    runInfoTimelineLink={this.runInfoTimelineLink}/>;
                 ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
             }
+        }
+
+        //to be called before setSnapshot
+        public prePassElementSpecificData(args: string []){
+            this.runInfoTimelineLink = args[0];
         }
     }
 
@@ -56,10 +67,16 @@ namespace DAQView {
         machineState?: string;
         beamState?: string;
         drawPausedComponent: boolean;
+        drawStaleSnapshot: boolean;
+        runInfoTimelineLink: string;
     }
 
     class MetadataTableElement extends React.Component<MetadataTableElementProperties,{}> {
+
         render() {
+
+            let timestampClass: string = this.props.drawStaleSnapshot && (!this.props.drawPausedComponent)? 'metadata-table-stale-page' : '';
+
             return (
                 <table className="metadata-table">
                     <thead className="metadata-table-head">
@@ -78,16 +95,16 @@ namespace DAQView {
                     </thead>
                     <tbody className="metadata-table-body">
                     <tr className="metadata-table-content-row">
-                        <td>{this.props.runNumber}</td>
+                        <td><a href={this.props.runInfoTimelineLink+"?run="+this.props.runNumber} target="_blank">{this.props.runNumber}</a></td>
                         <td>{this.props.lv0State}</td>
                         <td>{this.props.lv0StateTimestamp ? this.props.lv0StateTimestamp : 'Unknown'}</td>
                         <td>{this.props.daqState}</td>
                         <td>{this.props.machineState}</td>
                         <td>{this.props.beamState}</td>
-                        <td>{this.props.sessionId}</td>
+                        <td><a href={this.props.runInfoTimelineLink+"?sessionId="+this.props.sessionId} target="_blank">{this.props.sessionId}</a></td>
                         <td>{this.props.dpSetPath}</td>
-                        <td>{new Date(this.props.snapshotTimestamp).toString()}</td>
-                        <td>{new Date(this.props.snapshotTimestamp).toUTCString()}</td>
+                        <td className={timestampClass}>{new Date(this.props.snapshotTimestamp).toString()}</td>
+                        <td className={classNames('metadata-table-utc-timestamp',timestampClass)}>{new Date(this.props.snapshotTimestamp).toUTCString()}</td>
                     </tr>
                     </tbody>
                 </table>

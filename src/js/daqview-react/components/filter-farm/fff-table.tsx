@@ -24,6 +24,7 @@ namespace DAQView {
         private snapshot: DAQAggregatorSnapshot = null;
         private drawPausedComponent: boolean = false;
         private drawZeroDataFlowComponent: boolean = false;
+        private drawStaleSnapshot: boolean = false;
 
         private sortFunction: SortFunction = {
             presort: this.INITIAL_PRESORT_FUNCTION,
@@ -58,7 +59,7 @@ namespace DAQView {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
             if (!snapshot){
                 let msg: string = "";
                 let errRootElement: any = <ErrorElement message={msg}/>;
@@ -66,7 +67,7 @@ namespace DAQView {
             }else {
                 if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
                     console.log("duplicate snapshot detected");
-                    if (drawPausedComponent || drawZeroDataFlowComponent) {
+                    if (drawPausedComponent || drawZeroDataFlowComponent || drawStaleSnapshot) {
                         console.log("...but page color has to change, so do render");
                     } else {
                         return;
@@ -75,8 +76,14 @@ namespace DAQView {
                 this.snapshot = snapshot;
                 this.drawPausedComponent = drawPausedComponent;
                 this.drawZeroDataFlowComponent = drawZeroDataFlowComponent;
+                this.drawStaleSnapshot = drawStaleSnapshot;
                 this.updateSnapshot();
             }
+        }
+
+        //to be called before setSnapshot
+        public prePassElementSpecificData(args: string []){
+
         }
 
         private updateSnapshot() {
@@ -84,11 +91,13 @@ namespace DAQView {
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
             let drawPausedComponent: boolean = this.drawPausedComponent;
             let drawZeroDataFlowComponent: boolean = this.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.drawStaleSnapshot;
             let fileBasedFilterFarmTableRootElement: any = <FileBasedFilterFarmTableElement tableObject={this}
                                                                                             bus={daq.bus}
                                                                                             buSummary={daq.buSummary}
                                                                                             drawPausedComponent={drawPausedComponent}
-                                                                                            drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>;
+                                                                                            drawZeroDataFlowComponent={drawZeroDataFlowComponent}
+                                                                                            drawStaleSnapshot={drawStaleSnapshot}/>;
             ReactDOM.render(fileBasedFilterFarmTableRootElement, this.htmlRootElement);
         }
 
@@ -542,6 +551,7 @@ namespace DAQView {
         buSummary: DAQAggregatorSnapshot.BUSummary;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     class FileBasedFilterFarmTableElement extends React.Component<FileBasedFilterFarmTableElementProperties,{}> {
@@ -553,10 +563,17 @@ namespace DAQView {
 
             let drawPausedComponents: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponents: boolean = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
+
             let buRows: any[] = [];
             if (bus != null) {
                 numBus = bus.length;
-                bus.forEach(bu => buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}/>));
+                bus.forEach( function (bu){
+                    let index: number = buRows.length;
+                    let oddRow: boolean = (index % 2 == 1)? true : false;
+
+                    buRows.push(<FileBasedFilterFarmTableBURow key={bu['@id']} bu={bu} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents} oddRow={oddRow} drawStaleSnapshot={drawStaleSnapshot}/>);
+                })
             }
             let numBusNoRate:number = numBus - buSummary.busNoRate;
 
@@ -575,7 +592,7 @@ namespace DAQView {
                     <tfoot className="fff-table-foot">
                     <FileBasedFilterFarmTableHeaderRow key="fff-summary-header-row" tableObject={tableObject}
                                                        headers={FFF_TABLE_SUMMARY_HEADERS} drawPausedComponent={drawPausedComponents}/>
-                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus } numBusNoRate={numBusNoRate} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}/>
+                    <FileBasedFilterFarmTableBUSummaryRow key="fff-summary-row" buSummary={buSummary} numBus={numBus} numBusNoRate={numBusNoRate} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents} drawStaleSnapshot={drawStaleSnapshot}/>
                     </tfoot>
                 </table>
             );
@@ -692,6 +709,8 @@ namespace DAQView {
         bu: DAQAggregatorSnapshot.BU;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
+        oddRow:boolean;
+        drawStaleSnapshot:boolean;
     }
 
     class FileBasedFilterFarmTableBURow extends React.Component<FileBasedFilterFarmTableBURowProperties,{}> {
@@ -703,6 +722,9 @@ namespace DAQView {
         render() {
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
+
+            let oddRow: boolean  = this.props.oddRow;
 
             let bu: DAQAggregatorSnapshot.BU = this.props.bu;
             let buUrl: string = 'http://' + bu.hostname + ':'+bu.port+'/urn:xdaq-application:service=bu';
@@ -744,19 +766,51 @@ namespace DAQView {
                 fffBuRowClass = "fff-table-bu-row-ratezero";
             }
 
+            let eventsInBuClass: string = FormatUtility.getClassNameForNumber(eventsInBU, FFFTableNumberFormats.EVENTS_IN_BU);
+            let requestsSentClass: string = FormatUtility.getClassNameForNumber(requestsSent, FFFTableNumberFormats.REQUESTS_SENT);
+            let requestsUsedClass: string = FormatUtility.getClassNameForNumber(requestsUsed, FFFTableNumberFormats.REQUESTS_USED);
+            let requestsBlockedClass: string = FormatUtility.getClassNameForNumber(requestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED);
+
+            //invert color when DAQ is stuck, because red colors are missed
+            if (drawZeroDataFlowComponent && oddRow) {
+
+                let escapeRedField: string = 'fff-table-bu-red-column-escape';
+
+                if (eventsInBuClass === 'fff-table-events-in-bu') {
+                    eventsInBuClass = escapeRedField;
+                }
+                if (requestsSentClass === 'fff-table-requests-sent') {
+                    requestsSentClass = escapeRedField;
+                }
+                if (requestsUsedClass === 'fff-table-requests-used') {
+                    requestsUsedClass = escapeRedField;
+                }
+                if (requestsBlockedClass === 'fff-table-requests-blocked') {
+                    requestsBlockedClass = escapeRedField;
+                }
+            }
+
+            if (drawZeroDataFlowComponent) {
+                fffBuRowClass = "fff-table-bu-row-ratezero";
+            }
+
+            if (drawStaleSnapshot && (!drawPausedComponent)){
+                fffBuRowClass = 'fff-table-bu-row-stale-page-row';
+            }
+
             return (
                 <tr className={fffBuRowClass}>
                     <td><a href={buUrl} target="_blank">{hostname}</a></td>
                     <td className={buStateClass}>{buState}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE))}>{rate}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT))}>{throughput}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean}±{sizeStddev}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE))}>{rate.toFixed(3)}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT))}>{throughput.toFixed(1)}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean.toFixed(3)}±{sizeStddev.toFixed(3)}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(events, FFFTableNumberFormats.EVENTS))}>{events}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(eventsInBU, FFFTableNumberFormats.EVENTS_IN_BU))}>{eventsInBU}</td>
+                    <td className={classNames("fff-table-bu-row-counter",eventsInBuClass)}>{eventsInBU}</td>
                     <td className="fff-table-bu-row-counter">{bu.priority}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(requestsSent, FFFTableNumberFormats.REQUESTS_SENT))}>{requestsSent}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(requestsUsed, FFFTableNumberFormats.REQUESTS_USED))}>{requestsUsed}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(requestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED))}>{requestsBlocked}</td>
+                    <td className={classNames("fff-table-bu-row-counter",requestsSentClass)}>{requestsSent}</td>
+                    <td className={classNames("fff-table-bu-row-counter",requestsUsedClass)}>{requestsUsed}</td>
+                    <td className={classNames("fff-table-bu-row-counter",requestsBlockedClass)}>{requestsBlocked}</td>
                     <td className="fff-table-bu-row-counter">{bu.numFUsHLT}</td>
                     <td className="fff-table-bu-row-counter">{bu.numFUsCrashed}</td>
                     <td className="fff-table-bu-row-counter">{bu.numFUsStale}</td>
@@ -780,6 +834,7 @@ namespace DAQView {
         buSummary: DAQAggregatorSnapshot.BUSummary;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     class FileBasedFilterFarmTableBUSummaryRow extends React.Component<FileBasedFilterFarmTableBUSummaryRowProperties,{}> {
@@ -792,10 +847,39 @@ namespace DAQView {
             let buSummary: DAQAggregatorSnapshot.BUSummary = this.props.buSummary;
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
             let fffBuSummaryRowClass: string = drawPausedComponent ? "fff-table-bu-summary-row-paused" : "fff-table-bu-summary-row-running";
+
+
+            let eventsInBuClass: string = FormatUtility.getClassNameForNumber(buSummary.numEventsInBU, FFFTableNumberFormats.EVENTS_IN_BU);
+            let requestsSentClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsSent, FFFTableNumberFormats.REQUESTS_SENT);
+            let requestsUsedClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsUsed, FFFTableNumberFormats.REQUESTS_USED);
+            let requestsBlockedClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED);
 
             if (drawZeroDataFlowComponent){
                 fffBuSummaryRowClass = "fff-table-bu-summary-row-ratezero";
+
+                if (!drawStaleSnapshot) {
+                    let escapeRedField: string = 'fff-table-bu-red-column-escape';
+
+                    if (eventsInBuClass === 'fff-table-events-in-bu') {
+                        eventsInBuClass = escapeRedField;
+                    }
+                    if (requestsSentClass === 'fff-table-requests-sent') {
+                        requestsSentClass = escapeRedField;
+                    }
+                    if (requestsUsedClass === 'fff-table-requests-used') {
+                        requestsUsedClass = escapeRedField;
+                    }
+                    if (requestsBlockedClass === 'fff-table-requests-blocked') {
+                        requestsBlockedClass = escapeRedField;
+                    }
+                }
+            }
+
+
+            if (drawStaleSnapshot && (!drawPausedComponent)){
+                fffBuSummaryRowClass = 'fff-table-bu-summary-row-stale-page';
             }
 
             return (
@@ -804,13 +888,13 @@ namespace DAQView {
                     <td></td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.rate / 1000, FFFTableNumberFormats.RATE)}>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.throughput / 1000 / 1000, FFFTableNumberFormats.THROUGHPUT)}>Σ {(buSummary.throughput / 1000 / 1000).toFixed(1)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.eventSizeMean / 1000, FFFTableNumberFormats.SIZE)}>{(buSummary.eventSizeMean / 1000).toFixed(1)}±{(buSummary.eventSizeStddev / 1000).toFixed(1)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.eventSizeMean / 1000, FFFTableNumberFormats.SIZE)}>{(buSummary.eventSizeMean / 1000).toFixed(3)}±{(buSummary.eventSizeStddev / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.numEvents, FFFTableNumberFormats.EVENTS)}>Σ {buSummary.numEvents}</td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.numEventsInBU, FFFTableNumberFormats.EVENTS_IN_BU)}>Σ {buSummary.numEventsInBU}</td>
+                    <td className={eventsInBuClass}>Σ {buSummary.numEventsInBU}</td>
                     <td>{buSummary.priority}</td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.numRequestsSent, FFFTableNumberFormats.REQUESTS_SENT)}>Σ {buSummary.numRequestsSent}</td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.numRequestsUsed, FFFTableNumberFormats.REQUESTS_USED)}>Σ {buSummary.numRequestsUsed}</td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.numRequestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED)}>Σ {buSummary.numRequestsBlocked}</td>
+                    <td className={requestsSentClass}>Σ {buSummary.numRequestsSent}</td>
+                    <td className={requestsUsedClass}>Σ {buSummary.numRequestsUsed}</td>
+                    <td className={requestsBlockedClass}>Σ {buSummary.numRequestsBlocked}</td>
                     <td>Σ {buSummary.numFUsHLT}</td>
                     <td>Σ {buSummary.numFUsCrashed}</td>
                     <td>Σ {buSummary.numFUsStale}</td>

@@ -28,9 +28,44 @@ html, body {
     font-style: italic;
 }
 
-.daqview-control-previous,
-.daqview-control-pause-resume ,
-.daqview-control-next {
-    width: 24px;
-    height: 24px;
+.daqview-control-pause-resume,
+.daqview-go-to-time-add,
+.daqview-go-to-time-subtract{
+    width: 30px;
+    height: 30px;
+    align: center;
+    vertical-align: middle;
+}
+
+.daqview-nav-step-input-class{
+    align: center;
+    vertical-align: middle;
+    width: 11%;
+    text-align: center;
+}
+
+.daqview-react-stale-page{
+
+}
+
+.daqview-react-stale-element{
+
+}
+
+input[type=submit] {
+    border: 1px dotted #999;
+    border-radius: 0;
+    height: auto;
+    width: auto;
+    background-color: #d7dfff;
+    align: center;
+    vertical-align: center;
+}
+
+.daqview-external-link{
+    border: 1px dotted #999;
+    border-radius: 0;
+    height: auto;
+    width: auto;
+    background-color: #d7dfff;
 }

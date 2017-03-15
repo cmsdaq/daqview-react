@@ -12,8 +12,9 @@ declare namespace DAQView {
     export interface DAQSnapshotView {
 
         //it might make sense to overload setSnapshot()
-        setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, url: string): void;
+        setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url: string): void;
 
+        prePassElementSpecificData(args: string []): void;
     }
 
 }

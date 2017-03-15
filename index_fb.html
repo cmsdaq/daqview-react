@@ -35,7 +35,7 @@
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
     <script type="text/javascript" src="dist/js/daqview.js"></script>
-    <script type="text/javascript" src="snapshot-source.js"></script>
+    <script type="text/javascript" src="link-configuration.js"></script>
 
     <script type="text/javascript">
         var daqView; //daqView is an object containing an array of the created views (page components)
@@ -134,14 +134,25 @@
                         var baseURL = snapshotSources.url+'?setup='+daqSetup+'&time=';
                         var timestampDelim = '"';
 
-                        var currentTime = $('#daqview-go-to-time-input').val();
+                        var currentLocalTime = $('#daqview-go-to-time-input').val();
 
+                        var timestamp=Date.parse(currentLocalTime)
+
+                        var currentTime = '';
+                        if (isNaN(timestamp)==false){
+                            currentTime=new Date(timestamp).toISOString();
+
+                        }
 
                         var ret = baseURL + timestampDelim + currentTime + timestampDelim;
                         return ret;
                     },
                     getRequestSetup: function() {
                         return daqSetup;
+                    },
+                    currentSnapshotTimestamp: -1,
+                    runInfoTimelineLink: function(){
+                        return externalLinks.runInfoTimeline;
                     },
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
@@ -204,39 +215,86 @@
                 //if time parameter is found, then this request should return a static display at the requested timestamp
                 if (typeof queryString.time != 'undefined'){
                     console.log("page loaded with 'time' parameter(s): "+queryString.time);
-                    $('#daqview-go-to-time-input').val(queryString.time);
+                    $('#daqview-go-to-time-input').val(queryString.time.replace(/-/g, " "));
                     $('.daqview-go-to-time').click();
                 }
+
+                var controlPlus = $('.daqview-go-to-time-add');
+                var controlMinus = $('.daqview-go-to-time-subtract');
+
+                controlPlus.on('click', function(){
+                    var newDateTargetInMillis = snapshotSource.currentSnapshotTimestamp + 1000*($('#daqview-nav-step-input').val());
+                    var newDateTargetFormatted = formatLocalDate(newDateTargetInMillis);
+                    $('#daqview-go-to-time-input').val(newDateTargetFormatted); //pointer to id
+                    $('.daqview-go-to-time').click(); //pointer to class
+                });
+
+                controlMinus.on('click', function(){
+                    var newDateTargetInMillis = snapshotSource.currentSnapshotTimestamp - 1000*($('#daqview-nav-step-input').val());
+                    var newDateTargetFormatted = formatLocalDate(newDateTargetInMillis);
+                    $('#daqview-go-to-time-input').val(newDateTargetFormatted);
+                    $('.daqview-go-to-time').click();
+                });
+
+                var formatLocalDate = function(newDateTargetInMillis){
+                    var localTimestampElements = (new Date(newDateTargetInMillis).toString()).split(" ");
+
+                    //keep Month, Day, Year, Time (discard Weekday and timezone info)
+                    var formattedLocalTimestamp = localTimestampElements[1]+" "+localTimestampElements[2]+" "+localTimestampElements[3]+" "+localTimestampElements[4];
+
+                    return formattedLocalTimestamp;
+                };
+
+                //setting values in links of the upper left corner
+                $('#dvhomelink').attr("href",daqviewLinks.controller);
+                $('#dvalllink').attr("href",daqviewLinks.base_all+"?setup="+daqSetup);
+                $('#dvffflink').attr("href",daqviewLinks.base_fff+"?setup="+daqSetup);
 
             }
             catch (exception) {
                 console ? (console.debug ? console.debug(exception) : console.log(exception)) : alert(exception);
             }
         });
+
     </script>
 </head>
 <body>
 <div id="daqview-react">
     <table style="width:100%">
         <tr>
-            <td style="width:20%">
-                <div id="daqview-time-navigation">
-                    <input type="text" placeholder="please respect format" value="2016-12-03T10:38:26.039Z" id="daqview-go-to-time-input">
-                    <input type="submit" value="Go to time" class="daqview-go-to-time">
-                    <p>Please use provided format (ISO) and UTC time:<br/>e.g. 2016-12-03T10:38:26.039Z</p>
-                </div>
+            <td width="20%" align="left" valign="center">
+                <a href="" id="dvhomelink" target="_blank"><button class="daqview-external-link">DAQView Home</button></a>
+                <a href="" id="dvalllink" target="_blank"><button class="daqview-external-link">All Tables</button></a>
+                <a href="" id="dvffflink" target="_blank"><button class="daqview-external-link">FFF Table</button></a>
             </td>
-            <td style="width:60%">
+            <td width="20%" align="right" valign="center">
                 <div id="daqview-control">
                     <input type="image" class="daqview-control-pause-resume" src="dist/img/pause.png" alt="pause/resume"
                            title="pause/resume"/>
                 </div>
             </td>
-            <td style="width:20%" align="right" valign="bottom"><div id="daqview-react-snapshot-modal"></div></td>
+            <td width="20%" align="center" valign="center">
+
+                <div id="daqview-time-navigation-prevnext">
+                    <input type="image" class="daqview-go-to-time-subtract" src="dist/img/previous.png" alt="minus-time"
+                           title="minus-time"/>
+                    <input type="text" placeholder="sec" value="3" id="daqview-nav-step-input" class="daqview-nav-step-input-class">
+                    <input type="image" class="daqview-go-to-time-add" src="dist/img/next.png" alt="plus-time"
+                           title="plus-time"/>
+
+                </div>
+            </td>
+            <td width="20%" align="center" valign="center">
+                <div id="daqview-time-navigation-goto">
+                    <input type="text" placeholder="e.g.: Mar 15 2017 10:12:41" value="Mar 15 2017 10:12:41" id="daqview-go-to-time-input">
+                    <input type="submit" value="Go to time" class="daqview-go-to-time">
+                </div>
+            </td>
+            <td width="20%" align="right" valign="bottom"><div id="daqview-react-snapshot-modal"></div></td>
         </tr>
     </table>
     <div id="daqview-react-metadata-table"></div>
-    <p/><p/>
+    <p></p>
     <div id="daqview-react-fb-table"></div>
     <br/><br/>
     <div id="daqview-react-about-table"><div class="loader"></div></div>

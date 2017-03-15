@@ -55,3 +55,16 @@
     background-color: #C8C5C5;
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
+
+@keyframes pulse {
+    to { background-color: #ffbe11; }
+}
+
+.metadata-table-stale-page {
+    font-weight: bold;
+    animation: pulse 500ms alternate infinite;
+}
+
+.metadata-table-utc-timestamp {
+    font-style: italic;
+}

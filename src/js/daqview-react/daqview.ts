@@ -23,8 +23,12 @@ namespace DAQView {
         }
 
         //calls specific setSnapshot() definition of each daqview component type
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedPage: boolean, drawZeroDataFlowPage: boolean, url: string) {
-            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowPage, url));
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedPage: boolean, drawZeroDataFlowPage: boolean, drawStaleSnapshot:boolean, url: string) {
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowPage, drawStaleSnapshot, url));
+        }
+
+        public prePassElementSpecificData(args: string[]) {
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].prePassElementSpecificData(args));
         }
 
         public createSnapshotModal(elementName: string) {

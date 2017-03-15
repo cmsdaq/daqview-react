@@ -17,7 +17,7 @@ namespace DAQView {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
 
@@ -26,6 +26,11 @@ namespace DAQView {
                                                                       organization={"CERN CMS DAQ Group"}
                                                                       year={"2016-2017"}/>;
             ReactDOM.render(aboutTableRootElement, this.htmlRootElement);
+        }
+
+        //to be called before setSnapshot
+        public prePassElementSpecificData(args: string []){
+
         }
     }
 

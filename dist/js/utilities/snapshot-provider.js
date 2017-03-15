@@ -18,8 +18,11 @@ var DAQAggregator;
         SnapshotProvider.prototype.addView = function (view) {
             this.views.push(view);
         };
-        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, drawZeroDataFlowComponent, url) {
-            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, url); });
+        SnapshotProvider.prototype.prePassElementSpecificData = function (args) {
+            this.views.forEach(function (view) { return view.prePassElementSpecificData(args); });
+        };
+        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url); });
         };
         SnapshotProvider.prototype.isRunning = function () {
             return this.running;
@@ -81,7 +84,7 @@ var DAQAggregator;
                             errorMsg = snapshotJSON.message;
                         }
                         //url argument is not used in a state of error, so I use it to pass more info about the error
-                        this.setSnapshot(snapshot, this.drawPausedPage, false, errorMsg); //maybe also pass message to setSnapshot?
+                        this.setSnapshot(snapshot, this.drawPausedPage, false, false, errorMsg); //maybe also pass message to setSnapshot?
                         //reset value after use
                         this.drawPausedPage = false;
                     }
@@ -111,20 +114,42 @@ var DAQAggregator;
                                     }
                                 });
                             }
+                            //discover if snapshot is stale
+                            var drawStaleSnapshot = false;
+                            var dataTime = new Date(daq.lastUpdate).getTime();
+                            this.snapshotSource.currentSnapshotTimestamp = dataTime;
+                            var serverResponseTime = new Date(snapshotRequest.getResponseHeader("Date")).getTime();
+                            var diff = serverResponseTime - dataTime;
+                            var thres = 6500; //in ms
+                            console.log("Time diff between snapshot timestamp and response (in ms): " + diff);
+                            if ((diff > thres)) {
+                                drawStaleSnapshot = true;
+                            }
+                            else {
+                                drawStaleSnapshot = false;
+                            }
                             //updates daqview url
-                            window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
-                            document.title = "DAQView [" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "]";
+                            var localTimestampElements = (new Date(snapshot.getUpdateTimestamp()).toString()).split(" ");
+                            //keep Month, Day, Year, Time (discard Weekday and timezone info)
+                            var formattedLocalTimestamp = localTimestampElements[1] + "-" + localTimestampElements[2] + "-" + localTimestampElements[3] + "-" + localTimestampElements[4];
+                            window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp);
+                            document.title = "DAQView [" + formattedLocalTimestamp + "]";
+                            //updates url to retrieve snapshot
                             //in case of point time queries (eg. after pause or goto-time command, the time is already appended in the URL)
                             var urlToSnapshot = url.indexOf("time") > -1 ? url : url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
+                            //pass info before setting snapshot and rendering (this passes the same set of info to all elements)
+                            var args = [];
+                            args.push(this.snapshotSource.runInfoTimelineLink());
+                            this.prePassElementSpecificData(args);
                             console.log("drawPaused@provider? " + this.drawPausedPage);
-                            this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero_1, urlToSnapshot); //passes snapshot source url to be used for the "see raw snapshot" button
+                            this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero_1, drawStaleSnapshot, urlToSnapshot); //passes snapshot source url to be used for the "see raw snapshot" button
                             //in case there is a parsed snapshot, update pointer to previous snapshot with the more precise timestamp retrieved by the snapshot itself
                             this.previousUrl = url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
                         }
                         else {
                             console.log("DAQView was unable to parse snapshot...");
                             console.log(snapshotJSON);
-                            this.setSnapshot(snapshot, this.drawPausedPage, false, "Could not parse DAQ snapshot");
+                            this.setSnapshot(snapshot, this.drawPausedPage, false, false, "Could not parse DAQ snapshot");
                         }
                         //reset value after use
                         this.drawPausedPage = false;
@@ -136,7 +161,7 @@ var DAQAggregator;
                 snapshotRequest.fail((function () {
                     console.log("Error in remote snapshot request, retrying after " + this.snapshotSource.updateInterval + " millis");
                     var snapshot;
-                    this.setSnapshot(snapshot, this.drawPausedPage, false, "Could not reach server for snapshots");
+                    this.setSnapshot(snapshot, this.drawPausedPage, false, false, "Could not reach server for snapshots");
                     //reset value after use
                     this.drawPausedPage = false;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
