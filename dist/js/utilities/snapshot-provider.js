@@ -18,6 +18,9 @@ var DAQAggregator;
         SnapshotProvider.prototype.addView = function (view) {
             this.views.push(view);
         };
+        SnapshotProvider.prototype.prePassElementSpecificData = function (args) {
+            this.views.forEach(function (view) { return view.prePassElementSpecificData(args); });
+        };
         SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
             this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url); });
         };
@@ -134,6 +137,10 @@ var DAQAggregator;
                             //updates url to retrieve snapshot
                             //in case of point time queries (eg. after pause or goto-time command, the time is already appended in the URL)
                             var urlToSnapshot = url.indexOf("time") > -1 ? url : url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
+                            //pass info before setting snapshot and rendering (this passes the same set of info to all elements)
+                            var args = [];
+                            args.push(this.snapshotSource.runInfoTimelineLink());
+                            this.prePassElementSpecificData(args);
                             console.log("drawPaused@provider? " + this.drawPausedPage);
                             this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero_1, drawStaleSnapshot, urlToSnapshot); //passes snapshot source url to be used for the "see raw snapshot" button
                             //in case there is a parsed snapshot, update pointer to previous snapshot with the more precise timestamp retrieved by the snapshot itself

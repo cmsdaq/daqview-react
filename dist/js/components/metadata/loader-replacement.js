@@ -19,6 +19,9 @@ var DAQView;
             var loaderReplacementRootElement = React.createElement(LoaderReplacementElement, {placeholder: ""});
             ReactDOM.render(loaderReplacementRootElement, this.htmlRootElement);
         };
+        //to be called before setSnapshot
+        LoaderReplacement.prototype.prePassElementSpecificData = function (args) {
+        };
         return LoaderReplacement;
     }());
     DAQView.LoaderReplacement = LoaderReplacement;

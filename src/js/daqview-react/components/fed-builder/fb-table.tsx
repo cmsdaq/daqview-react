@@ -80,6 +80,11 @@ namespace DAQView {
             }
         }
 
+        //to be called before setSnapshot
+        public prePassElementSpecificData(args: string []){
+
+        }
+
         private updateSnapshot() {
             let sortedSnapshot: DAQAggregatorSnapshot = this.sort(this.snapshot);
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();

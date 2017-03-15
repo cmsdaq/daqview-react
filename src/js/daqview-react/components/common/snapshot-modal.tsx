@@ -41,6 +41,11 @@ namespace DAQView {
             ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
             }
         }
+
+        //to be called before setSnapshot
+        public prePassElementSpecificData(args: string []){
+
+        }
     }
 
     interface SnapshotModalElementProperties {

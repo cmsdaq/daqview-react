@@ -28,9 +28,16 @@ namespace DAQAggregator {
             this.views.push(view);
         }
 
+        public prePassElementSpecificData(args: string[]){
+                this.views.forEach(
+                    view => view.prePassElementSpecificData(args)
+                );
+        }
+
         public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url: string) {
 
-            this.views.forEach(view => view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url));
+            this.views.forEach(
+                view => view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url));
         }
 
         public isRunning(): boolean {
@@ -173,6 +180,12 @@ namespace DAQAggregator {
                             //updates url to retrieve snapshot
                             //in case of point time queries (eg. after pause or goto-time command, the time is already appended in the URL)
                             let urlToSnapshot: string = url.indexOf("time") > -1 ? url : url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
+
+
+                            //pass info before setting snapshot and rendering (this passes the same set of info to all elements)
+                            let args: string[] = [];
+                            args.push(this.snapshotSource.runInfoTimelineLink());
+                            this.prePassElementSpecificData(args);
 
                             console.log("drawPaused@provider? " + this.drawPausedPage);
                             this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero, drawStaleSnapshot, urlToSnapshot); //passes snapshot source url to be used for the "see raw snapshot" button

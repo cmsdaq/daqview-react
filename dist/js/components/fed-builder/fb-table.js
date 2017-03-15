@@ -66,6 +66,9 @@ var DAQView;
                 this.updateSnapshot();
             }
         };
+        //to be called before setSnapshot
+        FEDBuilderTable.prototype.prePassElementSpecificData = function (args) {
+        };
         FEDBuilderTable.prototype.updateSnapshot = function () {
             var sortedSnapshot = this.sort(this.snapshot);
             var daq = sortedSnapshot.getDAQ();

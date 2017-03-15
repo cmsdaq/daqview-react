@@ -9,3 +9,7 @@
     "base_fff" : "http://daq-expert-dev.cms/daq2view-react/index_fff.html",
     "controller" : "http://daq-expert-dev.cms:8081/DAQSnapshotService/daqviews.jsp"
   }
+
+  var externalLinks = {
+    "runInfoTimeline" : "http://cmsrc-srv.cms:9500/RunInfoTimeline/"
+  }

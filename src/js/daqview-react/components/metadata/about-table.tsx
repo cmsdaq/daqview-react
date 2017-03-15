@@ -27,6 +27,11 @@ namespace DAQView {
                                                                       year={"2016-2017"}/>;
             ReactDOM.render(aboutTableRootElement, this.htmlRootElement);
         }
+
+        //to be called before setSnapshot
+        public prePassElementSpecificData(args: string []){
+
+        }
     }
 
     interface AboutTableElementProperties {

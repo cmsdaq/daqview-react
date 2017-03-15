@@ -35,7 +35,7 @@
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
     <script type="text/javascript" src="dist/js/daqview.js"></script>
-    <script type="text/javascript" src="snapshot-source.js"></script>
+    <script type="text/javascript" src="link-configuration.js"></script>
 
     <script type="text/javascript">
         var daqView; //daqView is an object containing an array of the created views (page components)
@@ -152,6 +152,9 @@
                         return daqSetup;
                     },
                     currentSnapshotTimestamp: -1,
+                    runInfoTimelineLink: function(){
+                        return externalLinks.runInfoTimeline;
+                    },
                     parseSnapshot: (function (snapshot) {
                         console.log(snapshot);
 
@@ -234,14 +237,14 @@
                     $('.daqview-go-to-time').click();
                 });
 
-               var formatLocalDate = function(newDateTargetInMillis){
-                   var localTimestampElements = (new Date(newDateTargetInMillis).toString()).split(" ");
+                var formatLocalDate = function(newDateTargetInMillis){
+                    var localTimestampElements = (new Date(newDateTargetInMillis).toString()).split(" ");
 
-                   //keep Month, Day, Year, Time (discard Weekday and timezone info)
-                   var formattedLocalTimestamp = localTimestampElements[1]+" "+localTimestampElements[2]+" "+localTimestampElements[3]+" "+localTimestampElements[4];
+                    //keep Month, Day, Year, Time (discard Weekday and timezone info)
+                    var formattedLocalTimestamp = localTimestampElements[1]+" "+localTimestampElements[2]+" "+localTimestampElements[3]+" "+localTimestampElements[4];
 
-                   return formattedLocalTimestamp;
-               };
+                    return formattedLocalTimestamp;
+                };
 
                 //setting values in links of the upper left corner
                 $('#dvhomelink').attr("href",daqviewLinks.controller);

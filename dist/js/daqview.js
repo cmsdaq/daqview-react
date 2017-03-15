@@ -19,6 +19,10 @@ var DAQView;
             var _this = this;
             DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowPage, drawStaleSnapshot, url); });
         };
+        DAQViewReact.prototype.prePassElementSpecificData = function (args) {
+            var _this = this;
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].prePassElementSpecificData(args); });
+        };
         DAQViewReact.prototype.createSnapshotModal = function (elementName) {
             this.createSnapshotModalImpl(elementName);
         };

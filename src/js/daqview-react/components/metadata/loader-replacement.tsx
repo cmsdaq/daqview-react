@@ -25,6 +25,11 @@ namespace DAQView {
                                                         placeholder={""}/>;
             ReactDOM.render(loaderReplacementRootElement, this.htmlRootElement);
         }
+
+        //to be called before setSnapshot
+        public prePassElementSpecificData(args: string []){
+
+        }
     }
 
     interface LoaderReplacementElementProperties {

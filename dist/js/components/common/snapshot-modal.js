@@ -33,6 +33,9 @@ var DAQView;
                 ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
             }
         };
+        //to be called before setSnapshot
+        SnapshotModal.prototype.prePassElementSpecificData = function (args) {
+        };
         return SnapshotModal;
     }());
     DAQView.SnapshotModal = SnapshotModal;

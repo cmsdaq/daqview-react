@@ -73,6 +73,9 @@ var DAQView;
                 this.updateSnapshot();
             }
         };
+        //to be called before setSnapshot
+        FileBasedFilterFarmTable.prototype.prePassElementSpecificData = function (args) {
+        };
         FileBasedFilterFarmTable.prototype.updateSnapshot = function () {
             var sortedSnapshot = this.sort(this.snapshot);
             var daq = sortedSnapshot.getDAQ();

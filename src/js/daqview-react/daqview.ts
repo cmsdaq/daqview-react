@@ -27,6 +27,10 @@ namespace DAQView {
             DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowPage, drawStaleSnapshot, url));
         }
 
+        public prePassElementSpecificData(args: string[]) {
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].prePassElementSpecificData(args));
+        }
+
         public createSnapshotModal(elementName: string) {
             this.createSnapshotModalImpl(elementName);
         }
