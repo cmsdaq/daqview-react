@@ -81,7 +81,7 @@ var DAQAggregator;
                             errorMsg = snapshotJSON.message;
                         }
                         //url argument is not used in a state of error, so I use it to pass more info about the error
-                        this.setSnapshot(snapshot, this.drawPausedPage, false, errorMsg); //maybe also pass message to setSnapshot?
+                        this.setSnapshot(snapshot, this.drawPausedPage, false, false, errorMsg); //maybe also pass message to setSnapshot?
                         //reset value after use
                         this.drawPausedPage = false;
                     }
@@ -138,7 +138,7 @@ var DAQAggregator;
                         else {
                             console.log("DAQView was unable to parse snapshot...");
                             console.log(snapshotJSON);
-                            this.setSnapshot(snapshot, this.drawPausedPage, false, "Could not parse DAQ snapshot");
+                            this.setSnapshot(snapshot, this.drawPausedPage, false, false, "Could not parse DAQ snapshot");
                         }
                         //reset value after use
                         this.drawPausedPage = false;
@@ -150,7 +150,7 @@ var DAQAggregator;
                 snapshotRequest.fail((function () {
                     console.log("Error in remote snapshot request, retrying after " + this.snapshotSource.updateInterval + " millis");
                     var snapshot;
-                    this.setSnapshot(snapshot, this.drawPausedPage, false, "Could not reach server for snapshots");
+                    this.setSnapshot(snapshot, this.drawPausedPage, false, false, "Could not reach server for snapshots");
                     //reset value after use
                     this.drawPausedPage = false;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
