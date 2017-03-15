@@ -95,7 +95,7 @@ namespace DAQView {
                         <td>{this.props.sessionId}</td>
                         <td>{this.props.dpSetPath}</td>
                         <td className={timestampClass}>{new Date(this.props.snapshotTimestamp).toString()}</td>
-                        <td className={timestampClass}>{new Date(this.props.snapshotTimestamp).toUTCString()}</td>
+                        <td className={classNames('metadata-table-utc-timestamp',timestampClass)}>{new Date(this.props.snapshotTimestamp).toUTCString()}</td>
                     </tr>
                     </tbody>
                 </table>
