@@ -134,8 +134,15 @@
                         var baseURL = snapshotSources.url+'?setup='+daqSetup+'&time=';
                         var timestampDelim = '"';
 
-                        var currentTime = $('#daqview-go-to-time-input').val();
+                        var currentLocalTime = $('#daqview-go-to-time-input').val();
 
+                        var timestamp=Date.parse(currentLocalTime)
+
+                        var currentTime = '';
+                        if (isNaN(timestamp)==false){
+                            currentTime=new Date(timestamp).toISOString();
+
+                        }
 
                         var ret = baseURL + timestampDelim + currentTime + timestampDelim;
                         return ret;
@@ -205,7 +212,7 @@
                 //if time parameter is found, then this request should return a static display at the requested timestamp
                 if (typeof queryString.time != 'undefined'){
                     console.log("page loaded with 'time' parameter(s): "+queryString.time);
-                    $('#daqview-go-to-time-input').val(queryString.time);
+                    $('#daqview-go-to-time-input').val(queryString.time.replace(/-/g, " "));
                     $('.daqview-go-to-time').click();
                 }
 
@@ -214,17 +221,26 @@
 
                 controlPlus.on('click', function(){
                     var newDateTargetInMillis = snapshotSource.currentSnapshotTimestamp + 1000*($('#daqview-nav-step-input').val());
-                    var newDateTargetFormatted = new Date(newDateTargetInMillis).toISOString();
+                    var newDateTargetFormatted = formatLocalDate(newDateTargetInMillis);
                     $('#daqview-go-to-time-input').val(newDateTargetFormatted); //pointer to id
                     $('.daqview-go-to-time').click(); //pointer to class
                 });
 
                 controlMinus.on('click', function(){
                     var newDateTargetInMillis = snapshotSource.currentSnapshotTimestamp - 1000*($('#daqview-nav-step-input').val());
-                    var newDateTargetFormatted = new Date(newDateTargetInMillis).toISOString();
+                    var newDateTargetFormatted = formatLocalDate(newDateTargetInMillis);
                     $('#daqview-go-to-time-input').val(newDateTargetFormatted);
                     $('.daqview-go-to-time').click();
                 });
+
+                var formatLocalDate = function(newDateTargetInMillis){
+                    var localTimestampElements = (new Date(newDateTargetInMillis).toString()).split(" ");
+
+                    //keep Month, Day, Year, Time (discard Weekday and timezone info)
+                    var formattedLocalTimestamp = localTimestampElements[1]+" "+localTimestampElements[2]+" "+localTimestampElements[3]+" "+localTimestampElements[4];
+
+                    return formattedLocalTimestamp;
+                };
 
                 //setting values in links of the upper left corner
                 $('#dvhomelink').attr("href",daqviewLinks.controller);

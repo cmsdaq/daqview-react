@@ -162,9 +162,15 @@ namespace DAQAggregator {
                             }
 
                             //updates daqview url
-                            window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + (new Date(snapshot.getUpdateTimestamp()).toISOString()));
-                            document.title = "DAQView [" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "]";
+                            let localTimestampElements: string[] = (new Date(snapshot.getUpdateTimestamp()).toString()).split(" ");
 
+                            //keep Month, Day, Year, Time (discard Weekday and timezone info)
+                            let formattedLocalTimestamp: string = localTimestampElements[1]+"-"+localTimestampElements[2]+"-"+localTimestampElements[3]+"-"+localTimestampElements[4];
+
+                            window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp);
+                            document.title = "DAQView [" + formattedLocalTimestamp + "]";
+
+                            //updates url to retrieve snapshot
                             //in case of point time queries (eg. after pause or goto-time command, the time is already appended in the URL)
                             let urlToSnapshot: string = url.indexOf("time") > -1 ? url : url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
 
