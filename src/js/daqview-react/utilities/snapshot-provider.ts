@@ -29,9 +29,9 @@ namespace DAQAggregator {
         }
 
         public prePassElementSpecificData(args: string[]){
-                this.views.forEach(
-                    view => view.prePassElementSpecificData(args)
-                );
+            this.views.forEach(
+                view => view.prePassElementSpecificData(args)
+            );
         }
 
         public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url: string) {
@@ -105,15 +105,18 @@ namespace DAQAggregator {
 
                     let malformedSnapshot: boolean = false;
 
-                    if ((snapshotJSON == null)||(!snapshotJSON.hasOwnProperty("@id"))){
+                    if ((snapshotJSON == null)||(!snapshotJSON.hasOwnProperty("@id"))) {
                         console.log("Malformed snapshot received, parsing and updating won't be launched until next valid snapshot");
                         console.log(snapshotJSON);
                         malformedSnapshot = true;
                         let snapshot: Snapshot;
 
                         let errorMsg: string = "Could not find DAQ snapshot with requested params";
-                        if (snapshotJSON.hasOwnProperty("message")){
-                            errorMsg = snapshotJSON.message;
+
+                        if (snapshotJSON != null) {
+                            if (snapshotJSON.hasOwnProperty("message")) {
+                                errorMsg = snapshotJSON.message;
+                            }
                         }
 
                         //url argument is not used in a state of error, so I use it to pass more info about the error

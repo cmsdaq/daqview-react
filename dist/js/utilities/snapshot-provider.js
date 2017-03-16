@@ -80,8 +80,10 @@ var DAQAggregator;
                         malformedSnapshot = true;
                         var snapshot = void 0;
                         var errorMsg = "Could not find DAQ snapshot with requested params";
-                        if (snapshotJSON.hasOwnProperty("message")) {
-                            errorMsg = snapshotJSON.message;
+                        if (snapshotJSON != null) {
+                            if (snapshotJSON.hasOwnProperty("message")) {
+                                errorMsg = snapshotJSON.message;
+                            }
                         }
                         //url argument is not used in a state of error, so I use it to pass more info about the error
                         this.setSnapshot(snapshot, this.drawPausedPage, false, false, errorMsg); //maybe also pass message to setSnapshot?
