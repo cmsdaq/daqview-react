@@ -1525,7 +1525,7 @@ namespace DAQView {
             let ttsStateClasses: string = classNames('fb-table-fed-tts-state', ttsStateClass);
 
             let percentBackpressureDisplay: any = percentBackpressure > 0 ?
-                <span className="fb-table-fed-percent-backpressure">{'<'}{percentWarning.toFixed(1)}%</span> : '';
+                <span className="fb-table-fed-percent-backpressure">{'<'}{percentBackpressure.toFixed(1)}%</span> : '';
 
             let unexpectedSourceIdDisplay: any = '';
             if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId && receivedSourceId != 0) {

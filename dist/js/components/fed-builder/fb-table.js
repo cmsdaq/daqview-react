@@ -1189,7 +1189,7 @@ var DAQView;
             }
             var ttsStateClasses = classNames('fb-table-fed-tts-state', ttsStateClass);
             var percentBackpressureDisplay = percentBackpressure > 0 ?
-                React.createElement("span", {className: "fb-table-fed-percent-backpressure"}, '<', percentWarning.toFixed(1), "%") : '';
+                React.createElement("span", {className: "fb-table-fed-percent-backpressure"}, '<', percentBackpressure.toFixed(1), "%") : '';
             var unexpectedSourceIdDisplay = '';
             if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId && receivedSourceId != 0) {
                 unexpectedSourceIdDisplay =
