@@ -26,13 +26,13 @@ var DAQView;
                 presort: this.INITIAL_PRESORT_FUNCTION,
                 sort: this.INITIAL_SORT_FUNCTION
             };
+            //columns stored here will get a sort icon
             this.currentSorting = {
                 'TTCP': DAQView.Sorting.Ascending,
                 'FB Name': DAQView.Sorting.None,
                 '%W': DAQView.Sorting.None,
                 '%B': DAQView.Sorting.None,
                 'RU': DAQView.Sorting.None,
-                'warn': DAQView.Sorting.None,
                 'rate (kHz)': DAQView.Sorting.None,
                 'thru (MB/s)': DAQView.Sorting.None,
                 'size (kB)': DAQView.Sorting.None,
@@ -439,6 +439,39 @@ var DAQView;
             });
             return snapshot;
         }
+        function RUHOSTNAME(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU throughput
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRUHostname = firstFedBuilder.ru.hostname;
+                var secondFedBuilderRUHostname = secondFedBuilder.ru.hostname;
+                if (firstFedBuilderRUHostname > secondFedBuilderRUHostname) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRUHostname < secondFedBuilderRUHostname) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RU_HOSTNAME_ASC(snapshot) {
+            return RUHOSTNAME(snapshot, false);
+        }
+        FBTableSortFunctions.RU_HOSTNAME_ASC = RU_HOSTNAME_ASC;
+        function RU_HOSTNAME_DESC(snapshot) {
+            return RUHOSTNAME(snapshot, true);
+        }
+        FBTableSortFunctions.RU_HOSTNAME_DESC = RU_HOSTNAME_DESC;
         function RURATE_ASC(snapshot) {
             return RURATE(snapshot, false);
         }
@@ -546,7 +579,7 @@ var DAQView;
             return RUNUMFRAG(snapshot, true);
         }
         FBTableSortFunctions.RUNUMFRAG_DESC = RUNUMFRAG_DESC;
-        function RUNUMEVTS(snapshot, descending) {
+        function RUNUMEVTSINRU(snapshot, descending) {
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
             // sort the FEDBuilders based on their RU number of events in RU
@@ -559,6 +592,39 @@ var DAQView;
                 }
                 var firstFedBuilderRUNumevts = firstFedBuilder.ru.eventsInRU;
                 var secondFedBuilderRUNumevts = secondFedBuilder.ru.eventsInRU;
+                if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRUNumevts < secondFedBuilderRUNumevts) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RUNUMEVTSINRU_ASC(snapshot) {
+            return RUNUMEVTSINRU(snapshot, false);
+        }
+        FBTableSortFunctions.RUNUMEVTSINRU_ASC = RUNUMEVTSINRU_ASC;
+        function RUNUMEVTSINRU_DESC(snapshot) {
+            return RUNUMEVTSINRU(snapshot, true);
+        }
+        FBTableSortFunctions.RUNUMEVTSINRU_DESC = RUNUMEVTSINRU_DESC;
+        function RUNUMEVTS(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU number of events in RU
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRUNumevts = firstFedBuilder.ru.eventCount;
+                var secondFedBuilderRUNumevts = secondFedBuilder.ru.eventCount;
                 if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
                     return (descending ? -1 : 1);
                 }
@@ -613,6 +679,7 @@ var DAQView;
         }
         FBTableSortFunctions.RUREQUESTS_DESC = RUREQUESTS_DESC;
     })(FBTableSortFunctions = DAQView.FBTableSortFunctions || (DAQView.FBTableSortFunctions = {}));
+    //assignment of sort function to the columns (where applicable)
     var FB_TABLE_BASE_HEADERS = [
         { content: 'P' },
         { content: 'A' },
@@ -642,8 +709,14 @@ var DAQView;
                 Descending: { sort: FBTableSortFunctions.FB_DESC }
             }
         },
-        { content: 'RU' },
-        { content: 'warn', },
+        {
+            content: 'RU',
+            sortFunctions: {
+                Ascending: { sort: FBTableSortFunctions.RU_HOSTNAME_ASC },
+                Descending: { sort: FBTableSortFunctions.RU_HOSTNAME_DESC }
+            }
+        },
+        { content: 'warn' },
         {
             content: 'rate (kHz)',
             sortFunctions: {
@@ -665,7 +738,13 @@ var DAQView;
                 Descending: { sort: FBTableSortFunctions.RUSIZE_DESC }
             }
         },
-        { content: '#events' },
+        {
+            content: '#events',
+            sortFunctions: {
+                Ascending: { sort: FBTableSortFunctions.RUNUMEVTS_ASC },
+                Descending: { sort: FBTableSortFunctions.RUNUMEVTS_DESC }
+            }
+        },
         {
             content: '#frags in RU',
             sortFunctions: {
@@ -676,8 +755,8 @@ var DAQView;
         {
             content: '#evts in RU',
             sortFunctions: {
-                Ascending: { sort: FBTableSortFunctions.RUNUMEVTS_ASC },
-                Descending: { sort: FBTableSortFunctions.RUNUMEVTS_DESC }
+                Ascending: { sort: FBTableSortFunctions.RUNUMEVTSINRU_ASC },
+                Descending: { sort: FBTableSortFunctions.RUNUMEVTSINRU_DESC }
             }
         },
         {

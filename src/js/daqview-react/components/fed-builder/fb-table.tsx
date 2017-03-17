@@ -35,6 +35,7 @@ namespace DAQView {
             sort: this.INITIAL_SORT_FUNCTION
         };
 
+        //columns stored here will get a sort icon
         private currentSorting: {[key: string]: Sorting} = {
             'TTCP': Sorting.Ascending,
             'FB Name': Sorting.None,
@@ -42,7 +43,7 @@ namespace DAQView {
             '%B': Sorting.None,
 
             'RU': Sorting.None,
-            'warn': Sorting.None,
+
             'rate (kHz)': Sorting.None,
             'thru (MB/s)': Sorting.None,
             'size (kB)': Sorting.None,
@@ -102,7 +103,7 @@ namespace DAQView {
                                                                           drawZeroDataFlowComponent={drawZeroDataFlowComponent}
                                                                           tcdsControllerUrl={tcdsControllerUrl}
                                                                           tcdsControllerServiceName={tcdsControllerServiceName}
-                                                                            drawStaleSnapshot={drawStaleSnapshot}/>
+                                                                          drawStaleSnapshot={drawStaleSnapshot}/>
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         }
 
@@ -504,6 +505,42 @@ namespace DAQView {
             return snapshot;
         }
 
+
+        function RUHOSTNAME(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU throughput
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRUHostname: string = firstFedBuilder.ru.hostname;
+                let secondFedBuilderRUHostname: string = secondFedBuilder.ru.hostname;
+
+                if (firstFedBuilderRUHostname > secondFedBuilderRUHostname) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRUHostname < secondFedBuilderRUHostname) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RU_HOSTNAME_ASC(snapshot: DAQAggregatorSnapshot) {
+            return RUHOSTNAME(snapshot, false);
+        }
+
+        export function RU_HOSTNAME_DESC(snapshot: DAQAggregatorSnapshot) {
+            return RUHOSTNAME(snapshot, true);
+        }
+
         export function RURATE_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
             return RURATE(snapshot, false);
         }
@@ -620,7 +657,7 @@ namespace DAQView {
             return RUNUMFRAG(snapshot, true);
         }
 
-        function RUNUMEVTS(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+        function RUNUMEVTSINRU(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
 
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
@@ -635,6 +672,42 @@ namespace DAQView {
 
                 let firstFedBuilderRUNumevts: number = firstFedBuilder.ru.eventsInRU;
                 let secondFedBuilderRUNumevts: number = secondFedBuilder.ru.eventsInRU;
+
+                if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRUNumevts < secondFedBuilderRUNumevts) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RUNUMEVTSINRU_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUNUMEVTSINRU(snapshot, false);
+        }
+
+        export function RUNUMEVTSINRU_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUNUMEVTSINRU(snapshot, true);
+        }
+
+        function RUNUMEVTS(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU number of events in RU
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRUNumevts: number = firstFedBuilder.ru.eventCount;
+                let secondFedBuilderRUNumevts: number = secondFedBuilder.ru.eventCount;
 
                 if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
                     return (descending ? -1 : 1);
@@ -695,6 +768,7 @@ namespace DAQView {
 
     }
 
+    //assignment of sort function to the columns (where applicable)
     const FB_TABLE_BASE_HEADERS: FEDBuilderTableHeaderProperties[] = [
         {content: 'P'},
         {content: 'A'},
@@ -724,8 +798,14 @@ namespace DAQView {
                 Descending: {sort: FBTableSortFunctions.FB_DESC}
             }
         },
-        {content: 'RU'},
-        {content: 'warn',},
+        {
+            content: 'RU',
+            sortFunctions: {
+                Ascending: {sort: FBTableSortFunctions.RU_HOSTNAME_ASC},
+                Descending: {sort: FBTableSortFunctions.RU_HOSTNAME_DESC}
+            }
+        },
+        {content: 'warn'},
         {
             content: 'rate (kHz)',
             sortFunctions: {
@@ -747,7 +827,13 @@ namespace DAQView {
                 Descending: {sort: FBTableSortFunctions.RUSIZE_DESC}
             }
         },
-        {content: '#events'},
+        {
+            content: '#events',
+            sortFunctions: {
+                Ascending: {sort: FBTableSortFunctions.RUNUMEVTS_ASC},
+                Descending: {sort: FBTableSortFunctions.RUNUMEVTS_DESC}
+            }
+        },
         {
             content: '#frags in RU',
             sortFunctions: {
@@ -758,8 +844,8 @@ namespace DAQView {
         {
             content: '#evts in RU',
             sortFunctions: {
-                Ascending: {sort: FBTableSortFunctions.RUNUMEVTS_ASC},
-                Descending: {sort: FBTableSortFunctions.RUNUMEVTS_DESC}
+                Ascending: {sort: FBTableSortFunctions.RUNUMEVTSINRU_ASC},
+                Descending: {sort: FBTableSortFunctions.RUNUMEVTSINRU_DESC}
             }
         },
         {
@@ -827,7 +913,7 @@ namespace DAQView {
                                                    tcdsControllerUrl={tcdsControllerUrl}
                                                    tcdsControllerServiceName={tcdsControllerServiceName}
                                                    oddRow={oddRow}
-                                                    drawStaleSnapshot={drawStaleSnapshot}/>);
+                                                   drawStaleSnapshot={drawStaleSnapshot}/>);
             });
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
@@ -854,7 +940,7 @@ namespace DAQView {
                                               headers={FB_TABLE_SUMMARY_HEADERS} drawPausedComponent={drawPausedComponents}/>
                     <FEDBuilderTableSummaryRow key="fb-summary-row" fedBuilderSummary={fedBuilderSummary}
                                                numRus={numRus} numUsedRus={numUsedRus} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}
-                                                drawStaleSnapshot={drawStaleSnapshot}/>
+                                               drawStaleSnapshot={drawStaleSnapshot}/>
                     </tfoot>
                 </table>
             );
