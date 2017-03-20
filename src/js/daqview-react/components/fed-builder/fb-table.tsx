@@ -788,6 +788,7 @@ namespace DAQView {
             }
         },
         {content: 'frlpc'},
+        {content: ''},
         {content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId'},
         {content: 'min Trg'},
         {content: 'max Trg'},
@@ -805,6 +806,7 @@ namespace DAQView {
                 Descending: {sort: FBTableSortFunctions.RU_HOSTNAME_DESC}
             }
         },
+        {content: '         '},
         {content: 'warn'},
         {
             content: 'rate (kHz)',
@@ -926,8 +928,8 @@ namespace DAQView {
 
             return (
                 <table className="fb-table">
-                    <colgroup className="fb-table-colgroup-fedbuilder" span="11"/>
-                    <colgroup className="fb-table-colgroup-evb" span="9"/>
+                    <colgroup className="fb-table-colgroup-fedbuilder" span="12"/>
+                    <colgroup className="fb-table-colgroup-evb" span="10"/>
                     <thead className="fb-table-head">
                     <FEDBuilderTableTopHeaderRow key="fb-top-header-row" drawPausedComponent={drawPausedComponents}/>
                     <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row" drawPausedComponent={drawPausedComponents}/>
@@ -1045,6 +1047,7 @@ namespace DAQView {
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
             </td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className="">{""}</td>);//TODO: Implement class and value logic for frlpcstate conditional column
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><RUWarningData key={ru['@id']} ru={ru}/></td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
@@ -1141,9 +1144,9 @@ namespace DAQView {
             return (
                 <tr className="fb-table-top-header-row">
                     <FEDBuilderTableHeader additionalClasses="fb-table-help" content={<a href="fbtablehelp.html" target="_blank">Table Help</a>}
-                                           colSpan="2" drawPausedComponent={drawPausedComponent}/>
-                    <FEDBuilderTableHeader content="F  E  D  B  U  I  L  D  E  R" colSpan="9" drawPausedComponent={drawPausedComponent}/>
-                    <FEDBuilderTableHeader content="E  V  B" colSpan="9" drawPausedComponent={drawPausedComponent}/>
+                                           colSpan="1" drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="F  E  D  B  U  I  L  D  E  R" colSpan="11" drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="E  V  B" colSpan="10" drawPausedComponent={drawPausedComponent}/>
                 </tr>
 
             );
@@ -1166,7 +1169,7 @@ namespace DAQView {
                 <tr className="fb-table-secondary-header-row">
                     <FEDBuilderTableHeader content="" colSpan="1" drawPausedComponent={drawPausedComponent}/>
                     <FEDBuilderTableHeader content="T T S" colSpan="3" drawPausedComponent={drawPausedComponent}/>
-                    <FEDBuilderTableHeader content="" colSpan="16" drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="" colSpan="18" drawPausedComponent={drawPausedComponent}/>
                 </tr>
 
             );
@@ -1449,6 +1452,8 @@ namespace DAQView {
                 }
             }
 
+            //TODO: Implement class and value logic for frlpcstate conditional column
+
             return (
                 <tr className={className}>
                     <td>{ttcPartition.name}:{ttcPartition.ttcpNr}</td>
@@ -1458,6 +1463,7 @@ namespace DAQView {
                     <td className="fb-table-subfb-tts-perc">{ttcpPercWarn}</td>
                     <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
+                    <td className="">{""}</td>
                     <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
                     <td className={maxTrigClassNames}>{maxTrigDisplayContent}</td>
@@ -1715,8 +1721,9 @@ namespace DAQView {
 
             return (
                 <tr className={classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}>
-                    <td colSpan="11"></td>
+                    <td colSpan="12"></td>
                     <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
+                    <td></td>
                     <td></td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput / 1000 / 1000, FBTableNumberFormats.THROUGHPUT)}>Σ {(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)}</td>
