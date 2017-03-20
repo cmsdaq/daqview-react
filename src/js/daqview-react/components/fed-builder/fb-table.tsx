@@ -1382,7 +1382,7 @@ namespace DAQView {
             if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0,2) != 'no') {
                 ttcPartitionTTSStateLink =
                     <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
-                       target="_blank">{ttsState}</a>;
+                       target="_blank" title={ttcPartition.ttsState}>{ttsState}</a>;
             }
 
             let tcdsControllerUrl: string = this.props.tcdsControllerUrl;
@@ -1392,15 +1392,16 @@ namespace DAQView {
             if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttsStateTcdsPm != '-' && ttcPartition.tcds_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
                 ttcPartitionTTSStateTcdsPmLink =
                     <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
-                       target="_blank">{ttsStateTcdsPm}</a>;
+                       target="_blank" title={ttcPartition.tcds_pm_ttsState}>{ttsStateTcdsPm}</a>;
             }
 
             let ttcPartitionTTSStateTcdsApvPmLink: any = ttsStateTcdsApvPm;
             if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttsStateTcdsApvPm != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
                 ttcPartitionTTSStateTcdsApvPmLink =
                     <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
-                       target="_blank">{ttsStateTcdsApvPm}</a>;
+                       target="_blank" title={ttcPartition.tcds_apv_pm_ttsState}>{ttsStateTcdsApvPm}</a>;
             }
+
 
 
 
