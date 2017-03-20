@@ -1160,7 +1160,6 @@ var DAQView;
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
-            //TODO: Implement class and value logic for frlpcstate conditional column
             var frlpcStateDisplay = "";
             var frlpcStateDisplayClass = "";
             if (frlPc.crashed) {

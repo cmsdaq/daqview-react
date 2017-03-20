@@ -1453,7 +1453,6 @@ namespace DAQView {
                 }
             }
 
-            //TODO: Implement class and value logic for frlpcstate conditional column
             let frlpcStateDisplay: string = "";
             let frlpcStateDisplayClass: string = "";
             if (frlPc.crashed){
