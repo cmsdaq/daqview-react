@@ -224,7 +224,7 @@ namespace DAQAggregator {
             port: number;
             // masked: boolean;
             // frls?: FRL[];
-            // crashed: boolean;
+            crashed: boolean;
         }
 
         export interface FRL extends SnapshotElement {

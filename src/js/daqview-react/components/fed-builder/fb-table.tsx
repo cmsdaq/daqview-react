@@ -1043,11 +1043,12 @@ namespace DAQView {
             ruName = ruName.indexOf('ru')==0 ? ruName.substring(3) : ruName;
             let ruUrl: string = 'http://' + ruHostname + ':'+ruPort+'/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
 
+
             let fedBuilderData: any[] = [];
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
             </td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className="">{""}</td>);//TODO: Implement class and value logic for frlpcstate conditional column
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className="">{}</td>);//TODO: Implement class and value logic for rustate conditional column
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><RUWarningData key={ru['@id']} ru={ru}/></td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
@@ -1453,6 +1454,12 @@ namespace DAQView {
             }
 
             //TODO: Implement class and value logic for frlpcstate conditional column
+            let frlpcStateDisplay: string = "";
+            let frlpcStateDisplayClass: string = "";
+            if (frlPc.crashed){
+                frlpcStateDisplay = "JobCrash";
+                frlpcStateDisplayClass = "fb-table-frlpc-state";
+            }
 
             return (
                 <tr className={className}>
@@ -1463,7 +1470,7 @@ namespace DAQView {
                     <td className="fb-table-subfb-tts-perc">{ttcpPercWarn}</td>
                     <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
-                    <td className="">{""}</td>
+                    <td className={frlpcStateDisplayClass}>{frlpcStateDisplay}</td>
                     <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
                     <td className={maxTrigClassNames}>{maxTrigDisplayContent}</td>

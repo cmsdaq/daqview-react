@@ -883,7 +883,7 @@ var DAQView;
             var fedBuilderData = [];
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: ""}, "")); //TODO: Implement class and value logic for frlpcstate conditional column
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: ""})); //TODO: Implement class and value logic for rustate conditional column
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement(RUWarningData, {key: ru['@id'], ru: ru})));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}, (ru.rate / 1000).toFixed(3)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}, (ru.throughput / 1000 / 1000).toFixed(1)));
@@ -1161,7 +1161,13 @@ var DAQView;
                 }
             }
             //TODO: Implement class and value logic for frlpcstate conditional column
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_P), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_A), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_F), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercWarn), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement("td", {className: ""}, ""), React.createElement(FRLs, {frls: frls, minTrig: minTrigDisplayContent, pseudoFeds: pseudoFeds, drawZeroDataFlowComponent: drawZeroDataFlowComponent}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
+            var frlpcStateDisplay = "";
+            var frlpcStateDisplayClass = "";
+            if (frlPc.crashed) {
+                frlpcStateDisplay = "JobCrash";
+                frlpcStateDisplayClass = "fb-table-frlpc-state";
+            }
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_P), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_A), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_F), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercWarn), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement("td", {className: frlpcStateDisplayClass}, frlpcStateDisplay), React.createElement(FRLs, {frls: frls, minTrig: minTrigDisplayContent, pseudoFeds: pseudoFeds, drawZeroDataFlowComponent: drawZeroDataFlowComponent}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));
