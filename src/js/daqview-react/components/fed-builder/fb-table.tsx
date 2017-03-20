@@ -1043,12 +1043,27 @@ namespace DAQView {
             ruName = ruName.indexOf('ru')==0 ? ruName.substring(3) : ruName;
             let ruUrl: string = 'http://' + ruHostname + ':'+ruPort+'/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
 
+            let ruState: string  = '';
+            let ruStateClass = 'fb-table-ru-state-normal';
+
+            if (ru.stateName){
+
+                if (ruState === 'Halted' || ruState === 'Ready' || ruState === 'Enabled' || ruState === ''){
+                    ruState = '';
+                }else{
+                    ruStateClass = 'fb-table-ru-state-warn';
+                }
+
+                if (ruState === 'Failed' || ruState === 'Error'){
+                    ruStateClass = 'fb-table-ru-state-error';
+                }
+            }
 
             let fedBuilderData: any[] = [];
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
             </td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className="">{}</td>);//TODO: Implement class and value logic for rustate conditional column
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className={ruStateClass}>{ruState}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><RUWarningData key={ru['@id']} ru={ru}/></td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
