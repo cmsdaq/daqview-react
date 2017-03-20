@@ -1115,7 +1115,8 @@ namespace DAQView {
                                                                                     subFedBuilder={subFedBuilder}
                                                                                     additionalContent={++count == 1 ? fedBuilderData : null}
                                                                                     tcdsControllerUrl={this.props.tcdsControllerUrl}
-                                                                                    tcdsControllerServiceName={this.props.tcdsControllerServiceName}/>));
+                                                                                    tcdsControllerServiceName={this.props.tcdsControllerServiceName}
+                                                                                    drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>));
             return (
                 <tbody className={fbRowClassName}>
                 {children}
@@ -1313,10 +1314,14 @@ namespace DAQView {
         additionalClasses?: string | string[];
         tcdsControllerUrl: string;
         tcdsControllerServiceName: string;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class SubFEDBuilderRow extends React.Component<SubFEDBuilderRowProperties,{}> {
         render() {
+
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+
             let subFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder = this.props.subFedBuilder;
             let frlPc: DAQAggregatorSnapshot.FRLPc = subFedBuilder.frlPc;
             let frlPcHostname: string = frlPc.hostname;
@@ -1452,7 +1457,7 @@ namespace DAQView {
                     <td className="fb-table-subfb-tts-perc">{ttcpPercWarn}</td>
                     <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
-                    <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds}/>
+                    <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
                     <td className={maxTrigClassNames}>{maxTrigDisplayContent}</td>
                     {this.props.additionalContent ? this.props.additionalContent : null}
@@ -1465,6 +1470,7 @@ namespace DAQView {
         frls: DAQAggregatorSnapshot.FRL[];
         pseudoFeds: DAQAggregatorSnapshot.FED[];
         minTrig: any;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class FRLs extends React.Component<FRLsProperties,{}> {
@@ -1473,19 +1479,21 @@ namespace DAQView {
 
             let minTrigDisplayContent: any = this.props.minTrig;
 
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+
             let pseudoFEDs: DAQAggregatorSnapshot.FED[] = this.props.pseudoFeds;
 
             let fedData: any[] = [];
             let firstFrl: boolean = true;
             frls.forEach(function (frl: DAQAggregatorSnapshot.FRL) {
-                fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl} minTrig={minTrigDisplayContent}/>);
+                fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>);
                 firstFrl = false;
             });
 
             pseudoFEDs.forEach(function (fed: DAQAggregatorSnapshot.FED) {
                 fedData.push(' ');
                 fed.isPseudoFed = true; //this can be used for pseudofed-specific rendering at FEDData level
-                fedData.push(<FEDData key={fed['@id']} fed={fed} minTrig={minTrigDisplayContent}/>);
+                fedData.push(<FEDData key={fed['@id']} fed={fed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>);
             });
 
             return (
@@ -1498,23 +1506,25 @@ namespace DAQView {
         firstFrl: boolean;
         frl: DAQAggregatorSnapshot.FRL;
         minTrig: any;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class FRL extends React.Component<FRLProperties,{}> {
         render() {
             let frl: DAQAggregatorSnapshot.FRL = this.props.frl;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
 
             let minTrigDisplayContent: any = this.props.minTrig;
 
             let feds: {[key: number]: DAQAggregatorSnapshot.FED} = frl.feds;
             let firstFed: DAQAggregatorSnapshot.FED = feds[0];
-            let firstFedDisplay: any = firstFed ? <FEDData key={firstFed['@id']} fed={firstFed} minTrig={minTrigDisplayContent}/> : '-';
+            let firstFedDisplay: any = firstFed ? <FEDData key={firstFed['@id']} fed={firstFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '-';
             let secondFed: DAQAggregatorSnapshot.FED = feds[1];
-            let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed} minTrig={minTrigDisplayContent}/> : '';
+            let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
             let thirdFed: DAQAggregatorSnapshot.FED = feds[2];
-            let thirdFedDisplay: any = thirdFed ? <FEDData key={thirdFed['@id']} fed={thirdFed} minTrig={minTrigDisplayContent}/> : '';
+            let thirdFedDisplay: any = thirdFed ? <FEDData key={thirdFed['@id']} fed={thirdFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
             let fourthFed: DAQAggregatorSnapshot.FED = feds[3];
-            let fourthFedDisplay: any = fourthFed ? <FEDData key={fourthFed['@id']} fed={fourthFed} minTrig={minTrigDisplayContent}/> : '';
+            let fourthFedDisplay: any = fourthFed ? <FEDData key={fourthFed['@id']} fed={fourthFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
 
 
             let firstFrl: boolean = this.props.firstFrl;
@@ -1530,6 +1540,7 @@ namespace DAQView {
     interface FEDDataProperties {
         fed: DAQAggregatorSnapshot.FED;
         minTrig: any;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class FEDData extends React.Component<FEDDataProperties,{}> {
@@ -1549,6 +1560,9 @@ namespace DAQView {
         }
 
         render() {
+
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+
             let fed: DAQAggregatorSnapshot.FED = this.props.fed;
 
             let trigNum: number = fed.eventCounter;
@@ -1556,8 +1570,8 @@ namespace DAQView {
 
             let trigNumDisplay: any = '';
 
-            if (trigNum.toString() == minTrigDisplayContent){
-                trigNumDisplay = 'minTrg';
+            if ((trigNum.toString() == minTrigDisplayContent) && drawZeroDataFlowComponent){
+                trigNumDisplay = minTrigDisplayContent;
             }
 
             let minTrigClassNames: string = classNames('fb-table-fed-min-trig');
