@@ -1485,7 +1485,7 @@ namespace DAQView {
                     <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
                     <td className={frlpcStateDisplayClass}>{frlpcStateDisplay}</td>
-                    <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>
+                    <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>
                     <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
                     <td className={maxTrigClassNames}>{maxTrigDisplayContent}</td>
                     {this.props.additionalContent ? this.props.additionalContent : null}
@@ -1499,11 +1499,14 @@ namespace DAQView {
         pseudoFeds: DAQAggregatorSnapshot.FED[];
         minTrig: any;
         drawZeroDataFlowComponent: boolean;
+        ttcPartition: DAQAggregatorSnapshot.TTCPartition;
     }
 
     class FRLs extends React.Component<FRLsProperties,{}> {
         render() {
             let frls: DAQAggregatorSnapshot.FRL[] = this.props.frls;
+
+            let ttcPartition: DAQAggregatorSnapshot.TTCPartition = this.props.ttcPartition;
 
             let minTrigDisplayContent: any = this.props.minTrig;
 
@@ -1514,7 +1517,7 @@ namespace DAQView {
             let fedData: any[] = [];
             let firstFrl: boolean = true;
             frls.forEach(function (frl: DAQAggregatorSnapshot.FRL) {
-                fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>);
+                fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>);
                 firstFrl = false;
             });
 
@@ -1535,6 +1538,7 @@ namespace DAQView {
         frl: DAQAggregatorSnapshot.FRL;
         minTrig: any;
         drawZeroDataFlowComponent: boolean;
+        ttcPartition: DAQAggregatorSnapshot.TTCPartition;
     }
 
     class FRL extends React.Component<FRLProperties,{}> {
@@ -1544,22 +1548,29 @@ namespace DAQView {
 
             let minTrigDisplayContent: any = this.props.minTrig;
 
+            let ttcPartition: DAQAggregatorSnapshot.TTCPartition = this.props.ttcPartition;
+            console.log(ttcPartition.name)
+
             let feds: {[key: number]: DAQAggregatorSnapshot.FED} = frl.feds;
             let firstFed: DAQAggregatorSnapshot.FED = feds[0];
-            let firstFedDisplay: any = firstFed ? <FEDData key={firstFed['@id']} fed={firstFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '-';
+            let firstFedDisplay: any = firstFed && firstFed.ttcp.name === ttcPartition.name? <FEDData key={firstFed['@id']} fed={firstFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '-';
             let secondFed: DAQAggregatorSnapshot.FED = feds[1];
-            let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+            let secondFedDisplay: any = secondFed && secondFed.ttcp.name === ttcPartition.name? <FEDData key={secondFed['@id']} fed={secondFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
             let thirdFed: DAQAggregatorSnapshot.FED = feds[2];
-            let thirdFedDisplay: any = thirdFed ? <FEDData key={thirdFed['@id']} fed={thirdFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+            let thirdFedDisplay: any = thirdFed && secondFed.ttcp.name === ttcPartition.name? <FEDData key={thirdFed['@id']} fed={thirdFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
             let fourthFed: DAQAggregatorSnapshot.FED = feds[3];
-            let fourthFedDisplay: any = fourthFed ? <FEDData key={fourthFed['@id']} fed={fourthFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+            let fourthFedDisplay: any = fourthFed && secondFed.ttcp.name === ttcPartition.name? <FEDData key={fourthFed['@id']} fed={fourthFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+
+            let secondFedShown: boolean = secondFed && (secondFed && secondFed.ttcp.name === ttcPartition.name);
+            let thirdFedShown: boolean = thirdFed && (thirdFed && thirdFed.ttcp.name === ttcPartition.name);
+            let fourthFedShown: boolean = fourthFed && (fourthFed && fourthFed.ttcp.name === ttcPartition.name);
 
 
             let firstFrl: boolean = this.props.firstFrl;
 
             return (
                 <span>
-                    {firstFrl ? '' : ', '}{frl.geoSlot}:{firstFedDisplay}{secondFed ? ',' : ''}{secondFedDisplay}{thirdFed ? ',' : ''}{thirdFedDisplay}{fourthFed ? ',' : ''}{fourthFedDisplay}
+                    {firstFrl ? '' : ', '}{frl.geoSlot}:{firstFedDisplay}{secondFedShown ? ',' : ''}{secondFedDisplay}{thirdFedShown ? ',' : ''}{thirdFedDisplay}{fourthFedShown ? ',' : ''}{fourthFedDisplay}
                 </span>
             );
         }

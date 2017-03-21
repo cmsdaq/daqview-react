@@ -1179,7 +1179,7 @@ var DAQView;
                 frlpcStateDisplay = "JobCrash";
                 frlpcStateDisplayClass = "fb-table-frlpc-state";
             }
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_P), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_A), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_F), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercWarn), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement("td", {className: frlpcStateDisplayClass}, frlpcStateDisplay), React.createElement(FRLs, {frls: frls, minTrig: minTrigDisplayContent, pseudoFeds: pseudoFeds, drawZeroDataFlowComponent: drawZeroDataFlowComponent}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_P), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_A), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_F), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercWarn), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement("td", {className: frlpcStateDisplayClass}, frlpcStateDisplay), React.createElement(FRLs, {frls: frls, minTrig: minTrigDisplayContent, pseudoFeds: pseudoFeds, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));
@@ -1190,13 +1190,14 @@ var DAQView;
         }
         FRLs.prototype.render = function () {
             var frls = this.props.frls;
+            var ttcPartition = this.props.ttcPartition;
             var minTrigDisplayContent = this.props.minTrig;
             var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             var pseudoFEDs = this.props.pseudoFeds;
             var fedData = [];
             var firstFrl = true;
             frls.forEach(function (frl) {
-                fedData.push(React.createElement(FRL, {key: frl['@id'], frl: frl, firstFrl: firstFrl, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}));
+                fedData.push(React.createElement(FRL, {key: frl['@id'], frl: frl, firstFrl: firstFrl, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition}));
                 firstFrl = false;
             });
             pseudoFEDs.forEach(function (fed) {
@@ -1217,17 +1218,22 @@ var DAQView;
             var frl = this.props.frl;
             var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             var minTrigDisplayContent = this.props.minTrig;
+            var ttcPartition = this.props.ttcPartition;
+            console.log(ttcPartition.name);
             var feds = frl.feds;
             var firstFed = feds[0];
-            var firstFedDisplay = firstFed ? React.createElement(FEDData, {key: firstFed['@id'], fed: firstFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '-';
+            var firstFedDisplay = firstFed && firstFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, {key: firstFed['@id'], fed: firstFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '-';
             var secondFed = feds[1];
-            var secondFedDisplay = secondFed ? React.createElement(FEDData, {key: secondFed['@id'], fed: secondFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '';
+            var secondFedDisplay = secondFed && secondFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, {key: secondFed['@id'], fed: secondFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '';
             var thirdFed = feds[2];
-            var thirdFedDisplay = thirdFed ? React.createElement(FEDData, {key: thirdFed['@id'], fed: thirdFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '';
+            var thirdFedDisplay = thirdFed && secondFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, {key: thirdFed['@id'], fed: thirdFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '';
             var fourthFed = feds[3];
-            var fourthFedDisplay = fourthFed ? React.createElement(FEDData, {key: fourthFed['@id'], fed: fourthFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '';
+            var fourthFedDisplay = fourthFed && secondFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, {key: fourthFed['@id'], fed: fourthFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '';
+            var secondFedShown = secondFed && (secondFed && secondFed.ttcp.name === ttcPartition.name);
+            var thirdFedShown = thirdFed && (thirdFed && thirdFed.ttcp.name === ttcPartition.name);
+            var fourthFedShown = fourthFed && (fourthFed && fourthFed.ttcp.name === ttcPartition.name);
             var firstFrl = this.props.firstFrl;
-            return (React.createElement("span", null, firstFrl ? '' : ', ', frl.geoSlot, ":", firstFedDisplay, secondFed ? ',' : '', secondFedDisplay, thirdFed ? ',' : '', thirdFedDisplay, fourthFed ? ',' : '', fourthFedDisplay));
+            return (React.createElement("span", null, firstFrl ? '' : ', ', frl.geoSlot, ":", firstFedDisplay, secondFedShown ? ',' : '', secondFedDisplay, thirdFedShown ? ',' : '', thirdFedDisplay, fourthFedShown ? ',' : '', fourthFedDisplay));
         };
         return FRL;
     }(React.Component));
