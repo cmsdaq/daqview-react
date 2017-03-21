@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="feat(): RU state column">
+    <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="fix(): special case when an FRL FED's belong to multiple subFEDBuilders, trailing commas truncation at FEDs">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" afterPath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_fb.html" afterPath="$PROJECT_DIR$/index_fb.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_fff.html" afterPath="$PROJECT_DIR$/index_fff.html" />
     </list>
     <ignored path="daqview-react.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,26 +25,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="fb-table.tsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="1546" column="81" selection-start-line="1546" selection-start-column="81" selection-end-line="1546" selection-end-column="81" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="daq-snapshot.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="212" column="9" selection-start-line="212" selection-start-column="9" selection-end-line="212" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="ffftablehelp.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ffftablehelp.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -77,7 +58,7 @@
       <file leaf-file-name="fb-table.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="742">
+            <state relative-caret-position="5250">
               <caret line="350" column="1" selection-start-line="350" selection-start-column="1" selection-end-line="350" selection-end-column="1" />
               <folding />
             </state>
@@ -87,7 +68,7 @@
       <file leaf-file-name="snapshot-provider.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="557">
+            <state relative-caret-position="2505">
               <caret line="167" column="48" selection-start-line="167" selection-start-column="48" selection-end-line="167" selection-end-column="48" />
               <folding />
             </state>
@@ -97,7 +78,7 @@
       <file leaf-file-name="fff-table.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="712">
+            <state relative-caret-position="2700">
               <caret line="180" column="0" selection-start-line="180" selection-start-column="0" selection-end-line="191" selection-end-column="1" />
               <folding />
             </state>
@@ -107,8 +88,30 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="371">
-              <caret line="57" column="25" selection-start-line="57" selection-start-column="25" selection-end-line="57" selection-end-column="25" />
+            <state relative-caret-position="90">
+              <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="56" />
+              <folding>
+                <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index_fb.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index_fb.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index_fff.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/index_fff.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="12" column="99" selection-start-line="12" selection-start-column="99" selection-end-line="12" selection-end-column="99" />
               <folding>
                 <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -119,7 +122,7 @@
       <file leaf-file-name="fff-table.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1200">
+            <state relative-caret-position="12045">
               <caret line="803" column="20" selection-start-line="803" selection-start-column="20" selection-end-line="803" selection-end-column="63" />
               <folding />
             </state>
@@ -169,21 +172,21 @@
         <option value="$PROJECT_DIR$/snapshot-source.js" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/metadata/metadata-table.tsx" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/daq-snapshot-view/daq-snapshot-view.d.ts" />
-        <option value="$PROJECT_DIR$/index_fb.html" />
-        <option value="$PROJECT_DIR$/index_fff.html" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/daqview.ts" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/common/snapshot-modal.tsx" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/metadata/about-table.tsx" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/metadata/loader-replacement.tsx" />
         <option value="$PROJECT_DIR$/dist/css/components/common/snapshot-modal.css" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot-source.d.ts" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts" />
         <option value="$PROJECT_DIR$/fbtablehelp.html" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts" />
         <option value="$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/index_fb.html" />
+        <option value="$PROJECT_DIR$/index_fff.html" />
       </list>
     </option>
   </component>
@@ -194,10 +197,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1916" />
-    <option name="y" value="25" />
+    <option name="x" value="-4" />
     <option name="width" value="1928" />
-    <option name="height" value="1146" />
+    <option name="height" value="1203" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -680,8 +682,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -792,14 +794,8 @@
       <workItem from="1488529174196" duration="18575000" />
       <workItem from="1488813502647" duration="28844000" />
       <workItem from="1488972898739" duration="2360000" />
-      <workItem from="1489404058563" duration="87614000" />
-    </task>
-    <task id="LOCAL-00072" summary="fix(): flexible with new model fields, to ensure backwards snapshot compatibility">
-      <created>1485883046859</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1485883046859</updated>
+      <workItem from="1489404058563" duration="89619000" />
+      <workItem from="1490098670119" duration="851000" />
     </task>
     <task id="LOCAL-00073" summary="fix(): adaptations to the snapshot request links following release of the snapshot service">
       <created>1486143448036</created>
@@ -1137,34 +1133,41 @@
       <option name="project" value="LOCAL" />
       <updated>1490024316515</updated>
     </task>
-    <option name="localTasksCounter" value="121" />
+    <task id="LOCAL-00121" summary="fix(): special case when an FRL FED's belong to multiple subFEDBuilders, trailing commas truncation at FEDs">
+      <created>1490089874964</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1490089874964</updated>
+    </task>
+    <option name="localTasksCounter" value="122" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="508565000" />
+    <option name="totallyTimeSpent" value="511421000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1916" y="25" width="1928" height="1146" extended-state="6" />
+    <frame x="-4" y="0" width="1928" height="1203" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14901961" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21033014" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21246007" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942328" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28529412" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2028754" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28529412" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942328" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1179,7 +1182,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix(): hide ttcp masked state" />
     <MESSAGE value="fix(): hiding state info for masked out partitions" />
     <MESSAGE value="fix(): delinkify FMM state when is special value" />
     <MESSAGE value="feat(): time-based navigation back and forth" />
@@ -1204,7 +1206,8 @@
     <MESSAGE value="feat(): frlpc and ru state columns framing (missing logic for value and styling)" />
     <MESSAGE value="feat(): frlpc jobcrash indicator" />
     <MESSAGE value="feat(): RU state column" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(): RU state column" />
+    <MESSAGE value="fix(): special case when an FRL FED's belong to multiple subFEDBuilders, trailing commas truncation at FEDs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(): special case when an FRL FED's belong to multiple subFEDBuilders, trailing commas truncation at FEDs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1296,7 +1299,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="630">
           <caret line="42" column="1" selection-start-line="42" selection-start-column="1" selection-end-line="42" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1326,7 +1328,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
           <caret line="40" column="20" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1354,7 +1355,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
           <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1362,7 +1362,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="202">
           <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1370,7 +1369,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="421">
           <caret line="165" column="9" selection-start-line="165" selection-start-column="9" selection-end-line="165" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1378,7 +1376,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1386,7 +1383,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="415">
           <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1394,7 +1390,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1418,7 +1413,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="630">
           <caret line="44" column="7" selection-start-line="44" selection-start-column="7" selection-end-line="47" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1426,7 +1420,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1434,7 +1427,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
           <caret line="33" column="9" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1442,7 +1434,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="615">
           <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1450,15 +1441,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="675">
           <caret line="54" column="9" selection-start-line="54" selection-start-column="9" selection-end-line="54" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index_fb.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="115" column="95" selection-start-line="115" selection-start-column="95" selection-end-line="115" selection-end-column="95" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1466,7 +1448,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="13" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1474,7 +1455,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="16" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1482,7 +1462,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="675">
           <caret line="45" column="1" selection-start-line="45" selection-start-column="1" selection-end-line="45" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1498,32 +1477,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="1419" column="85" selection-start-line="1419" selection-start-column="85" selection-end-line="1419" selection-end-column="85" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index_fff.html">
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="117" column="0" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/daq-snapshot-view/daq-snapshot-view.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="557">
-          <caret line="167" column="48" selection-start-line="167" selection-start-column="48" selection-end-line="167" selection-end-column="48" />
+        <state relative-caret-position="3180">
+          <caret line="212" column="9" selection-start-line="212" selection-start-column="9" selection-end-line="212" selection-end-column="9" />
           <folding />
         </state>
       </provider>
@@ -1544,53 +1512,71 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts">
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/daq-snapshot-view/daq-snapshot-view.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="212" column="9" selection-start-line="212" selection-start-column="9" selection-end-line="212" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="712">
-          <caret line="180" column="0" selection-start-line="180" selection-start-column="0" selection-end-line="191" selection-end-column="1" />
+        <state relative-caret-position="285">
+          <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="742">
+        <state relative-caret-position="5250">
           <caret line="350" column="1" selection-start-line="350" selection-start-column="1" selection-end-line="350" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/utilities/snapshot-provider.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2505">
+          <caret line="167" column="48" selection-start-line="167" selection-start-column="48" selection-end-line="167" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2700">
+          <caret line="180" column="0" selection-start-line="180" selection-start-column="0" selection-end-line="191" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12045">
+          <caret line="803" column="20" selection-start-line="803" selection-start-column="20" selection-end-line="803" selection-end-column="63" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="57" column="25" selection-start-line="57" selection-start-column="25" selection-end-line="57" selection-end-column="25" />
+        <state relative-caret-position="90">
+          <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="56" />
           <folding>
             <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx">
+    <entry file="file://$PROJECT_DIR$/index_fb.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1200">
-          <caret line="803" column="20" selection-start-line="803" selection-start-column="20" selection-end-line="803" selection-end-column="63" />
+        <state relative-caret-position="270">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
+    <entry file="file://$PROJECT_DIR$/index_fff.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="1546" column="81" selection-start-line="1546" selection-start-column="81" selection-end-line="1546" selection-end-column="81" />
-          <folding />
+        <state relative-caret-position="180">
+          <caret line="12" column="99" selection-start-line="12" selection-start-column="99" selection-end-line="12" selection-end-column="99" />
+          <folding>
+            <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
