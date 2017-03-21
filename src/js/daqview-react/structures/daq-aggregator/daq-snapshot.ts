@@ -158,6 +158,8 @@ namespace DAQAggregator {
             numLumisectionsOutHLT: number;
 
             fuOutputBandwidthInMB: number;
+
+            crashed: boolean;
         }
 
         export interface RU extends SnapshotElement {
@@ -188,6 +190,8 @@ namespace DAQAggregator {
             fedsWithErrors: FED[];
 
             fedBuilder: FEDBuilder;
+
+            crashed: boolean;
         }
 
         export interface SubFEDBuilder extends SnapshotElement {
@@ -212,11 +216,17 @@ namespace DAQAggregator {
             topFMMInfo: FMMInfo;
         }
 
+        export interface FMMApplication extends SnapshotElement {
+            crashed: boolean;
+            hostname: string;
+        }
+
         export interface FMM extends SnapshotElement {
             geoslot: number;
             url: string;
             feds?: FED[];
             stateName: string;
+            fmmApplication: FMMApplication;
         }
 
         export interface FRLPc extends SnapshotElement {
