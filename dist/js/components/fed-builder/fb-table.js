@@ -883,7 +883,8 @@ var DAQView;
             var ruState = '';
             var ruStateClass = 'fb-table-ru-state-normal';
             if (ru.stateName) {
-                if (ruState === 'Halted' || ruState === 'Ready' || ruState === 'Enabled' || ruState === '') {
+                ruState = ru.stateName;
+                if (ruState === 'Halted' || ruState === 'Ready' || ruState === 'Enabled' || ruState === 'unknown' || ruState === '') {
                     ruState = '';
                 }
                 else {
@@ -893,10 +894,16 @@ var DAQView;
                     ruStateClass = 'fb-table-ru-state-error';
                 }
             }
+            var ruJobCrashStateDisplay = "";
+            var ruJobCrashStateDisplayClass = "";
+            if (ru.crashed) {
+                ruJobCrashStateDisplay = "JobCrash";
+                ruJobCrashStateDisplayClass = "fb-table-jobcrash";
+            }
             var fedBuilderData = [];
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: ruStateClass}, ruState));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("div", {className: ruStateClass}, ruState), React.createElement("div", {className: ruJobCrashStateDisplayClass}, ruJobCrashStateDisplay)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement(RUWarningData, {key: ru['@id'], ru: ru})));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}, (ru.rate / 1000).toFixed(3)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}, (ru.throughput / 1000 / 1000).toFixed(1)));

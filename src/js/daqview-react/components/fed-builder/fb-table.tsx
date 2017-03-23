@@ -1048,7 +1048,9 @@ namespace DAQView {
 
             if (ru.stateName){
 
-                if (ruState === 'Halted' || ruState === 'Ready' || ruState === 'Enabled' || ruState === ''){
+                ruState = ru.stateName;
+
+                if (ruState === 'Halted' || ruState === 'Ready' || ruState === 'Enabled' || ruState === 'unknown' || ruState === ''){
                     ruState = '';
                 }else{
                     ruStateClass = 'fb-table-ru-state-warn';
@@ -1059,11 +1061,21 @@ namespace DAQView {
                 }
             }
 
+            let ruJobCrashStateDisplay: string = "";
+            let ruJobCrashStateDisplayClass: string = "";
+            if (ru.crashed){
+                ruJobCrashStateDisplay = "JobCrash";
+                ruJobCrashStateDisplayClass = "fb-table-jobcrash";
+            }
+
             let fedBuilderData: any[] = [];
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
             </td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders} className={ruStateClass}>{ruState}</td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>
+                <div className={ruStateClass}>{ruState}</div>
+                <div className={ruJobCrashStateDisplayClass}>{ruJobCrashStateDisplay}</div>
+            </td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><RUWarningData key={ru['@id']} ru={ru}/></td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
@@ -1484,9 +1496,6 @@ namespace DAQView {
                 fmmAppStateDisplay = "JobCrash";
                 fmmAppStateDisplayClass = "fb-table-jobcrash";
             }
-
-
-
 
             return (
                 <tr className={className}>
