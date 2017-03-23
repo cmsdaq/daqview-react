@@ -203,6 +203,18 @@ namespace DAQAggregator {
             ttcPartition?: TTCPartition;
         }
 
+        export interface FMMInfo extends SnapshotElement{
+            nullCause: string;
+        }
+
+        export interface TCDSPartitionInfo extends SnapshotElement{
+            nullCause: string;
+            triggerName: string;
+            piContext: string;
+            icinr: number;
+            pmnr: number;
+        }
+
         export interface TTCPartition extends SnapshotElement {
             ttcpNr: number;
             name: string;
@@ -214,6 +226,7 @@ namespace DAQAggregator {
             fmm?: FMM;
             masked: boolean;
             topFMMInfo: FMMInfo;
+            tcdsPartitionInfo?: TCDSPartitionInfo;
         }
 
         export interface FMMApplication extends SnapshotElement {
@@ -294,9 +307,7 @@ namespace DAQAggregator {
             isPseudoFed: boolean; //variable set locally, using context information, for displays reason
         }
 
-        export interface FMMInfo extends SnapshotElement{
-            nullCause: string;
-        }
+
 
     }
 

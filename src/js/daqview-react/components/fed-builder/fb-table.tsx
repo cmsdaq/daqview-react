@@ -1361,10 +1361,13 @@ namespace DAQView {
             let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
 
 
+            if (ttcPartition.tcdsPartitionInfo.nullCause) {
+                ttsStateTcdsPm = ttcPartition.tcdsPartitionInfo.nullCause;
+                ttsStateTcdsApvPm = ttcPartition.tcdsPartitionInfo.nullCause;
+            }
+
             if (ttcPartition.topFMMInfo.nullCause){
                 ttsState = ttcPartition.topFMMInfo.nullCause;
-                ttsStateTcdsPm = ttcPartition.topFMMInfo.nullCause;
-                ttsStateTcdsApvPm = ttcPartition.topFMMInfo.nullCause;
             }else{
                 if (ttcPartition.masked){
                     ttsState = '-';
