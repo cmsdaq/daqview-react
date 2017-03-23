@@ -1475,15 +1475,27 @@ namespace DAQView {
             let frlpcStateDisplayClass: string = "";
             if (frlPc.crashed){
                 frlpcStateDisplay = "JobCrash";
-                frlpcStateDisplayClass = "fb-table-frlpc-state";
+                frlpcStateDisplayClass = "fb-table-jobcrash";
             }
+
+            let fmmAppStateDisplay: string = "";
+            let fmmAppStateDisplayClass: string = "";
+            if (ttcPartition.fmm && ttcPartition.fmm.fmmApplication && ttcPartition.fmm.fmmApplication.crashed){
+                fmmAppStateDisplay = "JobCrash";
+                fmmAppStateDisplayClass = "fb-table-jobcrash";
+            }
+
+
+
 
             return (
                 <tr className={className}>
                     <td>{ttcPartition.name}:{ttcPartition.ttcpNr}</td>
                     <td className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_P}</td>
                     <td className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_A}</td>
-                    <td className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_F}</td>
+                    <td><div className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_F}</div>
+                        <div className={fmmAppStateDisplayClass}>{fmmAppStateDisplay}</div>
+                    </td>
                     <td className="fb-table-subfb-tts-perc">{ttcpPercWarn}</td>
                     <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>

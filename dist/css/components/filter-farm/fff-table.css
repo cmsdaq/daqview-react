@@ -178,6 +178,12 @@
     margin: 0 0.2em 0 0.2em;
 }
 
+.fff-table-jobcrash{
+    background-color:#000000;
+    color:#ffffff;
+    font-weight:bold;
+}
+
 .fff-table-bu-state-error {
     font-weight: bold;
     background-color: #CC0033;
