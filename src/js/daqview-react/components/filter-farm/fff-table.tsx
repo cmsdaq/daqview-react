@@ -736,7 +736,7 @@ namespace DAQView {
 
                 buState = bu.stateName;
 
-                if (buState === 'Halted' || buState === 'Ready' || buState === 'Enabled' || buState === ''){
+                if (buState === 'Halted' || buState === 'Ready' || buState === 'Enabled' || buState === 'unknown' || buState === ''){
                     buState = '';
                 }else{
                     buStateClass = 'fff-table-bu-state-warn';
@@ -745,6 +745,13 @@ namespace DAQView {
                 if (buState === 'Failed' || buState === 'Error'){
                     buStateClass = 'fff-table-bu-state-error';
                 }
+            }
+
+            let buJobCrashStateDisplay: string = "";
+            let buJobCrashStateDisplayClass: string = "";
+            if (bu.crashed){
+                buJobCrashStateDisplay = "JobCrash";
+                buJobCrashStateDisplayClass = "fff-table-jobcrash";
             }
 
 
@@ -801,7 +808,10 @@ namespace DAQView {
             return (
                 <tr className={fffBuRowClass}>
                     <td><a href={buUrl} target="_blank">{hostname}</a></td>
-                    <td className={buStateClass}>{buState}</td>
+                    <td>
+                        <div className={buStateClass}>{buState}</div>
+                        <div className={buJobCrashStateDisplayClass}>{buJobCrashStateDisplay}</div>
+                    </td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE))}>{rate.toFixed(3)}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT))}>{throughput.toFixed(1)}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean.toFixed(1)}±{sizeStddev.toFixed(1)}</td>
