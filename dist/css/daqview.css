@@ -69,3 +69,8 @@ input[type=submit] {
     width: auto;
     background-color: #d7dfff;
 }
+
+.daqview-version-id{
+    font-size: x-small;
+    font-style: italic;
+}
