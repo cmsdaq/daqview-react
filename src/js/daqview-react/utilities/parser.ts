@@ -16,21 +16,33 @@ namespace DAQAggregator {
         private big_map: {[key: string]: any} = {};
         private level: number = 1;
         private replacerRecursions = 0;
+        private snapshot: {} = {};
 
         public parse(snapshot: {}): Snapshot {
+
             this.replacerRecursions = 0;
-            this.explore(snapshot);
+            this.big_map = {}; //flush old objects
+            this.snapshot = snapshot;
+
+            this.explore(this.snapshot);
 
             for (var key in this.big_map) {
                 this.scanAndReplace(this.big_map[key]);
             }
 
-            if(this.replacerRecursions>25000){
+            console.log("Size of map of objects after parsing: "+Object.keys(this.big_map).length);
+            console.log("Replacer calls: "+this.replacerRecursions);
+
+            if (this.replacerRecursions > 25000) {
                 console.log("Too much recursion imminent...parser aborted proactively");
+
                 return null;
             }
 
-            return new Snapshot(this.big_map['DAQ']);
+            let snapshotReturned: Snapshot = new Snapshot(this.big_map['DAQ']);
+
+            return snapshotReturned;
+
         }
 
         static getFieldType(field: any) {
@@ -97,7 +109,7 @@ namespace DAQAggregator {
             this.replacerRecursions++;
 
             /*this allows for a snapshot with up to 5 times more elements than the typical snapshot in late 2016,
-            if this is reached, then probably there is something wrong with the snapshot, causing infinite recursion over elements...
+             if this is reached, then probably there is something wrong with the snapshot, causing infinite recursion over elements...
              */
             if(this.replacerRecursions>25000){
                 return;
@@ -173,16 +185,16 @@ namespace DAQAggregator {
             //iterate all messages from feds
             let fedBuilder: FEDBuilder = ru.fedBuilder;
             for (var subFEDBuilder of fedBuilder.subFedbuilders){
-               for(var frl of (<SubFEDBuilder>subFEDBuilder).frls){
-                   let feds: {[key: number]: FED} = (<FRL>frl.feds);
-                   for (var fedSlot in feds){
-                       let fed: FED = feds[fedSlot];
+                for(var frl of (<SubFEDBuilder>subFEDBuilder).frls){
+                    let feds: {[key: number]: FED} = (<FRL>frl.feds);
+                    for (var fedSlot in feds){
+                        let fed: FED = feds[fedSlot];
 
-                       if (fed.ruFedWithoutFragments || fed.ruFedInError) {
-                           fedsWithErrors.push(fed); //fed indexed by its expectedSrcId
-                       }
-                   }
-               }
+                        if (fed.ruFedWithoutFragments || fed.ruFedInError) {
+                            fedsWithErrors.push(fed); //fed indexed by its expectedSrcId
+                        }
+                    }
+                }
             }
 
 

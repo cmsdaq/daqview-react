@@ -8,18 +8,24 @@ var DAQAggregator;
             this.big_map = {};
             this.level = 1;
             this.replacerRecursions = 0;
+            this.snapshot = {};
         }
         SnapshotParser.prototype.parse = function (snapshot) {
             this.replacerRecursions = 0;
-            this.explore(snapshot);
+            this.big_map = {}; //flush old objects
+            this.snapshot = snapshot;
+            this.explore(this.snapshot);
             for (var key in this.big_map) {
                 this.scanAndReplace(this.big_map[key]);
             }
+            console.log("Size of map of objects after parsing: " + Object.keys(this.big_map).length);
+            console.log("Replacer calls: " + this.replacerRecursions);
             if (this.replacerRecursions > 25000) {
                 console.log("Too much recursion imminent...parser aborted proactively");
                 return null;
             }
-            return new DAQAggregator.Snapshot(this.big_map['DAQ']);
+            var snapshotReturned = new DAQAggregator.Snapshot(this.big_map['DAQ']);
+            return snapshotReturned;
         };
         SnapshotParser.getFieldType = function (field) {
             var ret = typeof field;
@@ -74,7 +80,7 @@ var DAQAggregator;
         SnapshotParser.prototype.scanAndReplace = function (obj) {
             this.replacerRecursions++;
             /*this allows for a snapshot with up to 5 times more elements than the typical snapshot in late 2016,
-            if this is reached, then probably there is something wrong with the snapshot, causing infinite recursion over elements...
+             if this is reached, then probably there is something wrong with the snapshot, causing infinite recursion over elements...
              */
             if (this.replacerRecursions > 25000) {
                 return;
