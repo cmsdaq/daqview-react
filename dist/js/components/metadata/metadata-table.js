@@ -27,7 +27,7 @@ var DAQView;
             }
             else {
                 var daq = snapshot.getDAQ();
-                var metadataTableRootElement = React.createElement(MetadataTableElement, {runNumber: daq.runNumber, sessionId: daq.sessionId, dpSetPath: daq.dpsetPath, snapshotTimestamp: daq.lastUpdate, lv0State: daq.levelZeroState, daqState: daq.daqState, machineState: daq.lhcMachineMode, beamState: daq.lhcBeamMode, drawPausedComponent: drawPausedComponent, drawStaleSnapshot: drawStaleSnapshot, runInfoTimelineLink: this.runInfoTimelineLink, lv0StateTimestamp: daq.levelZeroStateEntry, runStartTime: daq.runStart, runDurationInMillis: daq.runDurationInMillis});
+                var metadataTableRootElement = React.createElement(MetadataTableElement, {runNumber: daq.runNumber, sessionId: daq.sessionId, dpSetPath: daq.dpsetPath, snapshotTimestamp: daq.lastUpdate, lv0State: daq.levelZeroState, daqState: daq.daqState, machineState: daq.lhcMachineMode, beamState: daq.lhcBeamMode, drawPausedComponent: drawPausedComponent, drawStaleSnapshot: drawStaleSnapshot, runInfoTimelineLink: this.runInfoTimelineLink, lv0StateTimestamp: daq.levelZeroStateEntry, runStartTime: daq.runStart, runDurationInMillis: daq.runDurationInMillis, daqAggregatorModel: daq.daqAggregatorBinaryName});
                 ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
             }
         };
@@ -57,7 +57,28 @@ var DAQView;
                 durationDescription += (minutes || hours || days) ? minutes + "m, " : "";
                 durationDescription += (seconds || minutes || hours || days) ? seconds + "s ago " : "";
             }
-            return (React.createElement("table", {className: "metadata-table"}, React.createElement("thead", {className: "metadata-table-head"}, React.createElement("tr", {className: "metadata-table-header-row"}, React.createElement("th", null, "Run number"), React.createElement("th", null, "Run start time (local)"), React.createElement("th", null, "LV0 state"), React.createElement("th", null, "LV0 state entry time (local)"), React.createElement("th", null, "DAQ state"), React.createElement("th", null, "Machine state"), React.createElement("th", null, "Beam state"), React.createElement("th", null, "Session ID"), React.createElement("th", null, "DAQ configuration"), React.createElement("th", null, "Snapshot time (local)"), React.createElement("th", null, "Snapshot timestamp (UTC)"))), React.createElement("tbody", {className: "metadata-table-body"}, React.createElement("tr", {className: "metadata-table-content-row"}, React.createElement("td", null, React.createElement("a", {href: this.props.runInfoTimelineLink + "?run=" + this.props.runNumber, target: "_blank"}, this.props.runNumber)), React.createElement("td", null, React.createElement("div", null, this.props.runStartTime ? new Date(this.props.runStartTime).toString().substring(4) : 'Not started'), React.createElement("div", {className: "metadata-table-run-duration"}, durationDescription)), React.createElement("td", null, this.props.lv0State), React.createElement("td", null, this.props.lv0StateTimestamp ? new Date(this.props.lv0StateTimestamp).toString().substring(4) : 'Unknown'), React.createElement("td", null, this.props.daqState), React.createElement("td", null, this.props.machineState), React.createElement("td", null, this.props.beamState), React.createElement("td", null, React.createElement("a", {href: this.props.runInfoTimelineLink + "?sessionId=" + this.props.sessionId, target: "_blank"}, this.props.sessionId)), React.createElement("td", null, this.props.dpSetPath), React.createElement("td", {className: timestampClass}, new Date(this.props.snapshotTimestamp).toString().substring(4)), React.createElement("td", {className: classNames('metadata-table-utc-timestamp', timestampClass)}, this.props.snapshotTimestamp)))));
+            var snapshotOnHoverMessage = "Timestamp: " + this.props.snapshotTimestamp + "\nDeserialized with: " + this.props.daqAggregatorModel;
+            return (React.createElement("table", {className: "metadata-table"}, React.createElement("thead", {className: "metadata-table-head"}, React.createElement("tr", {className: "metadata-table-header-row"}, React.createElement("th", null, "Run number"), React.createElement("th", null, "Run start time (local)"), React.createElement("th", null, "LV0 state"), React.createElement("th", null, "LV0 state entry time (local)"), React.createElement("th", null, "DAQ state"), React.createElement("th", null, "Machine state"), React.createElement("th", null, "Beam state"), React.createElement("th", null, "Session ID"), React.createElement("th", null, "DAQ configuration"), React.createElement("th", null, "Snapshot time (local)"))), React.createElement("tbody", {className: "metadata-table-body"}, React.createElement("tr", {className: "metadata-table-content-row"}, React.createElement("td", null, React.createElement("a", {href: this.props.runInfoTimelineLink + "?run=" + this.props.runNumber, target: "_blank"}, this.props.runNumber)), React.createElement("td", null, React.createElement("div", null, this.props.runStartTime ? this.formatHumanReadableTimestamp(this.props.runStartTime) : 'Not started'), React.createElement("div", {className: "metadata-table-run-duration"}, durationDescription)), React.createElement("td", null, this.props.lv0State), React.createElement("td", null, this.props.lv0StateTimestamp ? this.formatHumanReadableTimestamp(this.props.lv0StateTimestamp) : 'Unknown'), React.createElement("td", null, this.props.daqState), React.createElement("td", null, this.props.machineState), React.createElement("td", null, this.props.beamState), React.createElement("td", null, React.createElement("a", {href: this.props.runInfoTimelineLink + "?sessionId=" + this.props.sessionId, target: "_blank"}, this.props.sessionId)), React.createElement("td", null, this.props.dpSetPath), React.createElement("td", {className: timestampClass}, React.createElement("div", {title: snapshotOnHoverMessage}, this.formatHumanReadableTimestamp(this.props.snapshotTimestamp)))))));
+        };
+        MetadataTableElement.prototype.formatHumanReadableTimestamp = function (dateTs) {
+            var ret = "";
+            var dateTokens = new Date(dateTs).toString().split(" ");
+            var mapOfMonths = {
+                "Jan": "01",
+                "Feb": "02",
+                "Mar": "03",
+                "Apr": "04",
+                "May": "05",
+                "Jun": "06",
+                "Jul": "07",
+                "Aug": "08",
+                "Sep": "09",
+                "Oct": "10",
+                "Nov": "11",
+                "Dec": "12"
+            };
+            ret = dateTokens[0] + " " + dateTokens[2] + "/" + mapOfMonths[dateTokens[1]] + "/" + dateTokens[3] + ", " + dateTokens[4] + " " + dateTokens[5] + " " + dateTokens[6];
+            return ret;
         };
         return MetadataTableElement;
     }(React.Component));

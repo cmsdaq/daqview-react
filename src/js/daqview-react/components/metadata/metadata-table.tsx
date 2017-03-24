@@ -48,7 +48,8 @@ namespace DAQView {
                                                                     runInfoTimelineLink={this.runInfoTimelineLink}
                                                                     lv0StateTimestamp={daq.levelZeroStateEntry}
                                                                     runStartTime={daq.runStart}
-                                                                    runDurationInMillis={daq.runDurationInMillis}/>;
+                                                                    runDurationInMillis={daq.runDurationInMillis}
+                                                                    daqAggregatorModel={daq.daqAggregatorBinaryName}/>;
                 ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
             }
         }
@@ -75,6 +76,7 @@ namespace DAQView {
         drawPausedComponent: boolean;
         drawStaleSnapshot: boolean;
         runInfoTimelineLink: string;
+        daqAggregatorModel: string;
     }
 
     class MetadataTableElement extends React.Component<MetadataTableElementProperties,{}> {
@@ -100,6 +102,9 @@ namespace DAQView {
 
             }
 
+            let snapshotOnHoverMessage: string = "Timestamp: "+this.props.snapshotTimestamp+"\nDeserialized with: "+this.props.daqAggregatorModel;
+
+
             return (
                 <table className="metadata-table">
                     <thead className="metadata-table-head">
@@ -114,29 +119,56 @@ namespace DAQView {
                         <th>Session ID</th>
                         <th>DAQ configuration</th>
                         <th>Snapshot time (local)</th>
-                        <th>Snapshot timestamp (UTC)</th>
                     </tr>
                     </thead>
                     <tbody className="metadata-table-body">
                     <tr className="metadata-table-content-row">
                         <td><a href={this.props.runInfoTimelineLink+"?run="+this.props.runNumber} target="_blank">{this.props.runNumber}</a></td>
                         <td>
-                            <div>{this.props.runStartTime ? new Date(this.props.runStartTime).toString().substring(4) : 'Not started'}</div>
+                            <div>{this.props.runStartTime ? this.formatHumanReadableTimestamp(this.props.runStartTime) : 'Not started'}</div>
                             <div className="metadata-table-run-duration">{durationDescription}</div>
                         </td>
                         <td>{this.props.lv0State}</td>
-                        <td>{this.props.lv0StateTimestamp ? new Date(this.props.lv0StateTimestamp).toString().substring(4) : 'Unknown'}</td>
+                        <td>{this.props.lv0StateTimestamp ? this.formatHumanReadableTimestamp(this.props.lv0StateTimestamp) : 'Unknown'}</td>
                         <td>{this.props.daqState}</td>
                         <td>{this.props.machineState}</td>
                         <td>{this.props.beamState}</td>
                         <td><a href={this.props.runInfoTimelineLink+"?sessionId="+this.props.sessionId} target="_blank">{this.props.sessionId}</a></td>
                         <td>{this.props.dpSetPath}</td>
-                        <td className={timestampClass}>{new Date(this.props.snapshotTimestamp).toString().substring(4)}</td>
-                        <td className={classNames('metadata-table-utc-timestamp',timestampClass)}>{this.props.snapshotTimestamp}</td>
+                        <td className={timestampClass}>
+                            <div title={snapshotOnHoverMessage}>{this.formatHumanReadableTimestamp(this.props.snapshotTimestamp)}</div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             );
+        }
+
+
+        formatHumanReadableTimestamp(dateTs: number): string{
+            let ret: string = "";
+
+            let dateTokens: string[] = new Date(dateTs).toString().split(" ");
+
+            let mapOfMonths: {[key: string]: string} =
+            {
+                "Jan" : "01",
+                "Feb" : "02",
+                "Mar" : "03",
+                "Apr" : "04",
+                "May" : "05",
+                "Jun" : "06",
+                "Jul" : "07",
+                "Aug" : "08",
+                "Sep" : "09",
+                "Oct" : "10",
+                "Nov" : "11",
+                "Dec" : "12"
+            };
+
+            ret = dateTokens[0]+" "+ dateTokens[2]+"/"+mapOfMonths[dateTokens[1]]+"/"+dateTokens[3]+", "+dateTokens[4]+" "+dateTokens[5]+" "+dateTokens[6];
+
+            return ret;
         }
     }
 

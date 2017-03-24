@@ -55,7 +55,7 @@ namespace DAQView {
     class SnapshotModalElement extends React.Component<SnapshotModalElementProperties,{}> {
         render() {
             return (
-                    <a href={this.props.url} target="_blank" title={"Deserialized with: "+this.props.daq.daqAggregatorBinaryName}><button className="button-snapshot">See raw DAQ snapshot</button></a>
+                    <a href={this.props.url} target="_blank"><button className="button-snapshot">See raw DAQ snapshot</button></a>
         );
         }
     }
