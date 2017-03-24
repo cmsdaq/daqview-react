@@ -137,12 +137,11 @@
 
                         var currentLocalTime = $('#daqview-go-to-time-input').val();
 
-                        var timestamp=Date.parse(currentLocalTime)
+                        var timestamp=Date.parse(currentLocalTime);
 
                         var currentTime = '';
                         if (isNaN(timestamp)==false){
                             currentTime=new Date(timestamp).toISOString();
-
                         }
 
                         var ret = baseURL + timestampDelim + currentTime + timestampDelim;
@@ -287,7 +286,7 @@
             </td>
             <td width="20%" align="center" valign="center">
                 <div id="daqview-time-navigation-goto">
-                    <input type="text" placeholder="e.g.: Mar 15 2017 10:12:41" value="Mar 15 2017 10:12:41" id="daqview-go-to-time-input">
+                    <input type="text" placeholder="e.g.: Mar 15 2017 10:12:41" id="daqview-go-to-time-input">
                     <input type="submit" value="Go to time" class="daqview-go-to-time">
                 </div>
             </td>
