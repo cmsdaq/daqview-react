@@ -34,10 +34,9 @@ namespace DAQView {
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }else{
 
-
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
 
-            let snapshotModalRootElement: any = <SnapshotModalElement snapshot={snapshot} url={url}/>;
+            let snapshotModalRootElement: any = <SnapshotModalElement daq={daq} url={url}/>;
             ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
             }
         }
@@ -49,14 +48,14 @@ namespace DAQView {
     }
 
     interface SnapshotModalElementProperties {
-        snapshot: DAQAggregatorSnapshot;
+        daq: DAQAggregatorSnapshot.DAQ;
         url: string;
     }
 
     class SnapshotModalElement extends React.Component<SnapshotModalElementProperties,{}> {
         render() {
             return (
-                    <a href={this.props.url} target="_blank"><button className="button-snapshot">See raw DAQ snapshot</button></a>
+                    <a href={this.props.url} target="_blank" title={"Deserialized with: "+this.props.daq.daqAggregatorBinaryName}><button className="button-snapshot">See raw DAQ snapshot</button></a>
         );
         }
     }

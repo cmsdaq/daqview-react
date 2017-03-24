@@ -1068,6 +1068,13 @@ namespace DAQView {
                 ruJobCrashStateDisplayClass = "fb-table-jobcrash";
             }
 
+            let fbRowZeroEvmRateClass: string = "";
+            if (drawZeroDataFlowComponent && fedBuilder.ru.isEVM){
+                fbRowZeroEvmRateClass = "fb-table-fb-evm-row-ratezero";
+            }
+
+            let fbRowRateClass: string = classNames(fbRowZeroEvmRateClass, FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE));
+
             let fedBuilderData: any[] = [];
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
@@ -1078,7 +1085,7 @@ namespace DAQView {
             </td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><RUWarningData key={ru['@id']} ru={ru}/></td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
-                                    className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
+                                    className={fbRowRateClass}>{(ru.rate / 1000).toFixed(3)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}>{(ru.throughput / 1000 / 1000).toFixed(1)}</td>);
 
@@ -1129,6 +1136,7 @@ namespace DAQView {
                                     className={requestsClass}>{ru.requests}</td>);
 
             let fbRowClass: string = drawPausedComponent? "fb-table-fb-row-paused" : "fb-table-fb-row-running";
+
 
             if (drawZeroDataFlowComponent){
                 fbRowClass = "fb-table-fb-row-ratezero";
@@ -1783,7 +1791,7 @@ namespace DAQView {
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput / 1000 / 1000, FBTableNumberFormats.THROUGHPUT)}>Σ {(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean / 1000, FBTableNumberFormats.SIZE)}>
-                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(3)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(3)}</td>
+                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)}</td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}>Δ {fedBuilderSummary.deltaEvents}</td>
                     <td className={fragmentInRuClass}>Σ {fedBuilderSummary.sumFragmentsInRU}</td>
                     <td className={eventsInRuClass}>Σ {fedBuilderSummary.sumEventsInRU}</td>

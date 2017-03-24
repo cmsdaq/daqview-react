@@ -1,6 +1,11 @@
 /**
  * @author Michail Vougioukas
  * @author Philipp Brummer
+ *
+ * This model definition should contain only fields and objects which also exist in the Java model of the snapshot *deserializer*.
+ *
+ * For fields that might exist in the deserializer model but not in the model of the original Aggregator which produced snapshot,
+ * it is advised to use question marks to make them optional and to *always* check if null before using, to ensure backwards compatibility of the application.
  */
 
 namespace DAQAggregator {
@@ -40,10 +45,15 @@ namespace DAQAggregator {
 
             sessionId: number;
             runNumber: number;
+            runStart: number;
+            runDurationInMillis: number;
             dpsetPath: string;
+
+            daqAggregatorBinaryName: string;
 
             daqState: string;
             levelZeroState: string;
+            levelZeroStateEntry: number;
             lhcMachineMode: string;
             lhcBeamMode: string;
 
