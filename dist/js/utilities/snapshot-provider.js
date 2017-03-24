@@ -136,7 +136,7 @@ var DAQAggregator;
                             this.snapshotSource.currentSnapshotTimestamp = dataTime;
                             var serverResponseTime = new Date(snapshotRequest.getResponseHeader("Date")).getTime();
                             var diff = serverResponseTime - dataTime;
-                            var thres = 6500; //in ms
+                            var thres = 15000; //in ms
                             console.log("Time diff between snapshot timestamp and response (in ms): " + diff);
                             if ((diff > thres)) {
                                 drawStaleSnapshot = true;

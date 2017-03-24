@@ -179,7 +179,7 @@ namespace DAQAggregator {
                             let serverResponseTime: number = new Date(snapshotRequest.getResponseHeader("Date")).getTime();
 
                             let diff: number = serverResponseTime - dataTime;
-                            let thres: number = 6500; //in ms
+                            let thres: number = 15000; //in ms
                             console.log("Time diff between snapshot timestamp and response (in ms): "+diff);
                             if ((diff > thres)){
                                 drawStaleSnapshot = true;
