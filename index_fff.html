@@ -240,9 +240,25 @@
                     var localTimestampElements = (new Date(newDateTargetInMillis).toString()).split(" ");
 
                     //keep Month, Day, Year, Time (discard Weekday and timezone info)
-                    var formattedLocalTimestamp = localTimestampElements[1]+" "+localTimestampElements[2]+" "+localTimestampElements[3]+" "+localTimestampElements[4];
+                    var formattedLocalTimestamp = localTimestampElements[3]+" "+mapOfMonths[localTimestampElements[1]]+" "+localTimestampElements[2]+" "+localTimestampElements[4];
 
                     return formattedLocalTimestamp;
+                };
+
+                var mapOfMonths =
+                {
+                    "Jan" : "01",
+                    "Feb" : "02",
+                    "Mar" : "03",
+                    "Apr" : "04",
+                    "May" : "05",
+                    "Jun" : "06",
+                    "Jul" : "07",
+                    "Aug" : "08",
+                    "Sep" : "09",
+                    "Oct" : "10",
+                    "Nov" : "11",
+                    "Dec" : "12"
                 };
 
                 //setting values in links of the upper left corner
@@ -281,12 +297,11 @@
                     <input type="text" placeholder="sec" value="3" id="daqview-nav-step-input" class="daqview-nav-step-input-class">
                     <input type="image" class="daqview-go-to-time-add" src="dist/img/next.png" alt="plus-time"
                            title="plus-time"/>
-
                 </div>
             </td>
             <td width="20%" align="center" valign="center">
                 <div id="daqview-time-navigation-goto">
-                    <input type="text" placeholder="e.g.: Mar 15 2017 10:12:41" id="daqview-go-to-time-input">
+                    <input type="text" placeholder="e.g.: 2017 03 23 12:00:04" id="daqview-go-to-time-input">
                     <input type="submit" value="Go to time" class="daqview-go-to-time">
                 </div>
             </td>

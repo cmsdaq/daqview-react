@@ -20,6 +20,22 @@ namespace DAQAggregator {
 
         private views: DAQSnapshotView[] = [];
 
+        private mapOfMonths: {[key: string]: string} =
+        {
+            "Jan" : "01",
+            "Feb" : "02",
+            "Mar" : "03",
+            "Apr" : "04",
+            "May" : "05",
+            "Jun" : "06",
+            "Jul" : "07",
+            "Aug" : "08",
+            "Sep" : "09",
+            "Oct" : "10",
+            "Nov" : "11",
+            "Dec" : "12"
+        };
+
         constructor(snapshotSource: SnapshotSource) {
             this.snapshotSource = snapshotSource;
         }
@@ -175,7 +191,7 @@ namespace DAQAggregator {
                             let localTimestampElements: string[] = (new Date(snapshot.getUpdateTimestamp()).toString()).split(" ");
 
                             //keep Month, Day, Year, Time (discard Weekday and timezone info)
-                            let formattedLocalTimestamp: string = localTimestampElements[1]+"-"+localTimestampElements[2]+"-"+localTimestampElements[3]+"-"+localTimestampElements[4];
+                            let formattedLocalTimestamp: string = localTimestampElements[3]+"-"+this.mapOfMonths[localTimestampElements[1]]+"-"+localTimestampElements[2]+"-"+localTimestampElements[4];
 
                             window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp);
                             document.title = "DAQView [" + formattedLocalTimestamp + "]";
@@ -228,7 +244,7 @@ namespace DAQAggregator {
             setTimeout(updateFunction, this.snapshotSource.updateInterval);
         }
 
-//this method will immediately stop page updating (including both values and graphics)
+        //this method will immediately stop page updating (including both values and graphics)
         public stop() {
             this.running = false;
         }
@@ -245,21 +261,6 @@ namespace DAQAggregator {
         public provideOneMoreSnapshotAndStop(callerType: number){
             this.pauseCallerType = callerType;
             this.instructionToStop = true;
-        }
-
-        public checkIfDataFlowIsStopped(snapshot: Snapshot): boolean{
-            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
-            if (daq.fedBuilderSummary.rate>0){
-                return false;
-            }
-            daq.fedBuilders.forEach(function (fedBuilder) {
-                if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
-                    if (fedBuilder.ru.stateName === "Enabled") {
-                        return true;
-                    }
-                }
-            });
-            return false;
         }
     }
 
