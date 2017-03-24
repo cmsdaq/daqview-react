@@ -1234,7 +1234,6 @@ var DAQView;
             var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             var minTrigDisplayContent = this.props.minTrig;
             var ttcPartition = this.props.ttcPartition;
-            console.log(ttcPartition.name);
             var feds = frl.feds;
             var firstFed = feds[0];
             var firstFedDisplay = firstFed && firstFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, {key: firstFed['@id'], fed: firstFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '-';

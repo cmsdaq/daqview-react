@@ -3,10 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/css/daqview.css" afterPath="$PROJECT_DIR$/dist/css/daqview.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_fb.html" afterPath="$PROJECT_DIR$/index_fb.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_fff.html" afterPath="$PROJECT_DIR$/index_fff.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" afterPath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
     </list>
     <ignored path="daqview-react.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,21 +24,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="fb-table.tsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fb-table.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="571">
-              <caret line="1086" column="34" selection-start-line="1086" selection-start-column="34" selection-end-line="1086" selection-end-column="34" />
+            <state relative-caret-position="296">
+              <caret line="1574" column="91" selection-start-line="1574" selection-start-column="91" selection-end-line="1574" selection-end-column="91" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="daq-snapshot.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts">
+      <file leaf-file-name="index.d.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/typings/globals/react/index.d.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="301">
-              <caret line="215" column="9" selection-start-line="215" selection-start-column="9" selection-end-line="215" selection-end-column="9" />
+            <state relative-caret-position="331">
+              <caret line="159" column="8" selection-start-line="159" selection-start-column="8" selection-end-line="159" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -66,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="881">
-              <caret line="308" column="7" selection-start-line="308" selection-start-column="7" selection-end-line="308" selection-end-column="7" />
+            <state relative-caret-position="386">
+              <caret line="275" column="22" selection-start-line="275" selection-start-column="22" selection-end-line="275" selection-end-column="22" />
               <folding>
                 <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -182,12 +180,12 @@
         <option value="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts" />
         <option value="$PROJECT_DIR$/dist/css/components/fed-builder/fb-table.css" />
         <option value="$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css" />
-        <option value="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/index_fb.html" />
         <option value="$PROJECT_DIR$/index_fff.html" />
         <option value="$PROJECT_DIR$/dist/css/daqview.css" />
+        <option value="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
       </list>
     </option>
   </component>
@@ -797,14 +795,7 @@
       <workItem from="1488813502647" duration="28844000" />
       <workItem from="1488972898739" duration="2360000" />
       <workItem from="1489404058563" duration="89619000" />
-      <workItem from="1490098670119" duration="12591000" />
-    </task>
-    <task id="LOCAL-00080" summary="fix(): column grouping">
-      <created>1488471086025</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1488471086025</updated>
+      <workItem from="1490098670119" duration="14049000" />
     </task>
     <task id="LOCAL-00081" summary="fix(): more right alignment of counters">
       <created>1488530782558</created>
@@ -1142,11 +1133,18 @@
       <option name="project" value="LOCAL" />
       <updated>1490288718789</updated>
     </task>
-    <option name="localTasksCounter" value="129" />
+    <task id="LOCAL-00129" summary="feat(): version id">
+      <created>1490288996956</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1490288996956</updated>
+    </task>
+    <option name="localTasksCounter" value="130" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="523161000" />
+    <option name="totallyTimeSpent" value="524619000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1916" y="25" width="1928" height="1146" extended-state="6" />
@@ -1184,7 +1182,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(): external link buttons for the main page" />
     <MESSAGE value="fix(): syncing of three html files" />
     <MESSAGE value="chore(): fine tuning of stale snapshot threshold to 2*period(snapshot)+ε (6.5s)" />
     <MESSAGE value="fix(): correct passing of error message after increasing setSnapshot() arglist" />
@@ -1209,20 +1206,14 @@
     <MESSAGE value="feat(): fmm application jobcrash indicator" />
     <MESSAGE value="feat(): RU state warning fixes and jobcrash indicator implementation" />
     <MESSAGE value="feat(): BU state warning fixes and jobcrash indicator implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(): BU state warning fixes and jobcrash indicator implementation" />
+    <MESSAGE value="feat(): version id" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(): version id" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/typings/globals/classnames/typings.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/typings/globals/jquery/index.d.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1541,14 +1532,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="571">
-          <caret line="1086" column="34" selection-start-line="1086" selection-start-column="34" selection-end-line="1086" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dist/css/components/metadata/about-table.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -1585,11 +1568,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="881">
-          <caret line="308" column="7" selection-start-line="308" selection-start-column="7" selection-end-line="308" selection-end-column="7" />
+        <state relative-caret-position="386">
+          <caret line="275" column="22" selection-start-line="275" selection-start-column="22" selection-end-line="275" selection-end-column="22" />
           <folding>
             <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/typings/globals/react/index.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="331">
+          <caret line="159" column="8" selection-start-line="159" selection-start-column="8" selection-end-line="159" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="1574" column="91" selection-start-line="1574" selection-start-column="91" selection-end-line="1574" selection-end-column="91" />
+          <folding />
         </state>
       </provider>
     </entry>

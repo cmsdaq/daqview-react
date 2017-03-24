@@ -1573,7 +1573,6 @@ namespace DAQView {
             let minTrigDisplayContent: any = this.props.minTrig;
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = this.props.ttcPartition;
-            console.log(ttcPartition.name)
 
             let feds: {[key: number]: DAQAggregatorSnapshot.FED} = frl.feds;
             let firstFed: DAQAggregatorSnapshot.FED = feds[0];
