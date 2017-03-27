@@ -49,7 +49,7 @@ namespace DAQAggregator {
             runDurationInMillis: number;
             dpsetPath: string;
 
-            daqAggregatorBinaryName: string;
+            daqAggregatorProducer: string;
 
             daqState: string;
             levelZeroState: string;

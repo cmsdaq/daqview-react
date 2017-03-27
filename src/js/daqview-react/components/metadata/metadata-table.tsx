@@ -49,7 +49,7 @@ namespace DAQView {
                                                                     lv0StateTimestamp={daq.levelZeroStateEntry}
                                                                     runStartTime={daq.runStart}
                                                                     runDurationInMillis={daq.runDurationInMillis}
-                                                                    daqAggregatorModel={daq.daqAggregatorBinaryName}/>;
+                                                                    daqAggregatorVersion={daq.daqAggregatorProducer}/>;
                 ReactDOM.render(metadataTableRootElement, this.htmlRootElement);
             }
         }
@@ -76,7 +76,7 @@ namespace DAQView {
         drawPausedComponent: boolean;
         drawStaleSnapshot: boolean;
         runInfoTimelineLink: string;
-        daqAggregatorModel: string;
+        daqAggregatorVersion: string;
     }
 
     class MetadataTableElement extends React.Component<MetadataTableElementProperties,{}> {
@@ -102,7 +102,9 @@ namespace DAQView {
 
             }
 
-            let snapshotOnHoverMessage: string = "Timestamp: "+this.props.snapshotTimestamp+"\nDeserialized with: "+this.props.daqAggregatorModel;
+            let version: string = this.props.daqAggregatorVersion ?  this.props.daqAggregatorVersion.substring(0, this.props.daqAggregatorVersion.length-4) : "Unknown";
+
+            let snapshotOnHoverMessage: string = "Timestamp: "+this.props.snapshotTimestamp+"\nProduced by: "+version;
 
 
             return (
