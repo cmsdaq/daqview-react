@@ -164,6 +164,19 @@
     color: #FF0000;
 }
 
+.fff-table-requests-blocked-zero {
+    background-color: #ffff00;
+}
+
+.fff-table-priority {
+    color: #FF0000;
+}
+
+.fff-table-priority-zero {
+    background-color: #ffff00;
+}
+
+
 .fff-table-bwout {
 }
 

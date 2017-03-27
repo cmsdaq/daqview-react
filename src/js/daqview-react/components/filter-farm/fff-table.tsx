@@ -373,13 +373,22 @@ namespace DAQView {
         };
 
         export const REQUESTS_BLOCKED: FormatUtility.NumberFormat = {
-            baseStyle: 'fff-table-requests-blocked'
+            baseStyle: 'fff-table-requests-blocked',
+            formats: [{min: 1, max: 1000000, styleSuffix: '-zero'}]
+        };
+
+        export const PRIORITY: FormatUtility.NumberFormat = {
+            baseStyle: 'fff-table-priority',
+            formats: [{min: 1, max: 1000000, styleSuffix: '-zero'}]
         };
 
         export const BANDWIDTH: FormatUtility.NumberFormat = {
             baseStyle: 'fff-table-bwout',
             formats: [{min: 100, max: 1000000, styleSuffix: '-over'}, {styleSuffix: ''}]
         };
+
+
+
     }
 
     const FFF_TABLE_BASE_HEADERS: FileBasedFilterFarmTableHeaderProperties[] = [
@@ -774,6 +783,7 @@ namespace DAQView {
             }
 
             let eventsInBuClass: string = FormatUtility.getClassNameForNumber(eventsInBU, FFFTableNumberFormats.EVENTS_IN_BU);
+            let priorityClass: string = FormatUtility.getClassNameForNumber(bu.priority, FFFTableNumberFormats.PRIORITY)
             let requestsSentClass: string = FormatUtility.getClassNameForNumber(requestsSent, FFFTableNumberFormats.REQUESTS_SENT);
             let requestsUsedClass: string = FormatUtility.getClassNameForNumber(requestsUsed, FFFTableNumberFormats.REQUESTS_USED);
             let requestsBlockedClass: string = FormatUtility.getClassNameForNumber(requestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED);
@@ -817,7 +827,7 @@ namespace DAQView {
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean.toFixed(1)}±{sizeStddev.toFixed(1)}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(events, FFFTableNumberFormats.EVENTS))}>{events}</td>
                     <td className={classNames("fff-table-bu-row-counter",eventsInBuClass)}>{eventsInBU}</td>
-                    <td className="fff-table-bu-row-counter">{bu.priority}</td>
+                    <td className={classNames("fff-table-bu-row-counter",priorityClass)}>{bu.priority}</td>
                     <td className={classNames("fff-table-bu-row-counter",requestsSentClass)}>{requestsSent}</td>
                     <td className={classNames("fff-table-bu-row-counter",requestsUsedClass)}>{requestsUsed}</td>
                     <td className={classNames("fff-table-bu-row-counter",requestsBlockedClass)}>{requestsBlocked}</td>
@@ -864,7 +874,7 @@ namespace DAQView {
             let eventsInBuClass: string = FormatUtility.getClassNameForNumber(buSummary.numEventsInBU, FFFTableNumberFormats.EVENTS_IN_BU);
             let requestsSentClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsSent, FFFTableNumberFormats.REQUESTS_SENT);
             let requestsUsedClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsUsed, FFFTableNumberFormats.REQUESTS_USED);
-            let requestsBlockedClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED);
+            let requestsBlockedClass: string = 'fff-table-requests-blocked';
 
             if (drawZeroDataFlowComponent){
                 fffBuSummaryRowClass = "fff-table-bu-summary-row-ratezero";
@@ -901,7 +911,7 @@ namespace DAQView {
                     <td className={FormatUtility.getClassNameForNumber(buSummary.eventSizeMean / 1000, FFFTableNumberFormats.SIZE)}>{(buSummary.eventSizeMean / 1000).toFixed(1)}±{(buSummary.eventSizeStddev / 1000).toFixed(1)}</td>
                     <td className={FormatUtility.getClassNameForNumber(buSummary.numEvents, FFFTableNumberFormats.EVENTS)}>Σ {buSummary.numEvents}</td>
                     <td className={eventsInBuClass}>Σ {buSummary.numEventsInBU}</td>
-                    <td>{buSummary.priority}</td>
+                    <td className="fff-table-priority">{buSummary.priority}</td>
                     <td className={requestsSentClass}>Σ {buSummary.numRequestsSent}</td>
                     <td className={requestsUsedClass}>Σ {buSummary.numRequestsUsed}</td>
                     <td className={requestsBlockedClass}>Σ {buSummary.numRequestsBlocked}</td>
