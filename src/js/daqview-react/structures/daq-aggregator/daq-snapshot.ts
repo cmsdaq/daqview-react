@@ -264,7 +264,7 @@ namespace DAQAggregator {
             geoSlot: number;
             // type: string;
 
-            feds?: {[key: number]: FED};
+            feds?: {[key: string]: FED};
             subFedbuilder?: SubFEDBuilder;
 
             // state: string;

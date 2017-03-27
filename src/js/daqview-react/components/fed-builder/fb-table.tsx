@@ -1366,7 +1366,8 @@ namespace DAQView {
             let frlPcHostname: string = frlPc.hostname;
             let frlPcPort: number = frlPc.port;
             let frlPcName: string = frlPcHostname.split(".")[0];
-            frlPcName = frlPcName.indexOf('frlpc')==0 ? frlPcName.substring(6) : frlPcName;
+
+            frlPcName = frlPcName.indexOf('frlpc')==0 && frlPcName.indexOf('frlpc40')==-1? frlPcName.substring(6) : frlPcName;
             let frlPcUrl: string = 'http://' + frlPcHostname + ':'+frlPcPort;
             let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
             let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
@@ -1582,14 +1583,15 @@ namespace DAQView {
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = this.props.ttcPartition;
 
-            let feds: {[key: number]: DAQAggregatorSnapshot.FED} = frl.feds;
-            let firstFed: DAQAggregatorSnapshot.FED = feds[0];
+            let feds: {[key: string]: DAQAggregatorSnapshot.FED} = frl.feds;
+
+            let firstFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("0") ? feds["0"] : null;
             let firstFedDisplay: any = firstFed && firstFed.ttcp.name === ttcPartition.name? <FEDData key={firstFed['@id']} fed={firstFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '-';
-            let secondFed: DAQAggregatorSnapshot.FED = feds[1];
+            let secondFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("1") ? feds["1"] : null;
             let secondFedDisplay: any = secondFed && secondFed.ttcp.name === ttcPartition.name? <FEDData key={secondFed['@id']} fed={secondFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
-            let thirdFed: DAQAggregatorSnapshot.FED = feds[2];
+            let thirdFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("2") ? feds["2"] : null;
             let thirdFedDisplay: any = thirdFed && thirdFed.ttcp.name === ttcPartition.name? <FEDData key={thirdFed['@id']} fed={thirdFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
-            let fourthFed: DAQAggregatorSnapshot.FED = feds[3];
+            let fourthFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("3") ? feds["3"] : null;
             let fourthFedDisplay: any = fourthFed && fourthFed.ttcp.name === ttcPartition.name? <FEDData key={fourthFed['@id']} fed={fourthFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
 
             let secondFedShown: boolean = secondFed && (secondFed && secondFed.ttcp.name === ttcPartition.name);
