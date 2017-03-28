@@ -1,6 +1,11 @@
 /**
  * @author Michail Vougioukas
  * @author Philipp Brummer
+ *
+ * This model definition should contain only fields and objects which also exist in the Java model of the snapshot *deserializer*.
+ *
+ * For fields that might exist in the deserializer model but not in the model of the original Aggregator which produced snapshot,
+ * it is advised to use question marks to make them optional and to *always* check if null before using, to ensure backwards compatibility of the application.
  */
 
 namespace DAQAggregator {
@@ -40,10 +45,15 @@ namespace DAQAggregator {
 
             sessionId: number;
             runNumber: number;
+            runStart: number;
+            runDurationInMillis: number;
             dpsetPath: string;
+
+            daqAggregatorProducer: string;
 
             daqState: string;
             levelZeroState: string;
+            levelZeroStateEntry: number;
             lhcMachineMode: string;
             lhcBeamMode: string;
 
@@ -158,6 +168,8 @@ namespace DAQAggregator {
             numLumisectionsOutHLT: number;
 
             fuOutputBandwidthInMB: number;
+
+            crashed: boolean;
         }
 
         export interface RU extends SnapshotElement {
@@ -188,6 +200,8 @@ namespace DAQAggregator {
             fedsWithErrors: FED[];
 
             fedBuilder: FEDBuilder;
+
+            crashed: boolean;
         }
 
         export interface SubFEDBuilder extends SnapshotElement {
@@ -197,6 +211,18 @@ namespace DAQAggregator {
             frls?: FRL[];
             feds: FED[];
             ttcPartition?: TTCPartition;
+        }
+
+        export interface FMMInfo extends SnapshotElement{
+            nullCause: string;
+        }
+
+        export interface TCDSPartitionInfo extends SnapshotElement{
+            nullCause: string;
+            triggerName: string;
+            piContext: string;
+            icinr: number;
+            pmnr: number;
         }
 
         export interface TTCPartition extends SnapshotElement {
@@ -210,6 +236,12 @@ namespace DAQAggregator {
             fmm?: FMM;
             masked: boolean;
             topFMMInfo: FMMInfo;
+            tcdsPartitionInfo?: TCDSPartitionInfo;
+        }
+
+        export interface FMMApplication extends SnapshotElement {
+            crashed: boolean;
+            hostname: string;
         }
 
         export interface FMM extends SnapshotElement {
@@ -217,6 +249,7 @@ namespace DAQAggregator {
             url: string;
             feds?: FED[];
             stateName: string;
+            fmmApplication: FMMApplication;
         }
 
         export interface FRLPc extends SnapshotElement {
@@ -224,14 +257,14 @@ namespace DAQAggregator {
             port: number;
             // masked: boolean;
             // frls?: FRL[];
-            // crashed: boolean;
+            crashed: boolean;
         }
 
         export interface FRL extends SnapshotElement {
             geoSlot: number;
             // type: string;
 
-            feds?: {[key: number]: FED};
+            feds?: {[key: string]: FED};
             subFedbuilder?: SubFEDBuilder;
 
             // state: string;
@@ -284,9 +317,7 @@ namespace DAQAggregator {
             isPseudoFed: boolean; //variable set locally, using context information, for displays reason
         }
 
-        export interface FMMInfo extends SnapshotElement{
-            nullCause: string;
-        }
+
 
     }
 

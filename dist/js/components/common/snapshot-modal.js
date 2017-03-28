@@ -29,7 +29,7 @@ var DAQView;
             }
             else {
                 var daq = snapshot.getDAQ();
-                var snapshotModalRootElement = React.createElement(SnapshotModalElement, {snapshot: snapshot, url: url});
+                var snapshotModalRootElement = React.createElement(SnapshotModalElement, {daq: daq, url: url});
                 ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
             }
         };

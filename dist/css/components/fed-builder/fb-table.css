@@ -155,7 +155,7 @@
 }
 
 .fb-table-fb-row-stale-page-row:nth-of-type(odd) {
-    background-color:  #F5F2F2 ;
+    background-color:  #F5F2F2;
 }
 
 .fb-table-fb-row-ratezero:nth-of-type(even) {
@@ -163,7 +163,7 @@
 }
 
 .fb-table-fb-row-ratezero:nth-of-type(odd) {
-    background-color:  #F5F2F2 ;
+    background-color:  #F5F2F2;
 }
 
 .fb-table-fb-row-running:nth-of-type(even) {
@@ -171,7 +171,7 @@
 }
 
 .fb-table-fb-row-running:nth-of-type(odd) {
-    background-color:  #F5F2F2 ;
+    background-color:  #F5F2F2;
 }
 
 .fb-table-fb-row-paused:nth-of-type(even) {
@@ -179,7 +179,7 @@
 }
 
 .fb-table-fb-row-paused:nth-of-type(odd) {
-    background-color:  #F5F2F2 ;
+    background-color:  #F5F2F2;
 }
 
 .fb-table-subfb-row {
@@ -189,6 +189,15 @@
 .fb-table-fb-summary-row-stale-page {
     font-weight: bold;
     background-color: #ffbe11;
+}
+
+@keyframes pulseRate {
+    to { background-color: #EF4A50; }
+}
+
+.fb-table-fb-evm-row-ratezero {
+    font-weight: bold;
+    animation: pulseRate 500ms alternate infinite;
 }
 
 .fb-table-fb-summary-row-ratezero {
@@ -342,4 +351,23 @@
 .fb-table-ru-red-column-escape{
     color: #FFFFFF;
     text-align: right;
+}
+
+.fb-table-jobcrash{
+    background-color:#000000;
+    color:#ffffff;
+    font-weight:bold;
+}
+
+.fb-table-ru-state-error {
+    font-weight: bold;
+    background-color: #CC0033;
+}
+
+.fb-table-ru-state-warn {
+    background-color: #cc726e;
+}
+
+.fb-table-ru-state-normal {
+
 }

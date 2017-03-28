@@ -20,6 +20,22 @@ namespace DAQAggregator {
 
         private views: DAQSnapshotView[] = [];
 
+        private mapOfMonths: {[key: string]: string} =
+        {
+            "Jan" : "01",
+            "Feb" : "02",
+            "Mar" : "03",
+            "Apr" : "04",
+            "May" : "05",
+            "Jun" : "06",
+            "Jul" : "07",
+            "Aug" : "08",
+            "Sep" : "09",
+            "Oct" : "10",
+            "Nov" : "11",
+            "Dec" : "12"
+        };
+
         constructor(snapshotSource: SnapshotSource) {
             this.snapshotSource = snapshotSource;
         }
@@ -29,9 +45,9 @@ namespace DAQAggregator {
         }
 
         public prePassElementSpecificData(args: string[]){
-                this.views.forEach(
-                    view => view.prePassElementSpecificData(args)
-                );
+            this.views.forEach(
+                view => view.prePassElementSpecificData(args)
+            );
         }
 
         public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url: string) {
@@ -105,15 +121,18 @@ namespace DAQAggregator {
 
                     let malformedSnapshot: boolean = false;
 
-                    if ((snapshotJSON == null)||(!snapshotJSON.hasOwnProperty("@id"))){
+                    if ((snapshotJSON == null)||(!snapshotJSON.hasOwnProperty("@id"))) {
                         console.log("Malformed snapshot received, parsing and updating won't be launched until next valid snapshot");
                         console.log(snapshotJSON);
                         malformedSnapshot = true;
                         let snapshot: Snapshot;
 
                         let errorMsg: string = "Could not find DAQ snapshot with requested params";
-                        if (snapshotJSON.hasOwnProperty("message")){
-                            errorMsg = snapshotJSON.message;
+
+                        if (snapshotJSON != null) {
+                            if (snapshotJSON.hasOwnProperty("message")) {
+                                errorMsg = snapshotJSON.message;
+                            }
                         }
 
                         //url argument is not used in a state of error, so I use it to pass more info about the error
@@ -160,7 +179,7 @@ namespace DAQAggregator {
                             let serverResponseTime: number = new Date(snapshotRequest.getResponseHeader("Date")).getTime();
 
                             let diff: number = serverResponseTime - dataTime;
-                            let thres: number = 6500; //in ms
+                            let thres: number = 15000; //in ms
                             console.log("Time diff between snapshot timestamp and response (in ms): "+diff);
                             if ((diff > thres)){
                                 drawStaleSnapshot = true;
@@ -172,7 +191,7 @@ namespace DAQAggregator {
                             let localTimestampElements: string[] = (new Date(snapshot.getUpdateTimestamp()).toString()).split(" ");
 
                             //keep Month, Day, Year, Time (discard Weekday and timezone info)
-                            let formattedLocalTimestamp: string = localTimestampElements[1]+"-"+localTimestampElements[2]+"-"+localTimestampElements[3]+"-"+localTimestampElements[4];
+                            let formattedLocalTimestamp: string = localTimestampElements[3]+"-"+this.mapOfMonths[localTimestampElements[1]]+"-"+localTimestampElements[2]+"-"+localTimestampElements[4];
 
                             window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp);
                             document.title = "DAQView [" + formattedLocalTimestamp + "]";
@@ -225,7 +244,7 @@ namespace DAQAggregator {
             setTimeout(updateFunction, this.snapshotSource.updateInterval);
         }
 
-//this method will immediately stop page updating (including both values and graphics)
+        //this method will immediately stop page updating (including both values and graphics)
         public stop() {
             this.running = false;
         }
@@ -242,21 +261,6 @@ namespace DAQAggregator {
         public provideOneMoreSnapshotAndStop(callerType: number){
             this.pauseCallerType = callerType;
             this.instructionToStop = true;
-        }
-
-        public checkIfDataFlowIsStopped(snapshot: Snapshot): boolean{
-            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
-            if (daq.fedBuilderSummary.rate>0){
-                return false;
-            }
-            daq.fedBuilders.forEach(function (fedBuilder) {
-                if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
-                    if (fedBuilder.ru.stateName === "Enabled") {
-                        return true;
-                    }
-                }
-            });
-            return false;
         }
     }
 

@@ -13,6 +13,20 @@ var DAQAggregator;
             this.previousUrl = "";
             this.pauseCallerType = 0; //by default all pause calls are asssumed to be originated from the real time mode
             this.views = [];
+            this.mapOfMonths = {
+                "Jan": "01",
+                "Feb": "02",
+                "Mar": "03",
+                "Apr": "04",
+                "May": "05",
+                "Jun": "06",
+                "Jul": "07",
+                "Aug": "08",
+                "Sep": "09",
+                "Oct": "10",
+                "Nov": "11",
+                "Dec": "12"
+            };
             this.snapshotSource = snapshotSource;
         }
         SnapshotProvider.prototype.addView = function (view) {
@@ -80,8 +94,10 @@ var DAQAggregator;
                         malformedSnapshot = true;
                         var snapshot = void 0;
                         var errorMsg = "Could not find DAQ snapshot with requested params";
-                        if (snapshotJSON.hasOwnProperty("message")) {
-                            errorMsg = snapshotJSON.message;
+                        if (snapshotJSON != null) {
+                            if (snapshotJSON.hasOwnProperty("message")) {
+                                errorMsg = snapshotJSON.message;
+                            }
                         }
                         //url argument is not used in a state of error, so I use it to pass more info about the error
                         this.setSnapshot(snapshot, this.drawPausedPage, false, false, errorMsg); //maybe also pass message to setSnapshot?
@@ -120,7 +136,7 @@ var DAQAggregator;
                             this.snapshotSource.currentSnapshotTimestamp = dataTime;
                             var serverResponseTime = new Date(snapshotRequest.getResponseHeader("Date")).getTime();
                             var diff = serverResponseTime - dataTime;
-                            var thres = 6500; //in ms
+                            var thres = 15000; //in ms
                             console.log("Time diff between snapshot timestamp and response (in ms): " + diff);
                             if ((diff > thres)) {
                                 drawStaleSnapshot = true;
@@ -131,7 +147,7 @@ var DAQAggregator;
                             //updates daqview url
                             var localTimestampElements = (new Date(snapshot.getUpdateTimestamp()).toString()).split(" ");
                             //keep Month, Day, Year, Time (discard Weekday and timezone info)
-                            var formattedLocalTimestamp = localTimestampElements[1] + "-" + localTimestampElements[2] + "-" + localTimestampElements[3] + "-" + localTimestampElements[4];
+                            var formattedLocalTimestamp = localTimestampElements[3] + "-" + this.mapOfMonths[localTimestampElements[1]] + "-" + localTimestampElements[2] + "-" + localTimestampElements[4];
                             window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp);
                             document.title = "DAQView [" + formattedLocalTimestamp + "]";
                             //updates url to retrieve snapshot
@@ -183,20 +199,6 @@ var DAQAggregator;
         SnapshotProvider.prototype.provideOneMoreSnapshotAndStop = function (callerType) {
             this.pauseCallerType = callerType;
             this.instructionToStop = true;
-        };
-        SnapshotProvider.prototype.checkIfDataFlowIsStopped = function (snapshot) {
-            var daq = snapshot.getDAQ();
-            if (daq.fedBuilderSummary.rate > 0) {
-                return false;
-            }
-            daq.fedBuilders.forEach(function (fedBuilder) {
-                if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
-                    if (fedBuilder.ru.stateName === "Enabled") {
-                        return true;
-                    }
-                }
-            });
-            return false;
         };
         return SnapshotProvider;
     }());

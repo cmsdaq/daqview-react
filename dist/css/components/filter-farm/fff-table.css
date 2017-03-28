@@ -164,6 +164,19 @@
     color: #FF0000;
 }
 
+.fff-table-requests-blocked-nonzero {
+    background-color: #ffff00;
+}
+
+.fff-table-priority {
+    color: #FF0000;
+}
+
+.fff-table-priority-nonzero {
+    background-color: #ffff00;
+}
+
+
 .fff-table-bwout {
 }
 
@@ -176,6 +189,12 @@
     width: 8px;
     height: 8px;
     margin: 0 0.2em 0 0.2em;
+}
+
+.fff-table-jobcrash{
+    background-color:#000000;
+    color:#ffffff;
+    font-weight:bold;
 }
 
 .fff-table-bu-state-error {
