@@ -986,7 +986,7 @@ namespace DAQView {
             //without fragments
             for (var idx=0;idx<fedsWithErrors.length;idx++){
                 fedWithErrors = fedsWithErrors[idx];
-                if (fedWithErrors.ruFedWithoutFragments && ru.eventsInRU == 0 && ru.incompleteSuperFragmentCount > 0){
+                if (fedWithErrors.ruFedWithoutFragments && ru.rate == 0 && ru.incompleteSuperFragmentCount > 0){
                     ruWarningData.push(<span className="fb-table-ru-warn-message"> {fedWithErrors.srcIdExpected + ' '} </span>);
                 }
             }
