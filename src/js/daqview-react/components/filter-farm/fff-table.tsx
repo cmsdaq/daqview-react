@@ -374,12 +374,12 @@ namespace DAQView {
 
         export const REQUESTS_BLOCKED: FormatUtility.NumberFormat = {
             baseStyle: 'fff-table-requests-blocked',
-            formats: [{min: 1, max: 1000000, styleSuffix: '-zero'}]
+            formats: [{min: 1, max: 1000000, styleSuffix: '-nonzero'}]
         };
 
         export const PRIORITY: FormatUtility.NumberFormat = {
             baseStyle: 'fff-table-priority',
-            formats: [{min: 1, max: 1000000, styleSuffix: '-zero'}]
+            formats: [{min: 1, max: 1000000, styleSuffix: '-nonzero'}]
         };
 
         export const BANDWIDTH: FormatUtility.NumberFormat = {
@@ -827,10 +827,10 @@ namespace DAQView {
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean.toFixed(1)}±{sizeStddev.toFixed(1)}</td>
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(events, FFFTableNumberFormats.EVENTS))}>{events}</td>
                     <td className={classNames("fff-table-bu-row-counter",eventsInBuClass)}>{eventsInBU}</td>
-                    <td className={classNames("fff-table-bu-row-counter",priorityClass)}>{bu.priority}</td>
+                    <td><div className={classNames("fff-table-bu-row-counter",priorityClass)}>{bu.priority}</div></td>
                     <td className={classNames("fff-table-bu-row-counter",requestsSentClass)}>{requestsSent}</td>
                     <td className={classNames("fff-table-bu-row-counter",requestsUsedClass)}>{requestsUsed}</td>
-                    <td className={classNames("fff-table-bu-row-counter",requestsBlockedClass)}>{requestsBlocked}</td>
+                    <td><div className={classNames("fff-table-bu-row-counter",requestsBlockedClass)}>{requestsBlocked}</div></td>
                     <td className="fff-table-bu-row-counter">{bu.numFUsHLT}</td>
                     <td className="fff-table-bu-row-counter">{bu.numFUsCrashed}</td>
                     <td className="fff-table-bu-row-counter">{bu.numFUsStale}</td>

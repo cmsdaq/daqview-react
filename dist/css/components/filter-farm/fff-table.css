@@ -164,7 +164,7 @@
     color: #FF0000;
 }
 
-.fff-table-requests-blocked-zero {
+.fff-table-requests-blocked-nonzero {
     background-color: #ffff00;
 }
 
@@ -172,7 +172,7 @@
     color: #FF0000;
 }
 
-.fff-table-priority-zero {
+.fff-table-priority-nonzero {
     background-color: #ffff00;
 }
 

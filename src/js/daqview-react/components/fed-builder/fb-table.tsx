@@ -1519,8 +1519,8 @@ namespace DAQView {
                     <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
                     <td className={frlpcStateDisplayClass}>{frlpcStateDisplay}</td>
                     <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>
-                    <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
-                    <td className={maxTrigClassNames}>{maxTrigDisplayContent}</td>
+                    <td><div className={minTrigClassNames}>{minTrigDisplayContent}</div></td>
+                    <td><div className={maxTrigClassNames}>{maxTrigDisplayContent}</div></td>
                     {this.props.additionalContent ? this.props.additionalContent : null}
                 </tr>
             );
