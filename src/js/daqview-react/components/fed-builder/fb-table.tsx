@@ -1396,7 +1396,7 @@ namespace DAQView {
                     ttsStateTcdsApvPm = '-';
                 }else {
                     if (ttcPartition.fmm) {
-                        if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled') {
+                        if (ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Enabled') {
                             ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?'
                         } else {
                             ttsState = '-';
@@ -1422,7 +1422,7 @@ namespace DAQView {
             let maxTrigGreaterThanZero: boolean = maxTrig > 0;
 
             let ttcPartitionTTSStateLink: any = ttsState;
-            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0,2) != 'no') {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0,2) != 'no' && ttsState != '?') {
                 ttcPartitionTTSStateLink =
                     <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
                        target="_blank" title={ttcPartition.ttsState}>{ttsState}</a>;
