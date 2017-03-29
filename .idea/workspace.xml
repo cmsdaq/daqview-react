@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e23a429b-a98c-4b58-9e71-913f83e76789" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_fb.html" afterPath="$PROJECT_DIR$/index_fb.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_fff.html" afterPath="$PROJECT_DIR$/index_fff.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" afterPath="$PROJECT_DIR$/dist/js/components/fed-builder/fb-table.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" afterPath="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
     </list>
     <ignored path="daqview-react.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="fb-table.tsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fb-table.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="450">
-              <caret line="1432" column="0" selection-start-line="1432" selection-start-column="0" selection-end-line="1432" selection-end-column="0" />
+              <caret line="1375" column="0" selection-start-line="1375" selection-start-column="0" selection-end-line="1375" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -45,11 +44,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="892">
-              <caret line="319" column="57" selection-start-line="319" selection-start-column="57" selection-end-line="319" selection-end-column="74" />
+            <state relative-caret-position="22">
+              <caret line="261" column="32" selection-start-line="261" selection-start-column="32" selection-end-line="261" selection-end-column="32" />
               <folding>
                 <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -173,10 +172,10 @@
         <option value="$PROJECT_DIR$/dist/css/components/filter-farm/fff-table.css" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/components/filter-farm/fff-table.tsx" />
         <option value="$PROJECT_DIR$/src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts" />
-        <option value="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/index_fb.html" />
         <option value="$PROJECT_DIR$/index_fff.html" />
+        <option value="$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx" />
       </list>
     </option>
   </component>
@@ -911,14 +910,7 @@
       <workItem from="1488813502647" duration="28844000" />
       <workItem from="1488972898739" duration="2360000" />
       <workItem from="1489404058563" duration="89619000" />
-      <workItem from="1490098670119" duration="52722000" />
-    </task>
-    <task id="LOCAL-00103" summary="feat(): external link buttons for the main page">
-      <created>1489513008107</created>
-      <option name="number" value="00103" />
-      <option name="presentableId" value="LOCAL-00103" />
-      <option name="project" value="LOCAL" />
-      <updated>1489513008108</updated>
+      <workItem from="1490098670119" duration="53396000" />
     </task>
     <task id="LOCAL-00104" summary="fix(): syncing of three html files">
       <created>1489513306529</created>
@@ -1256,11 +1248,18 @@
       <option name="project" value="LOCAL" />
       <updated>1490800778682</updated>
     </task>
-    <option name="localTasksCounter" value="152" />
+    <task id="LOCAL-00152" summary="version bump">
+      <created>1490800857002</created>
+      <option name="number" value="00152" />
+      <option name="presentableId" value="LOCAL-00152" />
+      <option name="project" value="LOCAL" />
+      <updated>1490800857002</updated>
+    </task>
+    <option name="localTasksCounter" value="153" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="563292000" />
+    <option name="totallyTimeSpent" value="563966000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="0" width="1928" height="1203" extended-state="6" />
@@ -1321,9 +1320,9 @@
     <MESSAGE value="fix(): FFF table fixes and checks" />
     <MESSAGE value="fix(): Hiding FED without fragments if RU/EVM is not stuck" />
     <MESSAGE value="feat(): introduced divs to better separate adjacent elements with the same background color" />
-    <MESSAGE value="version bump" />
     <MESSAGE value="fix(): further null checks" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(): further null checks" />
+    <MESSAGE value="version bump" />
+    <option name="LAST_COMMIT_MESSAGE" value="version bump" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1678,14 +1677,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="1432" column="0" selection-start-line="1432" selection-start-column="0" selection-end-line="1432" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index_fff.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="833">
@@ -1706,11 +1697,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="892">
-          <caret line="319" column="57" selection-start-line="319" selection-start-column="57" selection-end-line="319" selection-end-column="74" />
+        <state relative-caret-position="22">
+          <caret line="261" column="32" selection-start-line="261" selection-start-column="32" selection-end-line="261" selection-end-column="32" />
           <folding>
             <element signature="n#style#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/daqview-react/components/fed-builder/fb-table.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="1375" column="0" selection-start-line="1375" selection-start-column="0" selection-end-line="1375" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

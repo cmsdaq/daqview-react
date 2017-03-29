@@ -1088,6 +1088,7 @@ var DAQView;
             var frlPcPort = frlPc.port;
             var frlPcName = frlPcHostname.split(".")[0];
             frlPcName = frlPcName.indexOf('frlpc') == 0 && frlPcName.indexOf('frlpc40') == -1 ? frlPcName.substring(6) : frlPcName;
+            frlPcName = frlPcName.indexOf('frlpc40') == 0 ? frlPcName.substring(8) : frlPcName;
             var frlPcUrl = 'http://' + frlPcHostname + ':' + frlPcPort;
             var frls = subFedBuilder.frls;
             var pseudoFeds = subFedBuilder.feds;

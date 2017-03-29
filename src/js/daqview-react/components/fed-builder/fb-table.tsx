@@ -1368,6 +1368,8 @@ namespace DAQView {
             let frlPcName: string = frlPcHostname.split(".")[0];
 
             frlPcName = frlPcName.indexOf('frlpc')==0 && frlPcName.indexOf('frlpc40')==-1? frlPcName.substring(6) : frlPcName;
+            frlPcName = frlPcName.indexOf('frlpc40')==0 ? frlPcName.substring(8) : frlPcName;
+
             let frlPcUrl: string = 'http://' + frlPcHostname + ':'+frlPcPort;
             let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
             let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
