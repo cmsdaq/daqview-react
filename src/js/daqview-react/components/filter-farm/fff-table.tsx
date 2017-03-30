@@ -768,10 +768,12 @@ namespace DAQView {
 
             let buUrlDisplay: any = hostname;
             let buUrlDisplayClass: string = "fff-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            let buDebug: string = "Check problems with BU flashlist!";
 
             if (bu.port > 0){
                 buUrlDisplay = <a href={buUrl} target="_blank">{hostname}</a>;
                 buUrlDisplayClass = "";
+                buDebug = "";
             }
 
 
@@ -827,7 +829,7 @@ namespace DAQView {
 
             return (
                 <tr className={fffBuRowClass}>
-                    <td><div className={buUrlDisplayClass}>{buUrlDisplay}</div></td>
+                    <td><div title={buDebug} className={buUrlDisplayClass}>{buUrlDisplay}</div></td>
                     <td>
                         <div className={buStateClass}>{buState}</div>
                         <div className={buJobCrashStateDisplayClass}>{buJobCrashStateDisplay}</div>
