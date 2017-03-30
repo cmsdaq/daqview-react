@@ -1043,6 +1043,14 @@ namespace DAQView {
             ruName = ruName.indexOf('ru')==0 ? ruName.substring(3) : ruName;
             let ruUrl: string = 'http://' + ruHostname + ':'+ruPort+'/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
 
+            let ruUrlDisplay: any = ruName;
+            let ruUrlDisplayClass: string = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+
+            if (ruPort > 0){
+                ruUrlDisplay = <a href={ruUrl} target="_blank">{ruName}</a>;
+                ruUrlDisplayClass = "";
+            }
+
             let ruState: string  = '';
             let ruStateClass = 'fb-table-ru-state-normal';
 
@@ -1077,8 +1085,7 @@ namespace DAQView {
 
             let fedBuilderData: any[] = [];
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
-            </td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}><div className={ruUrlDisplayClass}>{ruUrlDisplay}</div></td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>
                 <div className={ruStateClass}>{ruState}</div>
                 <div className={ruJobCrashStateDisplayClass}>{ruJobCrashStateDisplay}</div>
@@ -1363,14 +1370,25 @@ namespace DAQView {
 
             let subFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder = this.props.subFedBuilder;
             let frlPc: DAQAggregatorSnapshot.FRLPc = subFedBuilder.frlPc;
+
             let frlPcHostname: string = frlPc.hostname;
             let frlPcPort: number = frlPc.port;
             let frlPcName: string = frlPcHostname.split(".")[0];
 
             frlPcName = frlPcName.indexOf('frlpc')==0 && frlPcName.indexOf('frlpc40')==-1? frlPcName.substring(6) : frlPcName;
+            frlPcName = frlPcName.indexOf('frlpc40')==0 ? frlPcName.substring(8) : frlPcName;
+
             let frlPcUrl: string = 'http://' + frlPcHostname + ':'+frlPcPort;
             let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
             let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
+
+            let frlPcUrlDisplay: any = frlPcName;
+            let frlPcUrlDisplayClass: string = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+
+            if (frlPcPort > 0){
+                frlPcUrlDisplay = <a href={frlPcUrl} target="_blank">{frlPcName}</a>;
+                frlPcUrlDisplayClass = "";
+            }
 
             let additionalClasses: string | string[] = this.props.additionalClasses;
             let className: string = classNames("fb-table-subfb-row", additionalClasses);
@@ -1396,7 +1414,7 @@ namespace DAQView {
                     ttsStateTcdsApvPm = '-';
                 }else {
                     if (ttcPartition.fmm) {
-                        if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled') {
+                        if (ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Enabled') {
                             ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?'
                         } else {
                             ttsState = '-';
@@ -1422,7 +1440,7 @@ namespace DAQView {
             let maxTrigGreaterThanZero: boolean = maxTrig > 0;
 
             let ttcPartitionTTSStateLink: any = ttsState;
-            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0,2) != 'no') {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0,2) != 'no' && ttsState != '?') {
                 ttcPartitionTTSStateLink =
                     <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
                        target="_blank" title={ttcPartition.ttsState}>{ttsState}</a>;
@@ -1516,7 +1534,7 @@ namespace DAQView {
                     </td>
                     <td className="fb-table-subfb-tts-perc">{ttcpPercWarn}</td>
                     <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
-                    <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
+                    <td><div className={frlPcUrlDisplayClass}>{frlPcUrlDisplay}</div></td>
                     <td className={frlpcStateDisplayClass}>{frlpcStateDisplay}</td>
                     <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>
                     <td><div className={minTrigClassNames}>{minTrigDisplayContent}</div></td>

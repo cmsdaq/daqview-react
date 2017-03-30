@@ -880,6 +880,12 @@ var DAQView;
             var ruName = ruHostname.split(".")[0];
             ruName = ruName.indexOf('ru') == 0 ? ruName.substring(3) : ruName;
             var ruUrl = 'http://' + ruHostname + ':' + ruPort + '/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+            var ruUrlDisplay = ruName;
+            var ruUrlDisplayClass = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            if (ruPort > 0) {
+                ruUrlDisplay = React.createElement("a", {href: ruUrl, target: "_blank"}, ruName);
+                ruUrlDisplayClass = "";
+            }
             var ruState = '';
             var ruStateClass = 'fb-table-ru-state-normal';
             if (ru.stateName) {
@@ -907,7 +913,7 @@ var DAQView;
             var fbRowRateClass = classNames(fbRowZeroEvmRateClass, FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE));
             var fedBuilderData = [];
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("div", {className: ruUrlDisplayClass}, ruUrlDisplay)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("div", {className: ruStateClass}, ruState), React.createElement("div", {className: ruJobCrashStateDisplayClass}, ruJobCrashStateDisplay)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement(RUWarningData, {key: ru['@id'], ru: ru})));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: fbRowRateClass}, (ru.rate / 1000).toFixed(3)));
@@ -1088,9 +1094,16 @@ var DAQView;
             var frlPcPort = frlPc.port;
             var frlPcName = frlPcHostname.split(".")[0];
             frlPcName = frlPcName.indexOf('frlpc') == 0 && frlPcName.indexOf('frlpc40') == -1 ? frlPcName.substring(6) : frlPcName;
+            frlPcName = frlPcName.indexOf('frlpc40') == 0 ? frlPcName.substring(8) : frlPcName;
             var frlPcUrl = 'http://' + frlPcHostname + ':' + frlPcPort;
             var frls = subFedBuilder.frls;
             var pseudoFeds = subFedBuilder.feds;
+            var frlPcUrlDisplay = frlPcName;
+            var frlPcUrlDisplayClass = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            if (frlPcPort > 0) {
+                frlPcUrlDisplay = React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName);
+                frlPcUrlDisplayClass = "";
+            }
             var additionalClasses = this.props.additionalClasses;
             var className = classNames("fb-table-subfb-row", additionalClasses);
             var ttcPartition = subFedBuilder.ttcPartition;
@@ -1112,7 +1125,7 @@ var DAQView;
                 }
                 else {
                     if (ttcPartition.fmm) {
-                        if (ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName === 'Enabled') {
+                        if (ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Enabled') {
                             ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?';
                         }
                         else {
@@ -1135,7 +1148,7 @@ var DAQView;
             var minTrigUnequalMaxTrig = minTrig != maxTrig;
             var maxTrigGreaterThanZero = maxTrig > 0;
             var ttcPartitionTTSStateLink = ttsState;
-            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0, 2) != 'no') {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0, 2) != 'no' && ttsState != '?') {
                 ttcPartitionTTSStateLink =
                     React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank", title: ttcPartition.ttsState}, ttsState);
             }
@@ -1199,7 +1212,7 @@ var DAQView;
                 fmmAppStateDisplay = "JobCrash";
                 fmmAppStateDisplayClass = "fb-table-jobcrash";
             }
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_P), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_A), React.createElement("td", null, React.createElement("div", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_F), React.createElement("div", {className: fmmAppStateDisplayClass}, fmmAppStateDisplay)), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercWarn), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercBusy), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement("td", {className: frlpcStateDisplayClass}, frlpcStateDisplay), React.createElement(FRLs, {frls: frls, minTrig: minTrigDisplayContent, pseudoFeds: pseudoFeds, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition}), React.createElement("td", null, React.createElement("div", {className: minTrigClassNames}, minTrigDisplayContent)), React.createElement("td", null, React.createElement("div", {className: maxTrigClassNames}, maxTrigDisplayContent)), this.props.additionalContent ? this.props.additionalContent : null));
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_P), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_A), React.createElement("td", null, React.createElement("div", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_F), React.createElement("div", {className: fmmAppStateDisplayClass}, fmmAppStateDisplay)), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercWarn), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercBusy), React.createElement("td", null, React.createElement("div", {className: frlPcUrlDisplayClass}, frlPcUrlDisplay)), React.createElement("td", {className: frlpcStateDisplayClass}, frlpcStateDisplay), React.createElement(FRLs, {frls: frls, minTrig: minTrigDisplayContent, pseudoFeds: pseudoFeds, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition}), React.createElement("td", null, React.createElement("div", {className: minTrigClassNames}, minTrigDisplayContent)), React.createElement("td", null, React.createElement("div", {className: maxTrigClassNames}, maxTrigDisplayContent)), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));

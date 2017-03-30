@@ -180,7 +180,6 @@ namespace DAQAggregator {
             // instance: number;
 
             stateName?: string;
-            errorMsg: string;
             warnMsg: string;
             infoMsg: string;
 
@@ -267,10 +266,6 @@ namespace DAQAggregator {
             feds?: {[key: string]: FED};
             subFedbuilder?: SubFEDBuilder;
 
-            // state: string;
-            // substate: string;
-
-            // url: string;
         }
 
         export interface FED extends SnapshotElement {

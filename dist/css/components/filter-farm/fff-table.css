@@ -93,6 +93,12 @@
     background-color: #ffbe11;
 }
 
+.fff-table-stale-member-wrapbox {
+    border: 3px solid #ffbe11;
+    padding: 1px;
+    margin: 1px;
+}
+
 .fff-table-bu-summary-row-ratezero {
     font-weight: bold;
     background-color: #EF4A50;
