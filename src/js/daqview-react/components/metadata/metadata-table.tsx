@@ -84,6 +84,7 @@ namespace DAQView {
         render() {
 
             let timestampClass: string = this.props.drawStaleSnapshot && (!this.props.drawPausedComponent)? 'metadata-table-stale-page' : '';
+            let snapshotDebug: string = this.props.drawStaleSnapshot && (!this.props.drawPausedComponent)? "Check whether L0 Dynamic flashlist is there! If yes, check if DAQAggregator is running! If yes, check its logs!" : "";
 
             let durationDescription: string = "";
 
@@ -105,6 +106,10 @@ namespace DAQView {
             let version: string = this.props.daqAggregatorVersion ?  this.props.daqAggregatorVersion.substring(0, this.props.daqAggregatorVersion.length-4) : "Unknown";
 
             let snapshotOnHoverMessage: string = "Timestamp: "+this.props.snapshotTimestamp+"\nProduced by: "+version;
+
+            if (snapshotDebug.length>1){
+                snapshotOnHoverMessage = snapshotOnHoverMessage + "\n\n" + snapshotDebug;
+            }
 
 
             return (
