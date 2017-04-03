@@ -1150,7 +1150,7 @@ var DAQView;
             var minTrig = subFedBuilder.minTrig;
             var maxTrig = subFedBuilder.maxTrig;
             var minTrigUnequalMaxTrig = minTrig != maxTrig;
-            var maxTrigGreaterThanZero = maxTrig > 0;
+            var maxTrigSet = maxTrig >= 0;
             var ttcPartitionTTSStateLink = ttsState;
             if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0, 2) != 'no' && ttsState != '?') {
                 ttcPartitionTTSStateLink =
@@ -1184,7 +1184,7 @@ var DAQView;
             }
             var evmMaxTrg = this.props.evmMaxTrg;
             var minTrigDisplayContent = '';
-            var maxTrigDisplayContent = maxTrigGreaterThanZero ? maxTrig : '';
+            var maxTrigDisplayContent = maxTrigSet ? maxTrig : '';
             if (minTrigUnequalMaxTrig) {
                 minTrigDisplayContent = minTrig;
             }
@@ -1197,7 +1197,7 @@ var DAQView;
                 else {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-equal');
                 }
-                if (maxTrig != evmMaxTrg && maxTrigGreaterThanZero) {
+                if (maxTrig != evmMaxTrg && maxTrigSet) {
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
                 }
                 else {
