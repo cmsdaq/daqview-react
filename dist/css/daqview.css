@@ -28,6 +28,12 @@ html, body {
     font-style: italic;
 }
 
+.daqview-top-row{
+    position: fixed;
+    top: 1em;
+    background-color: #d7dfff;
+}
+
 .daqview-control-pause-resume,
 .daqview-go-to-time-add,
 .daqview-go-to-time-subtract{
