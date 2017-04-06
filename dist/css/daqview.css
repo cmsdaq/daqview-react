@@ -30,7 +30,7 @@ html, body {
 
 .daqview-top-row{
     position: fixed;
-    top: 1em;
+    top: 0em;
     background-color: #d7dfff;
 }
 
