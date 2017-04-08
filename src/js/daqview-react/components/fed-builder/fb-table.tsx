@@ -1045,10 +1045,12 @@ namespace DAQView {
 
             let ruUrlDisplay: any = ruName;
             let ruUrlDisplayClass: string = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            let ruDebug: string = ru.isEVM? "Check problems with EVM flashlist!" : "Check problems with RU flashlist!";
 
             if (ruPort > 0){
                 ruUrlDisplay = <a href={ruUrl} target="_blank">{ruName}</a>;
                 ruUrlDisplayClass = "";
+                ruDebug = "";
             }
 
             let ruState: string  = '';
@@ -1085,7 +1087,7 @@ namespace DAQView {
 
             let fedBuilderData: any[] = [];
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}><div className={ruUrlDisplayClass}>{ruUrlDisplay}</div></td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}><div title={ruDebug} className={ruUrlDisplayClass}>{ruUrlDisplay}</div></td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>
                 <div className={ruStateClass}>{ruState}</div>
                 <div className={ruJobCrashStateDisplayClass}>{ruJobCrashStateDisplay}</div>
@@ -1384,10 +1386,12 @@ namespace DAQView {
 
             let frlPcUrlDisplay: any = frlPcName;
             let frlPcUrlDisplayClass: string = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            let frlPcDebug: string = "Check problems with FEROL_CONFIGURATION flashlist!";
 
             if (frlPcPort > 0){
                 frlPcUrlDisplay = <a href={frlPcUrl} target="_blank">{frlPcName}</a>;
                 frlPcUrlDisplayClass = "";
+                frlPcDebug = "";
             }
 
             let additionalClasses: string | string[] = this.props.additionalClasses;
@@ -1437,7 +1441,7 @@ namespace DAQView {
             let maxTrig: number = subFedBuilder.maxTrig;
 
             let minTrigUnequalMaxTrig: boolean = minTrig != maxTrig;
-            let maxTrigGreaterThanZero: boolean = maxTrig > 0;
+            let maxTrigSet: boolean = maxTrig >= 0;
 
             let ttcPartitionTTSStateLink: any = ttsState;
             if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0,2) != 'no' && ttsState != '?') {
@@ -1487,7 +1491,7 @@ namespace DAQView {
             let evmMaxTrg: number = this.props.evmMaxTrg;
 
             let minTrigDisplayContent: any = '';
-            let maxTrigDisplayContent: any = maxTrigGreaterThanZero ? maxTrig : '';
+            let maxTrigDisplayContent: any = maxTrigSet ? maxTrig : '';
 
             if (minTrigUnequalMaxTrig) {
                 minTrigDisplayContent = minTrig;
@@ -1503,7 +1507,7 @@ namespace DAQView {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-equal');
                 }
 
-                if (maxTrig != evmMaxTrg && maxTrigGreaterThanZero) {
+                if (maxTrig != evmMaxTrg && maxTrigSet) {
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
                 } else {
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
@@ -1534,7 +1538,7 @@ namespace DAQView {
                     </td>
                     <td className="fb-table-subfb-tts-perc">{ttcpPercWarn}</td>
                     <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
-                    <td><div className={frlPcUrlDisplayClass}>{frlPcUrlDisplay}</div></td>
+                    <td><div title={frlPcDebug} className={frlPcUrlDisplayClass}>{frlPcUrlDisplay}</div></td>
                     <td className={frlpcStateDisplayClass}>{frlpcStateDisplay}</td>
                     <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>
                     <td><div className={minTrigClassNames}>{minTrigDisplayContent}</div></td>

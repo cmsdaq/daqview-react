@@ -7,7 +7,7 @@
     <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
     <title>DAQView</title>
 
-    <link rel="icon" type="image/png" href="dist/img/cms_logo.png?ver=30.03.17_1">
+    <link rel="icon" type="image/png" href="dist/img/cms_logo.png">
 
     <link rel="StyleSheet" href="dist/css/daqview.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/metadata-table.css" type="text/css"/>
@@ -276,7 +276,8 @@
 </head>
 <body>
 <div id="daqview-react">
-    <table style="width:100%">
+    <br/><br/>
+    <table style="width:100%" class="daqview-top-row">
         <tr>
             <td width="20%" align="left" valign="center">
                 <a href="" id="dvhomelink" target="_blank"><button class="daqview-external-link">DAQView Home</button></a>
@@ -305,6 +306,11 @@
                     <input type="submit" value="Go to time" class="daqview-go-to-time">
                 </div>
             </td>
+            <td width="20%" align="right" valign="bottom"/>
+        </tr>
+    </table>
+    <table style="width:100%">
+        <tr>
             <td width="20%" align="right" valign="bottom"><div id="daqview-react-snapshot-modal"></div></td>
         </tr>
     </table>
@@ -314,7 +320,7 @@
     <br/><br/>
     <div id="daqview-react-about-table"><div class="loader"></div></div>
     <br/><br/>
-    <div class="daqview-version-id">Version deployed on: 30/03/2017, 10:45</div>
+    <div class="daqview-version-id">Version deployed on: 03/04/2017, 12:10</div>
 </div>
 </body>
 </html>
