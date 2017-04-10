@@ -88,7 +88,7 @@ namespace DAQView {
 
             let durationDescription: string = "";
 
-            if (this.props.runStartTime){
+            if (this.props.runStartTime && this.props.runDurationInMillis){
                 let millis = this.props.runDurationInMillis;
 
                 let days: number = Math.floor(millis / 86400000);
@@ -130,7 +130,7 @@ namespace DAQView {
                     </thead>
                     <tbody className="metadata-table-body">
                     <tr className="metadata-table-content-row">
-                        <td><a href={this.props.runInfoTimelineLink+"?run="+this.props.runNumber} target="_blank">{this.props.runNumber}</a></td>
+                        <td><a href={this.props.runInfoTimelineLink+"?run="+(this.props.runNumber? this.props.runNumber : '0')} target="_blank">{(this.props.runNumber? this.props.runNumber : '0')}</a></td>
                         <td>
                             <div>{this.props.runStartTime ? this.formatHumanReadableTimestamp(this.props.runStartTime) : 'Not started'}</div>
                             <div className="metadata-table-run-duration">{durationDescription}</div>

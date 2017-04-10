@@ -770,7 +770,7 @@ namespace DAQView {
             let buUrlDisplayClass: string = "fff-table-stale-member-wrapbox"; //assume stale and overwrite if not
             let buDebug: string = "Check problems with BU flashlist!";
 
-            if (bu.port > 0){
+            if (bu.port !=null){
                 buUrlDisplay = <a href={buUrl} target="_blank">{hostname}</a>;
                 buUrlDisplayClass = "";
                 buDebug = "";
@@ -794,11 +794,14 @@ namespace DAQView {
                 fffBuRowClass = "fff-table-bu-row-ratezero";
             }
 
-            let eventsInBuClass: string = FormatUtility.getClassNameForNumber(eventsInBU, FFFTableNumberFormats.EVENTS_IN_BU);
-            let priorityClass: string = FormatUtility.getClassNameForNumber(bu.priority, FFFTableNumberFormats.PRIORITY)
-            let requestsSentClass: string = FormatUtility.getClassNameForNumber(requestsSent, FFFTableNumberFormats.REQUESTS_SENT);
-            let requestsUsedClass: string = FormatUtility.getClassNameForNumber(requestsUsed, FFFTableNumberFormats.REQUESTS_USED);
-            let requestsBlockedClass: string = FormatUtility.getClassNameForNumber(requestsBlocked, FFFTableNumberFormats.REQUESTS_BLOCKED);
+            let eventsInBuClass: string = FormatUtility.getClassNameForNumber(eventsInBU!=null?eventsInBU:0, FFFTableNumberFormats.EVENTS_IN_BU);
+            let priorityClass: string = FormatUtility.getClassNameForNumber(bu.priority!=null?bu.priority:0, FFFTableNumberFormats.PRIORITY)
+            let requestsSentClass: string = FormatUtility.getClassNameForNumber(requestsSent!=null?requestsSent:0, FFFTableNumberFormats.REQUESTS_SENT);
+            let requestsUsedClass: string = FormatUtility.getClassNameForNumber(requestsUsed!=null?requestsUsed:0, FFFTableNumberFormats.REQUESTS_USED);
+            let requestsBlockedClass: string = FormatUtility.getClassNameForNumber(requestsBlocked!=null?requestsBlocked:0, FFFTableNumberFormats.REQUESTS_BLOCKED);
+
+
+
 
             //invert color when DAQ is stuck, because red colors are missed
             if (drawZeroDataFlowComponent && oddRow) {
@@ -834,28 +837,30 @@ namespace DAQView {
                         <div className={buStateClass}>{buState}</div>
                         <div className={buJobCrashStateDisplayClass}>{buJobCrashStateDisplay}</div>
                     </td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(rate, FFFTableNumberFormats.RATE))}>{rate.toFixed(3)}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(throughput, FFFTableNumberFormats.THROUGHPUT))}>{throughput.toFixed(1)}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean, FFFTableNumberFormats.SIZE))}>{sizeMean.toFixed(1)}±{sizeStddev.toFixed(1)}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(events, FFFTableNumberFormats.EVENTS))}>{events}</td>
-                    <td className={classNames("fff-table-bu-row-counter",eventsInBuClass)}>{eventsInBU}</td>
-                    <td><div className={classNames("fff-table-bu-row-counter",priorityClass)}>{bu.priority}</div></td>
-                    <td className={classNames("fff-table-bu-row-counter",requestsSentClass)}>{requestsSent}</td>
-                    <td className={classNames("fff-table-bu-row-counter",requestsUsedClass)}>{requestsUsed}</td>
-                    <td><div className={classNames("fff-table-bu-row-counter",requestsBlockedClass)}>{requestsBlocked}</div></td>
-                    <td className="fff-table-bu-row-counter">{bu.numFUsHLT}</td>
-                    <td className="fff-table-bu-row-counter">{bu.numFUsCrashed}</td>
-                    <td className="fff-table-bu-row-counter">{bu.numFUsStale}</td>
-                    <td className="fff-table-bu-row-counter">{bu.numFUsCloud}</td>
-                    <td className="fff-table-bu-row-counter">{(bu.ramDiskUsage).toFixed(1)}% of {bu.ramDiskTotal.toFixed(1)}GB</td>
-                    <td className="fff-table-bu-row-counter">{bu.numFiles}</td>
-                    <td className="fff-table-bu-row-counter">{bu.numLumisectionsWithFiles}</td>
-                    <td className="fff-table-bu-row-counter">{bu.currentLumisection}</td>
-                    <td className="fff-table-bu-row-counter">{bu.numLumisectionsForHLT}</td>
-                    <td className="fff-table-bu-row-counter">{bu.numLumisectionsOutHLT}</td>
-                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(bu.fuOutputBandwidthInMB, FFFTableNumberFormats.BANDWIDTH))}>{bu.fuOutputBandwidthInMB.toFixed(2)}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(rate!=null?rate:0, FFFTableNumberFormats.RATE))}>{rate!=null?rate.toFixed(3):'*'}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(throughput!=null?throughput:0, FFFTableNumberFormats.THROUGHPUT))}>{throughput!=null?throughput.toFixed(1):'*'}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(sizeMean!=null?sizeMean:0, FFFTableNumberFormats.SIZE))}>{sizeMean!=null?sizeMean.toFixed(1):'*'}±{sizeStddev!=null?sizeStddev.toFixed(1):'*'}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(events!=null?events:0, FFFTableNumberFormats.EVENTS))}>{events!=null?events:'*'}</td>
+                    <td className={classNames("fff-table-bu-row-counter",eventsInBuClass)}>{eventsInBU!=null? eventsInBU:'*'}</td>
+                    <td><div className={classNames("fff-table-bu-row-counter",priorityClass)}>{bu.priority!=null?bu.priority:'*'}</div></td>
+                    <td className={classNames("fff-table-bu-row-counter",requestsSentClass)}>{requestsSent!=null?requestsSent:'*'}</td>
+                    <td className={classNames("fff-table-bu-row-counter",requestsUsedClass)}>{requestsUsed!=null?requestsUsed:'*'}</td>
+                    <td><div className={classNames("fff-table-bu-row-counter",requestsBlockedClass)}>{requestsBlocked!=null?requestsBlocked:'*'}</div></td>
+                    <td className="fff-table-bu-row-counter">{bu.numFUsHLT!=null?bu.numFUsHLT:'*'}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numFUsCrashed!=null?bu.numFUsCrashed:'*'}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numFUsStale!=null?bu.numFUsStale:'*'}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numFUsCloud!=null?bu.numFUsCloud:'*'}</td>
+                    <td className="fff-table-bu-row-counter">{bu.ramDiskUsage!=null?(bu.ramDiskUsage).toFixed(1):'*'}% of {bu.ramDiskTotal!=null?bu.ramDiskTotal.toFixed(1):'*'}GB</td>
+                    <td className="fff-table-bu-row-counter">{bu.numFiles!=null?bu.numFiles:'*'}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numLumisectionsWithFiles!=null?bu.numLumisectionsWithFiles:'*'}</td>
+                    <td className="fff-table-bu-row-counter">{bu.currentLumisection!=null?bu.currentLumisection:'*'}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numLumisectionsForHLT!=null?bu.numLumisectionsForHLT:'*'}</td>
+                    <td className="fff-table-bu-row-counter">{bu.numLumisectionsOutHLT!=null?bu.numLumisectionsOutHLT:'*'}</td>
+                    <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(bu.fuOutputBandwidthInMB!=null?bu.fuOutputBandwidthInMB:0, FFFTableNumberFormats.BANDWIDTH))}>{bu.fuOutputBandwidthInMB!=null?bu.fuOutputBandwidthInMB.toFixed(2):'*'}</td>
 
                 </tr>
+
+
             );
         }
     }
@@ -883,9 +888,9 @@ namespace DAQView {
             let fffBuSummaryRowClass: string = drawPausedComponent ? "fff-table-bu-summary-row-paused" : "fff-table-bu-summary-row-running";
 
 
-            let eventsInBuClass: string = FormatUtility.getClassNameForNumber(buSummary.numEventsInBU, FFFTableNumberFormats.EVENTS_IN_BU);
-            let requestsSentClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsSent, FFFTableNumberFormats.REQUESTS_SENT);
-            let requestsUsedClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsUsed, FFFTableNumberFormats.REQUESTS_USED);
+            let eventsInBuClass: string = FormatUtility.getClassNameForNumber(buSummary.numEventsInBU!=null? buSummary.numEventsInBU : 0, FFFTableNumberFormats.EVENTS_IN_BU);
+            let requestsSentClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsSent!=null? buSummary.numRequestsSent : 0, FFFTableNumberFormats.REQUESTS_SENT);
+            let requestsUsedClass: string = FormatUtility.getClassNameForNumber(buSummary.numRequestsUsed!=null? buSummary.numRequestsUsed : 0, FFFTableNumberFormats.REQUESTS_USED);
             let requestsBlockedClass: string = 'fff-table-requests-blocked';
 
             if (drawZeroDataFlowComponent){
@@ -914,30 +919,34 @@ namespace DAQView {
                 fffBuSummaryRowClass = 'fff-table-bu-summary-row-stale-page';
             }
 
+
+
+
+
             return (
                 <tr className={classNames(fffBuSummaryRowClass, "fff-table-bu-row-counter")}>
                     <td>Σ BUs = {this.props.numBusNoRate} / {this.props.numBus}</td>
                     <td></td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.rate / 1000, FFFTableNumberFormats.RATE)}>Σ {(buSummary.rate / 1000).toFixed(3)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.throughput / 1000 / 1000, FFFTableNumberFormats.THROUGHPUT)}>Σ {(buSummary.throughput / 1000 / 1000).toFixed(1)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.eventSizeMean / 1000, FFFTableNumberFormats.SIZE)}>{(buSummary.eventSizeMean / 1000).toFixed(1)}±{(buSummary.eventSizeStddev / 1000).toFixed(1)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(buSummary.numEvents, FFFTableNumberFormats.EVENTS)}>Σ {buSummary.numEvents}</td>
-                    <td className={eventsInBuClass}>Σ {buSummary.numEventsInBU}</td>
-                    <td className="fff-table-priority">{buSummary.priority}</td>
-                    <td className={requestsSentClass}>Σ {buSummary.numRequestsSent}</td>
-                    <td className={requestsUsedClass}>Σ {buSummary.numRequestsUsed}</td>
-                    <td className={requestsBlockedClass}>Σ {buSummary.numRequestsBlocked}</td>
-                    <td>Σ {buSummary.numFUsHLT}</td>
-                    <td>Σ {buSummary.numFUsCrashed}</td>
-                    <td>Σ {buSummary.numFUsStale}</td>
-                    <td>Σ {buSummary.numFUsCloud}</td>
-                    <td>Σ {buSummary.ramDiskUsage.toFixed(1)}% of {buSummary.ramDiskTotal.toFixed(1)}GB</td>
-                    <td>Σ {buSummary.numFiles}</td>
-                    <td>{buSummary.numLumisectionsWithFiles}</td>
-                    <td>{buSummary.currentLumisection}</td>
-                    <td>{buSummary.numLumisectionsForHLT}</td>
-                    <td>{buSummary.numLumisectionsOutHLT}</td>
-                    <td>{buSummary.fuOutputBandwidthInMB.toFixed(2)}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.rate!=null ? buSummary.rate / 1000 : 0, FFFTableNumberFormats.RATE)}>Σ {buSummary.rate!=null ? (buSummary.rate / 1000).toFixed(3) : '*'}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.throughput!=null ? buSummary.throughput / 1000 / 1000 : 0, FFFTableNumberFormats.THROUGHPUT)}>Σ {buSummary.throughput!=null ? (buSummary.throughput / 1000 / 1000).toFixed(1) : '*'}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.eventSizeMean!=null ? buSummary.eventSizeMean / 1000 : 0, FFFTableNumberFormats.SIZE)}>{buSummary.eventSizeMean!=null?(buSummary.eventSizeMean / 1000).toFixed(1):'*'}±{buSummary.eventSizeStddev!=null? (buSummary.eventSizeStddev / 1000).toFixed(1) :'*'}</td>
+                    <td className={FormatUtility.getClassNameForNumber(buSummary.numEvents!=null ? buSummary.numEvents : 0, FFFTableNumberFormats.EVENTS)}>Σ {buSummary.numEvents!=null?buSummary.numEvents:'*'}</td>
+                    <td className={eventsInBuClass}>Σ {buSummary.numEventsInBU!=null?buSummary.numEventsInBU:'*'}</td>
+                    <td className="fff-table-priority">{buSummary.priority!=null?buSummary.priority:'*'}</td>
+                    <td className={requestsSentClass}>Σ {buSummary.numRequestsSent!=null?buSummary.numRequestsSent:'*'}</td>
+                    <td className={requestsUsedClass}>Σ {buSummary.numRequestsUsed!=null?buSummary.numRequestsUsed:'*'}</td>
+                    <td className={requestsBlockedClass}>Σ {buSummary.numRequestsBlocked!=null?buSummary.numRequestsBlocked:'*'}</td>
+                    <td>Σ {buSummary.numFUsHLT!=null?buSummary.numFUsHLT:'*'}</td>
+                    <td>Σ {buSummary.numFUsCrashed!=null?buSummary.numFUsCrashed:'*'}</td>
+                    <td>Σ {buSummary.numFUsStale!=null?buSummary.numFUsStale:'*'}</td>
+                    <td>Σ {buSummary.numFUsCloud!=null?buSummary.numFUsCloud:'*'}</td>
+                    <td>Σ {buSummary.ramDiskUsage!=null?buSummary.ramDiskUsage.toFixed(1):'*'}% of {buSummary.ramDiskTotal!=null?buSummary.ramDiskTotal.toFixed(1):'*'}GB</td>
+                    <td>Σ {buSummary.numFiles!=null?buSummary.numFiles:'*'}</td>
+                    <td>{buSummary.numLumisectionsWithFiles!=null?buSummary.numLumisectionsWithFiles:'*'}</td>
+                    <td>{buSummary.currentLumisection!=null?buSummary.currentLumisection:'*'}</td>
+                    <td>{buSummary.numLumisectionsForHLT!=null?buSummary.numLumisectionsForHLT:'*'}</td>
+                    <td>{buSummary.numLumisectionsOutHLT!=null?buSummary.numLumisectionsOutHLT:'*'}</td>
+                    <td>{buSummary.fuOutputBandwidthInMB!=null?buSummary.fuOutputBandwidthInMB.toFixed(2):'*'}</td>
                 </tr>
             );
         }
