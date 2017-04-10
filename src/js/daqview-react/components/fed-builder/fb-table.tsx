@@ -1779,9 +1779,9 @@ namespace DAQView {
             let fbSummaryRowClass: string = drawPausedComponent ? "fb-table-fb-summary-row-paused" : "fb-table-fb-summary-row-running";
 
 
-            let fragmentInRuClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU, FBTableNumberFormats.FRAGMENTS_IN_RU);
-            let eventsInRuClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
-            let requestsClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests, FBTableNumberFormats.REQUESTS);
+            let fragmentInRuClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU!=null?fedBuilderSummary.sumFragmentsInRU:0, FBTableNumberFormats.FRAGMENTS_IN_RU);
+            let eventsInRuClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU!=null?fedBuilderSummary.sumEventsInRU:0, FBTableNumberFormats.EVENTS_IN_RU);
+            let requestsClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests!=null?fedBuilderSummary.sumRequests:0, FBTableNumberFormats.REQUESTS);
 
             if (drawZeroDataFlowComponent) {
                 fbSummaryRowClass = "fb-table-fb-summary-row-ratezero";
@@ -1812,14 +1812,14 @@ namespace DAQView {
                     <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
                     <td></td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput / 1000 / 1000, FBTableNumberFormats.THROUGHPUT)}>Σ {(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean / 1000, FBTableNumberFormats.SIZE)}>
-                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)}</td>
-                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents, FBTableNumberFormats.EVENTS)}>Δ {fedBuilderSummary.deltaEvents}</td>
-                    <td className={fragmentInRuClass}>Σ {fedBuilderSummary.sumFragmentsInRU}</td>
-                    <td className={eventsInRuClass}>Σ {fedBuilderSummary.sumEventsInRU}</td>
-                    <td className={requestsClass}>Σ {fedBuilderSummary.sumRequests}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.rate!=null?fedBuilderSummary.rate / 100:0, FBTableNumberFormats.RATE)}>{fedBuilderSummary.rate!=null?(fedBuilderSummary.rate / 1000).toFixed(3):'*'}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput!=null?fedBuilderSummary.throughput / 1000 / 1000:0, FBTableNumberFormats.THROUGHPUT)}>Σ {fedBuilderSummary.throughput!=null?(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1):'*'}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean!=null?fedBuilderSummary.superFragmentSizeMean / 1000:0, FBTableNumberFormats.SIZE)}>
+                        Σ {fedBuilderSummary.superFragmentSizeMean!=null?(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1):'*'}±{fedBuilderSummary.superFragmentSizeStddev!=null?(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1):'*'}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents!=null?fedBuilderSummary.deltaEvents:0, FBTableNumberFormats.EVENTS)}>Δ {fedBuilderSummary.deltaEvents!=null?fedBuilderSummary.deltaEvents:'*'}</td>
+                    <td className={fragmentInRuClass}>Σ {fedBuilderSummary.sumFragmentsInRU!=null?fedBuilderSummary.sumFragmentsInRU:'*'}</td>
+                    <td className={eventsInRuClass}>Σ {fedBuilderSummary.sumEventsInRU!=null?fedBuilderSummary.sumEventsInRU:'*'}</td>
+                    <td className={requestsClass}>Σ {fedBuilderSummary.sumRequests!=null?fedBuilderSummary.sumRequests:'*'}</td>
                 </tr>
             );
         }
