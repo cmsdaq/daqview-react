@@ -4,5 +4,5 @@ import React = __React;
 import ReactDOM = __React.__DOM;
 
 declare namespace __React {
-    export import addons = __React.__Addons;
+    //export import addons = __React.__Addons;
 }

@@ -1,3 +1,7 @@
+/**
+ * @author Philipp Brummer
+ */
+
 namespace DAQAggregator {
 
     const TYPE_STRING: string = 'string';

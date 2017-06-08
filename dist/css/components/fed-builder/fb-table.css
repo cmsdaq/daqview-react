@@ -43,6 +43,10 @@
 
 }
 
+.fb-table-fb-row-counter {
+    text-align: right;
+}
+
 .fb-table-top-header-row {
     text-align: center;
 }
@@ -59,7 +63,12 @@
 
 }
 
+.fb-table-subfb-tts-perc {
+    text-align: center;
+}
+
 .fb-table-ru-rate {
+    text-align: right;
     font-weight: bold;
 }
 
@@ -72,6 +81,7 @@
 }
 
 .fb-table-ru-throughput {
+    text-align: right;
     font-weight: bold;
 }
 
@@ -84,6 +94,7 @@
 }
 
 .fb-table-ru-size {
+    text-align: right;
     font-weight: bold;
     color: #0000FF;
 }
@@ -106,26 +117,32 @@
 }
 
 .fb-table-ru-events-nonzero {
+    text-align: right;
     color: #008800;
 }
 
 .fb-table-ru-events-zero {
-    color: #666666;
+    text-align: right;
+    color: #008800;
 }
 
 .fb-table-ru-fragments-in-ru {
+    text-align: right;
     color: #FF0000;
 }
 
 .fb-table-ru-events-in-ru {
+    text-align: right;
     color: #FF0000;
 }
 
 .fb-table-ru-requests {
+    text-align: right;
     color: #FF0000;
 }
 
 .fb-table-ru-masked {
+    text-align: right;
     color: #666666;
 }
 
@@ -133,20 +150,75 @@
 
 }
 
-.fb-table-fb-row:nth-of-type(even) {
+.fb-table-fb-row-stale-page-row:nth-of-type(even) {
+    background-color: #ffbe11;
+}
+
+.fb-table-fb-row-stale-page-row:nth-of-type(odd) {
+    background-color:  #F5F2F2;
+}
+
+.fb-table-fb-row-ratezero:nth-of-type(even) {
+    background-color: #EF4A50;
+}
+
+.fb-table-fb-row-ratezero:nth-of-type(odd) {
+    background-color:  #F5F2F2;
+}
+
+.fb-table-fb-row-running:nth-of-type(even) {
     background-color: #DDDDAA;
 }
 
-.fb-table-fb-row:nth-of-type(odd) {
+.fb-table-fb-row-running:nth-of-type(odd) {
+    background-color:  #F5F2F2;
+}
 
+.fb-table-fb-row-paused:nth-of-type(even) {
+    background-color: #FFFFFF;
+}
+
+.fb-table-fb-row-paused:nth-of-type(odd) {
+    background-color:  #F5F2F2;
 }
 
 .fb-table-subfb-row {
 
 }
 
-.fb-table-fb-summary-row {
+.fb-table-fb-summary-row-stale-page {
+    font-weight: bold;
+    background-color: #ffbe11;
+}
+
+.fb-table-stale-member-wrapbox {
+    border: 2px solid #ffbe11;
+    padding: 1px;
+    margin: 1px;
+}
+
+@keyframes pulseRate {
+    to { background-color: #EF4A50; }
+}
+
+.fb-table-fb-evm-row-ratezero {
+    font-weight: bold;
+    animation: pulseRate 500ms alternate infinite;
+}
+
+.fb-table-fb-summary-row-ratezero {
+    font-weight: bold;
+    background-color: #EF4A50;
+}
+
+.fb-table-fb-summary-row-running {
+    font-weight: bold;
     background-color: #DDDDAA;
+}
+
+.fb-table-fb-summary-row-paused {
+    font-weight: bold;
+    background-color: #FFFFFF;
 }
 
 .fb-table-subfb-tts-state,
@@ -209,7 +281,7 @@
     background-color: #3399FF;
 }
 
-.fb-table-fed-tts-state-ffm-masked {
+.fb-table-fed-tts-state-fmm-masked {
     color: gray;
 }
 
@@ -252,7 +324,12 @@
 }
 
 .fb-table-subfb-min-trig-unequal {
+    background-color: #ffff00;
+}
+
+.fb-table-fed-min-trig {
     background-color: #FFFF00;
+    font-style: italic;
 }
 
 .fb-table-subfb-min-trig-equal {
@@ -275,4 +352,28 @@
     width: 8px;
     height: 8px;
     margin: 0 0.2em 0 0.2em;
+}
+
+.fb-table-ru-red-column-escape{
+    color: #FFFFFF;
+    text-align: right;
+}
+
+.fb-table-jobcrash{
+    background-color:#000000;
+    color:#ffffff;
+    font-weight:bold;
+}
+
+.fb-table-ru-state-error {
+    font-weight: bold;
+    background-color: #CC0033;
+}
+
+.fb-table-ru-state-warn {
+    background-color: #cc726e;
+}
+
+.fb-table-ru-state-normal {
+
 }

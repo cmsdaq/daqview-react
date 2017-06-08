@@ -1,3 +1,6 @@
+/**
+ * @author Philipp Brummer
+ */
 var DAQAggregator;
 (function (DAQAggregator) {
     var TYPE_STRING = 'string';

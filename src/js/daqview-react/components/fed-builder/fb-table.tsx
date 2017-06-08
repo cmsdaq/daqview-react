@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 ///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
 ///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
 
@@ -19,11 +24,18 @@ namespace DAQView {
         public htmlRootElement: Element;
 
         private snapshot: DAQAggregatorSnapshot = null;
+        private drawPausedComponent: boolean = false;
+        private drawZeroDataFlowComponent: boolean = false;
+        private drawStaleSnapshot: boolean = false;
+
+        private previousPauseState: boolean = false;
+
         private sortFunction: SortFunction = {
             presort: this.INITIAL_PRESORT_FUNCTION,
             sort: this.INITIAL_SORT_FUNCTION
         };
 
+        //columns stored here will get a sort icon
         private currentSorting: {[key: string]: Sorting} = {
             'TTCP': Sorting.Ascending,
             'FB Name': Sorting.None,
@@ -31,7 +43,7 @@ namespace DAQView {
             '%B': Sorting.None,
 
             'RU': Sorting.None,
-            'warn': Sorting.None,
+
             'rate (kHz)': Sorting.None,
             'thru (MB/s)': Sorting.None,
             'size (kB)': Sorting.None,
@@ -45,21 +57,53 @@ namespace DAQView {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot) {
-            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
-                return;
-            }
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
 
-            this.snapshot = FBTableSortFunctions.STATIC(snapshot);
-            this.updateSnapshot();
+            if (!snapshot){
+                let msg: string = "";
+                let errRootElement: any = <ErrorElement message={msg}/>;
+                ReactDOM.render(errRootElement, this.htmlRootElement);
+            }else {
+                if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                    console.log("duplicate snapshot detected");
+                    if (drawPausedComponent || drawZeroDataFlowComponent || drawStaleSnapshot) {
+                        console.log("...but page color has to change, so do render");
+                    } else {
+                        return;
+                    }
+                }
+
+                this.snapshot = FBTableSortFunctions.STATIC(snapshot);
+                this.drawPausedComponent = drawPausedComponent;
+                this.drawZeroDataFlowComponent = drawZeroDataFlowComponent;
+                this.drawStaleSnapshot = drawStaleSnapshot;
+                this.updateSnapshot();
+            }
+        }
+
+        //to be called before setSnapshot
+        public prePassElementSpecificData(args: string []){
+
         }
 
         private updateSnapshot() {
             let sortedSnapshot: DAQAggregatorSnapshot = this.sort(this.snapshot);
             let daq: DAQAggregatorSnapshot.DAQ = sortedSnapshot.getDAQ();
+            let drawPausedComponent: boolean = this.drawPausedComponent;
+            let drawZeroDataFlowComponent: boolean = this.drawZeroDataFlowComponent;
+            let drawStaleSnapshot: boolean = this.drawStaleSnapshot;
+
+            let tcdsControllerUrl :string = daq.tcdsGlobalInfo.tcdsControllerContext;
+            let tcdsControllerServiceName :string  = daq.tcdsGlobalInfo.tcdsControllerServiceName;
+
             let fedBuilderTableRootElement: any = <FEDBuilderTableElement tableObject={this}
                                                                           fedBuilders={daq.fedBuilders}
-                                                                          fedBuilderSummary={daq.fedBuilderSummary}/>
+                                                                          fedBuilderSummary={daq.fedBuilderSummary}
+                                                                          drawPausedComponent={drawPausedComponent}
+                                                                          drawZeroDataFlowComponent={drawZeroDataFlowComponent}
+                                                                          tcdsControllerUrl={tcdsControllerUrl}
+                                                                          tcdsControllerServiceName={tcdsControllerServiceName}
+                                                                          drawStaleSnapshot={drawStaleSnapshot}/>
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         }
 
@@ -89,6 +133,18 @@ namespace DAQView {
 
         public getCurrentSorting(headerName: string) {
             return this.currentSorting[headerName];
+        }
+    }
+
+    interface ErrorElementProperties {
+        message: string;
+    }
+
+    class ErrorElement extends React.Component<ErrorElementProperties,{}> {
+        render() {
+            return (
+                <div>{this.props.message}</div>
+            );
         }
     }
 
@@ -449,6 +505,42 @@ namespace DAQView {
             return snapshot;
         }
 
+
+        function RUHOSTNAME(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU throughput
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRUHostname: string = firstFedBuilder.ru.hostname;
+                let secondFedBuilderRUHostname: string = secondFedBuilder.ru.hostname;
+
+                if (firstFedBuilderRUHostname > secondFedBuilderRUHostname) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRUHostname < secondFedBuilderRUHostname) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RU_HOSTNAME_ASC(snapshot: DAQAggregatorSnapshot) {
+            return RUHOSTNAME(snapshot, false);
+        }
+
+        export function RU_HOSTNAME_DESC(snapshot: DAQAggregatorSnapshot) {
+            return RUHOSTNAME(snapshot, true);
+        }
+
         export function RURATE_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
             return RURATE(snapshot, false);
         }
@@ -565,7 +657,7 @@ namespace DAQView {
             return RUNUMFRAG(snapshot, true);
         }
 
-        function RUNUMEVTS(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+        function RUNUMEVTSINRU(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
 
             let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
@@ -580,6 +672,42 @@ namespace DAQView {
 
                 let firstFedBuilderRUNumevts: number = firstFedBuilder.ru.eventsInRU;
                 let secondFedBuilderRUNumevts: number = secondFedBuilder.ru.eventsInRU;
+
+                if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
+                    return (descending ? -1 : 1);
+                } else if (firstFedBuilderRUNumevts < secondFedBuilderRUNumevts) {
+                    return (descending ? 1 : -1);
+                } else {
+                    return 0;
+                }
+            });
+
+            return snapshot;
+        }
+
+        export function RUNUMEVTSINRU_ASC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUNUMEVTSINRU(snapshot, false);
+        }
+
+        export function RUNUMEVTSINRU_DESC(snapshot: DAQAggregatorSnapshot): DAQAggregatorSnapshot {
+            return RUNUMEVTSINRU(snapshot, true);
+        }
+
+        function RUNUMEVTS(snapshot: DAQAggregatorSnapshot, descending: boolean): DAQAggregatorSnapshot {
+
+            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+            let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = daq.fedBuilders;
+
+            // sort the FEDBuilders based on their RU number of events in RU
+            fedBuilders.sort(function (firstFedBuilder: DAQAggregatorSnapshot.FEDBuilder, secondFedBuilder: DAQAggregatorSnapshot.FEDBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                } else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+
+                let firstFedBuilderRUNumevts: number = firstFedBuilder.ru.eventCount;
+                let secondFedBuilderRUNumevts: number = secondFedBuilder.ru.eventCount;
 
                 if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
                     return (descending ? -1 : 1);
@@ -640,6 +768,7 @@ namespace DAQView {
 
     }
 
+    //assignment of sort function to the columns (where applicable)
     const FB_TABLE_BASE_HEADERS: FEDBuilderTableHeaderProperties[] = [
         {content: 'P'},
         {content: 'A'},
@@ -659,6 +788,7 @@ namespace DAQView {
             }
         },
         {content: 'frlpc'},
+        {content: ''},
         {content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId'},
         {content: 'min Trg'},
         {content: 'max Trg'},
@@ -669,8 +799,15 @@ namespace DAQView {
                 Descending: {sort: FBTableSortFunctions.FB_DESC}
             }
         },
-        {content: 'RU'},
-        {content: 'warn',},
+        {
+            content: 'RU',
+            sortFunctions: {
+                Ascending: {sort: FBTableSortFunctions.RU_HOSTNAME_ASC},
+                Descending: {sort: FBTableSortFunctions.RU_HOSTNAME_DESC}
+            }
+        },
+        {content: '         '},
+        {content: 'warn'},
         {
             content: 'rate (kHz)',
             sortFunctions: {
@@ -692,7 +829,13 @@ namespace DAQView {
                 Descending: {sort: FBTableSortFunctions.RUSIZE_DESC}
             }
         },
-        {content: '#events'},
+        {
+            content: '#events',
+            sortFunctions: {
+                Ascending: {sort: FBTableSortFunctions.RUNUMEVTS_ASC},
+                Descending: {sort: FBTableSortFunctions.RUNUMEVTS_DESC}
+            }
+        },
         {
             content: '#frags in RU',
             sortFunctions: {
@@ -703,8 +846,8 @@ namespace DAQView {
         {
             content: '#evts in RU',
             sortFunctions: {
-                Ascending: {sort: FBTableSortFunctions.RUNUMEVTS_ASC},
-                Descending: {sort: FBTableSortFunctions.RUNUMEVTS_DESC}
+                Ascending: {sort: FBTableSortFunctions.RUNUMEVTSINRU_ASC},
+                Descending: {sort: FBTableSortFunctions.RUNUMEVTSINRU_DESC}
             }
         },
         {
@@ -732,13 +875,26 @@ namespace DAQView {
         tableObject: FEDBuilderTable;
         fedBuilders: DAQAggregatorSnapshot.FEDBuilder[];
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
+        drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
+        tcdsControllerUrl: string;
+        tcdsControllerServiceName: string;
+        drawStaleSnapshot: boolean;
     }
 
     class FEDBuilderTableElement extends React.Component<FEDBuilderTableElementProperties,{}> {
         render() {
             let fedBuilders: DAQAggregatorSnapshot.FEDBuilder[] = this.props.fedBuilders;
 
+            let drawPausedComponents: boolean = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponents: boolean = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
+
+            let tcdsControllerUrl: string = this.props.tcdsControllerUrl;
+            let tcdsControllerServiceName: string = this.props.tcdsControllerServiceName;
+
             let evmMaxTrg: number = null;
+            //can similarly invent and pass down the evm minTrg here, for comparison at innermost levels
             fedBuilders.forEach(function (fedBuilder) {
                 if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
                     if (fedBuilder.subFedbuilders != null && fedBuilder.subFedbuilders.length > 0) {
@@ -749,8 +905,17 @@ namespace DAQView {
 
             let fedBuilderRows: any[] = [];
             fedBuilders.forEach(function (fedBuilder) {
+                let index: number = fedBuilderRows.length;
+                let oddRow: boolean = (index % 2 == 1)? true : false;
+
                 fedBuilderRows.push(<FEDBuilderRow key={fedBuilder['@id']} fedBuilder={fedBuilder}
-                                                   evmMaxTrg={evmMaxTrg}/>);
+                                                   evmMaxTrg={evmMaxTrg}
+                                                   drawPausedComponent={drawPausedComponents}
+                                                   drawZeroDataFlowComponent={drawZeroDataFlowComponents}
+                                                   tcdsControllerUrl={tcdsControllerUrl}
+                                                   tcdsControllerServiceName={tcdsControllerServiceName}
+                                                   oddRow={oddRow}
+                                                   drawStaleSnapshot={drawStaleSnapshot}/>);
             });
 
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
@@ -763,21 +928,21 @@ namespace DAQView {
 
             return (
                 <table className="fb-table">
-                    <colgroup className="fb-table-colgroup-fedbuilder" span="9"/>
-                    <colgroup className="fb-table-colgroup-evb" span="9"/>
-                    <colgroup className="fb-table-colgroup-unknown" span="2"/>
+                    <colgroup className="fb-table-colgroup-fedbuilder" span="12"/>
+                    <colgroup className="fb-table-colgroup-evb" span="10"/>
                     <thead className="fb-table-head">
-                    <FEDBuilderTableTopHeaderRow key="fb-top-header-row"/>
-                    <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row"/>
+                    <FEDBuilderTableTopHeaderRow key="fb-top-header-row" drawPausedComponent={drawPausedComponents}/>
+                    <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row" drawPausedComponent={drawPausedComponents}/>
                     <FEDBuilderTableHeaderRow key="fb-header-row" tableObject={tableObject}
-                                              headers={FB_TABLE_TOP_HEADERS}/>
+                                              headers={FB_TABLE_TOP_HEADERS} drawPausedComponent={drawPausedComponents}/>
                     </thead>
                     {fedBuilderRows}
                     <tfoot className="fb-table-foot">
                     <FEDBuilderTableHeaderRow key="fb-summary-header-row" tableObject={tableObject}
-                                              headers={FB_TABLE_SUMMARY_HEADERS}/>
+                                              headers={FB_TABLE_SUMMARY_HEADERS} drawPausedComponent={drawPausedComponents}/>
                     <FEDBuilderTableSummaryRow key="fb-summary-row" fedBuilderSummary={fedBuilderSummary}
-                                               numRus={numRus} numUsedRus={numUsedRus}/>
+                                               numRus={numRus} numUsedRus={numUsedRus} drawPausedComponent={drawPausedComponents} drawZeroDataFlowComponent={drawZeroDataFlowComponents}
+                                               drawStaleSnapshot={drawStaleSnapshot}/>
                     </tfoot>
                 </table>
             );
@@ -788,6 +953,12 @@ namespace DAQView {
         fedBuilder: DAQAggregatorSnapshot.FEDBuilder;
         evmMaxTrg: number;
         additionalClasses?: string | string[];
+        drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
+        tcdsControllerUrl: string;
+        tcdsControllerServiceName: string;
+        oddRow: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     interface RUWarningDataProperties {
@@ -815,7 +986,7 @@ namespace DAQView {
             //without fragments
             for (var idx=0;idx<fedsWithErrors.length;idx++){
                 fedWithErrors = fedsWithErrors[idx];
-                if (fedWithErrors.ruFedWithoutFragments && ru.eventsInRU == 0 && ru.incompleteSuperFragmentCount > 0){
+                if (fedWithErrors.ruFedWithoutFragments && ru.rate == 0 && ru.incompleteSuperFragmentCount > 0){
                     ruWarningData.push(<span className="fb-table-ru-warn-message"> {fedWithErrors.srcIdExpected + ' '} </span>);
                 }
             }
@@ -851,6 +1022,13 @@ namespace DAQView {
 
     class FEDBuilderRow extends React.Component<FEDBuilderRowProperties,{}> {
         render() {
+
+            let drawPausedComponent = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
+
+            let oddRow: boolean = this.props.oddRow;
+
             let fedBuilder: DAQAggregatorSnapshot.FEDBuilder = this.props.fedBuilder;
 
             let subFedBuilders: DAQAggregatorSnapshot.SubFEDBuilder[] = fedBuilder.subFedbuilders;
@@ -860,16 +1038,63 @@ namespace DAQView {
 
             let ruMasked: boolean = ru.masked;
             let ruHostname: string = ru.hostname;
-            let ruName: string = ruHostname.substring(3, ruHostname.length - 4);
-            let ruUrl: string = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+            let ruPort: number = ru.port;
+            let ruName: string = ruHostname.split(".")[0];
+            ruName = ruName.indexOf('ru')==0 ? ruName.substring(3) : ruName;
+            let ruUrl: string = 'http://' + ruHostname + ':'+ruPort+'/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+
+            let ruUrlDisplay: any = ruName;
+            let ruUrlDisplayClass: string = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            let ruDebug: string = ru.isEVM? "Check problems with EVM flashlist!" : "Check problems with RU flashlist!";
+
+            if (ruPort > 0){
+                ruUrlDisplay = <a href={ruUrl} target="_blank">{ruName}</a>;
+                ruUrlDisplayClass = "";
+                ruDebug = "";
+            }
+
+            let ruState: string  = '';
+            let ruStateClass = 'fb-table-ru-state-normal';
+
+            if (ru.stateName){
+
+                ruState = ru.stateName;
+
+                if (ruState === 'Halted' || ruState === 'Ready' || ruState === 'Enabled' || ruState === 'unknown' || ruState === ''){
+                    ruState = '';
+                }else{
+                    ruStateClass = 'fb-table-ru-state-warn';
+                }
+
+                if (ruState === 'Failed' || ruState === 'Error'){
+                    ruStateClass = 'fb-table-ru-state-error';
+                }
+            }
+
+            let ruJobCrashStateDisplay: string = "";
+            let ruJobCrashStateDisplayClass: string = "";
+            if (ru.crashed){
+                ruJobCrashStateDisplay = "JobCrash";
+                ruJobCrashStateDisplayClass = "fb-table-jobcrash";
+            }
+
+            let fbRowZeroEvmRateClass: string = "";
+            if (drawZeroDataFlowComponent && fedBuilder.ru.isEVM){
+                fbRowZeroEvmRateClass = "fb-table-fb-evm-row-ratezero";
+            }
+
+            let fbRowRateClass: string = classNames(fbRowZeroEvmRateClass, FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE));
 
             let fedBuilderData: any[] = [];
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}>{fedBuilder.name}</td>);
-            fedBuilderData.push(<td rowSpan={numSubFedBuilders}><a href={ruUrl} target="_blank">{ruName}</a>
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}><div title={ruDebug} className={ruUrlDisplayClass}>{ruUrlDisplay}</div></td>);
+            fedBuilderData.push(<td rowSpan={numSubFedBuilders}>
+                <div className={ruStateClass}>{ruState}</div>
+                <div className={ruJobCrashStateDisplayClass}>{ruJobCrashStateDisplay}</div>
             </td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}><RUWarningData key={ru['@id']} ru={ru}/></td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
-                                    className={FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}>{(ru.rate / 1000).toFixed(3)}</td>);
+                                    className={fbRowRateClass}>{(ru.rate / 1000).toFixed(3)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}>{(ru.throughput / 1000 / 1000).toFixed(1)}</td>);
 
@@ -889,8 +1114,27 @@ namespace DAQView {
                 requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
             }
 
+            //invert color when DAQ is stuck, because red colors are missed
+            if (drawZeroDataFlowComponent && oddRow) {
+
+                let escapeRedField: string = 'fb-table-ru-red-column-escape';
+
+                if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru'){
+                    fragmentInRuClass = escapeRedField;
+                }
+                if (eventsInRuClass === 'fb-table-ru-events-in-ru'){
+                    eventsInRuClass = escapeRedField;
+                }
+                if (requestsClass === 'fb-table-ru-requests'){
+                    requestsClass = escapeRedField;
+                }
+            }
+
+            let superFragmentSizePrecision: number = (ru.superFragmentSizeMean > 1000) ? 1 : 3;
+
+
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
-                                    className={sizeClass}>{(ru.superFragmentSizeMean / 1000).toFixed(3)}±{(ru.superFragmentSizeStddev / 1000).toFixed(3)}</td>);
+                                    className={sizeClass}>{(ru.superFragmentSizeMean / 1000).toFixed(superFragmentSizePrecision)}±{(ru.superFragmentSizeStddev / 1000).toFixed(superFragmentSizePrecision)}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={eventCountClass}>{ru.eventCount}</td>);
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
@@ -900,14 +1144,27 @@ namespace DAQView {
             fedBuilderData.push(<td rowSpan={numSubFedBuilders}
                                     className={requestsClass}>{ru.requests}</td>);
 
+            let fbRowClass: string = drawPausedComponent? "fb-table-fb-row-paused" : "fb-table-fb-row-running";
 
-            let fbRowClassName: string = classNames("fb-table-fb-row", this.props.additionalClasses);
+
+            if (drawZeroDataFlowComponent){
+                fbRowClass = "fb-table-fb-row-ratezero";
+            }
+
+            if (drawStaleSnapshot && (!drawPausedComponent)){
+                fbRowClass = 'fb-table-fb-row-stale-page-row';
+            }
+
+            let fbRowClassName: string = classNames(fbRowClass, this.props.additionalClasses);
 
             let children: any = [];
             let count: number = 0;
             subFedBuilders.forEach(subFedBuilder => children.push(<SubFEDBuilderRow evmMaxTrg={this.props.evmMaxTrg}
                                                                                     subFedBuilder={subFedBuilder}
-                                                                                    additionalContent={++count == 1 ? fedBuilderData : null}/>));
+                                                                                    additionalContent={++count == 1 ? fedBuilderData : null}
+                                                                                    tcdsControllerUrl={this.props.tcdsControllerUrl}
+                                                                                    tcdsControllerServiceName={this.props.tcdsControllerServiceName}
+                                                                                    drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>));
             return (
                 <tbody className={fbRowClassName}>
                 {children}
@@ -916,35 +1173,48 @@ namespace DAQView {
         }
     }
 
-    class FEDBuilderTableTopHeaderRow extends React.Component<{},{}> {
+    interface FEDBuilderTableTopHeaderRowProperties {
+        drawPausedComponent: boolean;
+    }
+
+
+    class FEDBuilderTableTopHeaderRow extends React.Component<FEDBuilderTableTopHeaderRowProperties,{}> {
         shouldComponentUpdate() {
+
             return false;
         }
 
         render() {
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
             return (
                 <tr className="fb-table-top-header-row">
                     <FEDBuilderTableHeader additionalClasses="fb-table-help" content={<a href="fbtablehelp.html" target="_blank">Table Help</a>}
-                                           colSpan="2"/>
-                    <FEDBuilderTableHeader content="F  E  D  B  U  I  L  D  E  R" colSpan="9"/>
-                    <FEDBuilderTableHeader content="E  V  B" colSpan="9"/>
+                                           colSpan="1" drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="F  E  D  B  U  I  L  D  E  R" colSpan="11" drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="E  V  B" colSpan="10" drawPausedComponent={drawPausedComponent}/>
                 </tr>
 
             );
         }
     }
 
-    class FEDBuilderTableSecondaryHeaderRow extends React.Component<{},{}> {
+    interface FEDBuilderTableSecondaryHeaderRowProperties {
+        drawPausedComponent: boolean;
+    }
+
+    class FEDBuilderTableSecondaryHeaderRow extends React.Component<FEDBuilderTableSecondaryHeaderRowProperties,{}> {
         shouldComponentUpdate() {
+
             return false;
         }
 
         render() {
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
             return (
                 <tr className="fb-table-secondary-header-row">
-                    <FEDBuilderTableHeader content="" colSpan="1"/>
-                    <FEDBuilderTableHeader content="T T S" colSpan="3"/>
-                    <FEDBuilderTableHeader content="" colSpan="16"/>
+                    <FEDBuilderTableHeader content="" colSpan="1" drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="T T S" colSpan="3" drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="" colSpan="18" drawPausedComponent={drawPausedComponent}/>
                 </tr>
 
             );
@@ -954,10 +1224,12 @@ namespace DAQView {
     interface FEDBuilderTableHeaderRowProperties {
         headers: FEDBuilderTableHeaderProperties[];
         tableObject: FEDBuilderTable;
+        drawPausedComponent: boolean;
     }
 
     class FEDBuilderTableHeaderRow extends React.Component<FEDBuilderTableHeaderRowProperties,{}> {
         render() {
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let tableObject: FEDBuilderTable = this.props.tableObject;
 
             let children: any[] = [];
@@ -968,7 +1240,8 @@ namespace DAQView {
                 additionalClasses={header.additionalClasses}
                 tableObject={tableObject}
                 sorting={tableObject.getCurrentSorting(header.content)}
-                sortFunctions={header.sortFunctions}/>));
+                sortFunctions={header.sortFunctions}
+                drawPausedComponent={drawPausedComponent}/>));
             return (
                 <tr className="fb-table-header-row">
                     {children}
@@ -984,6 +1257,7 @@ namespace DAQView {
         tableObject?: FEDBuilderTable;
         sorting?: Sorting;
         sortFunctions?: { [key: string]: SortFunction };
+        drawPausedComponent?: boolean;
     }
 
     class FEDBuilderTableHeader extends React.Component<FEDBuilderTableHeaderProperties,{}> {
@@ -992,10 +1266,13 @@ namespace DAQView {
         }
 
         render() {
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
+
             let content: string = this.props.content;
             let colSpan: string = this.props.colSpan;
             let additionalClasses: string | string[] = this.props.additionalClasses;
-            let className: string = classNames("fb-table-header", additionalClasses);
+            let fbHeaderClass: string = "fb-table-header";
+            let className: string = classNames(fbHeaderClass, additionalClasses);
 
             let tableObject: FEDBuilderTable = this.props.tableObject;
             let currentSorting: Sorting = this.props.sorting ? this.props.sorting : null;
@@ -1021,16 +1298,16 @@ namespace DAQView {
 
             //handlers to be used with onMouseOver and onMouseOut of this element
             /*
-            let mouseOverFunction: () => void = null;
-            mouseOverFunction = function (){
+             let mouseOverFunction: () => void = null;
+             mouseOverFunction = function (){
 
-            };
+             };
 
-            let mouseOutFunction: () => void = null;
-            mouseOutFunction = function (){
+             let mouseOutFunction: () => void = null;
+             mouseOutFunction = function (){
 
-                //alert("mouseOut"+content);
-            };*/
+             //alert("mouseOut"+content);
+             };*/
 
 
             let sortingImage: any = null;
@@ -1083,27 +1360,74 @@ namespace DAQView {
         evmMaxTrg?: number;
         additionalContent?: any[];
         additionalClasses?: string | string[];
+        tcdsControllerUrl: string;
+        tcdsControllerServiceName: string;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class SubFEDBuilderRow extends React.Component<SubFEDBuilderRowProperties,{}> {
         render() {
+
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+
             let subFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder = this.props.subFedBuilder;
             let frlPc: DAQAggregatorSnapshot.FRLPc = subFedBuilder.frlPc;
+
             let frlPcHostname: string = frlPc.hostname;
-            let frlPcName: string = frlPcHostname.substring(6, frlPcHostname.length - 4);
-            let frlPcUrl: string = 'http://' + frlPcHostname + ':11100';
+            let frlPcPort: number = frlPc.port;
+            let frlPcName: string = frlPcHostname.split(".")[0];
+
+            frlPcName = frlPcName.indexOf('frlpc')==0 && frlPcName.indexOf('frlpc40')==-1? frlPcName.substring(6) : frlPcName;
+            frlPcName = frlPcName.indexOf('frlpc40')==0 ? frlPcName.substring(8) : frlPcName;
+
+            let frlPcUrl: string = 'http://' + frlPcHostname + ':'+frlPcPort;
             let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
             let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
+
+            let frlPcUrlDisplay: any = frlPcName;
+            let frlPcUrlDisplayClass: string = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            let frlPcDebug: string = "Check problems with FEROL_CONFIGURATION flashlist!";
+
+            if (frlPcPort > 0){
+                frlPcUrlDisplay = <a href={frlPcUrl} target="_blank">{frlPcName}</a>;
+                frlPcUrlDisplayClass = "";
+                frlPcDebug = "";
+            }
 
             let additionalClasses: string | string[] = this.props.additionalClasses;
             let className: string = classNames("fb-table-subfb-row", additionalClasses);
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = subFedBuilder.ttcPartition;
 
-            let ttsState: string = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : 'x';
-
+            let ttsState: string = '';
             let ttsStateTcdsPm: string = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
             let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
+
+
+            if (ttcPartition.tcdsPartitionInfo && ttcPartition.tcdsPartitionInfo.nullCause) {
+                ttsStateTcdsPm = ttcPartition.tcdsPartitionInfo.nullCause;
+                ttsStateTcdsApvPm = ttcPartition.tcdsPartitionInfo.nullCause;
+            }
+
+            if (ttcPartition.topFMMInfo && ttcPartition.topFMMInfo.nullCause){
+                ttsState = ttcPartition.topFMMInfo.nullCause;
+            }else{
+                if (ttcPartition.masked){
+                    ttsState = '-';
+                    ttsStateTcdsPm = '-';
+                    ttsStateTcdsApvPm = '-';
+                }else {
+                    if (ttcPartition.fmm) {
+                        if (ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Enabled') {
+                            ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?'
+                        } else {
+                            ttsState = '-';
+                        }
+                    } else {
+                        ttsState = 'x';
+                    }
+                }
+            }
 
             let ttsStateClasses: string = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
@@ -1117,31 +1441,32 @@ namespace DAQView {
             let maxTrig: number = subFedBuilder.maxTrig;
 
             let minTrigUnequalMaxTrig: boolean = minTrig != maxTrig;
+            let maxTrigSet: boolean = maxTrig >= 0;
 
             let ttcPartitionTTSStateLink: any = ttsState;
-            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-') {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0,2) != 'no' && ttsState != '?') {
                 ttcPartitionTTSStateLink =
                     <a href={ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller'}
-                       target="_blank">{ttsState}</a>;
+                       target="_blank" title={ttcPartition.ttsState}>{ttsState}</a>;
             }
 
-            //two vars below should be available from the data model instead of being hardcoded
-            let tcdsControlUrl: string = 'http://tcds-control-cpm.cms:2050';
-            let tcdsControlService: string = 'cpm-pri';
+            let tcdsControllerUrl: string = this.props.tcdsControllerUrl;
+            let tcdsControllerServiceName: string = this.props.tcdsControllerServiceName;
 
             let ttcPartitionTTSStateTcdsPmLink: any = ttsStateTcdsPm;
-            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-') {  //review this check
+            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttsStateTcdsPm != '-' && ttcPartition.tcds_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
                 ttcPartitionTTSStateTcdsPmLink =
-                    <a href={tcdsControlUrl + '/urn:xdaq-application:service='+tcdsControlService}
-                       target="_blank">{ttsStateTcdsPm}</a>;
+                    <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
+                       target="_blank" title={ttcPartition.tcds_pm_ttsState}>{ttsStateTcdsPm}</a>;
             }
 
             let ttcPartitionTTSStateTcdsApvPmLink: any = ttsStateTcdsApvPm;
-            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-') {  //review this check
+            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttsStateTcdsApvPm != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0,2) != 'no') {  //review this check
                 ttcPartitionTTSStateTcdsApvPmLink =
-                    <a href={tcdsControlUrl + '/urn:xdaq-application:service='+tcdsControlService}
-                       target="_blank">{ttsStateTcdsApvPm}</a>;
+                    <a href={tcdsControllerUrl + '/urn:xdaq-application:service='+ tcdsControllerServiceName}
+                       target="_blank" title={ttcPartition.tcds_apv_pm_ttsState}>{ttsStateTcdsApvPm}</a>;
             }
+
 
 
 
@@ -1149,10 +1474,24 @@ namespace DAQView {
             let ttcPartitionTTSStateDisplay_P: any = <span className={ttsStateTcdsPmClasses}>{ttcPartitionTTSStateTcdsPmLink}</span>;
             let ttcPartitionTTSStateDisplay_A: any = <span className={ttsStateTcdsApvClasses}>{ttcPartitionTTSStateTcdsApvPmLink}</span>;
 
+
+            let ttcpPercWarn: string = ttcPartition.percentWarning != null ? ttcPartition.percentWarning.toFixed(1) : '-';
+            let ttcpPercBusy: string = ttcPartition.percentWarning != null ? ttcPartition.percentBusy.toFixed(1) : '-';
+
+            //on special cases of ttsState, percentages cannot be retrieved, therefore assign them the special state
+            if (ttsState === '-' || ttsState === 'x' || ttsState === '?'){
+                ttcpPercWarn = ttsState;
+                ttcpPercBusy = ttsState;
+            }
+            if (ttcPartition.topFMMInfo.nullCause){
+                ttcpPercWarn = ttcPartition.topFMMInfo.nullCause;
+                ttcpPercBusy = ttcPartition.topFMMInfo.nullCause;
+            }
+
             let evmMaxTrg: number = this.props.evmMaxTrg;
 
             let minTrigDisplayContent: any = '';
-            let maxTrigDisplayContent: any = maxTrig;
+            let maxTrigDisplayContent: any = maxTrigSet ? maxTrig : '';
 
             if (minTrigUnequalMaxTrig) {
                 minTrigDisplayContent = minTrig;
@@ -1168,25 +1507,42 @@ namespace DAQView {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-equal');
                 }
 
-                if (maxTrig != evmMaxTrg) {
+                if (maxTrig != evmMaxTrg && maxTrigSet) {
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
                 } else {
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
 
+            let frlpcStateDisplay: string = "";
+            let frlpcStateDisplayClass: string = "";
+            if (frlPc.crashed){
+                frlpcStateDisplay = "JobCrash";
+                frlpcStateDisplayClass = "fb-table-jobcrash";
+            }
+
+            let fmmAppStateDisplay: string = "";
+            let fmmAppStateDisplayClass: string = "";
+            if (ttcPartition.fmm && ttcPartition.fmm.fmmApplication && ttcPartition.fmm.fmmApplication.crashed){
+                fmmAppStateDisplay = "JobCrash";
+                fmmAppStateDisplayClass = "fb-table-jobcrash";
+            }
+
             return (
                 <tr className={className}>
                     <td>{ttcPartition.name}:{ttcPartition.ttcpNr}</td>
-                    <td>{ttcPartitionTTSStateDisplay_P}</td>
-                    <td>{ttcPartitionTTSStateDisplay_A}</td>
-                    <td>{ttcPartitionTTSStateDisplay_F}</td>
-                    <td>{ttcPartition.percentWarning.toFixed(1)}</td>
-                    <td>{ttcPartition.percentBusy.toFixed(1)}</td>
-                    <td><a href={frlPcUrl} target="_blank">{frlPcName}</a></td>
-                    <FRLs frls={frls} pseudoFeds={pseudoFeds}/>
-                    <td className={minTrigClassNames}>{minTrigDisplayContent}</td>
-                    <td className={maxTrigClassNames}>{maxTrigDisplayContent}</td>
+                    <td className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_P}</td>
+                    <td className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_A}</td>
+                    <td><div className="fb-table-subfb-tts-perc">{ttcPartitionTTSStateDisplay_F}</div>
+                        <div className={fmmAppStateDisplayClass}>{fmmAppStateDisplay}</div>
+                    </td>
+                    <td className="fb-table-subfb-tts-perc">{ttcpPercWarn}</td>
+                    <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
+                    <td><div title={frlPcDebug} className={frlPcUrlDisplayClass}>{frlPcUrlDisplay}</div></td>
+                    <td className={frlpcStateDisplayClass}>{frlpcStateDisplay}</td>
+                    <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>
+                    <td><div className={minTrigClassNames}>{minTrigDisplayContent}</div></td>
+                    <td><div className={maxTrigClassNames}>{maxTrigDisplayContent}</div></td>
                     {this.props.additionalContent ? this.props.additionalContent : null}
                 </tr>
             );
@@ -1196,25 +1552,34 @@ namespace DAQView {
     interface FRLsProperties {
         frls: DAQAggregatorSnapshot.FRL[];
         pseudoFeds: DAQAggregatorSnapshot.FED[];
+        minTrig: any;
+        drawZeroDataFlowComponent: boolean;
+        ttcPartition: DAQAggregatorSnapshot.TTCPartition;
     }
 
     class FRLs extends React.Component<FRLsProperties,{}> {
         render() {
             let frls: DAQAggregatorSnapshot.FRL[] = this.props.frls;
 
+            let ttcPartition: DAQAggregatorSnapshot.TTCPartition = this.props.ttcPartition;
+
+            let minTrigDisplayContent: any = this.props.minTrig;
+
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+
             let pseudoFEDs: DAQAggregatorSnapshot.FED[] = this.props.pseudoFeds;
 
             let fedData: any[] = [];
             let firstFrl: boolean = true;
             frls.forEach(function (frl: DAQAggregatorSnapshot.FRL) {
-                fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl}/>);
+                fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>);
                 firstFrl = false;
             });
 
             pseudoFEDs.forEach(function (fed: DAQAggregatorSnapshot.FED) {
                 fedData.push(' ');
                 fed.isPseudoFed = true; //this can be used for pseudofed-specific rendering at FEDData level
-                fedData.push(<FEDData key={fed['@id']} fed={fed}/>);
+                fedData.push(<FEDData key={fed['@id']} fed={fed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>);
             });
 
             return (
@@ -1226,23 +1591,41 @@ namespace DAQView {
     interface FRLProperties {
         firstFrl: boolean;
         frl: DAQAggregatorSnapshot.FRL;
+        minTrig: any;
+        drawZeroDataFlowComponent: boolean;
+        ttcPartition: DAQAggregatorSnapshot.TTCPartition;
     }
 
     class FRL extends React.Component<FRLProperties,{}> {
         render() {
             let frl: DAQAggregatorSnapshot.FRL = this.props.frl;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
 
-            let feds: {[key: number]: DAQAggregatorSnapshot.FED} = frl.feds;
-            let firstFed: DAQAggregatorSnapshot.FED = feds[0];
-            let firstFedDisplay: any = firstFed ? <FEDData key={firstFed['@id']} fed={firstFed}/> : '-';
-            let secondFed: DAQAggregatorSnapshot.FED = feds[1];
-            let secondFedDisplay: any = secondFed ? <FEDData key={secondFed['@id']} fed={secondFed}/> : '';
+            let minTrigDisplayContent: any = this.props.minTrig;
+
+            let ttcPartition: DAQAggregatorSnapshot.TTCPartition = this.props.ttcPartition;
+
+            let feds: {[key: string]: DAQAggregatorSnapshot.FED} = frl.feds;
+
+            let firstFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("0") ? feds["0"] : null;
+            let firstFedDisplay: any = firstFed && firstFed.ttcp.name === ttcPartition.name? <FEDData key={firstFed['@id']} fed={firstFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '-';
+            let secondFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("1") ? feds["1"] : null;
+            let secondFedDisplay: any = secondFed && secondFed.ttcp.name === ttcPartition.name? <FEDData key={secondFed['@id']} fed={secondFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+            let thirdFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("2") ? feds["2"] : null;
+            let thirdFedDisplay: any = thirdFed && thirdFed.ttcp.name === ttcPartition.name? <FEDData key={thirdFed['@id']} fed={thirdFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+            let fourthFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("3") ? feds["3"] : null;
+            let fourthFedDisplay: any = fourthFed && fourthFed.ttcp.name === ttcPartition.name? <FEDData key={fourthFed['@id']} fed={fourthFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+
+            let secondFedShown: boolean = secondFed && (secondFed && secondFed.ttcp.name === ttcPartition.name);
+            let thirdFedShown: boolean = thirdFed && (thirdFed && thirdFed.ttcp.name === ttcPartition.name);
+            let fourthFedShown: boolean = fourthFed && (fourthFed && fourthFed.ttcp.name === ttcPartition.name);
+
 
             let firstFrl: boolean = this.props.firstFrl;
 
             return (
                 <span>
-                    {firstFrl ? '' : ', '}{frl.geoSlot}:{firstFedDisplay}{secondFed ? ',' : ''}{secondFedDisplay}
+                    {firstFrl ? '' : ', '}{frl.geoSlot}:{firstFedDisplay}{secondFedShown ? ',' : ''}{secondFedDisplay}{thirdFedShown ? ',' : ''}{thirdFedDisplay}{fourthFedShown ? ',' : ''}{fourthFedDisplay}
                 </span>
             );
         }
@@ -1250,6 +1633,8 @@ namespace DAQView {
 
     interface FEDDataProperties {
         fed: DAQAggregatorSnapshot.FED;
+        minTrig: any;
+        drawZeroDataFlowComponent: boolean;
     }
 
     class FEDData extends React.Component<FEDDataProperties,{}> {
@@ -1269,7 +1654,21 @@ namespace DAQView {
         }
 
         render() {
+
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+
             let fed: DAQAggregatorSnapshot.FED = this.props.fed;
+
+            let trigNum: number = fed.eventCounter;
+            let minTrigDisplayContent: any = this.props.minTrig;
+
+            let trigNumDisplay: any = '';
+
+            if ((trigNum.toString() == minTrigDisplayContent) && drawZeroDataFlowComponent){
+                trigNumDisplay = minTrigDisplayContent;
+            }
+
+            let minTrigClassNames: string = classNames('fb-table-fed-min-trig');
 
             let percentWarning: number = fed.percentWarning;
             let percentBusy: number = fed.percentBusy;
@@ -1298,28 +1697,32 @@ namespace DAQView {
                 ttsStateDisplay = fedTTSStateLink;
             }
 
+            if (fed.fmmMasked || fed.frlMasked){
+                ttsStateDisplay = '';
+            }
+
             let ttsStateClass: string;
             let fedIdClasses: string = 'fb-table-fed-id';
 
             ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
 
-            if (fed.frlMasked === true) {
+            if (fed.frlMasked === true || (!fed.hasSLINK && fed.fmmMasked)) {
                 fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
             } else if (ttsStateClass != null) {
                 fedIdClasses = classNames(fedIdClasses, ttsStateClass);
             }
 
             if (fed.fmmMasked === true) {
-                ttsStateClass = 'fb-table-fed-tts-state-ffm-masked';
+                ttsStateClass = 'fb-table-fed-tts-state-fmm-masked';
             }
 
             let ttsStateClasses: string = classNames('fb-table-fed-tts-state', ttsStateClass);
 
             let percentBackpressureDisplay: any = percentBackpressure > 0 ?
-                <span className="fb-table-fed-percent-backpressure">{'<'}{percentWarning.toFixed(1)}%</span> : '';
+                <span className="fb-table-fed-percent-backpressure">{'<'}{percentBackpressure.toFixed(1)}%</span> : '';
 
             let unexpectedSourceIdDisplay: any = '';
-            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId) {
+            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId && receivedSourceId != 0) {
                 unexpectedSourceIdDisplay =
                     <span className="fb-table-fed-received-source-id">rcvSrcId:{receivedSourceId}</span>;
             }
@@ -1330,6 +1733,7 @@ namespace DAQView {
             let slinkCRCErrorDisplay: any = slinkCRCErrors > 0 ?
                 <span className="fb-table-slink-crc-errors">#SCRC={slinkCRCErrors}</span> : '';
 
+
             return (
                 <span className="fb-table-fed">
                     {percentWarningDisplay}
@@ -1339,6 +1743,9 @@ namespace DAQView {
                     </span>
                     <span className={fedIdClasses}>
                         {expectedSourceId}
+                    </span>
+                    <span className={minTrigClassNames}>
+                        {trigNumDisplay}
                     </span>
                     {percentBackpressureDisplay}
                     {unexpectedSourceIdDisplay}
@@ -1353,32 +1760,70 @@ namespace DAQView {
         numRus: number;
         numUsedRus: number;
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
+        drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     class FEDBuilderTableSummaryRow extends React.Component<FEDBuilderTableSummaryRowProperties,{}> {
         shouldComponentUpdate(nextProps: FEDBuilderTableSummaryRowProperties) {
-            return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
+            return true; //this can be optimized
+            //return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
         }
 
         render() {
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
+            let fbSummaryRowClass: string = drawPausedComponent ? "fb-table-fb-summary-row-paused" : "fb-table-fb-summary-row-running";
+
+
+            let fragmentInRuClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU!=null?fedBuilderSummary.sumFragmentsInRU:0, FBTableNumberFormats.FRAGMENTS_IN_RU);
+            let eventsInRuClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU!=null?fedBuilderSummary.sumEventsInRU:0, FBTableNumberFormats.EVENTS_IN_RU);
+            let requestsClass: string = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests!=null?fedBuilderSummary.sumRequests:0, FBTableNumberFormats.REQUESTS);
+
+            if (drawZeroDataFlowComponent) {
+                fbSummaryRowClass = "fb-table-fb-summary-row-ratezero";
+
+                if (!drawStaleSnapshot) {
+
+                    let escapeRedField: string = 'fb-table-ru-red-column-escape';
+
+                    if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru') {
+                        fragmentInRuClass = escapeRedField;
+                    }
+                    if (eventsInRuClass === 'fb-table-ru-events-in-ru') {
+                        eventsInRuClass = escapeRedField;
+                    }
+                    if (requestsClass === 'fb-table-ru-requests') {
+                        requestsClass = escapeRedField;
+                    }
+                }
+            }
+
+            if (drawStaleSnapshot && (!drawPausedComponent)){
+                fbSummaryRowClass = 'fb-table-fb-summary-row-stale-page';
+            }
 
             return (
-                <tr className="fb-table-fb-summary-row">
-                    <td colSpan="11"></td>
+                <tr className={classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}>
+                    <td colSpan="12"></td>
                     <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
-                    <td>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>
-                    <td>Σ {(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1)}</td>
-                    <td>
-                        Σ {(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1)}±{(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1)}</td>
-                    <td>Δ {fedBuilderSummary.deltaEvents}</td>
-                    <td>Σ {FormatUtility.formatSINumber(fedBuilderSummary.sumFragmentsInRU, 1)}</td>
-                    <td>Σ {fedBuilderSummary.sumEventsInRU}</td>
-                    <td>Σ {fedBuilderSummary.sumRequests}</td>
+                    <td></td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.rate!=null?fedBuilderSummary.rate / 100:0, FBTableNumberFormats.RATE)}>{fedBuilderSummary.rate!=null?(fedBuilderSummary.rate / 1000).toFixed(3):'*'}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput!=null?fedBuilderSummary.throughput / 1000 / 1000:0, FBTableNumberFormats.THROUGHPUT)}>Σ {fedBuilderSummary.throughput!=null?(fedBuilderSummary.throughput / 1000 / 1000).toFixed(1):'*'}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean!=null?fedBuilderSummary.superFragmentSizeMean / 1000:0, FBTableNumberFormats.SIZE)}>
+                        Σ {fedBuilderSummary.superFragmentSizeMean!=null?(fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1):'*'}±{fedBuilderSummary.superFragmentSizeStddev!=null?(fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1):'*'}</td>
+                    <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents!=null?fedBuilderSummary.deltaEvents:0, FBTableNumberFormats.EVENTS)}>Δ {fedBuilderSummary.deltaEvents!=null?fedBuilderSummary.deltaEvents:'*'}</td>
+                    <td className={fragmentInRuClass}>Σ {fedBuilderSummary.sumFragmentsInRU!=null?fedBuilderSummary.sumFragmentsInRU:'*'}</td>
+                    <td className={eventsInRuClass}>Σ {fedBuilderSummary.sumEventsInRU!=null?fedBuilderSummary.sumEventsInRU:'*'}</td>
+                    <td className={requestsClass}>Σ {fedBuilderSummary.sumRequests!=null?fedBuilderSummary.sumRequests:'*'}</td>
                 </tr>
             );
         }
     }
+
 
 }

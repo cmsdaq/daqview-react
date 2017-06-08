@@ -1,3 +1,7 @@
+/**
+ * @author Philipp Brummer
+ */
+
 namespace FormatUtility {
 
     const KILO: number = 1E3;

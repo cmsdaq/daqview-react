@@ -1,3 +1,8 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
+
 namespace DAQViewUtility {
 
     export function forEachOwnObjectProperty(object : any, callback : (property : any) => any) {

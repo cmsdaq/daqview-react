@@ -5,24 +5,74 @@
 }
 
 .metadata-table-head {
-    background-color: #DDDDAA;
+    background-color: #C8C5C5;
 }
 
 .metadata-table-body {
 
 }
 
-.metadata-table-header-row {
-    text-align: left;
-    background-color: #DDDDAA;
+.metadata-error-table {
+    width: 100%;
+    border-width: 0;
+    border-collapse: collapse;
 }
 
-.metadata-table-content-row {
+.metadata-error-table-head {
+    background-color: #C2C0C8;
+}
+
+.metadata-error-table-body {
 
 }
+
+.metadata-table-header-row th{
+    text-align: center;
+    background-color: #C8C5C5;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.metadata-table-content-row td:nth-of-type(even){
+    font-weight: bold;
+    text-align: center;
+    background-color:  #F5F2F2;
+}
+.metadata-table-content-row td:nth-of-type(odd){
+    font-weight: bold;
+    text-align: center;
+    background-color:  #FFFFFF;
+}
+
 
 .metadata-table,
-.metadata-table-body td,
+.metadata-table-content-row td,
 .metadata-table-header-row th {
+
+}
+
+.metadata-error-table-content-row td{
+    font-size: large;
+    text-align: center;
+    background-color: #C8C5C5;
+}
+
+.metadata-error-table-header-row th{
+    text-align: center;
+    font-size: x-large;
+    background-color: #C8C5C5;
     border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+@keyframes pulse {
+    to { background-color: #ffbe11; }
+}
+
+.metadata-table-stale-page {
+    font-weight: bold;
+    animation: pulse 500ms alternate infinite;
+}
+
+.metadata-table-utc-timestamp,
+.metadata-table-run-duration{
+    font-style: italic;
 }
