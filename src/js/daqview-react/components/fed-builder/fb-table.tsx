@@ -1697,26 +1697,37 @@ namespace DAQView {
                 ttsStateDisplay = fedTTSStateLink;
             }
 
-            if (fed.fmmMasked || fed.frlMasked){
+            let ttsStateClass: string;
+            let fedIdClasses: string = 'fb-table-fed-id';
+            ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
+
+            let display: boolean = false;
+
+            /* Masking feds with SLINK - FRL masking*/
+            if(fed.hasSLINK) {
+                if (!fed.frlMasked) {
+                    fedIdClasses = classNames(fedIdClasses, ttsStateClass);
+                    display = true;
+                } else{
+                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
+                }
+            }
+
+            /* Masking feds with TTS - FMM masking */
+            if(fed.hasTTS) {
+                if (!fed.fmmMasked) {
+                    fedIdClasses = classNames(fedIdClasses, ttsStateClass);
+                    display = true;
+                } else{
+                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-tts-state-fmm-masked');
+                }
+            }
+
+            if(!display){
                 ttsStateDisplay = '';
             }
 
-            let ttsStateClass: string;
-            let fedIdClasses: string = 'fb-table-fed-id';
-
-            ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
-
-            if (fed.frlMasked === true || (!fed.hasSLINK && fed.fmmMasked)) {
-                fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
-            } else if (ttsStateClass != null) {
-                fedIdClasses = classNames(fedIdClasses, ttsStateClass);
-            }
-
-            if (fed.fmmMasked === true) {
-                ttsStateClass = 'fb-table-fed-tts-state-fmm-masked';
-            }
-
-            let ttsStateClasses: string = classNames('fb-table-fed-tts-state', ttsStateClass);
+            let ttsStateClasses: string = classNames('fb-table-fed-tts-state', fedIdClasses);
 
             let percentBackpressureDisplay: any = percentBackpressure > 0 ?
                 <span className="fb-table-fed-percent-backpressure">{'<'}{percentBackpressure.toFixed(1)}%</span> : '';
