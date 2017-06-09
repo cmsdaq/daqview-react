@@ -21,11 +21,13 @@
     <script type="text/javascript" src="dist/lib/classnames/index.js"></script>
     <script type="text/javascript" src="dist/lib/react/react.min.js"></script>
     <script type="text/javascript" src="dist/lib/react/react-dom.min.js"></script>
+    <script type="text/javascript" src="dist/lib/clipboard/clipboard.min.js"></script>
 
     <script type="text/javascript" src="dist/js/structures/daq-aggregator/daq-snapshot.js"></script>
     <script type="text/javascript" src="dist/js/utilities/snapshot-provider.js"></script>
     <script type="text/javascript" src="dist/js/utilities/daqview-util.js"></script>
     <script type="text/javascript" src="dist/js/utilities/format-util.js"></script>
+    <script type="text/javascript" src="dist/js/utilities/gui-util.js"></script>
     <script type="text/javascript" src="dist/js/utilities/snapshot-randomizer.js"></script>
     <script type="text/javascript" src="dist/js/utilities/parser.js"></script>
     <script type="text/javascript" src="dist/js/components/common/sorting.js"></script>
@@ -270,6 +272,38 @@
             catch (exception) {
                 console ? (console.debug ? console.debug(exception) : console.log(exception)) : alert(exception);
             }
+
+            var clipboard = new Clipboard('.button-share', {
+                text : function() {
+                    return DAQViewGUIUtility.getSharableLink();
+                }
+            });
+
+            clipboard.on('success', function(e) {
+                setTooltip(e.trigger, 'Link copied!');
+                hideTooltip(e.trigger);
+            });
+
+            clipboard.on('error', function(e) {
+                setTooltip(e.trigger, 'Failed!');
+                hideTooltip(e.trigger);
+            });
+
+            $('#share-button').tooltip({
+                trigger : 'click',
+                placement : 'left'
+            });
+
+            function setTooltip(btn, message) {
+                $(btn).html(message);
+            }
+
+            function hideTooltip(btn) {
+                setTimeout(function() {
+                    $(btn).html("Share");
+                }, 1000);
+            }
+
         });
 
     </script>

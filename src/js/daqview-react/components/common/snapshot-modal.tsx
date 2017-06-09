@@ -55,8 +55,10 @@ namespace DAQView {
     class SnapshotModalElement extends React.Component<SnapshotModalElementProperties,{}> {
         render() {
             return (
+                <div>
+                    <button className="button-share">Share</button>
                     <a href={this.props.url} target="_blank"><button className="button-snapshot">See raw DAQ snapshot</button></a>
-        );
+                </div>);
         }
     }
 
@@ -71,4 +73,6 @@ namespace DAQView {
             );
         }
     }
+
+
 }
