@@ -1701,31 +1701,49 @@ namespace DAQView {
             let fedIdClasses: string = 'fb-table-fed-id';
             ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
 
-            let display: boolean = false;
+            let displayFedId: boolean = false;
+            let displayFedTTSState: boolean = false;
 
             /* Masking feds with SLINK - FRL masking*/
             if(fed.hasSLINK) {
                 if (!fed.frlMasked) {
-                    fedIdClasses = classNames(fedIdClasses, ttsStateClass);
-                    display = true;
-                } else{
-                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
+                    displayFedId = true;
                 }
             }
 
             /* Masking feds with TTS - FMM masking */
-            if(fed.hasTTS) {
+            else if(fed.hasTTS) {
                 if (!fed.fmmMasked) {
-                    fedIdClasses = classNames(fedIdClasses, ttsStateClass);
-                    display = true;
-                } else{
+                    displayFedId = true;
+                }
+            }
+
+            if(fed.hasTTS && !fed.fmmMasked){
+                displayFedTTSState = true;
+            } else {
+                ttsStateDisplay = '';
+            }
+
+
+            /* display all */
+            if(displayFedId && displayFedTTSState){
+                fedIdClasses = classNames(fedIdClasses, ttsStateClass);
+            }
+
+            /* Special case */
+            else if(!displayFedId && displayFedTTSState){
+                fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-special-case')
+                fedIdClasses = classNames(fedIdClasses, ttsStateClass);
+            }
+            /* Do not display */
+            else{
+                if(fed.frlMasked) {
+                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
+                } else if (fed.fmmMasked){
                     fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-tts-state-fmm-masked');
                 }
             }
 
-            if(!display){
-                ttsStateDisplay = '';
-            }
 
             let ttsStateClasses: string = classNames('fb-table-fed-tts-state', fedIdClasses);
 
