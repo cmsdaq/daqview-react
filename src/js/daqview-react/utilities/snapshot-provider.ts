@@ -193,7 +193,7 @@ namespace DAQAggregator {
                             //keep Month, Day, Year, Time (discard Weekday and timezone info)
                             let formattedLocalTimestamp: string = localTimestampElements[3]+"-"+this.mapOfMonths[localTimestampElements[1]]+"-"+localTimestampElements[2]+"-"+localTimestampElements[4];
 
-                            window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp);
+                            //window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp);
                             document.title = "DAQView [" + formattedLocalTimestamp + "]";
 
                             //updates url to retrieve snapshot
