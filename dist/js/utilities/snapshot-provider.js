@@ -148,7 +148,13 @@ var DAQAggregator;
                             var localTimestampElements = (new Date(snapshot.getUpdateTimestamp()).toString()).split(" ");
                             //keep Month, Day, Year, Time (discard Weekday and timezone info)
                             var formattedLocalTimestamp = localTimestampElements[3] + "-" + this.mapOfMonths[localTimestampElements[1]] + "-" + localTimestampElements[2] + "-" + localTimestampElements[4];
-                            window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp);
+                            var currentUrl = document.location.href;
+                            var urlToUpdate = currentUrl.indexOf("?") > -1 ? currentUrl.substr(0, currentUrl.indexOf("?")) : currentUrl;
+                            var query = "setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp;
+                            urlToUpdate = urlToUpdate + "?" + query;
+                            console.log("new URL : " + urlToUpdate);
+                            DAQViewGUIUtility.setSharableLink(urlToUpdate);
+                            //window.history.replaceState(null, null, "?setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp);
                             document.title = "DAQView [" + formattedLocalTimestamp + "]";
                             //updates url to retrieve snapshot
                             //in case of point time queries (eg. after pause or goto-time command, the time is already appended in the URL)

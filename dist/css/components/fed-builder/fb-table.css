@@ -289,6 +289,10 @@
     font-weight: bold;
 }
 
+.fb-table-fed-special-case {
+    color: blue;
+}
+
 .fb-table-fed-frl-masked {
     color: gray;
 }

@@ -1319,22 +1319,45 @@ var DAQView;
                 fedTTSStateLink = React.createElement("a", {href: fed.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsStateDisplay);
                 ttsStateDisplay = fedTTSStateLink;
             }
-            if (fed.fmmMasked || fed.frlMasked) {
-                ttsStateDisplay = '';
-            }
             var ttsStateClass;
             var fedIdClasses = 'fb-table-fed-id';
             ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
-            if (fed.frlMasked === true || (!fed.hasSLINK && fed.fmmMasked)) {
-                fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
+            var displayFedId = false;
+            var displayFedTTSState = false;
+            /* Masking feds with SLINK - FRL masking*/
+            if (fed.hasSLINK) {
+                if (!fed.frlMasked) {
+                    displayFedId = true;
+                }
             }
-            else if (ttsStateClass != null) {
+            else if (fed.hasTTS) {
+                if (!fed.fmmMasked) {
+                    displayFedId = true;
+                }
+            }
+            if (fed.hasTTS && !fed.fmmMasked) {
+                displayFedTTSState = true;
+            }
+            else {
+                ttsStateDisplay = '';
+            }
+            /* display all */
+            if (displayFedId && displayFedTTSState) {
                 fedIdClasses = classNames(fedIdClasses, ttsStateClass);
             }
-            if (fed.fmmMasked === true) {
-                ttsStateClass = 'fb-table-fed-tts-state-fmm-masked';
+            else if (!displayFedId && displayFedTTSState) {
+                fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-special-case');
+                fedIdClasses = classNames(fedIdClasses, ttsStateClass);
             }
-            var ttsStateClasses = classNames('fb-table-fed-tts-state', ttsStateClass);
+            else {
+                if (fed.frlMasked) {
+                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
+                }
+                else if (fed.fmmMasked) {
+                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-tts-state-fmm-masked');
+                }
+            }
+            var ttsStateClasses = classNames('fb-table-fed-tts-state', fedIdClasses);
             var percentBackpressureDisplay = percentBackpressure > 0 ?
                 React.createElement("span", {className: "fb-table-fed-percent-backpressure"}, '<', percentBackpressure.toFixed(1), "%") : '';
             var unexpectedSourceIdDisplay = '';
