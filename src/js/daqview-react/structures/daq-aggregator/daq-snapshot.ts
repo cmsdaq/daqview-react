@@ -58,9 +58,17 @@ namespace DAQAggregator {
 
         }
 
+        export interface GlobalTTSState {
+            state: string;
+            percentWarning: number;
+            percentBusy: number;
+        }
+
         export interface TCDSGlobalInfo extends SnapshotElement {
             tcdsControllerContext? : string;
             tcdsControllerServiceName? : string;
+            globalTtsStates : {[key: string] : GlobalTTSState};
+            deadTimes : {[key:string] : number};
         }
 
         export interface FEDBuilder extends SnapshotElement {

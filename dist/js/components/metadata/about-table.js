@@ -31,7 +31,15 @@ var DAQView;
             _super.apply(this, arguments);
         }
         AboutTableElement.prototype.render = function () {
-            return (React.createElement("table", {className: "about-table"}, React.createElement("tbody", {className: "about-table-body"}, React.createElement("tr", {className: "about-table-content-row"}, React.createElement("td", null, this.props.project), React.createElement("td", null, this.props.authors), React.createElement("td", null, this.props.organization), React.createElement("td", null, this.props.year)))));
+            return (React.createElement("table", {className: "about-table"}, 
+                React.createElement("tbody", {className: "about-table-body"}, 
+                    React.createElement("tr", {className: "about-table-content-row"}, 
+                        React.createElement("td", null, this.props.project), 
+                        React.createElement("td", null, this.props.authors), 
+                        React.createElement("td", null, this.props.organization), 
+                        React.createElement("td", null, this.props.year))
+                )
+            ));
         };
         return AboutTableElement;
     }(React.Component));

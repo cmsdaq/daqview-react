@@ -15,7 +15,7 @@
     "src/js/daqview-react/structures/daq-aggregator/daq-snapshot.ts",
     "src/js/daqview-react/structures/daq-aggregator/daq-snapshot-source.d.ts",
     "src/js/daqview-react/components/daq-snapshot-view/daq-snapshot-view.d.ts",
-    "src/js/daqview-react/components/common/sorting",
+    "src/js/daqview-react/components/common/sorting.ts",
     "src/js/daqview-react/components/metadata/metadata-table.tsx",
     "src/js/daqview-react/components/common/snapshot-modal.tsx",
     "src/js/daqview-react/components/metadata/about-table.tsx",

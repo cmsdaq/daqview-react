@@ -14,6 +14,7 @@ namespace DAQView {
     import DAQ = DAQAggregator.Snapshot.DAQ;
     import snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
     import FED = DAQAggregator.Snapshot.FED;
+    import toFixedNumber = FormatUtility.toFixedNumber;
 
     export class FEDBuilderTable implements DAQSnapshotView {
         private DEFAULT_PRESORT_FUNCTION: (snapshot: DAQAggregatorSnapshot) => DAQAggregatorSnapshot = FBTableSortFunctions.TTCP_ASC;
@@ -98,7 +99,8 @@ namespace DAQView {
             let fedBuilderTableRootElement: any = <FEDBuilderTableElement tableObject={this}
                                                                           fedBuilders={daq.fedBuilders}
                                                                           fedBuilderSummary={daq.fedBuilderSummary}
-                                                                          drawPausedComponent={drawPausedComponent}
+                                                                          tcdsGlobalInfo={daq.tcdsGlobalInfo}
+                                                                           drawPausedComponent={drawPausedComponent}
                                                                           drawZeroDataFlowComponent={drawZeroDataFlowComponent}
                                                                           tcdsControllerUrl={tcdsControllerUrl}
                                                                           tcdsControllerServiceName={tcdsControllerServiceName}
@@ -787,6 +789,7 @@ namespace DAQView {
         tableObject: FEDBuilderTable;
         fedBuilders: DAQAggregatorSnapshot.FEDBuilder[];
         fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary;
+        tcdsGlobalInfo: DAQAggregator.Snapshot.TCDSGlobalInfo;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
         tcdsControllerUrl: string;
@@ -833,18 +836,18 @@ namespace DAQView {
             let fedBuilderSummary: DAQAggregatorSnapshot.FEDBuilderSummary = this.props.fedBuilderSummary;
             let numRus: number = fedBuilders.length;
             let numUsedRus: number = numRus - fedBuilderSummary.rusMasked;
-
+            let tcdsGlobalInfo: DAQAggregator.Snapshot.TCDSGlobalInfo = this.props.tcdsGlobalInfo;
 
 
             let tableObject: FEDBuilderTable = this.props.tableObject;
 
             return (
                 <table className="fb-table">
-                    <colgroup className="fb-table-colgroup-fedbuilder" span="11"/>
-                    <colgroup className="fb-table-colgroup-evb" span="9"/>
+                    <colgroup className="fb-table-colgroup-fedbuilder" span={11}/>
+                    <colgroup className="fb-table-colgroup-evb" span={9}/>
                     <thead className="fb-table-head">
                     <FEDBuilderTableTopHeaderRow key="fb-top-header-row" drawPausedComponent={drawPausedComponents}/>
-                    <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row" drawPausedComponent={drawPausedComponents}/>
+                    <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row" drawPausedComponent={drawPausedComponents} tcdsGlobalInfo={tcdsGlobalInfo}/>
                     <FEDBuilderTableHeaderRow key="fb-header-row" tableObject={tableObject}
                                               headers={FB_TABLE_TOP_HEADERS} drawPausedComponent={drawPausedComponents}/>
                     </thead>
@@ -1064,13 +1067,14 @@ namespace DAQView {
     }
 
     interface FEDBuilderTableSecondaryHeaderRowProperties {
+        tcdsGlobalInfo : DAQAggregator.Snapshot.TCDSGlobalInfo;
         drawPausedComponent: boolean;
     }
 
     class FEDBuilderTableSecondaryHeaderRow extends React.Component<FEDBuilderTableSecondaryHeaderRowProperties,{}> {
         shouldComponentUpdate() {
 
-            return false;
+            return true;
         }
 
         render() {
@@ -1079,7 +1083,7 @@ namespace DAQView {
                 <tr className="fb-table-secondary-header-row">
                     <FEDBuilderTableHeader content="" colSpan="1" drawPausedComponent={drawPausedComponent}/>
                     <FEDBuilderTableHeader content="T T S" colSpan="3" drawPausedComponent={drawPausedComponent}/>
-                    <FEDBuilderTableHeader content="" colSpan="16" drawPausedComponent={drawPausedComponent}/>
+                    <FBTableHeaderTCDSInfo tcdsGlobalInfo={this.props.tcdsGlobalInfo} colSpan={16} />
                 </tr>
 
             );
@@ -1184,12 +1188,90 @@ namespace DAQView {
             }
 
             return (
-                <th className={className} colSpan={colSpan ? colSpan : "1"}>
+                <th className={className} colSpan={colSpan ? Number(colSpan) : 1}>
                     {content}{sortingImage}
                 </th>
             );
         }
     }
+
+    interface FBTableHeaderTCDSInfoProperties {
+        tcdsGlobalInfo : DAQAggregatorSnapshot.TCDSGlobalInfo;
+        colSpan : number;
+    }
+
+    class columnInfo {
+        public title : string;
+        public ttsName : string;
+        public dtName : string;
+    }
+
+    class FBTableHeaderTCDSInfo extends React.Component<FBTableHeaderTCDSInfoProperties,{}> {
+        shouldComponentUpdate(nextProps: FBTableHeaderTCDSInfoProperties) {
+            return true;
+        }
+
+        render() {
+    /*        let additionalClasses: string | string[] = this.props.additionalClasses; */
+            let fbHeaderClass: string = "fb-table-header";
+            let className: string = classNames(fbHeaderClass/*, additionalClasses*/);
+
+            let ttsStateGlobal : string = this.props.tcdsGlobalInfo.globalTtsStates["tts_toplevel"].state;
+            let ttsStateRetri : string = this.props.tcdsGlobalInfo.globalTtsStates["block_retri"].state;
+
+            let columns : columnInfo[] = [
+                { title : "total", ttsName : null, dtName : "total" },
+                { title : "tts", ttsName : "tts_toplevel", dtName : "tts" }
+                ];
+
+            let tableHTML : any[]  = [];
+
+            let row1 : any[] = [];
+            row1.push(<th></th>);
+
+
+            for (var ci of columns)
+                row1.push(<th>{ci.title}</th>);
+
+            tableHTML.push(<tr>{row1}</tr>);
+
+            let row2 : any[] = [];
+
+            row2.push(<th>TTS state</th>);
+
+            for (var ci of columns)
+                if (ci.ttsName)
+                    row2.push(<td>{this.props.tcdsGlobalInfo.globalTtsStates[ci.ttsName].state}</td>);
+                else
+                    row2.push(<td></td>);
+
+            tableHTML.push(<tr>{row2}</tr>);
+
+            let row3 : any[] = [];
+            row3.push(<th>Deadtime</th>);
+
+            for (var ci of columns)
+                row3.push(<td>{this.props.tcdsGlobalInfo.deadTimes[ci.dtName]}</td>);
+
+            tableHTML.push(<tr>{row3}</tr>);
+
+            let row4 : any[] = [];
+            row4.push(<th>Deadtime Beamactive</th>);
+
+            for (var ci of columns)
+                row4.push(<td>{this.props.tcdsGlobalInfo.deadTimes["beamactive_" + ci.dtName]}</td>);
+
+            tableHTML.push(<tr>{row4}</tr>);
+
+            return (
+                <th className={className} colSpan={this.props.colSpan ? Number(this.props.colSpan) : 1}>
+                    <table>{tableHTML}</table>
+                </th>
+            );
+        }
+    }
+
+
 
     interface RUMessagesProperties {
         rowSpan?: number;
@@ -1614,7 +1696,7 @@ namespace DAQView {
 
             return (
                 <tr className={classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}>
-                    <td colSpan="11"></td>
+                    <td colSpan={11}></td>
                     <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
                     <td className={FormatUtility.getClassNameForNumber(fedBuilderSummary.rate / 100, FBTableNumberFormats.RATE)}>{(fedBuilderSummary.rate / 1000).toFixed(3)}</td>

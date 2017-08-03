@@ -698,7 +698,7 @@ namespace DAQView {
             }
 
             return (
-                <th className={className} colSpan={colSpan ? colSpan : "1"}>
+                <th className={className} colSpan={colSpan ? Number(colSpan) : 1}>
                     {content}{sortingImage}
                 </th>
             );
