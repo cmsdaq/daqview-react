@@ -3,11 +3,6 @@
  * @author Philipp Brummer
  */
 
-///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
-///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
-
-///<reference path="../../utilities/format-util.ts"/>
-
 namespace DAQView {
 
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
@@ -622,8 +617,8 @@ namespace DAQView {
             return (
                 <tr className="fff-table-top-header-row">
                     <FileBasedFilterFarmTableHeader additionalClasses="fff-table-help"
-                                                    content={<a href="ffftablehelp.html" target="_blank">Table Help</a>} colSpan="2" drawPausedComponent={drawPausedComponent}/>
-                    <FileBasedFilterFarmTableHeader content="B U I L D E R   U N I T   ( B U )" colSpan="20" drawPausedComponent={drawPausedComponent}/>
+                                                    content={<a href="ffftablehelp.html" target="_blank">Table Help</a>} colSpan={2} drawPausedComponent={drawPausedComponent}/>
+                    <FileBasedFilterFarmTableHeader content="B U I L D E R   U N I T   ( B U )" colSpan={20} drawPausedComponent={drawPausedComponent}/>
                 </tr>
             );
         }
@@ -659,7 +654,7 @@ namespace DAQView {
 
     interface FileBasedFilterFarmTableHeaderProperties {
         content: any;
-        colSpan?: string;
+        colSpan?: number;
         additionalClasses?: string | string[];
         tableObject?: FileBasedFilterFarmTable;
         sorting?: Sorting;
@@ -675,7 +670,7 @@ namespace DAQView {
         render() {
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
             let content: string = this.props.content;
-            let colSpan: string = this.props.colSpan;
+            let colSpan: number = this.props.colSpan;
             let additionalClasses: string | string[] = this.props.additionalClasses;
             let className: string = classNames("fff-table-header", additionalClasses);
 
@@ -707,7 +702,7 @@ namespace DAQView {
             }
 
             return (
-                <th className={className} colSpan={colSpan ? colSpan : "1"}>
+                <th className={className} colSpan={colSpan ? colSpan : 1}>
                     {content}{sortingImage}
                 </th>
             );
