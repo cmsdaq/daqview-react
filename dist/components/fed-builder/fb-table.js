@@ -847,7 +847,7 @@ var DAQView;
                 if (fedWithErrors.ruFedWithoutFragments && ru.rate == 0 && ru.incompleteSuperFragmentCount > 0) {
                     ruWarningData.push(React.createElement("span", { className: "fb-table-ru-warn-message" },
                         " ",
-                        fedWithErrors.srcIdExpected + ' ',
+                        fedWithErrors.ttcp.name + ':' + fedWithErrors.srcIdExpected + ' ',
                         " "));
                 }
             }
@@ -870,7 +870,7 @@ var DAQView;
                 if (errorString != '') {
                     ruWarningData.push(React.createElement("span", { className: "fb-table-ru-warn-message" },
                         " ",
-                        fedWithErrors.srcIdExpected + ':' + errorString,
+                        fedWithErrors.ttcp.name + ':' + fedWithErrors.srcIdExpected + ':' + errorString,
                         " "));
                 }
             }
