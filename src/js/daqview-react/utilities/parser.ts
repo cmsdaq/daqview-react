@@ -1,23 +1,48 @@
+/**
+ * @author Michail Vougioukas
+ */
+
 namespace DAQAggregator {
 
     import RU = DAQAggregator.Snapshot.RU;
+    import BU = DAQAggregator.Snapshot.BU;
     import FEDBuilder = DAQAggregator.Snapshot.FEDBuilder;
     import SubFEDBuilder = DAQAggregator.Snapshot.SubFEDBuilder;
     import FED = DAQAggregator.Snapshot.FED;
     import FRL = DAQAggregator.Snapshot.FRL;
+    import snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
     export class SnapshotParser {
 
         private big_map: {[key: string]: any} = {};
         private level: number = 1;
+        private replacerRecursions = 0;
+        private snapshot: {} = {};
 
         public parse(snapshot: {}): Snapshot {
 
-            this.explore(snapshot);
+            this.replacerRecursions = 0;
+            this.big_map = {}; //flush old objects
+            this.snapshot = snapshot;
+
+            this.explore(this.snapshot);
 
             for (var key in this.big_map) {
                 this.scanAndReplace(this.big_map[key]);
             }
-            return new Snapshot(this.big_map['DAQ']);
+
+            console.log("Size of map of objects after parsing: "+Object.keys(this.big_map).length);
+            console.log("Replacer calls: "+this.replacerRecursions);
+
+            if (this.replacerRecursions > 25000) {
+                console.log("Too much recursion imminent...parser aborted proactively");
+
+                return null;
+            }
+
+            let snapshotReturned: Snapshot = new Snapshot(this.big_map['DAQ']);
+
+            return snapshotReturned;
+
         }
 
         static getFieldType(field: any) {
@@ -81,6 +106,15 @@ namespace DAQAggregator {
         }
 
         scanAndReplace(obj: {[key: string]: any}): void {
+            this.replacerRecursions++;
+
+            /*this allows for a snapshot with up to 5 times more elements than the typical snapshot in late 2016,
+             if this is reached, then probably there is something wrong with the snapshot, causing infinite recursion over elements...
+             */
+            if(this.replacerRecursions>25000){
+                return;
+            }
+
             for (var key in obj) { // iterate, `key` is the property key
                 var elem = obj[key]; // `obj[key]` is the value
 
@@ -151,16 +185,16 @@ namespace DAQAggregator {
             //iterate all messages from feds
             let fedBuilder: FEDBuilder = ru.fedBuilder;
             for (var subFEDBuilder of fedBuilder.subFedbuilders){
-               for(var frl of (<SubFEDBuilder>subFEDBuilder).frls){
-                   let feds: {[key: number]: FED} = (<FRL>frl.feds);
-                   for (var fedSlot in feds){
-                       let fed: FED = feds[fedSlot];
+                for(var frl of (<SubFEDBuilder>subFEDBuilder).frls){
+                    let feds: {[key: number]: FED} = (<FRL>frl.feds);
+                    for (var fedSlot in feds){
+                        let fed: FED = feds[fedSlot];
 
-                       if (fed.ruFedWithoutFragments || fed.ruFedInError) {
-                           fedsWithErrors.push(fed); //fed indexed by its expectedSrcId
-                       }
-                   }
-               }
+                        if (fed.ruFedWithoutFragments || fed.ruFedInError) {
+                            fedsWithErrors.push(fed); //fed indexed by its expectedSrcId
+                        }
+                    }
+                }
             }
 
 
@@ -168,6 +202,39 @@ namespace DAQAggregator {
             return fedsWithErrors;
         }
 
+    }
+
+    export class RUMaskedCounter {
+        public countMaskedRUs(snapshot: Snapshot): Snapshot {
+            //retrieve and assign warning messages to RUs
+            let rus: RU[] = snapshot.getDAQ().rus;
+            let rusMasked: number = 0;
+            for (let idx: number = 0; idx < rus.length; idx++) {
+                if (rus[idx].masked){
+                    rusMasked++;
+                }
+            }
+            snapshot.getDAQ().fedBuilderSummary.rusMasked = rusMasked;
+            //console.log(rusMasked);
+
+            return snapshot;
+        }
+    }
+
+    export class BUNoRateCounter {
+        public countNoRateBUs(snapshot: Snapshot): Snapshot {
+            //retrieve and assign warning messages to RUs
+            let bus: BU[] = snapshot.getDAQ().bus;
+            let busNoRate: number = 0;
+            for (let idx: number = 0; idx < bus.length; idx++) {
+                if (bus[idx].rate == 0){
+                    busNoRate++;
+                }
+            }
+            snapshot.getDAQ().buSummary.busNoRate = busNoRate;
+
+            return snapshot;
+        }
     }
 
 }

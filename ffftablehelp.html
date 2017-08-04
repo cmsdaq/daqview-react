@@ -1,0 +1,69 @@
+<!-- @authors: Hannes Sakulin and Remi Mommsen -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Table help</title>
+    <style type="text/css">
+        <!--
+        body {font-size: small}
+        table {font-size: small}
+        -->
+    </style>
+</head>
+<body bgcolor="#ddddaa">
+<h2>FFF Table</h2>
+
+This table gives an overview of the file-based filter farm (FFF). There is one line per appliance.<br><br>
+
+Explanation of the columns:
+
+<table border=1>
+    <tr><th colspan=2>BU</th>
+        <td>The host name of the builder unit responsible for the appliance (excluding the domain name '.cms')<br>
+            The hyperlink leads to the BU hyperdaq page.</td></tr>
+    <tr><th rowspan=20>BU-<br>Info</th>
+        <th>rate</th><td>Event rate in kHz (average over last second)</td></tr>
+    <tr><th>thru</th><td>Throughput in MB/s (average over last second).</td></tr>
+    <tr><th>size</th><td>Event size in kB (average over last second).</td></tr>
+    <tr><th>#events</th><td>Number of events built since the start of the run.</td></tr>
+    <tr><th>#evts in BU</th><td>Number of events in the BU. A
+        number &gt; 0 means that the BU is working on events.</td></tr>
+    <tr><th>priority</th><td>The priority of the event requests. Requests from BUs with a lower priority number are handled first.
+        The priority is calculated based on the RAM disk occupancy.</td></tr>
+    <tr><th>#req. sent</th><td>Number of outstanding event requests. A
+        number &gt; 0 means that the BU is able to accept new events.</td></tr>
+    <tr><th>#req. used</th><td>Number of requests the BU has received some data for and is assembling events.</td></tr>
+    <tr><th>#req. blocked</th><td>Number of blocked resources. A
+        number &gt; 0 means that the BU is throttled down. If the number is equal
+        to the available resources, the BU stopped requesting events. A resource can get blocked when
+        <ul>
+            <li>the RAM disk gets full</li>
+            <li>there are not enough FU cores available</li>
+            <li>the HLT is lagging behind in processing data</li>
+        </ul></td></tr>
+    <tr><th>#FUs HLT</th><td>Number of filter-unit (FU) CPU available in the appliance for HLT.</td></tr>
+    <tr><th>#FUs crashed</th><td>Number of filter-unit (FU) CPUs which repeatedly crashed in the current run.</td></tr>
+    <tr><th>#FUs stale</th><td>Number of filter-unit (FU) CPUs with a stale NFS mount.</td></tr>
+    <tr><th>#FUs cloud</th><td>Number of filter-unit (FU) CPU allocated to the offline cloud.</td></tr>
+    <tr><th>RAM disk usage</th><td>Occupancy of in percent of the total
+        RAM disk size in GB on the BU. If the RAM disk becomes full, the BU
+        throttles the requests for new events.</td></tr>
+    <tr><th>#files</th><td>Number of files written since the beginning of the run.</td></tr>
+    <tr><th>#LS w/ files</th><td>Number of lumi sections (LS) for which
+        the BU wrote at least one file.</td></tr>
+    <tr><th>current LS</th><td>The latest lumi section (LS) the BU knows about.</td></tr>
+    <tr><th>#LS for HLT</th><td>Number lumi sections (LS) waiting to be processed by the filter units.</td></tr>
+    <tr><th>#LS out HLT</th><td>Number lumi sections (LS) queued on the output of the filter units. -1 indicates that the FUs have not yet produced and output for the current run.</td></tr>
+    <tr><th>b/w out</th><td>The output bandwidth in MB/s of the HLT summed over all FUs in this appliance.</td></tr>
+
+</table>
+
+<h3>Job crash indicators</h3>
+
+If a job crash is detected for any type of application, a job crash inidicator is displayed following the hyperlink to the application. <br>
+<font style="background-color: #000000; color: #ffffff"><b>JobCrash:Unexpected Signal 136</b></font> <br>
+
+</body>
+</html>

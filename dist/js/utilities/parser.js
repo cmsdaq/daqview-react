@@ -1,16 +1,31 @@
+/**
+ * @author Michail Vougioukas
+ */
 var DAQAggregator;
 (function (DAQAggregator) {
     var SnapshotParser = (function () {
         function SnapshotParser() {
             this.big_map = {};
             this.level = 1;
+            this.replacerRecursions = 0;
+            this.snapshot = {};
         }
         SnapshotParser.prototype.parse = function (snapshot) {
-            this.explore(snapshot);
+            this.replacerRecursions = 0;
+            this.big_map = {}; //flush old objects
+            this.snapshot = snapshot;
+            this.explore(this.snapshot);
             for (var key in this.big_map) {
                 this.scanAndReplace(this.big_map[key]);
             }
-            return new DAQAggregator.Snapshot(this.big_map['DAQ']);
+            console.log("Size of map of objects after parsing: " + Object.keys(this.big_map).length);
+            console.log("Replacer calls: " + this.replacerRecursions);
+            if (this.replacerRecursions > 25000) {
+                console.log("Too much recursion imminent...parser aborted proactively");
+                return null;
+            }
+            var snapshotReturned = new DAQAggregator.Snapshot(this.big_map['DAQ']);
+            return snapshotReturned;
         };
         SnapshotParser.getFieldType = function (field) {
             var ret = typeof field;
@@ -63,6 +78,13 @@ var DAQAggregator;
             }
         };
         SnapshotParser.prototype.scanAndReplace = function (obj) {
+            this.replacerRecursions++;
+            /*this allows for a snapshot with up to 5 times more elements than the typical snapshot in late 2016,
+             if this is reached, then probably there is something wrong with the snapshot, causing infinite recursion over elements...
+             */
+            if (this.replacerRecursions > 25000) {
+                return;
+            }
             for (var key in obj) {
                 var elem = obj[key]; // `obj[key]` is the value
                 var elemTypeLiteral = SnapshotParser.getFieldType(elem);
@@ -140,4 +162,41 @@ var DAQAggregator;
         return RUWarnMessageAggregator;
     }());
     DAQAggregator.RUWarnMessageAggregator = RUWarnMessageAggregator;
+    var RUMaskedCounter = (function () {
+        function RUMaskedCounter() {
+        }
+        RUMaskedCounter.prototype.countMaskedRUs = function (snapshot) {
+            //retrieve and assign warning messages to RUs
+            var rus = snapshot.getDAQ().rus;
+            var rusMasked = 0;
+            for (var idx = 0; idx < rus.length; idx++) {
+                if (rus[idx].masked) {
+                    rusMasked++;
+                }
+            }
+            snapshot.getDAQ().fedBuilderSummary.rusMasked = rusMasked;
+            //console.log(rusMasked);
+            return snapshot;
+        };
+        return RUMaskedCounter;
+    }());
+    DAQAggregator.RUMaskedCounter = RUMaskedCounter;
+    var BUNoRateCounter = (function () {
+        function BUNoRateCounter() {
+        }
+        BUNoRateCounter.prototype.countNoRateBUs = function (snapshot) {
+            //retrieve and assign warning messages to RUs
+            var bus = snapshot.getDAQ().bus;
+            var busNoRate = 0;
+            for (var idx = 0; idx < bus.length; idx++) {
+                if (bus[idx].rate == 0) {
+                    busNoRate++;
+                }
+            }
+            snapshot.getDAQ().buSummary.busNoRate = busNoRate;
+            return snapshot;
+        };
+        return BUNoRateCounter;
+    }());
+    DAQAggregator.BUNoRateCounter = BUNoRateCounter;
 })(DAQAggregator || (DAQAggregator = {}));

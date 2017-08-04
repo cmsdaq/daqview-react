@@ -47,7 +47,6 @@
                 daqView = new DAQView.DAQViewReact();
                 daqView.createMetadataTable('daqview-react-metadata-table');
                 daqView.createFBTable('daqview-react-fb-table');
-                daqView.createFFFTable('daqview-react-fff-table');
                 daqView.createAboutTable('daqview-react-about-table');
                 daqView.createSnapshotModal('daqview-react-snapshot-modal');
 
@@ -266,7 +265,7 @@
 
                 //setting values in links of the upper left corner
                 $('#dvhomelink').attr("href",daqviewLinks.controller);
-                $('#dvfblink').attr("href",daqviewLinks.base_fb+"?setup="+daqSetup);
+                $('#dvalllink').attr("href",daqviewLinks.base_all+"?setup="+daqSetup);
                 $('#dvffflink').attr("href",daqviewLinks.base_fff+"?setup="+daqSetup);
 
             }
@@ -305,7 +304,6 @@
                 }, 1000);
             }
 
-
         });
 
     </script>
@@ -314,11 +312,10 @@
 <div id="daqview-react">
     <br/><br/>
     <table style="width:100%" class="daqview-top-row">
-
         <tr>
             <td width="20%" align="left" valign="center">
                 <a href="" id="dvhomelink" target="_blank"><button class="daqview-external-link">DAQView Home</button></a>
-                <a href="" id="dvfblink" target="_blank"><button class="daqview-external-link">FB Table</button></a>
+                <a href="" id="dvalllink" target="_blank"><button class="daqview-external-link">All Tables</button></a>
                 <a href="" id="dvffflink" target="_blank"><button class="daqview-external-link">FFF Table</button></a>
             </td>
             <td width="20%" align="right" valign="center">
@@ -345,19 +342,15 @@
             </td>
             <td width="20%" align="right" valign="bottom"/>
         </tr>
-
     </table>
     <table style="width:100%">
         <tr>
             <td width="20%" align="right" valign="bottom"><div id="daqview-react-snapshot-modal"></div></td>
         </tr>
     </table>
-
     <div id="daqview-react-metadata-table"></div>
     <p></p>
     <div id="daqview-react-fb-table"></div>
-    <br/><br/>
-    <div id="daqview-react-fff-table"></div>
     <br/><br/>
     <div id="daqview-react-about-table"><div class="loader"></div></div>
     <br/><br/>

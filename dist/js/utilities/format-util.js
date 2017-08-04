@@ -1,3 +1,6 @@
+/**
+ * @author Philipp Brummer
+ */
 var FormatUtility;
 (function (FormatUtility) {
     var KILO = 1E3;

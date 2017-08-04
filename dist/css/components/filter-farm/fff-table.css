@@ -10,6 +10,10 @@
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
+.fff-table-bu-summary-row{
+    font-weight: bold;
+}
+
 .fff-table-body td {
     border-style: solid;
     border-color: rgba(0, 0, 0, 0.2);
@@ -48,16 +52,66 @@
 
 }
 
-.fff-table-bu-row:nth-of-type(even) {
+.fff-table-bu-row-counter {
+    text-align: right;
+}
+
+.fff-table-bu-row-stale-page-row:nth-of-type(even) {
+    background-color: #ffbe11;
+}
+
+.fff-table-bu-row-stale-page-row:nth-of-type(odd) {
+    background-color:  #F5F2F2 ;
+}
+
+.fff-table-bu-row-ratezero:nth-of-type(even) {
+    background-color: #EF4A50;
+}
+
+.fff-table-bu-row-ratezero:nth-of-type(odd) {
+    background-color: #F5F2F2;
+}
+
+.fff-table-bu-row-running:nth-of-type(even) {
     background-color: #DDDDAA;
 }
 
-.fff-table-bu-row:nth-of-type(odd) {
-
+.fff-table-bu-row-running:nth-of-type(odd) {
+    background-color: #F5F2F2;
 }
 
-.fff-table-bu-summary-row {
+.fff-table-bu-row-paused:nth-of-type(even) {
+    background-color: #FFFFFF;
+}
+
+.fff-table-bu-row-paused:nth-of-type(odd) {
+    background-color: #F5F2F2;
+}
+
+.fff-table-bu-summary-row-stale-page {
+    font-weight: bold;
+    background-color: #ffbe11;
+}
+
+.fff-table-stale-member-wrapbox {
+    border: 2px solid #ffbe11;
+    padding: 1px;
+    margin: 1px;
+}
+
+.fff-table-bu-summary-row-ratezero {
+    font-weight: bold;
+    background-color: #EF4A50;
+}
+
+.fff-table-bu-summary-row-running {
+    font-weight: bold;
     background-color: #DDDDAA;
+}
+
+.fff-table-bu-summary-row-paused {
+    font-weight: bold;
+    background-color: #FFFFFF;
 }
 
 .fff-table-rate {
@@ -116,8 +170,52 @@
     color: #FF0000;
 }
 
+.fff-table-requests-blocked-nonzero {
+    background-color: #ffff00;
+}
+
+.fff-table-priority {
+    color: #FF0000;
+}
+
+.fff-table-priority-nonzero {
+    background-color: #ffff00;
+}
+
+
+.fff-table-bwout {
+}
+
+.fff-table-bwout-over {
+    font-weight: bold;
+    color: #FF0000;
+}
+
 .fff-table-sort-image {
     width: 8px;
     height: 8px;
     margin: 0 0.2em 0 0.2em;
+}
+
+.fff-table-jobcrash{
+    background-color:#000000;
+    color:#ffffff;
+    font-weight:bold;
+}
+
+.fff-table-bu-state-error {
+    font-weight: bold;
+    background-color: #CC0033;
+}
+
+.fff-table-bu-state-warn {
+    background-color: #cc726e;
+}
+
+.fff-table-bu-state-normal {
+
+}
+
+.fff-table-bu-red-column-escape{
+    color: #FFFFFF;
 }

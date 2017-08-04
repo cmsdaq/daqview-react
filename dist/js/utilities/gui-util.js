@@ -1,3 +1,7 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
 var DAQViewGUIUtility;
 (function (DAQViewGUIUtility) {
     function getParametersFromCurrentRequestURL() {
@@ -15,4 +19,17 @@ var DAQViewGUIUtility;
         return parameters;
     }
     DAQViewGUIUtility.parseURLParameters = parseURLParameters;
+    /**
+     * Script for generating links to share expert browser view
+     */
+    var sharableLink = null;
+    function getSharableLink() {
+        console.log("Getting sharable link " + sharableLink);
+        return sharableLink;
+    }
+    DAQViewGUIUtility.getSharableLink = getSharableLink;
+    function setSharableLink(url) {
+        sharableLink = url;
+    }
+    DAQViewGUIUtility.setSharableLink = setSharableLink;
 })(DAQViewGUIUtility || (DAQViewGUIUtility = {}));

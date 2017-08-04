@@ -1,31 +1,38 @@
-///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
-///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
+///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
 ///<reference path="../../utilities/format-util.ts"/>
 var DAQView;
 (function (DAQView) {
-    var snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
     var FEDBuilderTable = (function () {
         function FEDBuilderTable(htmlRootElementName) {
             this.DEFAULT_PRESORT_FUNCTION = FBTableSortFunctions.TTCP_ASC;
             this.INITIAL_SORT_FUNCTION = FBTableSortFunctions.TTCP_ASC;
             this.INITIAL_PRESORT_FUNCTION = FBTableSortFunctions.NONE;
             this.snapshot = null;
+            this.drawPausedComponent = false;
+            this.drawZeroDataFlowComponent = false;
+            this.drawStaleSnapshot = false;
+            this.previousPauseState = false;
             this.sortFunction = {
                 presort: this.INITIAL_PRESORT_FUNCTION,
                 sort: this.INITIAL_SORT_FUNCTION
             };
+            //columns stored here will get a sort icon
             this.currentSorting = {
                 'TTCP': DAQView.Sorting.Ascending,
                 'FB Name': DAQView.Sorting.None,
                 '%W': DAQView.Sorting.None,
                 '%B': DAQView.Sorting.None,
                 'RU': DAQView.Sorting.None,
-                'warn': DAQView.Sorting.None,
                 'rate (kHz)': DAQView.Sorting.None,
                 'thru (MB/s)': DAQView.Sorting.None,
                 'size (kB)': DAQView.Sorting.None,
@@ -36,17 +43,41 @@ var DAQView;
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        FEDBuilderTable.prototype.setSnapshot = function (snapshot) {
-            if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
-                return;
+        FEDBuilderTable.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+            if (!snapshot) {
+                var msg = "";
+                var errRootElement = React.createElement(ErrorElement, {message: msg});
+                ReactDOM.render(errRootElement, this.htmlRootElement);
             }
-            this.snapshot = FBTableSortFunctions.STATIC(snapshot);
-            this.updateSnapshot();
+            else {
+                if (this.snapshot != null && this.snapshot.getUpdateTimestamp() === snapshot.getUpdateTimestamp()) {
+                    console.log("duplicate snapshot detected");
+                    if (drawPausedComponent || drawZeroDataFlowComponent || drawStaleSnapshot) {
+                        console.log("...but page color has to change, so do render");
+                    }
+                    else {
+                        return;
+                    }
+                }
+                this.snapshot = FBTableSortFunctions.STATIC(snapshot);
+                this.drawPausedComponent = drawPausedComponent;
+                this.drawZeroDataFlowComponent = drawZeroDataFlowComponent;
+                this.drawStaleSnapshot = drawStaleSnapshot;
+                this.updateSnapshot();
+            }
+        };
+        //to be called before setSnapshot
+        FEDBuilderTable.prototype.prePassElementSpecificData = function (args) {
         };
         FEDBuilderTable.prototype.updateSnapshot = function () {
             var sortedSnapshot = this.sort(this.snapshot);
             var daq = sortedSnapshot.getDAQ();
-            var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {tableObject: this, fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary});
+            var drawPausedComponent = this.drawPausedComponent;
+            var drawZeroDataFlowComponent = this.drawZeroDataFlowComponent;
+            var drawStaleSnapshot = this.drawStaleSnapshot;
+            var tcdsControllerUrl = daq.tcdsGlobalInfo.tcdsControllerContext;
+            var tcdsControllerServiceName = daq.tcdsGlobalInfo.tcdsControllerServiceName;
+            var fedBuilderTableRootElement = React.createElement(FEDBuilderTableElement, {tableObject: this, fedBuilders: daq.fedBuilders, fedBuilderSummary: daq.fedBuilderSummary, drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, tcdsControllerUrl: tcdsControllerUrl, tcdsControllerServiceName: tcdsControllerServiceName, drawStaleSnapshot: drawStaleSnapshot});
             ReactDOM.render(fedBuilderTableRootElement, this.htmlRootElement);
         };
         FEDBuilderTable.prototype.setSortFunction = function (sortFunctions) {
@@ -76,6 +107,16 @@ var DAQView;
         return FEDBuilderTable;
     }());
     DAQView.FEDBuilderTable = FEDBuilderTable;
+    var ErrorElement = (function (_super) {
+        __extends(ErrorElement, _super);
+        function ErrorElement() {
+            _super.apply(this, arguments);
+        }
+        ErrorElement.prototype.render = function () {
+            return (React.createElement("div", null, this.props.message));
+        };
+        return ErrorElement;
+    }(React.Component));
     var FBTableNumberFormats;
     (function (FBTableNumberFormats) {
         FBTableNumberFormats.RATE = {
@@ -398,6 +439,39 @@ var DAQView;
             });
             return snapshot;
         }
+        function RUHOSTNAME(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU throughput
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRUHostname = firstFedBuilder.ru.hostname;
+                var secondFedBuilderRUHostname = secondFedBuilder.ru.hostname;
+                if (firstFedBuilderRUHostname > secondFedBuilderRUHostname) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRUHostname < secondFedBuilderRUHostname) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RU_HOSTNAME_ASC(snapshot) {
+            return RUHOSTNAME(snapshot, false);
+        }
+        FBTableSortFunctions.RU_HOSTNAME_ASC = RU_HOSTNAME_ASC;
+        function RU_HOSTNAME_DESC(snapshot) {
+            return RUHOSTNAME(snapshot, true);
+        }
+        FBTableSortFunctions.RU_HOSTNAME_DESC = RU_HOSTNAME_DESC;
         function RURATE_ASC(snapshot) {
             return RURATE(snapshot, false);
         }
@@ -505,7 +579,7 @@ var DAQView;
             return RUNUMFRAG(snapshot, true);
         }
         FBTableSortFunctions.RUNUMFRAG_DESC = RUNUMFRAG_DESC;
-        function RUNUMEVTS(snapshot, descending) {
+        function RUNUMEVTSINRU(snapshot, descending) {
             var daq = snapshot.getDAQ();
             var fedBuilders = daq.fedBuilders;
             // sort the FEDBuilders based on their RU number of events in RU
@@ -518,6 +592,39 @@ var DAQView;
                 }
                 var firstFedBuilderRUNumevts = firstFedBuilder.ru.eventsInRU;
                 var secondFedBuilderRUNumevts = secondFedBuilder.ru.eventsInRU;
+                if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
+                    return (descending ? -1 : 1);
+                }
+                else if (firstFedBuilderRUNumevts < secondFedBuilderRUNumevts) {
+                    return (descending ? 1 : -1);
+                }
+                else {
+                    return 0;
+                }
+            });
+            return snapshot;
+        }
+        function RUNUMEVTSINRU_ASC(snapshot) {
+            return RUNUMEVTSINRU(snapshot, false);
+        }
+        FBTableSortFunctions.RUNUMEVTSINRU_ASC = RUNUMEVTSINRU_ASC;
+        function RUNUMEVTSINRU_DESC(snapshot) {
+            return RUNUMEVTSINRU(snapshot, true);
+        }
+        FBTableSortFunctions.RUNUMEVTSINRU_DESC = RUNUMEVTSINRU_DESC;
+        function RUNUMEVTS(snapshot, descending) {
+            var daq = snapshot.getDAQ();
+            var fedBuilders = daq.fedBuilders;
+            // sort the FEDBuilders based on their RU number of events in RU
+            fedBuilders.sort(function (firstFedBuilder, secondFedBuilder) {
+                if (firstFedBuilder.ru.isEVM) {
+                    return -1;
+                }
+                else if (secondFedBuilder.ru.isEVM) {
+                    return 1;
+                }
+                var firstFedBuilderRUNumevts = firstFedBuilder.ru.eventCount;
+                var secondFedBuilderRUNumevts = secondFedBuilder.ru.eventCount;
                 if (firstFedBuilderRUNumevts > secondFedBuilderRUNumevts) {
                     return (descending ? -1 : 1);
                 }
@@ -572,8 +679,11 @@ var DAQView;
         }
         FBTableSortFunctions.RUREQUESTS_DESC = RUREQUESTS_DESC;
     })(FBTableSortFunctions = DAQView.FBTableSortFunctions || (DAQView.FBTableSortFunctions = {}));
+    //assignment of sort function to the columns (where applicable)
     var FB_TABLE_BASE_HEADERS = [
-        { content: 'T' },
+        { content: 'P' },
+        { content: 'A' },
+        { content: 'F' },
         {
             content: '%W',
             sortFunctions: {
@@ -589,6 +699,7 @@ var DAQView;
             }
         },
         { content: 'frlpc' },
+        { content: '' },
         { content: 'geoSlot:SrcId      /      TTSOnlyFEDSrcId' },
         { content: 'min Trg' },
         { content: 'max Trg' },
@@ -599,8 +710,15 @@ var DAQView;
                 Descending: { sort: FBTableSortFunctions.FB_DESC }
             }
         },
-        { content: 'RU' },
-        { content: 'warn', },
+        {
+            content: 'RU',
+            sortFunctions: {
+                Ascending: { sort: FBTableSortFunctions.RU_HOSTNAME_ASC },
+                Descending: { sort: FBTableSortFunctions.RU_HOSTNAME_DESC }
+            }
+        },
+        { content: '         ' },
+        { content: 'warn' },
         {
             content: 'rate (kHz)',
             sortFunctions: {
@@ -622,7 +740,13 @@ var DAQView;
                 Descending: { sort: FBTableSortFunctions.RUSIZE_DESC }
             }
         },
-        { content: '#events' },
+        {
+            content: '#events',
+            sortFunctions: {
+                Ascending: { sort: FBTableSortFunctions.RUNUMEVTS_ASC },
+                Descending: { sort: FBTableSortFunctions.RUNUMEVTS_DESC }
+            }
+        },
         {
             content: '#frags in RU',
             sortFunctions: {
@@ -633,8 +757,8 @@ var DAQView;
         {
             content: '#evts in RU',
             sortFunctions: {
-                Ascending: { sort: FBTableSortFunctions.RUNUMEVTS_ASC },
-                Descending: { sort: FBTableSortFunctions.RUNUMEVTS_DESC }
+                Ascending: { sort: FBTableSortFunctions.RUNUMEVTSINRU_ASC },
+                Descending: { sort: FBTableSortFunctions.RUNUMEVTSINRU_DESC }
             }
         },
         {
@@ -662,7 +786,13 @@ var DAQView;
         }
         FEDBuilderTableElement.prototype.render = function () {
             var fedBuilders = this.props.fedBuilders;
+            var drawPausedComponents = this.props.drawPausedComponent;
+            var drawZeroDataFlowComponents = this.props.drawZeroDataFlowComponent;
+            var drawStaleSnapshot = this.props.drawStaleSnapshot;
+            var tcdsControllerUrl = this.props.tcdsControllerUrl;
+            var tcdsControllerServiceName = this.props.tcdsControllerServiceName;
             var evmMaxTrg = null;
+            //can similarly invent and pass down the evm minTrg here, for comparison at innermost levels
             fedBuilders.forEach(function (fedBuilder) {
                 if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
                     if (fedBuilder.subFedbuilders != null && fedBuilder.subFedbuilders.length > 0) {
@@ -672,12 +802,15 @@ var DAQView;
             });
             var fedBuilderRows = [];
             fedBuilders.forEach(function (fedBuilder) {
-                fedBuilderRows.push(React.createElement(FEDBuilderRow, {key: fedBuilder['@id'], fedBuilder: fedBuilder, evmMaxTrg: evmMaxTrg}));
+                var index = fedBuilderRows.length;
+                var oddRow = (index % 2 == 1) ? true : false;
+                fedBuilderRows.push(React.createElement(FEDBuilderRow, {key: fedBuilder['@id'], fedBuilder: fedBuilder, evmMaxTrg: evmMaxTrg, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, tcdsControllerUrl: tcdsControllerUrl, tcdsControllerServiceName: tcdsControllerServiceName, oddRow: oddRow, drawStaleSnapshot: drawStaleSnapshot}));
             });
             var fedBuilderSummary = this.props.fedBuilderSummary;
             var numRus = fedBuilders.length;
+            var numUsedRus = numRus - fedBuilderSummary.rusMasked;
             var tableObject = this.props.tableObject;
-            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "9"}), React.createElement("colgroup", {className: "fb-table-colgroup-unknown", span: "2"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, {key: "fb-top-header-row"}), React.createElement(FEDBuilderTableHeaderRow, {key: "fb-header-row", tableObject: tableObject, headers: FB_TABLE_TOP_HEADERS})), fedBuilderRows, React.createElement("tfoot", {className: "fb-table-foot"}, React.createElement(FEDBuilderTableHeaderRow, {key: "fb-summary-header-row", tableObject: tableObject, headers: FB_TABLE_SUMMARY_HEADERS}), React.createElement(FEDBuilderTableSummaryRow, {key: "fb-summary-row", fedBuilderSummary: fedBuilderSummary, numRus: numRus}))));
+            return (React.createElement("table", {className: "fb-table"}, React.createElement("colgroup", {className: "fb-table-colgroup-fedbuilder", span: "12"}), React.createElement("colgroup", {className: "fb-table-colgroup-evb", span: "10"}), React.createElement("thead", {className: "fb-table-head"}, React.createElement(FEDBuilderTableTopHeaderRow, {key: "fb-top-header-row", drawPausedComponent: drawPausedComponents}), React.createElement(FEDBuilderTableSecondaryHeaderRow, {key: "fb-secondary-header-row", drawPausedComponent: drawPausedComponents}), React.createElement(FEDBuilderTableHeaderRow, {key: "fb-header-row", tableObject: tableObject, headers: FB_TABLE_TOP_HEADERS, drawPausedComponent: drawPausedComponents})), fedBuilderRows, React.createElement("tfoot", {className: "fb-table-foot"}, React.createElement(FEDBuilderTableHeaderRow, {key: "fb-summary-header-row", tableObject: tableObject, headers: FB_TABLE_SUMMARY_HEADERS, drawPausedComponent: drawPausedComponents}), React.createElement(FEDBuilderTableSummaryRow, {key: "fb-summary-row", fedBuilderSummary: fedBuilderSummary, numRus: numRus, numUsedRus: numUsedRus, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, drawStaleSnapshot: drawStaleSnapshot}))));
         };
         return FEDBuilderTableElement;
     }(React.Component));
@@ -698,7 +831,7 @@ var DAQView;
             //without fragments
             for (var idx = 0; idx < fedsWithErrors.length; idx++) {
                 fedWithErrors = fedsWithErrors[idx];
-                if (fedWithErrors.ruFedWithoutFragments && ru.eventsInRU == 0 && ru.incompleteSuperFragmentCount > 0) {
+                if (fedWithErrors.ruFedWithoutFragments && ru.rate == 0 && ru.incompleteSuperFragmentCount > 0) {
                     ruWarningData.push(React.createElement("span", {className: "fb-table-ru-warn-message"}, " ", fedWithErrors.srcIdExpected + ' ', " "));
                 }
             }
@@ -733,20 +866,60 @@ var DAQView;
         }
         FEDBuilderRow.prototype.render = function () {
             var _this = this;
+            var drawPausedComponent = this.props.drawPausedComponent;
+            var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            var drawStaleSnapshot = this.props.drawStaleSnapshot;
+            var oddRow = this.props.oddRow;
             var fedBuilder = this.props.fedBuilder;
             var subFedBuilders = fedBuilder.subFedbuilders;
             var numSubFedBuilders = subFedBuilders.length;
             var ru = fedBuilder.ru;
             var ruMasked = ru.masked;
             var ruHostname = ru.hostname;
-            var ruName = ruHostname.substring(3, ruHostname.length - 4);
-            var ruUrl = 'http://' + ruHostname + ':11100/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+            var ruPort = ru.port;
+            var ruName = ruHostname.split(".")[0];
+            ruName = ruName.indexOf('ru') == 0 ? ruName.substring(3) : ruName;
+            var ruUrl = 'http://' + ruHostname + ':' + ruPort + '/urn:xdaq-application:service=' + (ru.isEVM ? 'evm' : 'ru');
+            var ruUrlDisplay = ruName;
+            var ruUrlDisplayClass = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            var ruDebug = ru.isEVM ? "Check problems with EVM flashlist!" : "Check problems with RU flashlist!";
+            if (ruPort > 0) {
+                ruUrlDisplay = React.createElement("a", {href: ruUrl, target: "_blank"}, ruName);
+                ruUrlDisplayClass = "";
+                ruDebug = "";
+            }
+            var ruState = '';
+            var ruStateClass = 'fb-table-ru-state-normal';
+            if (ru.stateName) {
+                ruState = ru.stateName;
+                if (ruState === 'Halted' || ruState === 'Ready' || ruState === 'Enabled' || ruState === 'unknown' || ruState === '') {
+                    ruState = '';
+                }
+                else {
+                    ruStateClass = 'fb-table-ru-state-warn';
+                }
+                if (ruState === 'Failed' || ruState === 'Error') {
+                    ruStateClass = 'fb-table-ru-state-error';
+                }
+            }
+            var ruJobCrashStateDisplay = "";
+            var ruJobCrashStateDisplayClass = "";
+            if (ru.crashed) {
+                ruJobCrashStateDisplay = "JobCrash";
+                ruJobCrashStateDisplayClass = "fb-table-jobcrash";
+            }
+            var fbRowZeroEvmRateClass = "";
+            if (drawZeroDataFlowComponent && fedBuilder.ru.isEVM) {
+                fbRowZeroEvmRateClass = "fb-table-fb-evm-row-ratezero";
+            }
+            var fbRowRateClass = classNames(fbRowZeroEvmRateClass, FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE));
             var fedBuilderData = [];
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, fedBuilder.name));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("a", {href: ruUrl, target: "_blank"}, ruName)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("div", {title: ruDebug, className: ruUrlDisplayClass}, ruUrlDisplay)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement("div", {className: ruStateClass}, ruState), React.createElement("div", {className: ruJobCrashStateDisplayClass}, ruJobCrashStateDisplay)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders}, React.createElement(RUWarningData, {key: ru['@id'], ru: ru})));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.rate, FBTableNumberFormats.RATE)}, (ru.rate / 1000).toFixed(3)));
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}, (ru.throughput / 1024 / 1024).toFixed(1)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: fbRowRateClass}, (ru.rate / 1000).toFixed(3)));
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: FormatUtility.getClassNameForNumber(ru.throughput, FBTableNumberFormats.THROUGHPUT)}, (ru.throughput / 1000 / 1000).toFixed(1)));
             var sizeClass;
             var eventCountClass;
             var fragmentInRuClass;
@@ -762,15 +935,36 @@ var DAQView;
                 eventsInRuClass = FormatUtility.getClassNameForNumber(ru.eventsInRU, FBTableNumberFormats.EVENTS_IN_RU);
                 requestsClass = FormatUtility.getClassNameForNumber(ru.requests, FBTableNumberFormats.REQUESTS);
             }
-            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: sizeClass}, (ru.superFragmentSizeMean / 1024).toFixed(3), "±", (ru.superFragmentSizeStddev / 1024).toFixed(3)));
+            //invert color when DAQ is stuck, because red colors are missed
+            if (drawZeroDataFlowComponent && oddRow) {
+                var escapeRedField = 'fb-table-ru-red-column-escape';
+                if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru') {
+                    fragmentInRuClass = escapeRedField;
+                }
+                if (eventsInRuClass === 'fb-table-ru-events-in-ru') {
+                    eventsInRuClass = escapeRedField;
+                }
+                if (requestsClass === 'fb-table-ru-requests') {
+                    requestsClass = escapeRedField;
+                }
+            }
+            var superFragmentSizePrecision = (ru.superFragmentSizeMean > 1000) ? 1 : 3;
+            fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: sizeClass}, (ru.superFragmentSizeMean / 1000).toFixed(superFragmentSizePrecision), "±", (ru.superFragmentSizeStddev / 1000).toFixed(superFragmentSizePrecision)));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: eventCountClass}, ru.eventCount));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: fragmentInRuClass}, ru.fragmentsInRU));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: eventsInRuClass}, ru.eventsInRU));
             fedBuilderData.push(React.createElement("td", {rowSpan: numSubFedBuilders, className: requestsClass}, ru.requests));
-            var fbRowClassName = classNames("fb-table-fb-row", this.props.additionalClasses);
+            var fbRowClass = drawPausedComponent ? "fb-table-fb-row-paused" : "fb-table-fb-row-running";
+            if (drawZeroDataFlowComponent) {
+                fbRowClass = "fb-table-fb-row-ratezero";
+            }
+            if (drawStaleSnapshot && (!drawPausedComponent)) {
+                fbRowClass = 'fb-table-fb-row-stale-page-row';
+            }
+            var fbRowClassName = classNames(fbRowClass, this.props.additionalClasses);
             var children = [];
             var count = 0;
-            subFedBuilders.forEach(function (subFedBuilder) { return children.push(React.createElement(SubFEDBuilderRow, {evmMaxTrg: _this.props.evmMaxTrg, subFedBuilder: subFedBuilder, additionalContent: ++count == 1 ? fedBuilderData : null})); });
+            subFedBuilders.forEach(function (subFedBuilder) { return children.push(React.createElement(SubFEDBuilderRow, {evmMaxTrg: _this.props.evmMaxTrg, subFedBuilder: subFedBuilder, additionalContent: ++count == 1 ? fedBuilderData : null, tcdsControllerUrl: _this.props.tcdsControllerUrl, tcdsControllerServiceName: _this.props.tcdsControllerServiceName, drawZeroDataFlowComponent: drawZeroDataFlowComponent})); });
             return (React.createElement("tbody", {className: fbRowClassName}, children));
         };
         return FEDBuilderRow;
@@ -784,9 +978,24 @@ var DAQView;
             return false;
         };
         FEDBuilderTableTopHeaderRow.prototype.render = function () {
-            return (React.createElement("tr", {className: "fb-table-top-header-row"}, React.createElement(FEDBuilderTableHeader, {additionalClasses: "fb-table-help", content: React.createElement("a", {href: "."}, "Table Help"), colSpan: "2"}), React.createElement(FEDBuilderTableHeader, {content: "F E D B U I L D E R", colSpan: "7"}), React.createElement(FEDBuilderTableHeader, {content: "E V B", colSpan: "9"})));
+            var drawPausedComponent = this.props.drawPausedComponent;
+            return (React.createElement("tr", {className: "fb-table-top-header-row"}, React.createElement(FEDBuilderTableHeader, {additionalClasses: "fb-table-help", content: React.createElement("a", {href: "fbtablehelp.html", target: "_blank"}, "Table Help"), colSpan: "1", drawPausedComponent: drawPausedComponent}), React.createElement(FEDBuilderTableHeader, {content: "F  E  D  B  U  I  L  D  E  R", colSpan: "11", drawPausedComponent: drawPausedComponent}), React.createElement(FEDBuilderTableHeader, {content: "E  V  B", colSpan: "10", drawPausedComponent: drawPausedComponent})));
         };
         return FEDBuilderTableTopHeaderRow;
+    }(React.Component));
+    var FEDBuilderTableSecondaryHeaderRow = (function (_super) {
+        __extends(FEDBuilderTableSecondaryHeaderRow, _super);
+        function FEDBuilderTableSecondaryHeaderRow() {
+            _super.apply(this, arguments);
+        }
+        FEDBuilderTableSecondaryHeaderRow.prototype.shouldComponentUpdate = function () {
+            return false;
+        };
+        FEDBuilderTableSecondaryHeaderRow.prototype.render = function () {
+            var drawPausedComponent = this.props.drawPausedComponent;
+            return (React.createElement("tr", {className: "fb-table-secondary-header-row"}, React.createElement(FEDBuilderTableHeader, {content: "", colSpan: "1", drawPausedComponent: drawPausedComponent}), React.createElement(FEDBuilderTableHeader, {content: "T T S", colSpan: "3", drawPausedComponent: drawPausedComponent}), React.createElement(FEDBuilderTableHeader, {content: "", colSpan: "18", drawPausedComponent: drawPausedComponent})));
+        };
+        return FEDBuilderTableSecondaryHeaderRow;
     }(React.Component));
     var FEDBuilderTableHeaderRow = (function (_super) {
         __extends(FEDBuilderTableHeaderRow, _super);
@@ -794,9 +1003,10 @@ var DAQView;
             _super.apply(this, arguments);
         }
         FEDBuilderTableHeaderRow.prototype.render = function () {
+            var drawPausedComponent = this.props.drawPausedComponent;
             var tableObject = this.props.tableObject;
             var children = [];
-            this.props.headers.forEach(function (header) { return children.push(React.createElement(FEDBuilderTableHeader, {key: header.content, content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions})); });
+            this.props.headers.forEach(function (header) { return children.push(React.createElement(FEDBuilderTableHeader, {key: header.content, content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions, drawPausedComponent: drawPausedComponent})); });
             return (React.createElement("tr", {className: "fb-table-header-row"}, children));
         };
         return FEDBuilderTableHeaderRow;
@@ -810,10 +1020,12 @@ var DAQView;
             return this.props.sorting !== nextProps.sorting;
         };
         FEDBuilderTableHeader.prototype.render = function () {
+            var drawPausedComponent = this.props.drawPausedComponent;
             var content = this.props.content;
             var colSpan = this.props.colSpan;
             var additionalClasses = this.props.additionalClasses;
-            var className = classNames("fb-table-header", additionalClasses);
+            var fbHeaderClass = "fb-table-header";
+            var className = classNames(fbHeaderClass, additionalClasses);
             var tableObject = this.props.tableObject;
             var currentSorting = this.props.sorting ? this.props.sorting : null;
             var sortFunctions = this.props.sortFunctions;
@@ -833,6 +1045,18 @@ var DAQView;
                     };
                 }
             }
+            //handlers to be used with onMouseOver and onMouseOut of this element
+            /*
+             let mouseOverFunction: () => void = null;
+             mouseOverFunction = function (){
+
+             };
+
+             let mouseOutFunction: () => void = null;
+             mouseOutFunction = function (){
+
+             //alert("mouseOut"+content);
+             };*/
             var sortingImage = null;
             if (currentSorting != null) {
                 sortingImage = React.createElement("input", {type: "image", className: "fb-table-sort-image", src: 'dist/img/' + currentSorting.getImagePath(), alt: currentSorting.toString(), title: "Sort", onClick: clickFunction});
@@ -865,31 +1089,102 @@ var DAQView;
             _super.apply(this, arguments);
         }
         SubFEDBuilderRow.prototype.render = function () {
+            var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             var subFedBuilder = this.props.subFedBuilder;
             var frlPc = subFedBuilder.frlPc;
             var frlPcHostname = frlPc.hostname;
-            var frlPcName = frlPcHostname.substring(6, frlPcHostname.length - 4);
-            var frlPcUrl = 'http://' + frlPcHostname + ':11100';
+            var frlPcPort = frlPc.port;
+            var frlPcName = frlPcHostname.split(".")[0];
+            frlPcName = frlPcName.indexOf('frlpc') == 0 && frlPcName.indexOf('frlpc40') == -1 ? frlPcName.substring(6) : frlPcName;
+            frlPcName = frlPcName.indexOf('frlpc40') == 0 ? frlPcName.substring(8) : frlPcName;
+            var frlPcUrl = 'http://' + frlPcHostname + ':' + frlPcPort;
             var frls = subFedBuilder.frls;
             var pseudoFeds = subFedBuilder.feds;
+            var frlPcUrlDisplay = frlPcName;
+            var frlPcUrlDisplayClass = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            var frlPcDebug = "Check problems with FEROL_CONFIGURATION flashlist!";
+            if (frlPcPort > 0) {
+                frlPcUrlDisplay = React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName);
+                frlPcUrlDisplayClass = "";
+                frlPcDebug = "";
+            }
             var additionalClasses = this.props.additionalClasses;
             var className = classNames("fb-table-subfb-row", additionalClasses);
             var ttcPartition = subFedBuilder.ttcPartition;
-            var ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '-';
+            var ttsState = '';
+            var ttsStateTcdsPm = ttcPartition.tcds_pm_ttsState ? ttcPartition.tcds_pm_ttsState.substring(0, 1) : 'x';
+            var ttsStateTcdsApvPm = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
+            if (ttcPartition.tcdsPartitionInfo && ttcPartition.tcdsPartitionInfo.nullCause) {
+                ttsStateTcdsPm = ttcPartition.tcdsPartitionInfo.nullCause;
+                ttsStateTcdsApvPm = ttcPartition.tcdsPartitionInfo.nullCause;
+            }
+            if (ttcPartition.topFMMInfo && ttcPartition.topFMMInfo.nullCause) {
+                ttsState = ttcPartition.topFMMInfo.nullCause;
+            }
+            else {
+                if (ttcPartition.masked) {
+                    ttsState = '-';
+                    ttsStateTcdsPm = '-';
+                    ttsStateTcdsApvPm = '-';
+                }
+                else {
+                    if (ttcPartition.fmm) {
+                        if (ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Ready' || ttcPartition.fmm.stateName && ttcPartition.fmm.stateName === 'Enabled') {
+                            ttsState = ttcPartition.ttsState ? ttcPartition.ttsState.substring(0, 1) : '?';
+                        }
+                        else {
+                            ttsState = '-';
+                        }
+                    }
+                    else {
+                        ttsState = 'x';
+                    }
+                }
+            }
             var ttsStateClasses = ttcPartition.ttsState ? 'fb-table-subfb-tts-state-' + ttsState : 'fb-table-subfb-tts-state-none';
             ttsStateClasses = classNames(ttsStateClasses, 'fb-table-subfb-tts-state');
+            var ttsStateTcdsPmClasses = ttcPartition.tcds_pm_ttsState || ttcPartition.tcds_pm_ttsState != '-' ? 'fb-table-subfb-tts-state-' + ttsStateTcdsPm : 'fb-table-subfb-tts-state-none';
+            ttsStateTcdsPmClasses = classNames(ttsStateTcdsPmClasses, 'fb-table-subfb-tts-state');
+            var ttsStateTcdsApvClasses = ttcPartition.tcds_apv_pm_ttsState || ttcPartition.tcds_apv_pm_ttsState != '-' ? 'fb-table-subfb-tts-state-' + ttsStateTcdsApvPm : 'fb-table-subfb-tts-state-none';
+            ttsStateTcdsApvClasses = classNames(ttsStateTcdsApvClasses, 'fb-table-subfb-tts-state');
             var minTrig = subFedBuilder.minTrig;
             var maxTrig = subFedBuilder.maxTrig;
             var minTrigUnequalMaxTrig = minTrig != maxTrig;
+            var maxTrigSet = maxTrig >= 0;
             var ttcPartitionTTSStateLink = ttsState;
-            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null) {
+            if (ttcPartition.fmm != null && ttcPartition.fmm.url != null && ttsState != '-' && ttsState != 'x' && ttsState.substring(0, 2) != 'no' && ttsState != '?') {
                 ttcPartitionTTSStateLink =
-                    React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank"}, ttsState);
+                    React.createElement("a", {href: ttcPartition.fmm.url + '/urn:xdaq-application:service=fmmcontroller', target: "_blank", title: ttcPartition.ttsState}, ttsState);
             }
-            var ttcPartitionTTSStateDisplay = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
+            var tcdsControllerUrl = this.props.tcdsControllerUrl;
+            var tcdsControllerServiceName = this.props.tcdsControllerServiceName;
+            var ttcPartitionTTSStateTcdsPmLink = ttsStateTcdsPm;
+            if (ttcPartition.tcds_pm_ttsState != null && ttcPartition.tcds_pm_ttsState != '-' && ttsStateTcdsPm != '-' && ttcPartition.tcds_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0, 2) != 'no') {
+                ttcPartitionTTSStateTcdsPmLink =
+                    React.createElement("a", {href: tcdsControllerUrl + '/urn:xdaq-application:service=' + tcdsControllerServiceName, target: "_blank", title: ttcPartition.tcds_pm_ttsState}, ttsStateTcdsPm);
+            }
+            var ttcPartitionTTSStateTcdsApvPmLink = ttsStateTcdsApvPm;
+            if (ttcPartition.tcds_apv_pm_ttsState != null && ttcPartition.tcds_apv_pm_ttsState != '-' && ttsStateTcdsApvPm != '-' && ttcPartition.tcds_apv_pm_ttsState != 'x' && ttcPartition.tcds_pm_ttsState.substring(0, 2) != 'no') {
+                ttcPartitionTTSStateTcdsApvPmLink =
+                    React.createElement("a", {href: tcdsControllerUrl + '/urn:xdaq-application:service=' + tcdsControllerServiceName, target: "_blank", title: ttcPartition.tcds_apv_pm_ttsState}, ttsStateTcdsApvPm);
+            }
+            var ttcPartitionTTSStateDisplay_F = React.createElement("span", {className: ttsStateClasses}, ttcPartitionTTSStateLink);
+            var ttcPartitionTTSStateDisplay_P = React.createElement("span", {className: ttsStateTcdsPmClasses}, ttcPartitionTTSStateTcdsPmLink);
+            var ttcPartitionTTSStateDisplay_A = React.createElement("span", {className: ttsStateTcdsApvClasses}, ttcPartitionTTSStateTcdsApvPmLink);
+            var ttcpPercWarn = ttcPartition.percentWarning != null ? ttcPartition.percentWarning.toFixed(1) : '-';
+            var ttcpPercBusy = ttcPartition.percentWarning != null ? ttcPartition.percentBusy.toFixed(1) : '-';
+            //on special cases of ttsState, percentages cannot be retrieved, therefore assign them the special state
+            if (ttsState === '-' || ttsState === 'x' || ttsState === '?') {
+                ttcpPercWarn = ttsState;
+                ttcpPercBusy = ttsState;
+            }
+            if (ttcPartition.topFMMInfo.nullCause) {
+                ttcpPercWarn = ttcPartition.topFMMInfo.nullCause;
+                ttcpPercBusy = ttcPartition.topFMMInfo.nullCause;
+            }
             var evmMaxTrg = this.props.evmMaxTrg;
             var minTrigDisplayContent = '';
-            var maxTrigDisplayContent = maxTrig;
+            var maxTrigDisplayContent = maxTrigSet ? maxTrig : '';
             if (minTrigUnequalMaxTrig) {
                 minTrigDisplayContent = minTrig;
             }
@@ -902,14 +1197,26 @@ var DAQView;
                 else {
                     minTrigClassNames = classNames(minTrigClassNames, minTrigClassNames + '-equal');
                 }
-                if (maxTrig != evmMaxTrg) {
+                if (maxTrig != evmMaxTrg && maxTrigSet) {
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-unequal');
                 }
                 else {
                     maxTrigClassNames = classNames(maxTrigClassNames, maxTrigClassNames + '-equal');
                 }
             }
-            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", null, ttcPartitionTTSStateDisplay), React.createElement("td", null, ttcPartition.percentWarning.toFixed(1)), React.createElement("td", null, ttcPartition.percentBusy.toFixed(1)), React.createElement("td", null, React.createElement("a", {href: frlPcUrl, target: "_blank"}, frlPcName)), React.createElement(FRLs, {frls: frls, pseudoFeds: pseudoFeds}), React.createElement("td", {className: minTrigClassNames}, minTrigDisplayContent), React.createElement("td", {className: maxTrigClassNames}, maxTrigDisplayContent), this.props.additionalContent ? this.props.additionalContent : null));
+            var frlpcStateDisplay = "";
+            var frlpcStateDisplayClass = "";
+            if (frlPc.crashed) {
+                frlpcStateDisplay = "JobCrash";
+                frlpcStateDisplayClass = "fb-table-jobcrash";
+            }
+            var fmmAppStateDisplay = "";
+            var fmmAppStateDisplayClass = "";
+            if (ttcPartition.fmm && ttcPartition.fmm.fmmApplication && ttcPartition.fmm.fmmApplication.crashed) {
+                fmmAppStateDisplay = "JobCrash";
+                fmmAppStateDisplayClass = "fb-table-jobcrash";
+            }
+            return (React.createElement("tr", {className: className}, React.createElement("td", null, ttcPartition.name, ":", ttcPartition.ttcpNr), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_P), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_A), React.createElement("td", null, React.createElement("div", {className: "fb-table-subfb-tts-perc"}, ttcPartitionTTSStateDisplay_F), React.createElement("div", {className: fmmAppStateDisplayClass}, fmmAppStateDisplay)), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercWarn), React.createElement("td", {className: "fb-table-subfb-tts-perc"}, ttcpPercBusy), React.createElement("td", null, React.createElement("div", {title: frlPcDebug, className: frlPcUrlDisplayClass}, frlPcUrlDisplay)), React.createElement("td", {className: frlpcStateDisplayClass}, frlpcStateDisplay), React.createElement(FRLs, {frls: frls, minTrig: minTrigDisplayContent, pseudoFeds: pseudoFeds, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition}), React.createElement("td", null, React.createElement("div", {className: minTrigClassNames}, minTrigDisplayContent)), React.createElement("td", null, React.createElement("div", {className: maxTrigClassNames}, maxTrigDisplayContent)), this.props.additionalContent ? this.props.additionalContent : null));
         };
         return SubFEDBuilderRow;
     }(React.Component));
@@ -920,16 +1227,20 @@ var DAQView;
         }
         FRLs.prototype.render = function () {
             var frls = this.props.frls;
+            var ttcPartition = this.props.ttcPartition;
+            var minTrigDisplayContent = this.props.minTrig;
+            var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             var pseudoFEDs = this.props.pseudoFeds;
             var fedData = [];
             var firstFrl = true;
             frls.forEach(function (frl) {
-                fedData.push(React.createElement(FRL, {key: frl['@id'], frl: frl, firstFrl: firstFrl}));
+                fedData.push(React.createElement(FRL, {key: frl['@id'], frl: frl, firstFrl: firstFrl, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition}));
                 firstFrl = false;
             });
             pseudoFEDs.forEach(function (fed) {
                 fedData.push(' ');
-                fedData.push(React.createElement(FEDData, {key: fed['@id'], fed: fed}));
+                fed.isPseudoFed = true; //this can be used for pseudofed-specific rendering at FEDData level
+                fedData.push(React.createElement(FEDData, {key: fed['@id'], fed: fed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}));
             });
             return (React.createElement("td", null, fedData));
         };
@@ -942,13 +1253,23 @@ var DAQView;
         }
         FRL.prototype.render = function () {
             var frl = this.props.frl;
+            var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            var minTrigDisplayContent = this.props.minTrig;
+            var ttcPartition = this.props.ttcPartition;
             var feds = frl.feds;
-            var firstFed = feds[0];
-            var firstFedDisplay = firstFed ? React.createElement(FEDData, {key: firstFed['@id'], fed: firstFed}) : '-';
-            var secondFed = feds[1];
-            var secondFedDisplay = secondFed ? React.createElement(FEDData, {key: secondFed['@id'], fed: secondFed}) : '';
+            var firstFed = feds && feds.hasOwnProperty("0") ? feds["0"] : null;
+            var firstFedDisplay = firstFed && firstFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, {key: firstFed['@id'], fed: firstFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '-';
+            var secondFed = feds && feds.hasOwnProperty("1") ? feds["1"] : null;
+            var secondFedDisplay = secondFed && secondFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, {key: secondFed['@id'], fed: secondFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '';
+            var thirdFed = feds && feds.hasOwnProperty("2") ? feds["2"] : null;
+            var thirdFedDisplay = thirdFed && thirdFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, {key: thirdFed['@id'], fed: thirdFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '';
+            var fourthFed = feds && feds.hasOwnProperty("3") ? feds["3"] : null;
+            var fourthFedDisplay = fourthFed && fourthFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, {key: fourthFed['@id'], fed: fourthFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent}) : '';
+            var secondFedShown = secondFed && (secondFed && secondFed.ttcp.name === ttcPartition.name);
+            var thirdFedShown = thirdFed && (thirdFed && thirdFed.ttcp.name === ttcPartition.name);
+            var fourthFedShown = fourthFed && (fourthFed && fourthFed.ttcp.name === ttcPartition.name);
             var firstFrl = this.props.firstFrl;
-            return (React.createElement("span", null, firstFrl ? '' : ', ', frl.geoSlot, ":", firstFedDisplay, secondFed ? ',' : '', secondFedDisplay));
+            return (React.createElement("span", null, firstFrl ? '' : ', ', frl.geoSlot, ":", firstFedDisplay, secondFedShown ? ',' : '', secondFedDisplay, thirdFedShown ? ',' : '', thirdFedDisplay, fourthFedShown ? ',' : '', fourthFedDisplay));
         };
         return FRL;
     }(React.Component));
@@ -971,7 +1292,15 @@ var DAQView;
             return shouldUpdate;
         };
         FEDData.prototype.render = function () {
+            var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             var fed = this.props.fed;
+            var trigNum = fed.eventCounter;
+            var minTrigDisplayContent = this.props.minTrig;
+            var trigNumDisplay = '';
+            if ((trigNum.toString() == minTrigDisplayContent) && drawZeroDataFlowComponent) {
+                trigNumDisplay = minTrigDisplayContent;
+            }
+            var minTrigClassNames = classNames('fb-table-fed-min-trig');
             var percentWarning = fed.percentWarning;
             var percentBusy = fed.percentBusy;
             var ttsState = fed.ttsState ? fed.ttsState.substring(0, 1) : '';
@@ -993,20 +1322,46 @@ var DAQView;
             var ttsStateClass;
             var fedIdClasses = 'fb-table-fed-id';
             ttsStateClass = ttsStateDisplay.length !== 0 ? 'fb-table-fed-tts-state-' + ttsState : null;
-            if (fed.frlMasked === true) {
-                fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
+            var displayFedId = false;
+            var displayFedTTSState = false;
+            /* Masking feds with SLINK - FRL masking*/
+            if (fed.hasSLINK) {
+                if (!fed.frlMasked) {
+                    displayFedId = true;
+                }
             }
-            else if (ttsStateClass != null) {
+            else if (fed.hasTTS) {
+                if (!fed.fmmMasked) {
+                    displayFedId = true;
+                }
+            }
+            if (fed.hasTTS && !fed.fmmMasked) {
+                displayFedTTSState = true;
+            }
+            else {
+                ttsStateDisplay = '';
+            }
+            /* display all */
+            if (displayFedId && displayFedTTSState) {
                 fedIdClasses = classNames(fedIdClasses, ttsStateClass);
             }
-            if (fed.fmmMasked === true) {
-                ttsStateClass = 'fb-table-fed-tts-state-ffm-masked';
+            else if (!displayFedId && displayFedTTSState) {
+                fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-special-case');
+                fedIdClasses = classNames(fedIdClasses, ttsStateClass);
             }
-            var ttsStateClasses = classNames('fb-table-fed-tts-state', ttsStateClass);
+            else {
+                if (fed.frlMasked) {
+                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
+                }
+                else if (fed.fmmMasked) {
+                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-tts-state-fmm-masked');
+                }
+            }
+            var ttsStateClasses = classNames('fb-table-fed-tts-state', fedIdClasses);
             var percentBackpressureDisplay = percentBackpressure > 0 ?
-                React.createElement("span", {className: "fb-table-fed-percent-backpressure"}, '<', percentWarning.toFixed(1), "%") : '';
+                React.createElement("span", {className: "fb-table-fed-percent-backpressure"}, '<', percentBackpressure.toFixed(1), "%") : '';
             var unexpectedSourceIdDisplay = '';
-            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId) {
+            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId && receivedSourceId != 0) {
                 unexpectedSourceIdDisplay =
                     React.createElement("span", {className: "fb-table-fed-received-source-id"}, "rcvSrcId:", receivedSourceId);
             }
@@ -1014,7 +1369,7 @@ var DAQView;
                 React.createElement("span", {className: "fb-table-fed-crc-errors"}, "#FCRC=", fedCRCErrors) : '';
             var slinkCRCErrorDisplay = slinkCRCErrors > 0 ?
                 React.createElement("span", {className: "fb-table-slink-crc-errors"}, "#SCRC=", slinkCRCErrors) : '';
-            return (React.createElement("span", {className: "fb-table-fed"}, percentWarningDisplay, percentBusyDisplay, React.createElement("span", {className: ttsStateClasses}, ttsStateDisplay), React.createElement("span", {className: fedIdClasses}, expectedSourceId), percentBackpressureDisplay, unexpectedSourceIdDisplay, fedCRCErrorDisplay, slinkCRCErrorDisplay));
+            return (React.createElement("span", {className: "fb-table-fed"}, percentWarningDisplay, percentBusyDisplay, React.createElement("span", {className: ttsStateClasses}, ttsStateDisplay), React.createElement("span", {className: fedIdClasses}, expectedSourceId), React.createElement("span", {className: minTrigClassNames}, trigNumDisplay), percentBackpressureDisplay, unexpectedSourceIdDisplay, fedCRCErrorDisplay, slinkCRCErrorDisplay));
         };
         return FEDData;
     }(React.Component));
@@ -1024,11 +1379,37 @@ var DAQView;
             _super.apply(this, arguments);
         }
         FEDBuilderTableSummaryRow.prototype.shouldComponentUpdate = function (nextProps) {
-            return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
+            return true; //this can be optimized
+            //return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
         };
         FEDBuilderTableSummaryRow.prototype.render = function () {
             var fedBuilderSummary = this.props.fedBuilderSummary;
-            return (React.createElement("tr", {className: "fb-table-fb-summary-row"}, React.createElement("td", {colSpan: "9"}), React.createElement("td", null, "Σ x / ", this.props.numRus), React.createElement("td", null), React.createElement("td", null, (fedBuilderSummary.rate / 1000).toFixed(3)), React.createElement("td", null, "Σ ", (fedBuilderSummary.throughput / 1024 / 1024).toFixed(1)), React.createElement("td", null, "Σ ", (fedBuilderSummary.superFragmentSizeMean / 1024).toFixed(1), "±", (fedBuilderSummary.superFragmentSizeStddev / 1024).toFixed(1)), React.createElement("td", null, "Δ ", fedBuilderSummary.deltaEvents), React.createElement("td", null, "Σ ", FormatUtility.formatSINumber(fedBuilderSummary.sumFragmentsInRU, 1)), React.createElement("td", null, "Σ ", fedBuilderSummary.sumEventsInRU), React.createElement("td", null, "Σ ", fedBuilderSummary.sumRequests)));
+            var drawPausedComponent = this.props.drawPausedComponent;
+            var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            var drawStaleSnapshot = this.props.drawStaleSnapshot;
+            var fbSummaryRowClass = drawPausedComponent ? "fb-table-fb-summary-row-paused" : "fb-table-fb-summary-row-running";
+            var fragmentInRuClass = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumFragmentsInRU != null ? fedBuilderSummary.sumFragmentsInRU : 0, FBTableNumberFormats.FRAGMENTS_IN_RU);
+            var eventsInRuClass = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumEventsInRU != null ? fedBuilderSummary.sumEventsInRU : 0, FBTableNumberFormats.EVENTS_IN_RU);
+            var requestsClass = FormatUtility.getClassNameForNumber(fedBuilderSummary.sumRequests != null ? fedBuilderSummary.sumRequests : 0, FBTableNumberFormats.REQUESTS);
+            if (drawZeroDataFlowComponent) {
+                fbSummaryRowClass = "fb-table-fb-summary-row-ratezero";
+                if (!drawStaleSnapshot) {
+                    var escapeRedField = 'fb-table-ru-red-column-escape';
+                    if (fragmentInRuClass === 'fb-table-ru-fragments-in-ru') {
+                        fragmentInRuClass = escapeRedField;
+                    }
+                    if (eventsInRuClass === 'fb-table-ru-events-in-ru') {
+                        eventsInRuClass = escapeRedField;
+                    }
+                    if (requestsClass === 'fb-table-ru-requests') {
+                        requestsClass = escapeRedField;
+                    }
+                }
+            }
+            if (drawStaleSnapshot && (!drawPausedComponent)) {
+                fbSummaryRowClass = 'fb-table-fb-summary-row-stale-page';
+            }
+            return (React.createElement("tr", {className: classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}, React.createElement("td", {colSpan: "12"}), React.createElement("td", null, "Σ ", this.props.numUsedRus, " / ", this.props.numRus), React.createElement("td", null), React.createElement("td", null), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.rate != null ? fedBuilderSummary.rate / 100 : 0, FBTableNumberFormats.RATE)}, fedBuilderSummary.rate != null ? (fedBuilderSummary.rate / 1000).toFixed(3) : '*'), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.throughput != null ? fedBuilderSummary.throughput / 1000 / 1000 : 0, FBTableNumberFormats.THROUGHPUT)}, "Σ ", fedBuilderSummary.throughput != null ? (fedBuilderSummary.throughput / 1000 / 1000).toFixed(1) : '*'), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.superFragmentSizeMean != null ? fedBuilderSummary.superFragmentSizeMean / 1000 : 0, FBTableNumberFormats.SIZE)}, "Σ ", fedBuilderSummary.superFragmentSizeMean != null ? (fedBuilderSummary.superFragmentSizeMean / 1000).toFixed(1) : '*', "±", fedBuilderSummary.superFragmentSizeStddev != null ? (fedBuilderSummary.superFragmentSizeStddev / 1000).toFixed(1) : '*'), React.createElement("td", {className: FormatUtility.getClassNameForNumber(fedBuilderSummary.deltaEvents != null ? fedBuilderSummary.deltaEvents : 0, FBTableNumberFormats.EVENTS)}, "Δ ", fedBuilderSummary.deltaEvents != null ? fedBuilderSummary.deltaEvents : '*'), React.createElement("td", {className: fragmentInRuClass}, "Σ ", fedBuilderSummary.sumFragmentsInRU != null ? fedBuilderSummary.sumFragmentsInRU : '*'), React.createElement("td", {className: eventsInRuClass}, "Σ ", fedBuilderSummary.sumEventsInRU != null ? fedBuilderSummary.sumEventsInRU : '*'), React.createElement("td", {className: requestsClass}, "Σ ", fedBuilderSummary.sumRequests != null ? fedBuilderSummary.sumRequests : '*')));
         };
         return FEDBuilderTableSummaryRow;
     }(React.Component));

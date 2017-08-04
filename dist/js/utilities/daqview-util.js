@@ -1,3 +1,7 @@
+/**
+ * @author Michail Vougioukas
+ * @author Philipp Brummer
+ */
 var DAQViewUtility;
 (function (DAQViewUtility) {
     function forEachOwnObjectProperty(object, callback) {
