@@ -42,5 +42,5 @@ gulp.task("deploy-libs", function() {
 gulp.task("build", ["deploy-libs"], function() {
     return tsProject.src()
         .pipe(tsProject())
-        .js.pipe(gulp.dest("dist"));
+        .js.pipe(gulp.dest("dist/js"));
 });
