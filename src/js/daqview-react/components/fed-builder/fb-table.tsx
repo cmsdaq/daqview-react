@@ -3,16 +3,9 @@
  * @author Philipp Brummer
  */
 
-///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
-///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
-
-///<reference path="../../utilities/format-util.ts"/>
-
 namespace DAQView {
 
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
-    import DAQ = DAQAggregator.Snapshot.DAQ;
-    import snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
     import FED = DAQAggregator.Snapshot.FED;
 
     export class FEDBuilderTable implements DAQSnapshotView {
@@ -928,8 +921,8 @@ namespace DAQView {
 
             return (
                 <table className="fb-table">
-                    <colgroup className="fb-table-colgroup-fedbuilder" span="12"/>
-                    <colgroup className="fb-table-colgroup-evb" span="10"/>
+                    <colgroup className="fb-table-colgroup-fedbuilder" span={12}/>
+                    <colgroup className="fb-table-colgroup-evb" span={10}/>
                     <thead className="fb-table-head">
                     <FEDBuilderTableTopHeaderRow key="fb-top-header-row" drawPausedComponent={drawPausedComponents}/>
                     <FEDBuilderTableSecondaryHeaderRow key="fb-secondary-header-row" drawPausedComponent={drawPausedComponents}/>
@@ -1189,9 +1182,9 @@ namespace DAQView {
             return (
                 <tr className="fb-table-top-header-row">
                     <FEDBuilderTableHeader additionalClasses="fb-table-help" content={<a href="fbtablehelp.html" target="_blank">Table Help</a>}
-                                           colSpan="1" drawPausedComponent={drawPausedComponent}/>
-                    <FEDBuilderTableHeader content="F  E  D  B  U  I  L  D  E  R" colSpan="11" drawPausedComponent={drawPausedComponent}/>
-                    <FEDBuilderTableHeader content="E  V  B" colSpan="10" drawPausedComponent={drawPausedComponent}/>
+                                           colSpan={1} drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="F  E  D  B  U  I  L  D  E  R" colSpan={11} drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="E  V  B" colSpan={10} drawPausedComponent={drawPausedComponent}/>
                 </tr>
 
             );
@@ -1212,9 +1205,9 @@ namespace DAQView {
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
             return (
                 <tr className="fb-table-secondary-header-row">
-                    <FEDBuilderTableHeader content="" colSpan="1" drawPausedComponent={drawPausedComponent}/>
-                    <FEDBuilderTableHeader content="T T S" colSpan="3" drawPausedComponent={drawPausedComponent}/>
-                    <FEDBuilderTableHeader content="" colSpan="18" drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="" colSpan={1} drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="T T S" colSpan={3} drawPausedComponent={drawPausedComponent}/>
+                    <FEDBuilderTableHeader content="" colSpan={18} drawPausedComponent={drawPausedComponent}/>
                 </tr>
 
             );
@@ -1252,7 +1245,7 @@ namespace DAQView {
 
     interface FEDBuilderTableHeaderProperties {
         content: any;
-        colSpan?: string;
+        colSpan?: number;
         additionalClasses?: string | string[];
         tableObject?: FEDBuilderTable;
         sorting?: Sorting;
@@ -1269,7 +1262,7 @@ namespace DAQView {
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
 
             let content: string = this.props.content;
-            let colSpan: string = this.props.colSpan;
+            let colSpan: number = this.props.colSpan;
             let additionalClasses: string | string[] = this.props.additionalClasses;
             let fbHeaderClass: string = "fb-table-header";
             let className: string = classNames(fbHeaderClass, additionalClasses);
@@ -1319,7 +1312,7 @@ namespace DAQView {
             }
 
             return (
-                <th className={className} colSpan={colSpan ? colSpan : "1"}>
+                <th className={className} colSpan={colSpan ? colSpan : 1}>
                     {content}{sortingImage}
                 </th>
             );
@@ -1837,7 +1830,7 @@ namespace DAQView {
 
             return (
                 <tr className={classNames(fbSummaryRowClass, "fb-table-fb-row-counter")}>
-                    <td colSpan="12"></td>
+                    <td colSpan={12}></td>
                     <td>Σ {this.props.numUsedRus} / {this.props.numRus}</td>
                     <td></td>
                     <td></td>
