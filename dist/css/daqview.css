@@ -1,0 +1,82 @@
+html, body {
+    width: auto;
+    height: auto;
+    font-size: 0.92em;
+    font-family: arial,sans-serif;
+}
+
+#daqview-react {
+    width: 100%;
+}
+
+#daqview-react-fb-table {
+    width: 100%;
+}
+
+#daqview-react-fff-table {
+    width: 100%;
+}
+
+#daqview-control {
+    width: 100%;
+    text-align: center;
+}
+
+#daqview-time-navigation {
+    font-weight: lighter;
+    font-size: small;
+    font-style: italic;
+}
+
+.daqview-top-row{
+    position: fixed;
+    top: 0em;
+    background-color: #d7dfff;
+}
+
+.daqview-control-pause-resume,
+.daqview-go-to-time-add,
+.daqview-go-to-time-subtract{
+    width: 30px;
+    height: 30px;
+    align: center;
+    vertical-align: middle;
+}
+
+.daqview-nav-step-input-class{
+    align: center;
+    vertical-align: middle;
+    width: 11%;
+    text-align: center;
+}
+
+.daqview-react-stale-page{
+
+}
+
+.daqview-react-stale-element{
+
+}
+
+input[type=submit] {
+    border: 1px dotted #999;
+    border-radius: 0;
+    height: auto;
+    width: auto;
+    background-color: #d7dfff;
+    align: center;
+    vertical-align: center;
+}
+
+.daqview-external-link{
+    border: 1px dotted #999;
+    border-radius: 0;
+    height: auto;
+    width: auto;
+    background-color: #d7dfff;
+}
+
+.daqview-version-id{
+    font-size: x-small;
+    font-style: italic;
+}
