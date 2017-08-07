@@ -185,20 +185,20 @@ namespace DAQView {
 
                     if (ttsState !== null) {
                         stateRowValues.push(ttsState.state);
-                        busyRowValues.push(FormatUtility.toFixedNumber(ttsState.percentBusy, 1).toString());
-                        warningRowValues.push(FormatUtility.toFixedNumber(ttsState.percentWarning, 1).toString());
+                        busyRowValues.push(ttsState.percentBusy.toFixed(1));
+                        warningRowValues.push(ttsState.percentWarning.toFixed(1));
                     } else {
                         stateRowValues.push("");
                         busyRowValues.push("");
                         warningRowValues.push("");
                     }
                     if (deadTime !== null) {
-                        deadtimeRowValues.push(FormatUtility.toFixedNumber(deadTime, 2).toString());
+                        deadtimeRowValues.push(deadTime.toFixed(2));
                     } else {
                         deadtimeRowValues.push("");
                     }
                     if (beamactiveDeadTime !== null) {
-                        beamactiveDeadtimeRowValues.push(FormatUtility.toFixedNumber(beamactiveDeadTime, 2).toString());
+                        beamactiveDeadtimeRowValues.push(beamactiveDeadTime.toFixed(2));
                     } else {
                         beamactiveDeadtimeRowValues.push("");
                     }
@@ -280,7 +280,7 @@ namespace DAQView {
             let rowHead: string = this.props.rowHead;
             let rowValues: string[] = this.props.rowValues;
 
-            let row: any[] = [<th>{rowHead}</th>];
+            let row: any[] = [<th className="dt-table-header">{rowHead}</th>];
 
             rowValues.forEach(function(rowValue: string) {
                 row.push(<td>{rowValue}</td>);

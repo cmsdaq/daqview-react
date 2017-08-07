@@ -149,8 +149,8 @@ var DAQView;
                     var beamactiveDeadTime = entry.deadtimeIndex ? deadTimes[DEADTIME_BEAMACTIVE_PREFIX + entry.deadtimeIndex] : null;
                     if (ttsState !== null) {
                         stateRowValues.push(ttsState.state);
-                        busyRowValues.push(FormatUtility.toFixedNumber(ttsState.percentBusy, 1).toString());
-                        warningRowValues.push(FormatUtility.toFixedNumber(ttsState.percentWarning, 1).toString());
+                        busyRowValues.push(ttsState.percentBusy.toFixed(1));
+                        warningRowValues.push(ttsState.percentWarning.toFixed(1));
                     }
                     else {
                         stateRowValues.push("");
@@ -158,13 +158,13 @@ var DAQView;
                         warningRowValues.push("");
                     }
                     if (deadTime !== null) {
-                        deadtimeRowValues.push(FormatUtility.toFixedNumber(deadTime, 2).toString());
+                        deadtimeRowValues.push(deadTime.toFixed(2));
                     }
                     else {
                         deadtimeRowValues.push("");
                     }
                     if (beamactiveDeadTime !== null) {
-                        beamactiveDeadtimeRowValues.push(FormatUtility.toFixedNumber(beamactiveDeadTime, 2).toString());
+                        beamactiveDeadtimeRowValues.push(beamactiveDeadTime.toFixed(2));
                     }
                     else {
                         beamactiveDeadtimeRowValues.push("");
@@ -223,7 +223,7 @@ var DAQView;
         DeadtimeTableRow.prototype.render = function () {
             var rowHead = this.props.rowHead;
             var rowValues = this.props.rowValues;
-            var row = [React.createElement("th", null, rowHead)];
+            var row = [React.createElement("th", { className: "dt-table-header" }, rowHead)];
             rowValues.forEach(function (rowValue) {
                 row.push(React.createElement("td", null, rowValue));
             });

@@ -31,3 +31,8 @@
 .dt-table-body {
 
 }
+
+.dt-table-header,
+.dt-table-header-row {
+    text-align: left;
+}
