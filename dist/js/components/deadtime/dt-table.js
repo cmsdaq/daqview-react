@@ -148,7 +148,7 @@ var DAQView;
                     var deadTime = entry.deadtimeIndex ? deadTimes[entry.deadtimeIndex] : null;
                     var beamactiveDeadTime = entry.deadtimeIndex ? deadTimes[DEADTIME_BEAMACTIVE_PREFIX + entry.deadtimeIndex] : null;
                     if (ttsState !== null) {
-                        stateRowValues.push(ttsState.state);
+                        stateRowValues.push(ttsState.state.substring(0, 1));
                         busyRowValues.push(ttsState.percentBusy.toFixed(1));
                         warningRowValues.push(ttsState.percentWarning.toFixed(1));
                     }
