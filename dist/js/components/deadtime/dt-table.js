@@ -174,7 +174,7 @@ var DAQView;
             var tableValuesPerRow = [stateRowValues, busyRowValues, warningRowValues, deadtimeRowValues, beamactiveDeadtimeRowValues];
             var tableRows = [];
             for (var i = 1; i < DEADTIME_TABLE_HEADERS.length; i++) {
-                tableRows.push(React.createElement(DeadtimeTableRow, { rowHead: DEADTIME_TABLE_HEADERS[i], rowValues: tableValuesPerRow[i] }));
+                tableRows.push(React.createElement(DeadtimeTableRow, { rowHead: DEADTIME_TABLE_HEADERS[i], rowValues: tableValuesPerRow[i - 1] }));
             }
             return (React.createElement("table", { className: "dt-table" },
                 React.createElement("thead", { className: "dt-table-head" },
@@ -195,7 +195,7 @@ var DAQView;
             groupHeaders.forEach(function (groupHeader) {
                 groupHeaderColumns.push(React.createElement("th", { colSpan: groupHeader.colSpan }, groupHeader.name));
             });
-            return (React.createElement("tr", null, groupHeaderColumns));
+            return (React.createElement("tr", { className: "dt-table-group-header-row" }, groupHeaderColumns));
         };
         return DeadtimeTableGroupHeaderRow;
     }(React.Component));
@@ -211,7 +211,7 @@ var DAQView;
             rowValues.forEach(function (rowValue) {
                 row.push(React.createElement("th", null, rowValue));
             });
-            return (React.createElement("tr", null, row));
+            return (React.createElement("tr", { className: "dt-table-header-row" }, row));
         };
         return DeadtimeTableHeaderRow;
     }(React.Component));
@@ -227,7 +227,7 @@ var DAQView;
             rowValues.forEach(function (rowValue) {
                 row.push(React.createElement("td", null, rowValue));
             });
-            return (React.createElement("tr", null, row));
+            return (React.createElement("tr", { className: "dt-table-row" }, row));
         };
         return DeadtimeTableRow;
     }(React.Component));
