@@ -128,7 +128,7 @@ var DAQView;
             var drawZeroDataFlowComponents = this.props.drawZeroDataFlowComponent;
             var drawStaleSnapshot = this.props.drawStaleSnapshot;
             var groupHeaders = [];
-            var headerRowValues = [DEADTIME_TABLE_HEADERS[0]];
+            var headerRowValues = [];
             /* each entry has its own column
                however, we require data row-wise to construct the html table
             */

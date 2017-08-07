@@ -159,7 +159,7 @@ namespace DAQView {
 
             let groupHeaders: DeadtimeTableGroupHeader[] = [];
 
-            let headerRowValues: string[] = [DEADTIME_TABLE_HEADERS[0]];
+            let headerRowValues: string[] = [];
 
             /* each entry has its own column
                however, we require data row-wise to construct the html table
