@@ -46,6 +46,7 @@
             try {
                 daqView = new DAQView.DAQViewReact();
                 daqView.createMetadataTable('daqview-react-metadata-table');
+                daqView.createDTTable('daqview-react-dt-table');
                 daqView.createFBTable('daqview-react-fb-table');
                 daqView.createFFFTable('daqview-react-fff-table');
                 daqView.createAboutTable('daqview-react-about-table');
@@ -355,6 +356,8 @@
 
     <div id="daqview-react-metadata-table"></div>
     <p></p>
+    <div id="daqview-react-dt-table"></div>
+    <br/><br/>
     <div id="daqview-react-fb-table"></div>
     <br/><br/>
     <div id="daqview-react-fff-table"></div>

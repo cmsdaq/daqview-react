@@ -44,6 +44,16 @@ var DAQView;
             }
             this.snapshotViews[elementName] = newTable;
         };
+        DAQViewReact.prototype.createDTTable = function (elementName) {
+            this.createDeadTimeTable(elementName);
+        };
+        DAQViewReact.prototype.createDeadTimeTable = function (elementName) {
+            var newTable = new DAQView.DeadTimeTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        };
         DAQViewReact.prototype.createFBTable = function (elementName) {
             this.createFEDBuilderTable(elementName);
         };

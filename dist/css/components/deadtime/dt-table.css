@@ -1,0 +1,33 @@
+.dt-table {
+    width: 100%;
+    border-width: 0;
+    border-collapse: collapse;
+}
+
+.dt-table,
+.dt-table-header-row th,
+.dt-table-group-header-row th {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.dt-table-row td {
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-width: 0px 1px 0px 1px;
+}
+
+.dt-table-head {
+    background-color: #DDDDAA;
+}
+
+.dt-table-row:nth-of-type(even) {
+    background-color: #DDDDAA;
+}
+
+.dt-table-row:nth-of-type(odd) {
+    background-color:  #F5F2F2;
+}
+
+.dt-table-body {
+
+}
