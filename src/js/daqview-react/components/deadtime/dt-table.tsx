@@ -8,7 +8,6 @@ namespace DAQView {
     import DeadTimes = DAQAggregator.Snapshot.DeadTimes;
     import TCDSGlobalInfo = DAQAggregator.Snapshot.TCDSGlobalInfo;
     import TTSState = DAQAggregator.Snapshot.TTSState;
-    import toFixedNumber = FormatUtility.toFixedNumber;
 
     export class DeadTimeTable implements DAQSnapshotView {
 
@@ -211,7 +210,7 @@ namespace DAQView {
 
             let tableRows: any[] = [];
             for (let i: number = 1; i < DEADTIME_TABLE_HEADERS.length; i++) {
-                tableRows.push(<DeadtimeTableRow rowHead={DEADTIME_TABLE_HEADERS[i]} rowValues={tableValuesPerRow[i]} />);
+                tableRows.push(<DeadtimeTableRow rowHead={DEADTIME_TABLE_HEADERS[i]} rowValues={tableValuesPerRow[i-1]} />);
             }
 
             return (
