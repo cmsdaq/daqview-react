@@ -37,7 +37,7 @@ namespace DAQAggregator {
         export interface SnapshotElement {
             [key: string]: any;
 
-            "@id": string;
+            "@id"?: string;
         }
 
         export interface DAQ extends SnapshotElement {
@@ -71,6 +71,14 @@ namespace DAQAggregator {
         export interface TCDSGlobalInfo extends SnapshotElement {
             tcdsControllerContext? : string;
             tcdsControllerServiceName? : string;
+            globalTtsStates?: {[key:string]: TTSState};
+            deadTimes?: DeadTimes;
+        }
+
+        export interface TTSState extends SnapshotElement {
+            state: string;
+            percentWarning: number;
+            percentBusy: number;
         }
 
         export interface FEDBuilder extends SnapshotElement {
@@ -310,6 +318,38 @@ namespace DAQAggregator {
             frl_AccSlinkFullSec: number;
 
             isPseudoFed: boolean; //variable set locally, using context information, for displays reason
+        }
+
+        export interface DeadTimes extends SnapshotElement {
+            apve: number;
+            beamactive_apve: number;
+
+            bx_mask: number;
+            beamactive_bx_mask: number;
+
+            calib: number;
+            beamactive_calib: number;
+
+            daq_bp: number;
+            beamactive_daq_bp: number;
+
+            fw_pause: number;
+            beamactive_fw_pause: number;
+
+            retri: number;
+            beamactive_retri: number;
+
+            sw_pause: number;
+            beamactive_sw_pause: number;
+
+            total: number;
+            beamactive_total: number;
+
+            trg_rules: number;
+            beamactive_trg_rules: number;
+
+            tts: number;
+            beamactive_tts: number;
         }
 
 

@@ -27,6 +27,22 @@ var libPaths = {
     react_dom: {
         source: paths.node_modules + "/react-dom/dist/react-dom.min.js",
         target: paths.dist_lib + "/react/"
+    },
+    bootstrap_js: {
+        source: paths.node_modules + "/bootstrap/dist/js/bootstrap.min.js",
+        target: paths.dist_lib + "/bootstrap/"
+    },
+    moment: {
+        source: paths.node_modules + "/moment/min/moment.min.js",
+        target: paths.dist_lib + "/moment/"
+    },
+    daterangepicker_js: {
+        source: paths.node_modules + "/daterangepicker/daterangepicker.js",
+        target: paths.dist_lib + "/daterangepicker/"
+    },
+    daterangepicker_css: {
+        source: paths.node_modules + "/daterangepicker/daterangepicker.css",
+        target: paths.dist_lib + "/daterangepicker/"
     }
 };
 
