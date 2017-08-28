@@ -224,6 +224,8 @@
 
                 var goToTimeInput = $('#daqview-go-to-time-input');
 
+                goToTimeInput.val(moment().format("YYYY-MM-DD HH:mm:ss"));
+
                 goToTimeInput.daterangepicker({
                     "singleDatePicker": true,
                     "timePicker": true,
@@ -231,8 +233,7 @@
                     "timePickerSeconds": true,
                     "autoUpdateInput": false,
                     "locale": {
-                        "format": "YYYY-MM-DD HH:mm:ss",
-                        "applyLabel": "Go"
+                        "format": "YYYY-MM-DD HH:mm:ss"
                     },
                     startDate: moment(),
                     endDate: moment()
@@ -240,11 +241,10 @@
 
                 goToTimeInput.on('apply.daterangepicker', function(ev, picker) {
                     goToTimeInput.val(picker.startDate.format("YYYY-MM-DD HH:mm:ss"));
-                    goToTime();
                 });
 
-                // var controlGoToTime = $('.daqview-go-to-time');
-                // controlGoToTime.on('click', goToTime);
+                var controlGoToTime = $('.daqview-go-to-time');
+                controlGoToTime.on('click', goToTime);
 
                 var mapOfMonths =
                     {
@@ -373,8 +373,8 @@
             </td>
             <td width="20%" align="center" valign="center">
                 <div id="daqview-time-navigation-goto">
-                    <input type="text" placeholder="click to select" id="daqview-go-to-time-input" readonly>
-                    <!-- <input type="submit" value="Go to time" class="daqview-go-to-time"> -->
+                    <input type="text" id="daqview-go-to-time-input">
+                    <input type="submit" value="Go to time" class="daqview-go-to-time">
                 </div>
             </td>
             <td width="20%" align="right" valign="bottom"/>
