@@ -840,6 +840,7 @@ var DAQView;
                 warnMsg += ru.stateName + ' ';
             }
             var fedsWithErrors = ru.fedsWithErrors;
+            var addTtcpPrefix = (ru.fedBuilder.subFedbuilders.length > 1);
             var fedWithErrors;
             //without fragments
             for (var idx = 0; idx < fedsWithErrors.length; idx++) {
@@ -847,7 +848,7 @@ var DAQView;
                 if (fedWithErrors.ruFedWithoutFragments && ru.rate == 0 && ru.incompleteSuperFragmentCount > 0) {
                     ruWarningData.push(React.createElement("span", { className: "fb-table-ru-warn-message" },
                         " ",
-                        fedWithErrors.ttcp.name + ':' + fedWithErrors.srcIdExpected + ' ',
+                        (addTtcpPrefix ? fedWithErrors.ttcp.name + ':' : '') + fedWithErrors.srcIdExpected + ' ',
                         " "));
                 }
             }
@@ -870,7 +871,7 @@ var DAQView;
                 if (errorString != '') {
                     ruWarningData.push(React.createElement("span", { className: "fb-table-ru-warn-message" },
                         " ",
-                        fedWithErrors.ttcp.name + ':' + fedWithErrors.srcIdExpected + ':' + errorString,
+                        (addTtcpPrefix ? fedWithErrors.ttcp.name + ':' : '') + fedWithErrors.srcIdExpected + ':' + errorString,
                         " "));
                 }
             }

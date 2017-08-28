@@ -973,6 +973,7 @@ namespace DAQView {
 
             let fedsWithErrors: FED[] = ru.fedsWithErrors;
 
+            let addTtcpPrefix = (ru.fedBuilder.subFedbuilders.length > 1);
 
             let fedWithErrors: FED;
 
@@ -980,7 +981,7 @@ namespace DAQView {
             for (var idx=0;idx<fedsWithErrors.length;idx++){
                 fedWithErrors = fedsWithErrors[idx];
                 if (fedWithErrors.ruFedWithoutFragments && ru.rate == 0 && ru.incompleteSuperFragmentCount > 0){
-                    ruWarningData.push(<span className="fb-table-ru-warn-message"> {fedWithErrors.ttcp.name + ':' + fedWithErrors.srcIdExpected + ' '} </span>);
+                    ruWarningData.push(<span className="fb-table-ru-warn-message"> {(addTtcpPrefix ? fedWithErrors.ttcp.name + ':' : '') + fedWithErrors.srcIdExpected + ' '} </span>);
                 }
             }
 
@@ -1003,7 +1004,7 @@ namespace DAQView {
                 }
 
                 if (errorString!='') {
-                    ruWarningData.push(<span className="fb-table-ru-warn-message"> { fedWithErrors.ttcp.name + ':' + fedWithErrors.srcIdExpected + ':' + errorString} </span>);
+                    ruWarningData.push(<span className="fb-table-ru-warn-message"> {(addTtcpPrefix ? fedWithErrors.ttcp.name + ':' : '') + fedWithErrors.srcIdExpected + ':' + errorString} </span>);
                 }
             }
 
