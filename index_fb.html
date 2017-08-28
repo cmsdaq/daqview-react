@@ -229,7 +229,8 @@
                     "timePickerSeconds": true,
                     "autoUpdateInput": false,
                     "locale": {
-                        "format": "YYYY-MM-DD HH:mm:ss"
+                        "format": "YYYY-MM-DD HH:mm:ss",
+                        "applyLabel": "Load"
                     },
                     startDate: moment(),
                     endDate: moment()
@@ -237,6 +238,13 @@
 
                 goToTimeInput.on('apply.daterangepicker', function(ev, picker) {
                     goToTimeInput.val(picker.startDate.format("YYYY-MM-DD HH:mm:ss"));
+                    goToTime();
+                });
+
+                goToTimeInput.keypress(function(e) {
+                    if(e.which === 13) {
+                        goToTime();
+                    }
                 });
 
                 var controlGoToTime = $('.daqview-go-to-time');
