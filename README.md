@@ -36,6 +36,13 @@ With npm: (in project root)
 npm run build
 ```
 
+## Release (based on the version attribute in package.json)
+
+With npm: (in project root)
+```
+npm run release
+```
+
 ## Linting
 
 With npm: (in project root)
