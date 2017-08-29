@@ -2,9 +2,12 @@ var gulp = require("gulp");
 var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
 
+var package = require("./package.json");
+
 var paths = {
     node_modules: "node_modules",
-    dist_lib: "dist/lib"
+    dist_lib: "dist/lib",
+    release: "release"
 };
 
 var libPaths = {
@@ -46,17 +49,40 @@ var libPaths = {
     }
 };
 
-gulp.task("deploy-libs", function() {
+var releaseContent = [
+    "index.html",
+    "index_fb.html",
+    "index_fff.html",
+    "fbtablehelp.html",
+    "ffftablehelp.html",
+    "link-configuration.js",
+    ["dist/**/*", "dist"]
+];
+
+gulp.task("deploy-libs", function (cb) {
     for (var libName in libPaths) {
         if (libPaths.hasOwnProperty(libName)) {
             var lib = libPaths[libName];
             gulp.src(lib.source).pipe(gulp.dest(lib.target));
         }
     }
+    cb();
 });
 
-gulp.task("build", ["deploy-libs"], function() {
+gulp.task("build", ["deploy-libs"], function () {
     return tsProject.src()
         .pipe(tsProject())
         .js.pipe(gulp.dest("dist/js"));
+});
+
+gulp.task("release", ["build"], function (cb) {
+    var releasePath = paths.release + "/" + package.version + "/";
+    releaseContent.forEach(function (content) {
+        if (Array.isArray(content)) {
+            gulp.src(content[0]).pipe(gulp.dest(releasePath + content[1]))
+        } else {
+            gulp.src(content).pipe(gulp.dest(releasePath))
+        }
+    });
+    cb();
 });

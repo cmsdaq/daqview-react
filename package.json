@@ -25,6 +25,7 @@
   },
   "scripts": {
     "build": "$(npm bin)/gulp build",
-    "lint": "$(npm bin)/tslint -c tslint.json \"./src/js/**/*.*\""
+    "lint": "$(npm bin)/tslint -c tslint.json \"./src/js/**/*.*\"",
+    "release": "$(npm bin)/gulp release"
   }
 }
