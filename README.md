@@ -2,9 +2,11 @@
 
 ## Introduction
 
-An implementation of client-side daqview monitoring application for the CMS DAQ FED Builder and Filter-Based Filter Farm infrastructure.
+A client-side implementation of the daqview monitoring application for the CMS DAQ FED Builder and Filter Farm infrastructure.
 
-Data are provided by the DAQ Aggregator snapshots in form of JSON files and React.js is used for processing and rendering monitoring information on the client, without any need for server-side logic.
+Data is provided by the DAQ Aggregator in the form of JSON snapshots.
+
+React.js is used for processing and rendering monitoring information on the client, without the need of server-side logic.
 
 ## Development
 
