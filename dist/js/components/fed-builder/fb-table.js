@@ -1078,18 +1078,6 @@ var DAQView;
                     };
                 }
             }
-            //handlers to be used with onMouseOver and onMouseOut of this element
-            /*
-             let mouseOverFunction: () => void = null;
-             mouseOverFunction = function (){
-
-             };
-
-             let mouseOutFunction: () => void = null;
-             mouseOutFunction = function (){
-
-             //alert("mouseOut"+content);
-             };*/
             var sortingImage = null;
             if (currentSorting != null) {
                 sortingImage = React.createElement("input", { type: "image", className: "fb-table-sort-image", src: 'dist/img/' + currentSorting.getImagePath(), alt: currentSorting.toString(), title: "Sort", onClick: clickFunction });
@@ -1099,27 +1087,6 @@ var DAQView;
                 sortingImage));
         };
         return FEDBuilderTableHeader;
-    }(React.Component));
-    var RUMessages = (function (_super) {
-        __extends(RUMessages, _super);
-        function RUMessages() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        RUMessages.prototype.shouldComponentUpdate = function (nextProps) {
-            var shouldUpdate = false;
-            shouldUpdate = shouldUpdate || this.props.rowSpan === nextProps.rowSpan;
-            shouldUpdate = shouldUpdate || this.props.infoMessage === nextProps.infoMessage;
-            shouldUpdate = shouldUpdate || this.props.warnMessage === nextProps.warnMessage;
-            shouldUpdate = shouldUpdate || this.props.errorMessage === nextProps.errorMessage;
-            return shouldUpdate;
-        };
-        RUMessages.prototype.render = function () {
-            return (React.createElement("td", { className: "fb-table-ru-messages", rowSpan: this.props.rowSpan ? this.props.rowSpan : 1 },
-                React.createElement("span", { className: "fb-table-ru-error-message" }, this.props.errorMessage),
-                React.createElement("span", { className: "fb-table-ru-warn-message" }, this.props.warnMessage),
-                React.createElement("span", { className: "fb-table-ru-info-message" }, this.props.infoMessage)));
-        };
-        return RUMessages;
     }(React.Component));
     var SubFEDBuilderRow = (function (_super) {
         __extends(SubFEDBuilderRow, _super);
@@ -1360,7 +1327,7 @@ var DAQView;
                 shouldUpdate = true;
             }
             else if (!currentFMMIsNull && !newFmmIsNull) {
-                shouldUpdate = shouldUpdate || (this.props.fed.fmm.url !== nextProps.fed.fmm.url);
+                shouldUpdate = this.props.fed.fmm.url !== nextProps.fed.fmm.url;
             }
             shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.fed, nextProps.fed);
             return shouldUpdate;
@@ -1477,8 +1444,14 @@ var DAQView;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         FEDBuilderTableSummaryRow.prototype.shouldComponentUpdate = function (nextProps) {
-            return true; //this can be optimized
-            //return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
+            var shouldUpdate = false;
+            shouldUpdate = shouldUpdate || this.props.numRus !== nextProps.numRus;
+            shouldUpdate = shouldUpdate || this.props.numUsedRus !== nextProps.numUsedRus;
+            shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
+            shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
+            shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
+            return shouldUpdate;
         };
         FEDBuilderTableSummaryRow.prototype.render = function () {
             var fedBuilderSummary = this.props.fedBuilderSummary;

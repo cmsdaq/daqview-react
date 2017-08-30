@@ -36,6 +36,9 @@ var DAQView;
         function AboutTableElement() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        AboutTableElement.prototype.shouldComponentUpdate = function () {
+            return false;
+        };
         AboutTableElement.prototype.render = function () {
             return (React.createElement("table", { className: "about-table" },
                 React.createElement("tbody", { className: "about-table-body" },

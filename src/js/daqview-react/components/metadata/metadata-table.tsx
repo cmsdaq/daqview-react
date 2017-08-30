@@ -79,7 +79,7 @@ namespace DAQView {
         daqAggregatorVersion: string;
     }
 
-    class MetadataTableElement extends React.Component<MetadataTableElementProperties,{}> {
+    class MetadataTableElement extends React.PureComponent<MetadataTableElementProperties,{}> {
 
         render() {
 
@@ -184,7 +184,7 @@ namespace DAQView {
         details: string;
     }
 
-    class ErrorElement extends React.Component<ErrorElementProperties,{}> {
+    class ErrorElement extends React.PureComponent<ErrorElementProperties,{}> {
         render() {
             return (
                 <table className="metadata-table">

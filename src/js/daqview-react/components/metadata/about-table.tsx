@@ -42,6 +42,10 @@ namespace DAQView {
     }
 
     class AboutTableElement extends React.Component<AboutTableElementProperties,{}> {
+        shouldComponentUpdate() {
+            return false;
+        }
+
         render() {
             return (
                 <table className="about-table">

@@ -121,7 +121,7 @@ var DAQView;
             return ret;
         };
         return MetadataTableElement;
-    }(React.Component));
+    }(React.PureComponent));
     var ErrorElement = (function (_super) {
         __extends(ErrorElement, _super);
         function ErrorElement() {
@@ -137,5 +137,5 @@ var DAQView;
                         React.createElement("td", null, this.props.details)))));
         };
         return ErrorElement;
-    }(React.Component));
+    }(React.PureComponent));
 })(DAQView || (DAQView = {}));

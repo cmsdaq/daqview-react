@@ -72,19 +72,12 @@ namespace DAQView {
         message: string;
     }
 
-    class ErrorElement extends React.Component<ErrorElementProperties,{}> {
+    class ErrorElement extends React.PureComponent<ErrorElementProperties,{}> {
         render() {
             return (
                 <div>{this.props.message}</div>
             );
         }
-    }
-
-    interface DeadtimeTableElementProperties {
-        tcdsGlobalInfo: TCDSGlobalInfo;
-        drawPausedComponent: boolean;
-        drawZeroDataFlowComponent: boolean;
-        drawStaleSnapshot: boolean;
     }
 
     const DEADTIME_TABLE_HEADERS: string[] =
@@ -143,6 +136,13 @@ namespace DAQView {
                 ]
             }
         ];
+
+    interface DeadtimeTableElementProperties {
+        tcdsGlobalInfo: TCDSGlobalInfo;
+        drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
+        drawStaleSnapshot: boolean;
+    }
 
     class DeadtimeTableElement extends React.Component<DeadtimeTableElementProperties, {}> {
 
@@ -237,6 +237,10 @@ namespace DAQView {
     }
 
     class DeadtimeTableGroupHeaderRow extends React.Component<DeadtimeTableGroupHeaderProperties, {}> {
+        shouldComponentUpdate() {
+            return false
+        }
+
         render() {
             let groupHeaders: DeadtimeTableGroupHeader[] = this.props.groupHeaders;
 
@@ -256,6 +260,10 @@ namespace DAQView {
     }
 
     class DeadtimeTableHeaderRow extends React.Component<DeadtimeTableHeaderRowProperties, {}> {
+        shouldComponentUpdate() {
+            return false
+        }
+
         render() {
             let rowHead: string = this.props.rowHead;
             let rowValues: string[] = this.props.rowValues;
@@ -276,6 +284,19 @@ namespace DAQView {
     }
 
     class DeadtimeTableRow extends React.Component<DeadtimeTableRowProperties, {}> {
+        shouldComponentUpdate(nextProps: DeadtimeTableRowProperties) {
+            let shouldUpdate: boolean = false;
+
+            if (this.props.rowValues.length == nextProps.rowValues.length) {
+                for (let i = 0; !shouldUpdate && i < this.props.rowValues.length; i++)
+                {
+                    shouldUpdate = this.props.rowValues[i] !== nextProps.rowValues[i];
+                }
+            }
+
+            return shouldUpdate;
+        }
+
         render() {
             let rowHead: string = this.props.rowHead;
             let rowValues: string[] = this.props.rowValues;

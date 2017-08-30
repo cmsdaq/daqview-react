@@ -72,7 +72,7 @@ var DAQView;
             return (React.createElement("div", null, this.props.message));
         };
         return ErrorElement;
-    }(React.Component));
+    }(React.PureComponent));
     var DEADTIME_TABLE_HEADERS = [
         "Global TTS",
         "State",
@@ -189,6 +189,9 @@ var DAQView;
         function DeadtimeTableGroupHeaderRow() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        DeadtimeTableGroupHeaderRow.prototype.shouldComponentUpdate = function () {
+            return false;
+        };
         DeadtimeTableGroupHeaderRow.prototype.render = function () {
             var groupHeaders = this.props.groupHeaders;
             var groupHeaderColumns = [React.createElement("th", null)];
@@ -204,6 +207,9 @@ var DAQView;
         function DeadtimeTableHeaderRow() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        DeadtimeTableHeaderRow.prototype.shouldComponentUpdate = function () {
+            return false;
+        };
         DeadtimeTableHeaderRow.prototype.render = function () {
             var rowHead = this.props.rowHead;
             var rowValues = this.props.rowValues;
@@ -220,6 +226,15 @@ var DAQView;
         function DeadtimeTableRow() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        DeadtimeTableRow.prototype.shouldComponentUpdate = function (nextProps) {
+            var shouldUpdate = false;
+            if (this.props.rowValues.length == nextProps.rowValues.length) {
+                for (var i = 0; !shouldUpdate && i < this.props.rowValues.length; i++) {
+                    shouldUpdate = this.props.rowValues[i] !== nextProps.rowValues[i];
+                }
+            }
+            return shouldUpdate;
+        };
         DeadtimeTableRow.prototype.render = function () {
             var rowHead = this.props.rowHead;
             var rowValues = this.props.rowValues;

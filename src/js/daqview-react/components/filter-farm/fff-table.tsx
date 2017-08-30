@@ -719,8 +719,15 @@ namespace DAQView {
 
     class FileBasedFilterFarmTableBURow extends React.Component<FileBasedFilterFarmTableBURowProperties,{}> {
         shouldComponentUpdate(nextProps: FileBasedFilterFarmTableBURowProperties) {
-            return true; //this can be optimized
-            //return !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
+            let shouldUpdate: boolean = false;
+
+            shouldUpdate = shouldUpdate || this.props.oddRow !== nextProps.oddRow;
+            shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
+            shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
+            shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
+
+            return shouldUpdate;
         }
 
         render() {
@@ -871,8 +878,16 @@ namespace DAQView {
 
     class FileBasedFilterFarmTableBUSummaryRow extends React.Component<FileBasedFilterFarmTableBUSummaryRowProperties,{}> {
         shouldComponentUpdate(nextProps: FileBasedFilterFarmTableBUSummaryRowProperties) {
-            return true; //this can be optimized
-            //return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary));
+            let shouldUpdate: boolean = false;
+
+            shouldUpdate = shouldUpdate || this.props.numBus !== nextProps.numBus;
+            shouldUpdate = shouldUpdate || this.props.numBusNoRate !== nextProps.numBusNoRate;
+            shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
+            shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
+            shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary);
+
+            return shouldUpdate;
         }
 
         render() {

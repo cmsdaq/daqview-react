@@ -36,6 +36,9 @@ var DAQView;
         function LoaderReplacementElement() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        LoaderReplacementElement.prototype.shouldComponentUpdate = function () {
+            return false;
+        };
         LoaderReplacementElement.prototype.render = function () {
             return (React.createElement("p", null, this.props.placeholder));
         };

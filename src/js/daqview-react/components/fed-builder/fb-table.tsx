@@ -1174,7 +1174,6 @@ namespace DAQView {
 
     class FEDBuilderTableTopHeaderRow extends React.Component<FEDBuilderTableTopHeaderRowProperties,{}> {
         shouldComponentUpdate() {
-
             return false;
         }
 
@@ -1198,7 +1197,6 @@ namespace DAQView {
 
     class FEDBuilderTableSecondaryHeaderRow extends React.Component<FEDBuilderTableSecondaryHeaderRowProperties,{}> {
         shouldComponentUpdate() {
-
             return false;
         }
 
@@ -1289,21 +1287,6 @@ namespace DAQView {
                 }
             }
 
-
-            //handlers to be used with onMouseOver and onMouseOut of this element
-            /*
-             let mouseOverFunction: () => void = null;
-             mouseOverFunction = function (){
-
-             };
-
-             let mouseOutFunction: () => void = null;
-             mouseOutFunction = function (){
-
-             //alert("mouseOut"+content);
-             };*/
-
-
             let sortingImage: any = null;
             if (currentSorting != null) {
                 sortingImage = <input type="image" className="fb-table-sort-image"
@@ -1316,35 +1299,6 @@ namespace DAQView {
                 <th className={className} colSpan={colSpan ? colSpan : 1}>
                     {content}{sortingImage}
                 </th>
-            );
-        }
-    }
-
-    interface RUMessagesProperties {
-        rowSpan?: number;
-        infoMessage: string;
-        warnMessage: string;
-        errorMessage: string;
-    }
-
-    class RUMessages extends React.Component<RUMessagesProperties,{}> {
-        shouldComponentUpdate(nextProps: RUMessagesProperties) {
-            let shouldUpdate: boolean = false;
-            shouldUpdate = shouldUpdate || this.props.rowSpan === nextProps.rowSpan;
-            shouldUpdate = shouldUpdate || this.props.infoMessage === nextProps.infoMessage;
-            shouldUpdate = shouldUpdate || this.props.warnMessage === nextProps.warnMessage;
-            shouldUpdate = shouldUpdate || this.props.errorMessage === nextProps.errorMessage;
-
-            return shouldUpdate;
-        }
-
-        render() {
-            return (
-                <td className="fb-table-ru-messages" rowSpan={this.props.rowSpan ? this.props.rowSpan : 1}>
-                    <span className="fb-table-ru-error-message">{this.props.errorMessage}</span>
-                    <span className="fb-table-ru-warn-message">{this.props.warnMessage}</span>
-                    <span className="fb-table-ru-info-message">{this.props.infoMessage}</span>
-                </td>
             );
         }
     }
@@ -1644,7 +1598,7 @@ namespace DAQView {
             } else if (this.props.minTrig !== nextProps.minTrig) {
                 shouldUpdate = true;
             } else if (!currentFMMIsNull && !newFmmIsNull) {
-                shouldUpdate = shouldUpdate || (this.props.fed.fmm.url !== nextProps.fed.fmm.url);
+                shouldUpdate = this.props.fed.fmm.url !== nextProps.fed.fmm.url;
             }
             shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.fed, nextProps.fed);
 
@@ -1794,8 +1748,16 @@ namespace DAQView {
 
     class FEDBuilderTableSummaryRow extends React.Component<FEDBuilderTableSummaryRowProperties,{}> {
         shouldComponentUpdate(nextProps: FEDBuilderTableSummaryRowProperties) {
-            return true; //this can be optimized
-            //return this.props.numRus !== nextProps.numRus || !snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
+            let shouldUpdate: boolean = false;
+
+            shouldUpdate = shouldUpdate || this.props.numRus !== nextProps.numRus;
+            shouldUpdate = shouldUpdate || this.props.numUsedRus !== nextProps.numUsedRus;
+            shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
+            shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
+            shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.fedBuilderSummary, nextProps.fedBuilderSummary);
+
+            return shouldUpdate;
         }
 
         render() {

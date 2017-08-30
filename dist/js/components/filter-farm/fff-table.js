@@ -630,8 +630,13 @@ var DAQView;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         FileBasedFilterFarmTableBURow.prototype.shouldComponentUpdate = function (nextProps) {
-            return true; //this can be optimized
-            //return !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
+            var shouldUpdate = false;
+            shouldUpdate = shouldUpdate || this.props.oddRow !== nextProps.oddRow;
+            shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
+            shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
+            shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
+            return shouldUpdate;
         };
         FileBasedFilterFarmTableBURow.prototype.render = function () {
             var drawPausedComponent = this.props.drawPausedComponent;
@@ -753,8 +758,14 @@ var DAQView;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         FileBasedFilterFarmTableBUSummaryRow.prototype.shouldComponentUpdate = function (nextProps) {
-            return true; //this can be optimized
-            //return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary));
+            var shouldUpdate = false;
+            shouldUpdate = shouldUpdate || this.props.numBus !== nextProps.numBus;
+            shouldUpdate = shouldUpdate || this.props.numBusNoRate !== nextProps.numBusNoRate;
+            shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
+            shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
+            shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary);
+            return shouldUpdate;
         };
         FileBasedFilterFarmTableBUSummaryRow.prototype.render = function () {
             var buSummary = this.props.buSummary;
