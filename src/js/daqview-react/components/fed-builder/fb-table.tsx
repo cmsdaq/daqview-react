@@ -1639,6 +1639,10 @@ namespace DAQView {
             let newFmmIsNull: boolean = nextProps.fed.fmm == null;
             if (currentFMMIsNull !== newFmmIsNull) {
                 shouldUpdate = true;
+            } else if (this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent) {
+                shouldUpdate = true;
+            } else if (this.props.minTrig !== nextProps.minTrig) {
+                shouldUpdate = true;
             } else if (!currentFMMIsNull && !newFmmIsNull) {
                 shouldUpdate = shouldUpdate || (this.props.fed.fmm.url !== nextProps.fed.fmm.url);
             }
@@ -1658,7 +1662,7 @@ namespace DAQView {
 
             let trigNumDisplay: any = '';
 
-            if ((trigNum.toString() == minTrigDisplayContent) && drawZeroDataFlowComponent){
+            if (!fed.isPseudoFed && (trigNum.toString() == minTrigDisplayContent) && drawZeroDataFlowComponent){
                 trigNumDisplay = minTrigDisplayContent;
             }
 

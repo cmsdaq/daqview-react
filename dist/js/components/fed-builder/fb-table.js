@@ -1353,6 +1353,12 @@ var DAQView;
             if (currentFMMIsNull !== newFmmIsNull) {
                 shouldUpdate = true;
             }
+            else if (this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent) {
+                shouldUpdate = true;
+            }
+            else if (this.props.minTrig !== nextProps.minTrig) {
+                shouldUpdate = true;
+            }
             else if (!currentFMMIsNull && !newFmmIsNull) {
                 shouldUpdate = shouldUpdate || (this.props.fed.fmm.url !== nextProps.fed.fmm.url);
             }
@@ -1365,7 +1371,7 @@ var DAQView;
             var trigNum = fed.eventCounter;
             var minTrigDisplayContent = this.props.minTrig;
             var trigNumDisplay = '';
-            if ((trigNum.toString() == minTrigDisplayContent) && drawZeroDataFlowComponent) {
+            if (!fed.isPseudoFed && (trigNum.toString() == minTrigDisplayContent) && drawZeroDataFlowComponent) {
                 trigNumDisplay = minTrigDisplayContent;
             }
             var minTrigClassNames = classNames('fb-table-fed-min-trig');
