@@ -1236,7 +1236,7 @@ var DAQView;
                 React.createElement("td", null,
                     React.createElement("div", { title: frlPcDebug, className: frlPcUrlDisplayClass }, frlPcUrlDisplay)),
                 React.createElement("td", { className: frlpcStateDisplayClass }, frlpcStateDisplay),
-                React.createElement(FRLs, { frls: frls, minTrig: minTrigDisplayContent, pseudoFeds: pseudoFeds, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition }),
+                React.createElement(FRLs, { frls: frls, maxTrig: maxTrig, pseudoFeds: pseudoFeds, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition }),
                 React.createElement("td", null,
                     React.createElement("div", { className: minTrigClassNames }, minTrigDisplayContent)),
                 React.createElement("td", null,
@@ -1253,19 +1253,19 @@ var DAQView;
         FRLs.prototype.render = function () {
             var frls = this.props.frls;
             var ttcPartition = this.props.ttcPartition;
-            var minTrigDisplayContent = this.props.minTrig;
+            var maxTrig = this.props.maxTrig;
             var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             var pseudoFEDs = this.props.pseudoFeds;
             var fedData = [];
             var firstFrl = true;
             frls.forEach(function (frl) {
-                fedData.push(React.createElement(FRL, { key: frl['@id'], frl: frl, firstFrl: firstFrl, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition }));
+                fedData.push(React.createElement(FRL, { key: frl['@id'], frl: frl, firstFrl: firstFrl, maxTrig: maxTrig, drawZeroDataFlowComponent: drawZeroDataFlowComponent, ttcPartition: ttcPartition }));
                 firstFrl = false;
             });
             pseudoFEDs.forEach(function (fed) {
                 fedData.push(' ');
                 fed.isPseudoFed = true; //this can be used for pseudofed-specific rendering at FEDData level
-                fedData.push(React.createElement(FEDData, { key: fed['@id'], fed: fed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent }));
+                fedData.push(React.createElement(FEDData, { key: fed['@id'], fed: fed, maxTrig: maxTrig, drawZeroDataFlowComponent: drawZeroDataFlowComponent }));
             });
             return (React.createElement("td", null, fedData));
         };
@@ -1279,17 +1279,17 @@ var DAQView;
         FRL.prototype.render = function () {
             var frl = this.props.frl;
             var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
-            var minTrigDisplayContent = this.props.minTrig;
+            var maxTrig = this.props.maxTrig;
             var ttcPartition = this.props.ttcPartition;
             var feds = frl.feds;
             var firstFed = feds && feds.hasOwnProperty("0") ? feds["0"] : null;
-            var firstFedDisplay = firstFed && firstFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, { key: firstFed['@id'], fed: firstFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent }) : '-';
+            var firstFedDisplay = firstFed && firstFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, { key: firstFed['@id'], fed: firstFed, maxTrig: maxTrig, drawZeroDataFlowComponent: drawZeroDataFlowComponent }) : '-';
             var secondFed = feds && feds.hasOwnProperty("1") ? feds["1"] : null;
-            var secondFedDisplay = secondFed && secondFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, { key: secondFed['@id'], fed: secondFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent }) : '';
+            var secondFedDisplay = secondFed && secondFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, { key: secondFed['@id'], fed: secondFed, maxTrig: maxTrig, drawZeroDataFlowComponent: drawZeroDataFlowComponent }) : '';
             var thirdFed = feds && feds.hasOwnProperty("2") ? feds["2"] : null;
-            var thirdFedDisplay = thirdFed && thirdFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, { key: thirdFed['@id'], fed: thirdFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent }) : '';
+            var thirdFedDisplay = thirdFed && thirdFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, { key: thirdFed['@id'], fed: thirdFed, maxTrig: maxTrig, drawZeroDataFlowComponent: drawZeroDataFlowComponent }) : '';
             var fourthFed = feds && feds.hasOwnProperty("3") ? feds["3"] : null;
-            var fourthFedDisplay = fourthFed && fourthFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, { key: fourthFed['@id'], fed: fourthFed, minTrig: minTrigDisplayContent, drawZeroDataFlowComponent: drawZeroDataFlowComponent }) : '';
+            var fourthFedDisplay = fourthFed && fourthFed.ttcp.name === ttcPartition.name ? React.createElement(FEDData, { key: fourthFed['@id'], fed: fourthFed, maxTrig: maxTrig, drawZeroDataFlowComponent: drawZeroDataFlowComponent }) : '';
             var secondFedShown = secondFed && (secondFed && secondFed.ttcp.name === ttcPartition.name);
             var thirdFedShown = thirdFed && (thirdFed && thirdFed.ttcp.name === ttcPartition.name);
             var fourthFedShown = fourthFed && (fourthFed && fourthFed.ttcp.name === ttcPartition.name);
@@ -1323,7 +1323,7 @@ var DAQView;
             else if (this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent) {
                 shouldUpdate = true;
             }
-            else if (this.props.minTrig !== nextProps.minTrig) {
+            else if (this.props.maxTrig !== nextProps.maxTrig) {
                 shouldUpdate = true;
             }
             else if (!currentFMMIsNull && !newFmmIsNull) {
@@ -1336,10 +1336,10 @@ var DAQView;
             var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
             var fed = this.props.fed;
             var trigNum = fed.eventCounter;
-            var minTrigDisplayContent = this.props.minTrig;
+            var maxTrig = this.props.maxTrig;
             var trigNumDisplay = '';
-            if (!fed.isPseudoFed && (trigNum.toString() == minTrigDisplayContent) && drawZeroDataFlowComponent) {
-                trigNumDisplay = minTrigDisplayContent;
+            if (!fed.isPseudoFed && maxTrig > 0 && trigNum != maxTrig && drawZeroDataFlowComponent) {
+                trigNumDisplay = trigNum;
             }
             var minTrigClassNames = classNames('fb-table-fed-min-trig');
             var percentWarning = fed.percentWarning;

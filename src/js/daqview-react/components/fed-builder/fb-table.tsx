@@ -1488,7 +1488,7 @@ namespace DAQView {
                     <td className="fb-table-subfb-tts-perc">{ttcpPercBusy}</td>
                     <td><div title={frlPcDebug} className={frlPcUrlDisplayClass}>{frlPcUrlDisplay}</div></td>
                     <td className={frlpcStateDisplayClass}>{frlpcStateDisplay}</td>
-                    <FRLs frls={frls} minTrig={minTrigDisplayContent} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>
+                    <FRLs frls={frls} maxTrig={maxTrig} pseudoFeds={pseudoFeds} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>
                     <td><div className={minTrigClassNames}>{minTrigDisplayContent}</div></td>
                     <td><div className={maxTrigClassNames}>{maxTrigDisplayContent}</div></td>
                     {this.props.additionalContent ? this.props.additionalContent : null}
@@ -1500,7 +1500,7 @@ namespace DAQView {
     interface FRLsProperties {
         frls: DAQAggregatorSnapshot.FRL[];
         pseudoFeds: DAQAggregatorSnapshot.FED[];
-        minTrig: any;
+        maxTrig: number;
         drawZeroDataFlowComponent: boolean;
         ttcPartition: DAQAggregatorSnapshot.TTCPartition;
     }
@@ -1511,7 +1511,7 @@ namespace DAQView {
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = this.props.ttcPartition;
 
-            let minTrigDisplayContent: any = this.props.minTrig;
+            let maxTrig: number = this.props.maxTrig;
 
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
 
@@ -1520,14 +1520,14 @@ namespace DAQView {
             let fedData: any[] = [];
             let firstFrl: boolean = true;
             frls.forEach(function (frl: DAQAggregatorSnapshot.FRL) {
-                fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>);
+                fedData.push(<FRL key={frl['@id']} frl={frl} firstFrl={firstFrl} maxTrig={maxTrig} drawZeroDataFlowComponent={drawZeroDataFlowComponent} ttcPartition={ttcPartition}/>);
                 firstFrl = false;
             });
 
             pseudoFEDs.forEach(function (fed: DAQAggregatorSnapshot.FED) {
                 fedData.push(' ');
                 fed.isPseudoFed = true; //this can be used for pseudofed-specific rendering at FEDData level
-                fedData.push(<FEDData key={fed['@id']} fed={fed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>);
+                fedData.push(<FEDData key={fed['@id']} fed={fed} maxTrig={maxTrig} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/>);
             });
 
             return (
@@ -1539,7 +1539,7 @@ namespace DAQView {
     interface FRLProperties {
         firstFrl: boolean;
         frl: DAQAggregatorSnapshot.FRL;
-        minTrig: any;
+        maxTrig: number;
         drawZeroDataFlowComponent: boolean;
         ttcPartition: DAQAggregatorSnapshot.TTCPartition;
     }
@@ -1549,20 +1549,20 @@ namespace DAQView {
             let frl: DAQAggregatorSnapshot.FRL = this.props.frl;
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
 
-            let minTrigDisplayContent: any = this.props.minTrig;
+            let maxTrig: number = this.props.maxTrig;
 
             let ttcPartition: DAQAggregatorSnapshot.TTCPartition = this.props.ttcPartition;
 
             let feds: {[key: string]: DAQAggregatorSnapshot.FED} = frl.feds;
 
             let firstFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("0") ? feds["0"] : null;
-            let firstFedDisplay: any = firstFed && firstFed.ttcp.name === ttcPartition.name? <FEDData key={firstFed['@id']} fed={firstFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '-';
+            let firstFedDisplay: any = firstFed && firstFed.ttcp.name === ttcPartition.name? <FEDData key={firstFed['@id']} fed={firstFed} maxTrig={maxTrig} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '-';
             let secondFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("1") ? feds["1"] : null;
-            let secondFedDisplay: any = secondFed && secondFed.ttcp.name === ttcPartition.name? <FEDData key={secondFed['@id']} fed={secondFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+            let secondFedDisplay: any = secondFed && secondFed.ttcp.name === ttcPartition.name? <FEDData key={secondFed['@id']} fed={secondFed} maxTrig={maxTrig} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
             let thirdFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("2") ? feds["2"] : null;
-            let thirdFedDisplay: any = thirdFed && thirdFed.ttcp.name === ttcPartition.name? <FEDData key={thirdFed['@id']} fed={thirdFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+            let thirdFedDisplay: any = thirdFed && thirdFed.ttcp.name === ttcPartition.name? <FEDData key={thirdFed['@id']} fed={thirdFed} maxTrig={maxTrig} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
             let fourthFed: DAQAggregatorSnapshot.FED = feds && feds.hasOwnProperty("3") ? feds["3"] : null;
-            let fourthFedDisplay: any = fourthFed && fourthFed.ttcp.name === ttcPartition.name? <FEDData key={fourthFed['@id']} fed={fourthFed} minTrig={minTrigDisplayContent} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
+            let fourthFedDisplay: any = fourthFed && fourthFed.ttcp.name === ttcPartition.name? <FEDData key={fourthFed['@id']} fed={fourthFed} maxTrig={maxTrig} drawZeroDataFlowComponent={drawZeroDataFlowComponent}/> : '';
 
             let secondFedShown: boolean = secondFed && (secondFed && secondFed.ttcp.name === ttcPartition.name);
             let thirdFedShown: boolean = thirdFed && (thirdFed && thirdFed.ttcp.name === ttcPartition.name);
@@ -1581,7 +1581,7 @@ namespace DAQView {
 
     interface FEDDataProperties {
         fed: DAQAggregatorSnapshot.FED;
-        minTrig: any;
+        maxTrig: number;
         drawZeroDataFlowComponent: boolean;
     }
 
@@ -1595,7 +1595,7 @@ namespace DAQView {
                 shouldUpdate = true;
             } else if (this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent) {
                 shouldUpdate = true;
-            } else if (this.props.minTrig !== nextProps.minTrig) {
+            } else if (this.props.maxTrig !== nextProps.maxTrig) {
                 shouldUpdate = true;
             } else if (!currentFMMIsNull && !newFmmIsNull) {
                 shouldUpdate = this.props.fed.fmm.url !== nextProps.fed.fmm.url;
@@ -1612,12 +1612,12 @@ namespace DAQView {
             let fed: DAQAggregatorSnapshot.FED = this.props.fed;
 
             let trigNum: number = fed.eventCounter;
-            let minTrigDisplayContent: any = this.props.minTrig;
+            let maxTrig: number = this.props.maxTrig;
 
             let trigNumDisplay: any = '';
 
-            if (!fed.isPseudoFed && (trigNum.toString() == minTrigDisplayContent) && drawZeroDataFlowComponent){
-                trigNumDisplay = minTrigDisplayContent;
+            if (!fed.isPseudoFed && maxTrig > 0 && trigNum != maxTrig && drawZeroDataFlowComponent){
+                trigNumDisplay = trigNum;
             }
 
             let minTrigClassNames: string = classNames('fb-table-fed-min-trig');
