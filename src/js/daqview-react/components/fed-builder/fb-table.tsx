@@ -1616,7 +1616,11 @@ namespace DAQView {
 
             let trigNumDisplay: any = '';
 
-            if (!fed.isPseudoFed && maxTrig > 0 && trigNum != maxTrig && drawZeroDataFlowComponent){
+            if (!fed.isPseudoFed
+                && fed.hasSLINK && !fed.frlMasked
+                && maxTrig > 0
+                && trigNum != maxTrig
+                && drawZeroDataFlowComponent) {
                 trigNumDisplay = trigNum;
             }
 
@@ -1676,16 +1680,12 @@ namespace DAQView {
                 ttsStateDisplay = '';
             }
 
-
-            //console.log("fed: " + fed.srcIdExpected + "displayFEDId");
-
             /* display FED id */
             if(displayFedId){
                 if(displayFedTTSState) {
                     fedIdClasses = classNames(fedIdClasses, ttsStateClass);
                 }
             }
-
 
             /* Do not display FED id */
             else{

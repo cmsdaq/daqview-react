@@ -1338,7 +1338,11 @@ var DAQView;
             var trigNum = fed.eventCounter;
             var maxTrig = this.props.maxTrig;
             var trigNumDisplay = '';
-            if (!fed.isPseudoFed && maxTrig > 0 && trigNum != maxTrig && drawZeroDataFlowComponent) {
+            if (!fed.isPseudoFed
+                && fed.hasSLINK && !fed.frlMasked
+                && maxTrig > 0
+                && trigNum != maxTrig
+                && drawZeroDataFlowComponent) {
                 trigNumDisplay = trigNum;
             }
             var minTrigClassNames = classNames('fb-table-fed-min-trig');
@@ -1388,7 +1392,6 @@ var DAQView;
             else {
                 ttsStateDisplay = '';
             }
-            //console.log("fed: " + fed.srcIdExpected + "displayFEDId");
             /* display FED id */
             if (displayFedId) {
                 if (displayFedTTSState) {
