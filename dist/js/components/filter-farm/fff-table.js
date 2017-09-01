@@ -1,15 +1,18 @@
+"use strict";
 /**
  * @author Michail Vougioukas
  * @author Philipp Brummer
  */
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-///<reference path="../../structures/daq-aggregator/daq-snapshot.ts"/>
-///<reference path="../daq-snapshot-view/daq-snapshot-view.d.ts"/>
-///<reference path="../../utilities/format-util.ts"/>
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var DAQView;
 (function (DAQView) {
     var FileBasedFilterFarmTable = (function () {
@@ -53,7 +56,7 @@ var DAQView;
         FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
             if (!snapshot) {
                 var msg = "";
-                var errRootElement = React.createElement(ErrorElement, {message: msg});
+                var errRootElement = React.createElement(ErrorElement, { message: msg });
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }
             else {
@@ -82,7 +85,7 @@ var DAQView;
             var drawPausedComponent = this.drawPausedComponent;
             var drawZeroDataFlowComponent = this.drawZeroDataFlowComponent;
             var drawStaleSnapshot = this.drawStaleSnapshot;
-            var fileBasedFilterFarmTableRootElement = React.createElement(FileBasedFilterFarmTableElement, {tableObject: this, bus: daq.bus, buSummary: daq.buSummary, drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, drawStaleSnapshot: drawStaleSnapshot});
+            var fileBasedFilterFarmTableRootElement = React.createElement(FileBasedFilterFarmTableElement, { tableObject: this, bus: daq.bus, buSummary: daq.buSummary, drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, drawStaleSnapshot: drawStaleSnapshot });
             ReactDOM.render(fileBasedFilterFarmTableRootElement, this.htmlRootElement);
         };
         FileBasedFilterFarmTable.prototype.setSortFunction = function (sortFunctions) {
@@ -118,7 +121,7 @@ var DAQView;
     var ErrorElement = (function (_super) {
         __extends(ErrorElement, _super);
         function ErrorElement() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         ErrorElement.prototype.render = function () {
             return (React.createElement("div", null, this.props.message));
@@ -518,7 +521,7 @@ var DAQView;
     var FileBasedFilterFarmTableElement = (function (_super) {
         __extends(FileBasedFilterFarmTableElement, _super);
         function FileBasedFilterFarmTableElement() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         FileBasedFilterFarmTableElement.prototype.render = function () {
             var buSummary = this.props.buSummary;
@@ -533,47 +536,56 @@ var DAQView;
                 bus.forEach(function (bu) {
                     var index = buRows.length;
                     var oddRow = (index % 2 == 1) ? true : false;
-                    buRows.push(React.createElement(FileBasedFilterFarmTableBURow, {key: bu['@id'], bu: bu, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, oddRow: oddRow, drawStaleSnapshot: drawStaleSnapshot}));
+                    buRows.push(React.createElement(FileBasedFilterFarmTableBURow, { key: bu['@id'], bu: bu, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, oddRow: oddRow, drawStaleSnapshot: drawStaleSnapshot }));
                 });
             }
             var numBusNoRate = numBus - buSummary.busNoRate;
             var tableObject = this.props.tableObject;
-            return (React.createElement("table", {className: "fff-table"}, React.createElement("thead", {className: "fff-table-head"}, React.createElement(FileBasedFilterFarmTableTopHeaderRow, {key: "fff-top-header-row", drawPausedComponent: drawPausedComponents}), React.createElement(FileBasedFilterFarmTableHeaderRow, {key: "fff-header-row", tableObject: tableObject, headers: FFF_TABLE_TOP_HEADERS, drawPausedComponent: drawPausedComponents})), React.createElement("tbody", {className: "fff-table-body"}, buRows), React.createElement("tfoot", {className: "fff-table-foot"}, React.createElement(FileBasedFilterFarmTableHeaderRow, {key: "fff-summary-header-row", tableObject: tableObject, headers: FFF_TABLE_SUMMARY_HEADERS, drawPausedComponent: drawPausedComponents}), React.createElement(FileBasedFilterFarmTableBUSummaryRow, {key: "fff-summary-row", buSummary: buSummary, numBus: numBus, numBusNoRate: numBusNoRate, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, drawStaleSnapshot: drawStaleSnapshot}))));
+            return (React.createElement("table", { className: "fff-table" },
+                React.createElement("thead", { className: "fff-table-head" },
+                    React.createElement(FileBasedFilterFarmTableTopHeaderRow, { key: "fff-top-header-row", drawPausedComponent: drawPausedComponents }),
+                    React.createElement(FileBasedFilterFarmTableHeaderRow, { key: "fff-header-row", tableObject: tableObject, headers: FFF_TABLE_TOP_HEADERS, drawPausedComponent: drawPausedComponents })),
+                React.createElement("tbody", { className: "fff-table-body" }, buRows),
+                React.createElement("tfoot", { className: "fff-table-foot" },
+                    React.createElement(FileBasedFilterFarmTableHeaderRow, { key: "fff-summary-header-row", tableObject: tableObject, headers: FFF_TABLE_SUMMARY_HEADERS, drawPausedComponent: drawPausedComponents }),
+                    React.createElement(FileBasedFilterFarmTableBUSummaryRow, { key: "fff-summary-row", buSummary: buSummary, numBus: numBus, numBusNoRate: numBusNoRate, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, drawStaleSnapshot: drawStaleSnapshot }))));
         };
         return FileBasedFilterFarmTableElement;
     }(React.Component));
     var FileBasedFilterFarmTableTopHeaderRow = (function (_super) {
         __extends(FileBasedFilterFarmTableTopHeaderRow, _super);
         function FileBasedFilterFarmTableTopHeaderRow() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         FileBasedFilterFarmTableTopHeaderRow.prototype.shouldComponentUpdate = function () {
             return false;
         };
         FileBasedFilterFarmTableTopHeaderRow.prototype.render = function () {
             var drawPausedComponent = this.props.drawPausedComponent;
-            return (React.createElement("tr", {className: "fff-table-top-header-row"}, React.createElement(FileBasedFilterFarmTableHeader, {additionalClasses: "fff-table-help", content: React.createElement("a", {href: "ffftablehelp.html", target: "_blank"}, "Table Help"), colSpan: "2", drawPausedComponent: drawPausedComponent}), React.createElement(FileBasedFilterFarmTableHeader, {content: "B U I L D E R   U N I T   ( B U )", colSpan: "20", drawPausedComponent: drawPausedComponent})));
+            return (React.createElement("tr", { className: "fff-table-top-header-row" },
+                React.createElement(FileBasedFilterFarmTableHeader, { additionalClasses: "fff-table-help", content: React.createElement("a", { href: "ffftablehelp.html", target: "_blank" }, "Table Help"), colSpan: 2, drawPausedComponent: drawPausedComponent }),
+                React.createElement(FileBasedFilterFarmTableHeader, { content: "B U I L D E R   U N I T   ( B U )", colSpan: 20, drawPausedComponent: drawPausedComponent })));
         };
         return FileBasedFilterFarmTableTopHeaderRow;
     }(React.Component));
     var FileBasedFilterFarmTableHeaderRow = (function (_super) {
         __extends(FileBasedFilterFarmTableHeaderRow, _super);
         function FileBasedFilterFarmTableHeaderRow() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         FileBasedFilterFarmTableHeaderRow.prototype.render = function () {
             var drawPausedComponent = this.props.drawPausedComponent;
             var tableObject = this.props.tableObject;
             var children = [];
-            this.props.headers.forEach(function (header) { return children.push(React.createElement(FileBasedFilterFarmTableHeader, {key: header.content, content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions})); });
-            return (React.createElement("tr", {className: "fff-table-header-row"}, children));
+            this.props.headers.forEach(function (header) { return children.push(React.createElement(FileBasedFilterFarmTableHeader, { key: header.content, content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions })); });
+            return (React.createElement("tr", { className: "fff-table-header-row" }, children));
         };
         return FileBasedFilterFarmTableHeaderRow;
     }(React.Component));
     var FileBasedFilterFarmTableHeader = (function (_super) {
         __extends(FileBasedFilterFarmTableHeader, _super);
         function FileBasedFilterFarmTableHeader() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         FileBasedFilterFarmTableHeader.prototype.shouldComponentUpdate = function (nextProps) {
             return this.props.sorting !== nextProps.sorting;
@@ -604,20 +616,27 @@ var DAQView;
             }
             var sortingImage = null;
             if (currentSorting != null) {
-                sortingImage = React.createElement("input", {type: "image", className: "fff-table-sort-image", src: 'dist/img/' + currentSorting.getImagePath(), alt: currentSorting.toString(), title: "Sort", onClick: clickFunction});
+                sortingImage = React.createElement("input", { type: "image", className: "fff-table-sort-image", src: 'dist/img/' + currentSorting.getImagePath(), alt: currentSorting.toString(), title: "Sort", onClick: clickFunction });
             }
-            return (React.createElement("th", {className: className, colSpan: colSpan ? colSpan : "1"}, content, sortingImage));
+            return (React.createElement("th", { className: className, colSpan: colSpan ? colSpan : 1 },
+                content,
+                sortingImage));
         };
         return FileBasedFilterFarmTableHeader;
     }(React.Component));
     var FileBasedFilterFarmTableBURow = (function (_super) {
         __extends(FileBasedFilterFarmTableBURow, _super);
         function FileBasedFilterFarmTableBURow() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         FileBasedFilterFarmTableBURow.prototype.shouldComponentUpdate = function (nextProps) {
-            return true; //this can be optimized
-            //return !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
+            var shouldUpdate = false;
+            shouldUpdate = shouldUpdate || this.props.oddRow !== nextProps.oddRow;
+            shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
+            shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
+            shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
+            return shouldUpdate;
         };
         FileBasedFilterFarmTableBURow.prototype.render = function () {
             var drawPausedComponent = this.props.drawPausedComponent;
@@ -651,7 +670,7 @@ var DAQView;
             var buUrlDisplayClass = "fff-table-stale-member-wrapbox"; //assume stale and overwrite if not
             var buDebug = "Check problems with BU flashlist!";
             if (bu.port != null) {
-                buUrlDisplay = React.createElement("a", {href: buUrl, target: "_blank"}, hostname);
+                buUrlDisplay = React.createElement("a", { href: buUrl, target: "_blank" }, hostname);
                 buUrlDisplayClass = "";
                 buDebug = "";
             }
@@ -695,18 +714,58 @@ var DAQView;
             if (drawStaleSnapshot && (!drawPausedComponent)) {
                 fffBuRowClass = 'fff-table-bu-row-stale-page-row';
             }
-            return (React.createElement("tr", {className: fffBuRowClass}, React.createElement("td", null, React.createElement("div", {title: buDebug, className: buUrlDisplayClass}, buUrlDisplay)), React.createElement("td", null, React.createElement("div", {className: buStateClass}, buState), React.createElement("div", {className: buJobCrashStateDisplayClass}, buJobCrashStateDisplay)), React.createElement("td", {className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(rate != null ? rate : 0, FFFTableNumberFormats.RATE))}, rate != null ? rate.toFixed(3) : '*'), React.createElement("td", {className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(throughput != null ? throughput : 0, FFFTableNumberFormats.THROUGHPUT))}, throughput != null ? throughput.toFixed(1) : '*'), React.createElement("td", {className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(sizeMean != null ? sizeMean : 0, FFFTableNumberFormats.SIZE))}, sizeMean != null ? sizeMean.toFixed(1) : '*', "±", sizeStddev != null ? sizeStddev.toFixed(1) : '*'), React.createElement("td", {className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(events != null ? events : 0, FFFTableNumberFormats.EVENTS))}, events != null ? events : '*'), React.createElement("td", {className: classNames("fff-table-bu-row-counter", eventsInBuClass)}, eventsInBU != null ? eventsInBU : '*'), React.createElement("td", null, React.createElement("div", {className: classNames("fff-table-bu-row-counter", priorityClass)}, bu.priority != null ? bu.priority : '*')), React.createElement("td", {className: classNames("fff-table-bu-row-counter", requestsSentClass)}, requestsSent != null ? requestsSent : '*'), React.createElement("td", {className: classNames("fff-table-bu-row-counter", requestsUsedClass)}, requestsUsed != null ? requestsUsed : '*'), React.createElement("td", null, React.createElement("div", {className: classNames("fff-table-bu-row-counter", requestsBlockedClass)}, requestsBlocked != null ? requestsBlocked : '*')), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.numFUsHLT != null ? bu.numFUsHLT : '*'), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.numFUsCrashed != null ? bu.numFUsCrashed : '*'), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.numFUsStale != null ? bu.numFUsStale : '*'), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.numFUsCloud != null ? bu.numFUsCloud : '*'), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.ramDiskUsage != null ? (bu.ramDiskUsage).toFixed(1) : '*', "% of ", bu.ramDiskTotal != null ? bu.ramDiskTotal.toFixed(1) : '*', "GB"), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.numFiles != null ? bu.numFiles : '*'), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.numLumisectionsWithFiles != null ? bu.numLumisectionsWithFiles : '*'), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.currentLumisection != null ? bu.currentLumisection : '*'), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.numLumisectionsForHLT != null ? bu.numLumisectionsForHLT : '*'), React.createElement("td", {className: "fff-table-bu-row-counter"}, bu.numLumisectionsOutHLT != null ? bu.numLumisectionsOutHLT : '*'), React.createElement("td", {className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(bu.fuOutputBandwidthInMB != null ? bu.fuOutputBandwidthInMB : 0, FFFTableNumberFormats.BANDWIDTH))}, bu.fuOutputBandwidthInMB != null ? bu.fuOutputBandwidthInMB.toFixed(2) : '*')));
+            return (React.createElement("tr", { className: fffBuRowClass },
+                React.createElement("td", null,
+                    React.createElement("div", { title: buDebug, className: buUrlDisplayClass }, buUrlDisplay)),
+                React.createElement("td", null,
+                    React.createElement("div", { className: buStateClass }, buState),
+                    React.createElement("div", { className: buJobCrashStateDisplayClass }, buJobCrashStateDisplay)),
+                React.createElement("td", { className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(rate != null ? rate : 0, FFFTableNumberFormats.RATE)) }, rate != null ? rate.toFixed(3) : '*'),
+                React.createElement("td", { className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(throughput != null ? throughput : 0, FFFTableNumberFormats.THROUGHPUT)) }, throughput != null ? throughput.toFixed(1) : '*'),
+                React.createElement("td", { className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(sizeMean != null ? sizeMean : 0, FFFTableNumberFormats.SIZE)) },
+                    sizeMean != null ? sizeMean.toFixed(1) : '*',
+                    "\u00B1",
+                    sizeStddev != null ? sizeStddev.toFixed(1) : '*'),
+                React.createElement("td", { className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(events != null ? events : 0, FFFTableNumberFormats.EVENTS)) }, events != null ? events : '*'),
+                React.createElement("td", { className: classNames("fff-table-bu-row-counter", eventsInBuClass) }, eventsInBU != null ? eventsInBU : '*'),
+                React.createElement("td", null,
+                    React.createElement("div", { className: classNames("fff-table-bu-row-counter", priorityClass) }, bu.priority != null ? bu.priority : '*')),
+                React.createElement("td", { className: classNames("fff-table-bu-row-counter", requestsSentClass) }, requestsSent != null ? requestsSent : '*'),
+                React.createElement("td", { className: classNames("fff-table-bu-row-counter", requestsUsedClass) }, requestsUsed != null ? requestsUsed : '*'),
+                React.createElement("td", null,
+                    React.createElement("div", { className: classNames("fff-table-bu-row-counter", requestsBlockedClass) }, requestsBlocked != null ? requestsBlocked : '*')),
+                React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numFUsHLT != null ? bu.numFUsHLT : '*'),
+                React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numFUsCrashed != null ? bu.numFUsCrashed : '*'),
+                React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numFUsStale != null ? bu.numFUsStale : '*'),
+                React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numFUsCloud != null ? bu.numFUsCloud : '*'),
+                React.createElement("td", { className: "fff-table-bu-row-counter" },
+                    bu.ramDiskUsage != null ? (bu.ramDiskUsage).toFixed(1) : '*',
+                    "% of ",
+                    bu.ramDiskTotal != null ? bu.ramDiskTotal.toFixed(1) : '*',
+                    "GB"),
+                React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numFiles != null ? bu.numFiles : '*'),
+                React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numLumisectionsWithFiles != null ? bu.numLumisectionsWithFiles : '*'),
+                React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.currentLumisection != null ? bu.currentLumisection : '*'),
+                React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numLumisectionsForHLT != null ? bu.numLumisectionsForHLT : '*'),
+                React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numLumisectionsOutHLT != null ? bu.numLumisectionsOutHLT : '*'),
+                React.createElement("td", { className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(bu.fuOutputBandwidthInMB != null ? bu.fuOutputBandwidthInMB : 0, FFFTableNumberFormats.BANDWIDTH)) }, bu.fuOutputBandwidthInMB != null ? bu.fuOutputBandwidthInMB.toFixed(2) : '*')));
         };
         return FileBasedFilterFarmTableBURow;
     }(React.Component));
     var FileBasedFilterFarmTableBUSummaryRow = (function (_super) {
         __extends(FileBasedFilterFarmTableBUSummaryRow, _super);
         function FileBasedFilterFarmTableBUSummaryRow() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         FileBasedFilterFarmTableBUSummaryRow.prototype.shouldComponentUpdate = function (nextProps) {
-            return true; //this can be optimized
-            //return (this.props.numBus != nextProps.numBus) || (!DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary));
+            var shouldUpdate = false;
+            shouldUpdate = shouldUpdate || this.props.numBus !== nextProps.numBus;
+            shouldUpdate = shouldUpdate || this.props.numBusNoRate !== nextProps.numBusNoRate;
+            shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
+            shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
+            shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
+            shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary);
+            return shouldUpdate;
         };
         FileBasedFilterFarmTableBUSummaryRow.prototype.render = function () {
             var buSummary = this.props.buSummary;
@@ -739,7 +798,65 @@ var DAQView;
             if (drawStaleSnapshot && (!drawPausedComponent)) {
                 fffBuSummaryRowClass = 'fff-table-bu-summary-row-stale-page';
             }
-            return (React.createElement("tr", {className: classNames(fffBuSummaryRowClass, "fff-table-bu-row-counter")}, React.createElement("td", null, "Σ BUs = ", this.props.numBusNoRate, " / ", this.props.numBus), React.createElement("td", null), React.createElement("td", {className: FormatUtility.getClassNameForNumber(buSummary.rate != null ? buSummary.rate / 1000 : 0, FFFTableNumberFormats.RATE)}, "Σ ", buSummary.rate != null ? (buSummary.rate / 1000).toFixed(3) : '*'), React.createElement("td", {className: FormatUtility.getClassNameForNumber(buSummary.throughput != null ? buSummary.throughput / 1000 / 1000 : 0, FFFTableNumberFormats.THROUGHPUT)}, "Σ ", buSummary.throughput != null ? (buSummary.throughput / 1000 / 1000).toFixed(1) : '*'), React.createElement("td", {className: FormatUtility.getClassNameForNumber(buSummary.eventSizeMean != null ? buSummary.eventSizeMean / 1000 : 0, FFFTableNumberFormats.SIZE)}, buSummary.eventSizeMean != null ? (buSummary.eventSizeMean / 1000).toFixed(1) : '*', "±", buSummary.eventSizeStddev != null ? (buSummary.eventSizeStddev / 1000).toFixed(1) : '*'), React.createElement("td", {className: FormatUtility.getClassNameForNumber(buSummary.numEvents != null ? buSummary.numEvents : 0, FFFTableNumberFormats.EVENTS)}, "Σ ", buSummary.numEvents != null ? buSummary.numEvents : '*'), React.createElement("td", {className: eventsInBuClass}, "Σ ", buSummary.numEventsInBU != null ? buSummary.numEventsInBU : '*'), React.createElement("td", {className: "fff-table-priority"}, buSummary.priority != null ? buSummary.priority : '*'), React.createElement("td", {className: requestsSentClass}, "Σ ", buSummary.numRequestsSent != null ? buSummary.numRequestsSent : '*'), React.createElement("td", {className: requestsUsedClass}, "Σ ", buSummary.numRequestsUsed != null ? buSummary.numRequestsUsed : '*'), React.createElement("td", {className: requestsBlockedClass}, "Σ ", buSummary.numRequestsBlocked != null ? buSummary.numRequestsBlocked : '*'), React.createElement("td", null, "Σ ", buSummary.numFUsHLT != null ? buSummary.numFUsHLT : '*'), React.createElement("td", null, "Σ ", buSummary.numFUsCrashed != null ? buSummary.numFUsCrashed : '*'), React.createElement("td", null, "Σ ", buSummary.numFUsStale != null ? buSummary.numFUsStale : '*'), React.createElement("td", null, "Σ ", buSummary.numFUsCloud != null ? buSummary.numFUsCloud : '*'), React.createElement("td", null, "Σ ", buSummary.ramDiskUsage != null ? buSummary.ramDiskUsage.toFixed(1) : '*', "% of ", buSummary.ramDiskTotal != null ? buSummary.ramDiskTotal.toFixed(1) : '*', "GB"), React.createElement("td", null, "Σ ", buSummary.numFiles != null ? buSummary.numFiles : '*'), React.createElement("td", null, buSummary.numLumisectionsWithFiles != null ? buSummary.numLumisectionsWithFiles : '*'), React.createElement("td", null, buSummary.currentLumisection != null ? buSummary.currentLumisection : '*'), React.createElement("td", null, buSummary.numLumisectionsForHLT != null ? buSummary.numLumisectionsForHLT : '*'), React.createElement("td", null, buSummary.numLumisectionsOutHLT != null ? buSummary.numLumisectionsOutHLT : '*'), React.createElement("td", null, buSummary.fuOutputBandwidthInMB != null ? buSummary.fuOutputBandwidthInMB.toFixed(2) : '*')));
+            return (React.createElement("tr", { className: classNames(fffBuSummaryRowClass, "fff-table-bu-row-counter") },
+                React.createElement("td", null,
+                    "\u03A3 BUs = ",
+                    this.props.numBusNoRate,
+                    " / ",
+                    this.props.numBus),
+                React.createElement("td", null),
+                React.createElement("td", { className: FormatUtility.getClassNameForNumber(buSummary.rate != null ? buSummary.rate / 1000 : 0, FFFTableNumberFormats.RATE) },
+                    "\u03A3 ",
+                    buSummary.rate != null ? (buSummary.rate / 1000).toFixed(3) : '*'),
+                React.createElement("td", { className: FormatUtility.getClassNameForNumber(buSummary.throughput != null ? buSummary.throughput / 1000 / 1000 : 0, FFFTableNumberFormats.THROUGHPUT) },
+                    "\u03A3 ",
+                    buSummary.throughput != null ? (buSummary.throughput / 1000 / 1000).toFixed(1) : '*'),
+                React.createElement("td", { className: FormatUtility.getClassNameForNumber(buSummary.eventSizeMean != null ? buSummary.eventSizeMean / 1000 : 0, FFFTableNumberFormats.SIZE) },
+                    buSummary.eventSizeMean != null ? (buSummary.eventSizeMean / 1000).toFixed(1) : '*',
+                    "\u00B1",
+                    buSummary.eventSizeStddev != null ? (buSummary.eventSizeStddev / 1000).toFixed(1) : '*'),
+                React.createElement("td", { className: FormatUtility.getClassNameForNumber(buSummary.numEvents != null ? buSummary.numEvents : 0, FFFTableNumberFormats.EVENTS) },
+                    "\u03A3 ",
+                    buSummary.numEvents != null ? buSummary.numEvents : '*'),
+                React.createElement("td", { className: eventsInBuClass },
+                    "\u03A3 ",
+                    buSummary.numEventsInBU != null ? buSummary.numEventsInBU : '*'),
+                React.createElement("td", { className: "fff-table-priority" }, buSummary.priority != null ? buSummary.priority : '*'),
+                React.createElement("td", { className: requestsSentClass },
+                    "\u03A3 ",
+                    buSummary.numRequestsSent != null ? buSummary.numRequestsSent : '*'),
+                React.createElement("td", { className: requestsUsedClass },
+                    "\u03A3 ",
+                    buSummary.numRequestsUsed != null ? buSummary.numRequestsUsed : '*'),
+                React.createElement("td", { className: requestsBlockedClass },
+                    "\u03A3 ",
+                    buSummary.numRequestsBlocked != null ? buSummary.numRequestsBlocked : '*'),
+                React.createElement("td", null,
+                    "\u03A3 ",
+                    buSummary.numFUsHLT != null ? buSummary.numFUsHLT : '*'),
+                React.createElement("td", null,
+                    "\u03A3 ",
+                    buSummary.numFUsCrashed != null ? buSummary.numFUsCrashed : '*'),
+                React.createElement("td", null,
+                    "\u03A3 ",
+                    buSummary.numFUsStale != null ? buSummary.numFUsStale : '*'),
+                React.createElement("td", null,
+                    "\u03A3 ",
+                    buSummary.numFUsCloud != null ? buSummary.numFUsCloud : '*'),
+                React.createElement("td", null,
+                    "\u03A3 ",
+                    buSummary.ramDiskUsage != null ? buSummary.ramDiskUsage.toFixed(1) : '*',
+                    "% of ",
+                    buSummary.ramDiskTotal != null ? buSummary.ramDiskTotal.toFixed(1) : '*',
+                    "GB"),
+                React.createElement("td", null,
+                    "\u03A3 ",
+                    buSummary.numFiles != null ? buSummary.numFiles : '*'),
+                React.createElement("td", null, buSummary.numLumisectionsWithFiles != null ? buSummary.numLumisectionsWithFiles : '*'),
+                React.createElement("td", null, buSummary.currentLumisection != null ? buSummary.currentLumisection : '*'),
+                React.createElement("td", null, buSummary.numLumisectionsForHLT != null ? buSummary.numLumisectionsForHLT : '*'),
+                React.createElement("td", null, buSummary.numLumisectionsOutHLT != null ? buSummary.numLumisectionsOutHLT : '*'),
+                React.createElement("td", null, buSummary.fuOutputBandwidthInMB != null ? buSummary.fuOutputBandwidthInMB.toFixed(2) : '*')));
         };
         return FileBasedFilterFarmTableBUSummaryRow;
     }(React.Component));

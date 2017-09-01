@@ -55,6 +55,18 @@ namespace DAQView {
             this.snapshotViews[elementName] = newTable;
         }
 
+        public createDTTable(elementName: string) {
+            this.createDeadTimeTable(elementName);
+        }
+
+        private createDeadTimeTable(elementName: string) {
+            let newTable = new DeadTimeTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        }
+
         public createFBTable(elementName: string) {
             this.createFEDBuilderTable(elementName);
         }

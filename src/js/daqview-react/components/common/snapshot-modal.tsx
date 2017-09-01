@@ -10,7 +10,6 @@
 namespace DAQView {
 
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
-    import DAQ = DAQAggregator.Snapshot.DAQ;
 
     export class SnapshotModal implements DAQView.DAQSnapshotView {
         public htmlRootElement: Element;

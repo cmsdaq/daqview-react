@@ -10,7 +10,6 @@ namespace DAQAggregator {
     import SubFEDBuilder = DAQAggregator.Snapshot.SubFEDBuilder;
     import FED = DAQAggregator.Snapshot.FED;
     import FRL = DAQAggregator.Snapshot.FRL;
-    import snapshotElementsEqualShallow = DAQViewUtility.snapshotElementsEqualShallow;
     export class SnapshotParser {
 
         private big_map: {[key: string]: any} = {};
@@ -39,14 +38,12 @@ namespace DAQAggregator {
                 return null;
             }
 
-            let snapshotReturned: Snapshot = new Snapshot(this.big_map['DAQ']);
-
-            return snapshotReturned;
+            return new Snapshot(this.big_map['DAQ']);
 
         }
 
         static getFieldType(field: any) {
-            var ret = typeof field;
+            let ret: string = typeof field;
             if ((ret == 'object') && (field instanceof Array)) {
                 ret = 'array';
             }
