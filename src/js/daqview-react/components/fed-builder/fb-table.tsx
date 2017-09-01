@@ -1677,22 +1677,32 @@ namespace DAQView {
             }
 
 
-            /* display all */
-            if(displayFedId && displayFedTTSState){
-                fedIdClasses = classNames(fedIdClasses, ttsStateClass);
+            //console.log("fed: " + fed.srcIdExpected + "displayFEDId");
+
+            /* display FED id */
+            if(displayFedId){
+                if(displayFedTTSState) {
+                    fedIdClasses = classNames(fedIdClasses, ttsStateClass);
+                }
             }
 
-            /* Special case */
-            else if(!displayFedId && displayFedTTSState){
-                fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-special-case')
-                fedIdClasses = classNames(fedIdClasses, ttsStateClass);
-            }
-            /* Do not display */
+
+            /* Do not display FED id */
             else{
-                if(fed.frlMasked) {
-                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
-                } else if (fed.fmmMasked){
-                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-tts-state-fmm-masked');
+
+                /* Display TTS state - Special case */
+                if(displayFedTTSState){
+                    fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-special-case')
+                    fedIdClasses = classNames(fedIdClasses, ttsStateClass);
+                }
+
+                /* Do not display FED id, do not display FED TTS */
+                else {
+                    if (fed.frlMasked) {
+                        fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-frl-masked');
+                    } else if (fed.fmmMasked) {
+                        fedIdClasses = classNames(fedIdClasses, 'fb-table-fed-tts-state-fmm-masked');
+                    }
                 }
             }
 
