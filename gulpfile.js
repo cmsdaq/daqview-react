@@ -1,16 +1,17 @@
-var gulp = require("gulp");
-var ts = require("gulp-typescript");
-var tsProject = ts.createProject("tsconfig.json");
+const gulp = require("gulp");
+const rename = require("gulp-rename");
+const ts = require("gulp-typescript");
+const tsProject = ts.createProject("tsconfig.json");
 
-var package = require("./package.json");
+const packageInfo = require("./package.json");
 
-var paths = {
+const paths = {
     node_modules: "node_modules",
     dist_lib: "dist/lib",
     release: "release"
 };
 
-var libPaths = {
+const libPaths = {
     classnames: {
         source: paths.node_modules + "/classnames/index.js",
         target: paths.dist_lib + "/classnames/"
@@ -49,20 +50,36 @@ var libPaths = {
     }
 };
 
-var releaseContent = [
+const configurations = {
+    "dev": {
+        name: "dev",
+        linkConfiguration: "configuration/link-configuration.dev.js"
+    },
+    "pro": {
+        name: "pro",
+        linkConfiguration: "configuration/link-configuration.pro.js"
+    },
+    "904": {
+        name: "904",
+        linkConfiguration: "configuration/link-configuration.904.js"
+    }
+};
+
+const defaultConfiguration = configurations.pro;
+
+const releaseContent = [
     "index.html",
     "index_fb.html",
     "index_fff.html",
     "fbtablehelp.html",
     "ffftablehelp.html",
-    "link-configuration.js",
     ["dist/**/*", "dist"]
 ];
 
 gulp.task("deploy-libs", function (cb) {
-    for (var libName in libPaths) {
+    for (let libName in libPaths) {
         if (libPaths.hasOwnProperty(libName)) {
-            var lib = libPaths[libName];
+            let lib = libPaths[libName];
             gulp.src(lib.source).pipe(gulp.dest(lib.target));
         }
     }
@@ -76,7 +93,21 @@ gulp.task("build", ["deploy-libs"], function () {
 });
 
 gulp.task("release", ["build"], function (cb) {
-    var releasePath = paths.release + "/" + package.version + "/";
+    let configuration = null;
+    for (let configurationName in configurations) {
+        if (configurations.hasOwnProperty(configurationName)) {
+            let commandLineParam = process.argv.indexOf("--" + configurationName);
+            if (commandLineParam !== -1) {
+                configuration = configurations[configurationName];
+                break;
+            }
+        }
+    }
+    if (configuration === null) {
+        configuration = defaultConfiguration;
+    }
+
+    let releasePath = paths.release + "/" + packageInfo.version + "-" + configuration.name + "/";
     releaseContent.forEach(function (content) {
         if (Array.isArray(content)) {
             gulp.src(content[0]).pipe(gulp.dest(releasePath + content[1]))
@@ -84,5 +115,10 @@ gulp.task("release", ["build"], function (cb) {
             gulp.src(content).pipe(gulp.dest(releasePath))
         }
     });
+
+    gulp.src(configuration.linkConfiguration)
+        .pipe(rename("link-configuration.js"))
+        .pipe(gulp.dest(releasePath));
+
     cb();
 });
