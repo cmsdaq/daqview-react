@@ -43,6 +43,22 @@ With npm: (in project root)
 npm run release
 ```
 
+Defaults to creating a release for the production setup (daq-expert.cms).
+
+Other setups may be specified using parameters:
+
+for dev (daq-expert-dev.cms):
+
+```
+npm run release -- --dev
+```
+
+for 904 (daq-expert.cms904):
+
+```
+npm run release -- --904
+```
+
 ## Linting
 
 With npm: (in project root)
