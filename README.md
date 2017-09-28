@@ -1,27 +1,67 @@
-<<<<<<< HEAD
 # DAQ View React
 
 ## Introduction
 
-An implementation of client-side daqview monitoring application for the CMS DAQ FED Builder and Filter-Based Filter Farm infrastructure.
+A client-side implementation of the daqview monitoring application for the CMS DAQ FED Builder and Filter Farm infrastructure.
 
-Data are provided by the DAQ Aggregator snapshots in form of JSON files and React.js is used for processing and rendering monitoring information on the client, without any need for server-side logic.
+Data is provided by the DAQ Aggregator in the form of JSON snapshots.
 
+React.js is used for processing and rendering monitoring information on the client, without the need of server-side logic.
 
+## Development
 
-## Todo
-- [ ] comment TypeScript code
-- [x] implement sorting on all FFF table columns
-- [x] add styles to FB table
-- [ ] implement sorting of FB table (default order by TTCP name, option to order by any RU column, maybe TTS state)
-- [ ] complete display of FEDs in the FB table
-  - [ ] correctly find and distribute dependent FEDs
-- [ ] display FED errors in RU warn column of FB table
-- [x] add header view to display snapshot metadata and system status
-  - [ ] add additional information (beam mode etc.)
-- [ ] add page-wide styles and/or notifications to draw the shifter's attention to a problem
-- [x] rewrite parser to match the new snapshot format
-- [ ] add navigation options (display snapshot by run, session, time, next/previous snapshot) => requires server-side API
-- [ ] add expert option to display additional data from the snapshot
+### Minimal Requirements
 
-- [ ] switch back to production React before deploying
+- NodeJS version 6
+- NPM version 3
+- TypeScript version 2
+
+### Setup
+
+1. Install nodejs and npm
+
+2. Install dependencies: (in project root)
+```
+npm install
+```
+or
+```
+npm install --only=dev
+```
+
+## Compilation
+
+With npm: (in project root)
+```
+npm run build
+```
+
+## Release (based on the version attribute in package.json)
+
+With npm: (in project root)
+```
+npm run release
+```
+
+Defaults to creating a release for the production setup (daq-expert.cms).
+
+Other setups may be specified using parameters:
+
+for dev (daq-expert-dev.cms):
+
+```
+npm run release -- --dev
+```
+
+for 904 (daq-expert.cms904):
+
+```
+npm run release -- --904
+```
+
+## Linting
+
+With npm: (in project root)
+```
+npm run lint
+```

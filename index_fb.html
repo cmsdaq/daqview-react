@@ -17,15 +17,22 @@
     <link rel="StyleSheet" href="dist/css/components/metadata/loader.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/common/snapshot-modal.css" type="text/css"/>
 
-    <script type="text/javascript" src="dist/lib/jquery/jquery-3.0.0.min.js"></script>
+    <link rel="StyleSheet" href="dist/lib/daterangepicker/daterangepicker.css" type="text/css"/>
+
+    <script type="text/javascript" src="dist/lib/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="dist/lib/classnames/index.js"></script>
     <script type="text/javascript" src="dist/lib/react/react.min.js"></script>
     <script type="text/javascript" src="dist/lib/react/react-dom.min.js"></script>
+    <script type="text/javascript" src="dist/lib/clipboard/clipboard.min.js"></script>
+    <script type="text/javascript" src="dist/lib/moment/moment.min.js"></script>
+    <script type="text/javascript" src="dist/lib/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="dist/lib/daterangepicker/daterangepicker.js"></script>
 
     <script type="text/javascript" src="dist/js/structures/daq-aggregator/daq-snapshot.js"></script>
     <script type="text/javascript" src="dist/js/utilities/snapshot-provider.js"></script>
     <script type="text/javascript" src="dist/js/utilities/daqview-util.js"></script>
     <script type="text/javascript" src="dist/js/utilities/format-util.js"></script>
+    <script type="text/javascript" src="dist/js/utilities/gui-util.js"></script>
     <script type="text/javascript" src="dist/js/utilities/snapshot-randomizer.js"></script>
     <script type="text/javascript" src="dist/js/utilities/parser.js"></script>
     <script type="text/javascript" src="dist/js/components/common/sorting.js"></script>
@@ -135,7 +142,7 @@
                         var baseURL = snapshotSources.url+'?setup='+daqSetup+'&time=';
                         var timestampDelim = '"';
 
-                        var currentLocalTime = $('#daqview-go-to-time-input').val();
+                        var currentLocalTime = goToTimeInput.val();
 
                         var timestamp=Date.parse(currentLocalTime);
 
@@ -197,8 +204,7 @@
                     }
                 });
 
-                var controlGoToTime = $('.daqview-go-to-time');
-                controlGoToTime.on('click', function (){
+                var goToTime = function () {
                     snapshotProvider.switchToGotoTimeRequests();
                     snapshotProvider.provideOneMoreSnapshotAndStop(1); //calling with arg 1 will draw the requested snapshot with the paused_page color scheme, then stop updating
 
@@ -210,13 +216,75 @@
                     //updating play/pause button, because point queries essentially stop real-time monitoring
                     //the provider will stop itself once a gototime request is received (after providing this last snapshot)
                     $('.daqview-control-pause-resume').prop('src', 'dist/img/play.png');
+                };
+
+                var goToTimeInput = $('#daqview-go-to-time-input');
+
+                goToTimeInput.val(moment().format("YYYY-MM-DD HH:mm:ss"));
+
+                goToTimeInput.daterangepicker({
+                    "singleDatePicker": true,
+                    "timePicker": true,
+                    "timePicker24Hour": true,
+                    "timePickerSeconds": true,
+                    "autoUpdateInput": false,
+                    "locale": {
+                        "format": "YYYY-MM-DD HH:mm:ss",
+                        "applyLabel": "Load"
+                    },
+                    "parentEl": $('.daqview-top-row'),
+                    startDate: moment(),
+                    endDate: moment()
                 });
+
+                goToTimeInput.on('apply.daterangepicker', function(ev, picker) {
+                    goToTimeInput.val(picker.startDate.format("YYYY-MM-DD HH:mm:ss"));
+                    goToTime();
+                });
+
+                goToTimeInput.keypress(function(e) {
+                    if(e.which === 13) {
+                        goToTime();
+                    }
+                });
+
+                var controlGoToTime = $('.daqview-go-to-time');
+                controlGoToTime.on('click', goToTime);
+
+                var mapOfMonths =
+                    {
+                        "Jan" : "01",
+                        "Feb" : "02",
+                        "Mar" : "03",
+                        "Apr" : "04",
+                        "May" : "05",
+                        "Jun" : "06",
+                        "Jul" : "07",
+                        "Aug" : "08",
+                        "Sep" : "09",
+                        "Oct" : "10",
+                        "Nov" : "11",
+                        "Dec" : "12"
+                    };
+
+                var formatLocalDate = function(newDateTargetInMillis){
+                    var localTimestampElements = (new Date(newDateTargetInMillis).toString()).split(" ");
+
+                    //keep Month, Day, Year, Time (discard Weekday and timezone info)
+                    var formattedLocalTimestamp = localTimestampElements[3]+"-"+mapOfMonths[localTimestampElements[1]]+"-"+localTimestampElements[2]+" "+localTimestampElements[4];
+
+                    return formattedLocalTimestamp;
+                };
 
                 //if time parameter is found, then this request should return a static display at the requested timestamp
                 if (typeof queryString.time != 'undefined'){
                     console.log("page loaded with 'time' parameter(s): "+queryString.time);
-                    $('#daqview-go-to-time-input').val(queryString.time.replace(/-/g, " "));
-                    $('.daqview-go-to-time').click();
+                    var newDateTargetInMillis = moment(queryString.time, "YYYY-MM-DD-HH-mm-ss").valueOf();
+                    var newDateTargetFormatted = formatLocalDate(newDateTargetInMillis);
+                    goToTimeInput.val(newDateTargetFormatted);
+                    goToTimeInput.data('daterangepicker').setStartDate(newDateTargetFormatted);
+                    goToTimeInput.data('daterangepicker').setEndDate(newDateTargetFormatted);
+                    goToTime();
                 }
 
                 var controlPlus = $('.daqview-go-to-time-add');
@@ -225,41 +293,20 @@
                 controlPlus.on('click', function(){
                     var newDateTargetInMillis = snapshotSource.currentSnapshotTimestamp + 1000*($('#daqview-nav-step-input').val());
                     var newDateTargetFormatted = formatLocalDate(newDateTargetInMillis);
-                    $('#daqview-go-to-time-input').val(newDateTargetFormatted); //pointer to id
-                    $('.daqview-go-to-time').click(); //pointer to class
+                    goToTimeInput.val(newDateTargetFormatted);
+                    goToTimeInput.data('daterangepicker').setStartDate(newDateTargetFormatted);
+                    goToTimeInput.data('daterangepicker').setEndDate(newDateTargetFormatted);
+                    goToTime();
                 });
 
                 controlMinus.on('click', function(){
                     var newDateTargetInMillis = snapshotSource.currentSnapshotTimestamp - 1000*($('#daqview-nav-step-input').val());
                     var newDateTargetFormatted = formatLocalDate(newDateTargetInMillis);
-                    $('#daqview-go-to-time-input').val(newDateTargetFormatted);
-                    $('.daqview-go-to-time').click();
+                    goToTimeInput.val(newDateTargetFormatted);
+                    goToTimeInput.data('daterangepicker').setStartDate(newDateTargetFormatted);
+                    goToTimeInput.data('daterangepicker').setEndDate(newDateTargetFormatted);
+                    goToTime();
                 });
-
-                var formatLocalDate = function(newDateTargetInMillis){
-                    var localTimestampElements = (new Date(newDateTargetInMillis).toString()).split(" ");
-
-                    //keep Month, Day, Year, Time (discard Weekday and timezone info)
-                    var formattedLocalTimestamp = localTimestampElements[3]+" "+mapOfMonths[localTimestampElements[1]]+" "+localTimestampElements[2]+" "+localTimestampElements[4];
-
-                    return formattedLocalTimestamp;
-                };
-
-                var mapOfMonths =
-                {
-                    "Jan" : "01",
-                    "Feb" : "02",
-                    "Mar" : "03",
-                    "Apr" : "04",
-                    "May" : "05",
-                    "Jun" : "06",
-                    "Jul" : "07",
-                    "Aug" : "08",
-                    "Sep" : "09",
-                    "Oct" : "10",
-                    "Nov" : "11",
-                    "Dec" : "12"
-                };
 
                 //setting values in links of the upper left corner
                 $('#dvhomelink').attr("href",daqviewLinks.controller);
@@ -270,6 +317,33 @@
             catch (exception) {
                 console ? (console.debug ? console.debug(exception) : console.log(exception)) : alert(exception);
             }
+
+            var clipboard = new Clipboard('.button-share', {
+                text : function() {
+                    return DAQViewGUIUtility.getSharableLink();
+                }
+            });
+
+            clipboard.on('success', function(e) {
+                setTooltip(e.trigger, 'Link copied!');
+                hideTooltip(e.trigger);
+            });
+
+            clipboard.on('error', function(e) {
+                setTooltip(e.trigger, 'Failed!');
+                hideTooltip(e.trigger);
+            });
+
+            function setTooltip(btn, message) {
+                $(btn).html(message);
+            }
+
+            function hideTooltip(btn) {
+                setTimeout(function() {
+                    $(btn).html("Share");
+                }, 1000);
+            }
+
         });
 
     </script>
@@ -302,7 +376,7 @@
             </td>
             <td width="20%" align="center" valign="center">
                 <div id="daqview-time-navigation-goto">
-                    <input type="text" placeholder="e.g.: 2017 03 23 12:00:04" id="daqview-go-to-time-input">
+                    <input type="text" placeholder="click to select" id="daqview-go-to-time-input">
                     <input type="submit" value="Go to time" class="daqview-go-to-time">
                 </div>
             </td>
@@ -320,7 +394,7 @@
     <br/><br/>
     <div id="daqview-react-about-table"><div class="loader"></div></div>
     <br/><br/>
-    <div class="daqview-version-id">Version 1.0.0</div>
+    <div class="daqview-version-id">Version 1.2.2</div>
 </div>
 </body>
 </html>

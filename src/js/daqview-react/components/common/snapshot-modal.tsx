@@ -10,7 +10,6 @@
 namespace DAQView {
 
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
-    import DAQ = DAQAggregator.Snapshot.DAQ;
 
     export class SnapshotModal implements DAQView.DAQSnapshotView {
         public htmlRootElement: Element;
@@ -55,8 +54,10 @@ namespace DAQView {
     class SnapshotModalElement extends React.Component<SnapshotModalElementProperties,{}> {
         render() {
             return (
+                <div>
+                    <button className="button-share">Share</button>
                     <a href={this.props.url} target="_blank"><button className="button-snapshot">See raw DAQ snapshot</button></a>
-        );
+                </div>);
         }
     }
 
@@ -71,4 +72,6 @@ namespace DAQView {
             );
         }
     }
+
+
 }

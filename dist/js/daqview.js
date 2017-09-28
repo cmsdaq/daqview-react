@@ -1,3 +1,4 @@
+"use strict";
 /**
  * @author Michail Vougioukas
  * @author Philipp Brummer
@@ -38,6 +39,16 @@ var DAQView;
         };
         DAQViewReact.prototype.createMetadataTableImpl = function (elementName) {
             var newTable = new DAQView.MetadataTable(elementName);
+            if (this.snapshotViews[elementName]) {
+                throw new Error('Element already has a view attached: ' + elementName);
+            }
+            this.snapshotViews[elementName] = newTable;
+        };
+        DAQViewReact.prototype.createDTTable = function (elementName) {
+            this.createDeadTimeTable(elementName);
+        };
+        DAQViewReact.prototype.createDeadTimeTable = function (elementName) {
+            var newTable = new DAQView.DeadTimeTable(elementName);
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }

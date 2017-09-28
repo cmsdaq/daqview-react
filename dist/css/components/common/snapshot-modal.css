@@ -1,4 +1,4 @@
-.button-snapshot {
+.button-snapshot, .button-share  {
     border: 1px dotted #999;
     border-radius: 0;
     height: auto;

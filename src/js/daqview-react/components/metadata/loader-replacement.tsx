@@ -37,6 +37,10 @@ namespace DAQView {
     }
 
     class LoaderReplacementElement extends React.Component<LoaderReplacementElementProperties,{}> {
+        shouldComponentUpdate() {
+            return false;
+        }
+
         render() {
             return (
                 <p>{this.props.placeholder}</p>

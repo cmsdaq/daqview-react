@@ -23,4 +23,18 @@ namespace DAQViewGUIUtility {
         return parameters;
     }
 
+    /**
+     * Script for generating links to share expert browser view
+     */
+
+    let sharableLink:string = null;
+
+    export function getSharableLink(): string {
+        console.log("Getting sharable link " + sharableLink)
+        return sharableLink
+    }
+
+    export function setSharableLink(url:string){
+        sharableLink = url
+    }
 }
