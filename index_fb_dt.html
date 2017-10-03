@@ -147,11 +147,11 @@
 
                         var currentLocalTime = goToTimeInput.val();
 
-                        var timestamp=Date.parse(currentLocalTime);
+                        var timestamp = moment(currentLocalTime);
 
                         var currentTime = '';
-                        if (isNaN(timestamp)==false){
-                            currentTime=new Date(timestamp).toISOString();
+                        if (timestamp.isValid()){
+                            currentTime = timestamp.toISOString();
                         }
 
                         var ret = baseURL + timestampDelim + currentTime + timestampDelim;
