@@ -6,7 +6,7 @@
 var DAQViewUtility;
 (function (DAQViewUtility) {
     function forEachOwnObjectProperty(object, callback) {
-        for (var property in object) {
+        for (let property in object) {
             if (object.hasOwnProperty(property)) {
                 callback(property);
             }
@@ -25,10 +25,10 @@ var DAQViewUtility;
         }
         if (a['@id'] !== b['@id'])
             return false;
-        for (var key in a) {
+        for (let key in a) {
             if (a.hasOwnProperty(key)) {
-                var value = a[key];
-                var valueType = typeof (value);
+                let value = a[key];
+                let valueType = typeof (value);
                 if (value === null || isPrimitiveType(valueType)) {
                     if (value !== b[key])
                         return false;

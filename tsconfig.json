@@ -1,13 +1,16 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
     "alwaysStrict": true,
     "outDir": "./dist/js/",
     "sourceMap": false,
     "noImplicitAny": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "jsx": "react",
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
   "exclude": [
     "node_modules"

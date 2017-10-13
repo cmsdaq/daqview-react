@@ -70,6 +70,7 @@ const defaultConfiguration = configurations.pro;
 const releaseContent = [
     "index.html",
     "index_fb.html",
+    "index_fb_dt.html",
     "index_fff.html",
     "fbtablehelp.html",
     "ffftablehelp.html",

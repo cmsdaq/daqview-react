@@ -84,8 +84,8 @@ namespace DAQView {
         [
             "Global TTS",
             "State",
-            "% Busy",
-            "% Warning",
+            // "% Busy",
+            // "% Warning",
             "Deadtime",
             "Beamactive Deadtime"
         ];
@@ -206,7 +206,7 @@ namespace DAQView {
             });
 
             let tableValuesPerRow: string[][] =
-                [stateRowValues, busyRowValues, warningRowValues, deadtimeRowValues, beamactiveDeadtimeRowValues];
+                [stateRowValues, /* busyRowValues, warningRowValues, */ deadtimeRowValues, beamactiveDeadtimeRowValues];
 
             let tableRows: any[] = [];
             for (let i: number = 1; i < DEADTIME_TABLE_HEADERS.length; i++) {

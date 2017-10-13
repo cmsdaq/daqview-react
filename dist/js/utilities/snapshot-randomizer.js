@@ -4,19 +4,17 @@
  */
 var DAQAggregator;
 (function (DAQAggregator) {
-    var TYPE_STRING = 'string';
-    var TYPE_NUMBER = 'number';
-    var TYPE_OBJECT = 'object';
-    function randomizeSnapshot(snapshot, maxRecursion, recursion) {
-        if (maxRecursion === void 0) { maxRecursion = 10; }
-        if (recursion === void 0) { recursion = 0; }
+    const TYPE_STRING = 'string';
+    const TYPE_NUMBER = 'number';
+    const TYPE_OBJECT = 'object';
+    function randomizeSnapshot(snapshot, maxRecursion = 10, recursion = 0) {
         if (recursion >= maxRecursion) {
             return;
         }
-        for (var key in snapshot) {
+        for (let key in snapshot) {
             if (snapshot.hasOwnProperty(key)) {
-                var element = snapshot[key];
-                var type = typeof element;
+                let element = snapshot[key];
+                let type = typeof element;
                 if (type === TYPE_STRING) {
                 }
                 else if (type === TYPE_NUMBER) {

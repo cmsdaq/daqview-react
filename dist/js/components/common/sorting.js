@@ -4,21 +4,20 @@
  */
 var DAQView;
 (function (DAQView) {
-    var Sorting = (function () {
-        function Sorting(value, imagePath) {
+    class Sorting {
+        constructor(value, imagePath) {
             this.value = value;
             this.imagePath = imagePath;
         }
-        Sorting.prototype.toString = function () {
+        toString() {
             return this.value;
-        };
-        Sorting.prototype.getImagePath = function () {
+        }
+        getImagePath() {
             return this.imagePath;
-        };
-        Sorting.None = new Sorting('None', 'unsorted.png');
-        Sorting.Ascending = new Sorting('Ascending', 'sort_asc.png');
-        Sorting.Descending = new Sorting('Descending', 'sort_desc.png');
-        return Sorting;
-    }());
+        }
+    }
+    Sorting.None = new Sorting('None', 'unsorted.png');
+    Sorting.Ascending = new Sorting('Ascending', 'sort_asc.png');
+    Sorting.Descending = new Sorting('Descending', 'sort_desc.png');
     DAQView.Sorting = Sorting;
 })(DAQView || (DAQView = {}));
