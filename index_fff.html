@@ -308,11 +308,29 @@
                     goToTime();
                 });
 
-                //setting values in links of the upper left corner
-                $('#dvhomelink').attr("href",daqviewLinks.controller);
-                $('#dvalllink').attr("href",daqviewLinks.base_all+"?setup="+daqSetup);
-                $('#dvfblink').attr("href",daqviewLinks.base_fb+"?setup="+daqSetup);
-                $('#dvfbdtlink').attr("href",daqviewLinks.base_fbdt+"?setup="+daqSetup);
+                // setting values in links of the upper left corner
+
+                var getCurrentLinkParameters = function() {
+                    var parameters = "?setup=" + daqSetup;
+                    if (!snapshotProvider.isInRealTimePolling() || !snapshotProvider.isRunning()) {
+                        parameters += "&time=" + formatLocalDate(snapshotSource.currentSnapshotTimestamp);
+                    }
+                    return parameters;
+                };
+
+                $('#dvhomelink').attr("href", daqviewLinks.controller);
+
+                $('#dvalllink').on('click', function () {
+                    $(this).attr("href", daqviewLinks.base_all + getCurrentLinkParameters());
+                });
+
+                $('#dvfblink').on('click', function () {
+                    $(this).attr("href", daqviewLinks.base_fb + getCurrentLinkParameters());
+                });
+
+                $('#dvfbdtlink').on('click', function () {
+                    $(this).attr("href", daqviewLinks.base_fbdt + getCurrentLinkParameters());
+                });
 
             }
             catch (exception) {
