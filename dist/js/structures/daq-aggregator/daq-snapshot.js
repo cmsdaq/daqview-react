@@ -10,21 +10,20 @@
  */
 var DAQAggregator;
 (function (DAQAggregator) {
-    var Snapshot = (function () {
-        function Snapshot(snapshotObject) {
+    class Snapshot {
+        constructor(snapshotObject) {
             this.processSnapshot(snapshotObject);
         }
-        Snapshot.prototype.processSnapshot = function (snapshot) {
+        processSnapshot(snapshot) {
             this.snapshot = snapshot;
             this.daq = snapshot;
-        };
-        Snapshot.prototype.getDAQ = function () {
+        }
+        getDAQ() {
             return this.daq;
-        };
-        Snapshot.prototype.getUpdateTimestamp = function () {
+        }
+        getUpdateTimestamp() {
             return this.daq.lastUpdate;
-        };
-        return Snapshot;
-    }());
+        }
+    }
     DAQAggregator.Snapshot = Snapshot;
 })(DAQAggregator || (DAQAggregator = {}));

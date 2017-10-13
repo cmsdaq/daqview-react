@@ -4,14 +4,13 @@
  */
 var FormatUtility;
 (function (FormatUtility) {
-    var KILO = 1E3;
-    var MEGA = 1E6;
-    var GIGA = 1E9;
-    var TERA = 1E12;
-    function formatSINumber(number, fractionDigits) {
-        if (fractionDigits === void 0) { fractionDigits = 1; }
-        var result;
-        var suffix = '';
+    const KILO = 1E3;
+    const MEGA = 1E6;
+    const GIGA = 1E9;
+    const TERA = 1E12;
+    function formatSINumber(number, fractionDigits = 1) {
+        let result;
+        let suffix = '';
         if (number < KILO) {
             result = number;
         }
@@ -31,8 +30,8 @@ var FormatUtility;
     }
     FormatUtility.formatSINumber = formatSINumber;
     function getClassNameForNumber(number, format) {
-        var baseStyle = format.baseStyle;
-        var style = '';
+        let baseStyle = format.baseStyle;
+        let style = '';
         if (format.formats) {
             format.formats.some(function (format) {
                 if (typeof format.min === 'undefined' || number >= format.min) {
@@ -43,7 +42,7 @@ var FormatUtility;
                 }
             });
         }
-        var classes;
+        let classes;
         if (style !== '') {
             classes = classNames(baseStyle, style);
         }
@@ -53,9 +52,8 @@ var FormatUtility;
         return classes;
     }
     FormatUtility.getClassNameForNumber = getClassNameForNumber;
-    function toFixedNumber(number, fractionDigits, base) {
-        if (base === void 0) { base = 10; }
-        var factor = Math.pow(base, fractionDigits);
+    function toFixedNumber(number, fractionDigits, base = 10) {
+        let factor = Math.pow(base, fractionDigits);
         return Math.round(number * factor) / factor;
     }
     FormatUtility.toFixedNumber = toFixedNumber;

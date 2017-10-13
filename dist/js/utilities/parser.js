@@ -4,14 +4,14 @@
  */
 var DAQAggregator;
 (function (DAQAggregator) {
-    var SnapshotParser = (function () {
-        function SnapshotParser() {
+    class SnapshotParser {
+        constructor() {
             this.big_map = {};
             this.level = 1;
             this.replacerRecursions = 0;
             this.snapshot = {};
         }
-        SnapshotParser.prototype.parse = function (snapshot) {
+        parse(snapshot) {
             this.replacerRecursions = 0;
             this.big_map = {}; //flush old objects
             this.snapshot = snapshot;
@@ -26,9 +26,9 @@ var DAQAggregator;
                 return null;
             }
             return new DAQAggregator.Snapshot(this.big_map['DAQ']);
-        };
-        SnapshotParser.getFieldType = function (field) {
-            var ret = typeof field;
+        }
+        static getFieldType(field) {
+            let ret = typeof field;
             if ((ret == 'object') && (field instanceof Array)) {
                 ret = 'array';
             }
@@ -36,8 +36,8 @@ var DAQAggregator;
                 ret = 'null';
             }
             return ret;
-        };
-        SnapshotParser.prototype.explore = function (obj) {
+        }
+        explore(obj) {
             for (var key in obj) {
                 var elem = obj[key];
                 //stores all objects with an @id attribute
@@ -76,8 +76,8 @@ var DAQAggregator;
                     this.level--; //will pass to father
                 }
             }
-        };
-        SnapshotParser.prototype.scanAndReplace = function (obj) {
+        }
+        scanAndReplace(obj) {
             this.replacerRecursions++;
             /*this allows for a snapshot with up to 5 times more elements than the typical snapshot in late 2016,
              if this is reached, then probably there is something wrong with the snapshot, causing infinite recursion over elements...
@@ -100,9 +100,9 @@ var DAQAggregator;
                 if (replaceContent) {
                     //array of references, object of values which are references, single field reference
                     if (elemTypeLiteral == 'array') {
-                        var arr = [];
-                        var elemArray = elem;
-                        for (var idx = 0; idx < elemArray.length; idx++) {
+                        let arr = [];
+                        let elemArray = elem;
+                        for (let idx = 0; idx < elemArray.length; idx++) {
                             arr[idx] = this.big_map[elemArray[idx]];
                         }
                         obj[key] = arr;
@@ -123,34 +123,29 @@ var DAQAggregator;
                     delete (obj[key]);
                 }
             }
-        };
-        return SnapshotParser;
-    }());
-    DAQAggregator.SnapshotParser = SnapshotParser;
-    var RUWarnMessageAggregator = (function () {
-        function RUWarnMessageAggregator() {
         }
-        RUWarnMessageAggregator.prototype.resolveRUWarnings = function (snapshot) {
+    }
+    DAQAggregator.SnapshotParser = SnapshotParser;
+    class RUWarnMessageAggregator {
+        resolveRUWarnings(snapshot) {
             //retrieve and assign warning messages to RUs
-            var rus = snapshot.getDAQ().rus;
-            for (var idx = 0; idx < rus.length; idx++) {
+            let rus = snapshot.getDAQ().rus;
+            for (let idx = 0; idx < rus.length; idx++) {
                 rus[idx].fedsWithErrors = this.getFedWithErrorsForRU(rus[idx]);
             }
             return snapshot;
-        };
+        }
         //returns FED for this RU (excluding pseudofeds), by expectedId, if they contain error or withoutFragments warning
-        RUWarnMessageAggregator.prototype.getFedWithErrorsForRU = function (ru) {
+        getFedWithErrorsForRU(ru) {
             //fed: warnings
-            var fedsWithErrors = [];
+            let fedsWithErrors = [];
             //iterate all messages from feds
-            var fedBuilder = ru.fedBuilder;
-            for (var _i = 0, _a = fedBuilder.subFedbuilders; _i < _a.length; _i++) {
-                var subFEDBuilder = _a[_i];
-                for (var _b = 0, _c = subFEDBuilder.frls; _b < _c.length; _b++) {
-                    var frl = _c[_b];
-                    var feds = frl.feds;
+            let fedBuilder = ru.fedBuilder;
+            for (var subFEDBuilder of fedBuilder.subFedbuilders) {
+                for (var frl of subFEDBuilder.frls) {
+                    let feds = frl.feds;
                     for (var fedSlot in feds) {
-                        var fed = feds[fedSlot];
+                        let fed = feds[fedSlot];
                         if (fed.ruFedWithoutFragments || fed.ruFedInError) {
                             fedsWithErrors.push(fed); //fed indexed by its expectedSrcId
                         }
@@ -158,18 +153,15 @@ var DAQAggregator;
                 }
             }
             return fedsWithErrors;
-        };
-        return RUWarnMessageAggregator;
-    }());
-    DAQAggregator.RUWarnMessageAggregator = RUWarnMessageAggregator;
-    var RUMaskedCounter = (function () {
-        function RUMaskedCounter() {
         }
-        RUMaskedCounter.prototype.countMaskedRUs = function (snapshot) {
+    }
+    DAQAggregator.RUWarnMessageAggregator = RUWarnMessageAggregator;
+    class RUMaskedCounter {
+        countMaskedRUs(snapshot) {
             //retrieve and assign warning messages to RUs
-            var rus = snapshot.getDAQ().rus;
-            var rusMasked = 0;
-            for (var idx = 0; idx < rus.length; idx++) {
+            let rus = snapshot.getDAQ().rus;
+            let rusMasked = 0;
+            for (let idx = 0; idx < rus.length; idx++) {
                 if (rus[idx].masked) {
                     rusMasked++;
                 }
@@ -177,26 +169,22 @@ var DAQAggregator;
             snapshot.getDAQ().fedBuilderSummary.rusMasked = rusMasked;
             //console.log(rusMasked);
             return snapshot;
-        };
-        return RUMaskedCounter;
-    }());
-    DAQAggregator.RUMaskedCounter = RUMaskedCounter;
-    var BUNoRateCounter = (function () {
-        function BUNoRateCounter() {
         }
-        BUNoRateCounter.prototype.countNoRateBUs = function (snapshot) {
+    }
+    DAQAggregator.RUMaskedCounter = RUMaskedCounter;
+    class BUNoRateCounter {
+        countNoRateBUs(snapshot) {
             //retrieve and assign warning messages to RUs
-            var bus = snapshot.getDAQ().bus;
-            var busNoRate = 0;
-            for (var idx = 0; idx < bus.length; idx++) {
+            let bus = snapshot.getDAQ().bus;
+            let busNoRate = 0;
+            for (let idx = 0; idx < bus.length; idx++) {
                 if (bus[idx].rate == 0) {
                     busNoRate++;
                 }
             }
             snapshot.getDAQ().buSummary.busNoRate = busNoRate;
             return snapshot;
-        };
-        return BUNoRateCounter;
-    }());
+        }
+    }
     DAQAggregator.BUNoRateCounter = BUNoRateCounter;
 })(DAQAggregator || (DAQAggregator = {}));
