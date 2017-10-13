@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "daqview-react",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "license": "Apache 2.0",
   "description": "client-side daqview prototype using React JS",
   "repository": "https://github.com/cmsdaq/daqview-react",
