@@ -1709,21 +1709,27 @@ namespace DAQView {
 
             let ttsStateClasses: string = classNames('fb-table-fed-tts-state', fedIdClasses);
 
-            let percentBackpressureDisplay: any = percentBackpressure > 0 ?
-                <span className="fb-table-fed-percent-backpressure">{'<'}{percentBackpressure.toFixed(1)}%</span> : '';
-
+            let percentBackpressureDisplay: any = '';
             let unexpectedSourceIdDisplay: any = '';
-            if (!(fed.frlMasked === true) && receivedSourceId != expectedSourceId && receivedSourceId != 0) {
-                unexpectedSourceIdDisplay =
-                    <span className="fb-table-fed-received-source-id">rcvSrcId:{receivedSourceId}</span>;
+            let fedCRCErrorDisplay: any = '';
+            let slinkCRCErrorDisplay: any = '';
+
+            if (displayFedId) {
+                percentBackpressureDisplay = percentBackpressure > 0 ?
+                    <span
+                        className="fb-table-fed-percent-backpressure">{'<'}{percentBackpressure.toFixed(1)}%</span> : '';
+
+                if (receivedSourceId != expectedSourceId && receivedSourceId != 0) {
+                    unexpectedSourceIdDisplay =
+                        <span className="fb-table-fed-received-source-id">rcvSrcId:{receivedSourceId}</span>;
+                }
+
+                fedCRCErrorDisplay = fedCRCErrors > 0 ?
+                    <span className="fb-table-fed-crc-errors">#FCRC={fedCRCErrors}</span> : '';
+
+                slinkCRCErrorDisplay = slinkCRCErrors > 0 ?
+                    <span className="fb-table-slink-crc-errors">#SCRC={slinkCRCErrors}</span> : '';
             }
-
-            let fedCRCErrorDisplay: any = fedCRCErrors > 0 ?
-                <span className="fb-table-fed-crc-errors">#FCRC={fedCRCErrors}</span> : '';
-
-            let slinkCRCErrorDisplay: any = slinkCRCErrors > 0 ?
-                <span className="fb-table-slink-crc-errors">#SCRC={slinkCRCErrors}</span> : '';
-
 
             return (
                 <span className="fb-table-fed">
