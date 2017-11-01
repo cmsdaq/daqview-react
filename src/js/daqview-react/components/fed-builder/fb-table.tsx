@@ -1431,7 +1431,7 @@ namespace DAQView {
                 ttcpPercWarn = ttsState;
                 ttcpPercBusy = ttsState;
             }
-            if (ttcPartition.topFMMInfo.nullCause){
+            if (ttcPartition.topFMMInfo && ttcPartition.topFMMInfo.nullCause){
                 ttcpPercWarn = ttcPartition.topFMMInfo.nullCause;
                 ttcpPercBusy = ttcPartition.topFMMInfo.nullCause;
             }
