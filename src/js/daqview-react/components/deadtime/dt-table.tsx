@@ -52,7 +52,7 @@ namespace DAQView {
             let tcdsGlobalInfo: TCDSGlobalInfo = this.snapshot.getDAQ().tcdsGlobalInfo;
 
             if (!tcdsGlobalInfo) {
-                console.error("No TCDS global info in snapshot.");
+                console.warn("No TCDS global info in snapshot.");
                 return;
             }
 
@@ -152,6 +152,11 @@ namespace DAQView {
             let globalTTSStates: {[key:string]: TTSState} = tcdsGlobalInfo.globalTtsStates;
             let deadTimes: DeadTimes = tcdsGlobalInfo.deadTimes;
 
+            if (!deadTimes) {
+                console.warn("No dead times in snapshot.");
+                return;
+            }
+
             // XXX: What does this do?
             let drawPausedComponents: boolean = this.props.drawPausedComponent;
             let drawZeroDataFlowComponents: boolean = this.props.drawZeroDataFlowComponent;
@@ -183,24 +188,32 @@ namespace DAQView {
                     let deadTime: number = entry.deadtimeIndex ? deadTimes[entry.deadtimeIndex] : null;
                     let beamactiveDeadTime: number = entry.deadtimeIndex ? deadTimes[DEADTIME_BEAMACTIVE_PREFIX + entry.deadtimeIndex] : null;
 
-                    if (ttsState !== null) {
-                        stateRowValues.push(ttsState.state.substring(0, 1));
-                        busyRowValues.push(ttsState.percentBusy.toFixed(1));
-                        warningRowValues.push(ttsState.percentWarning.toFixed(1));
-                    } else {
+                    if (ttsState === null) {
                         stateRowValues.push("");
                         busyRowValues.push("");
                         warningRowValues.push("");
-                    }
-                    if (deadTime !== null) {
-                        deadtimeRowValues.push(deadTime.toFixed(2));
+                    } else if (!ttsState) {
+                        stateRowValues.push("N/A");
+                        busyRowValues.push("N/A");
+                        warningRowValues.push("N/A");
                     } else {
+                        stateRowValues.push(ttsState.state.substring(0, 1));
+                        busyRowValues.push(ttsState.percentBusy.toFixed(1));
+                        warningRowValues.push(ttsState.percentWarning.toFixed(1));
+                    }
+                    if (deadTime === null) {
                         deadtimeRowValues.push("");
-                    }
-                    if (beamactiveDeadTime !== null) {
-                        beamactiveDeadtimeRowValues.push(beamactiveDeadTime.toFixed(2));
+                    } else if (!deadTime) {
+                        deadtimeRowValues.push("N/A");
                     } else {
+                        deadtimeRowValues.push(deadTime.toFixed(2));
+                    }
+                    if (beamactiveDeadTime === null) {
                         beamactiveDeadtimeRowValues.push("");
+                    } else if (!beamactiveDeadTime) {
+                        beamactiveDeadtimeRowValues.push("N/A");
+                    } else {
+                        beamactiveDeadtimeRowValues.push(beamactiveDeadTime.toFixed(2));
                     }
                 });
             });
