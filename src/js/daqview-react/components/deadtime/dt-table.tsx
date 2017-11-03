@@ -192,7 +192,7 @@ namespace DAQView {
                         stateRowValues.push("");
                         busyRowValues.push("");
                         warningRowValues.push("");
-                    } else if (!ttsState) {
+                    } else if (ttsState === undefined) {
                         stateRowValues.push("N/A");
                         busyRowValues.push("N/A");
                         warningRowValues.push("N/A");
@@ -203,14 +203,14 @@ namespace DAQView {
                     }
                     if (deadTime === null) {
                         deadtimeRowValues.push("");
-                    } else if (!deadTime) {
+                    } else if (deadTime === undefined) {
                         deadtimeRowValues.push("N/A");
                     } else {
                         deadtimeRowValues.push(deadTime.toFixed(2));
                     }
                     if (beamactiveDeadTime === null) {
                         beamactiveDeadtimeRowValues.push("");
-                    } else if (!beamactiveDeadTime) {
+                    } else if (beamactiveDeadTime === undefined) {
                         beamactiveDeadtimeRowValues.push("N/A");
                     } else {
                         beamactiveDeadtimeRowValues.push(beamactiveDeadTime.toFixed(2));
