@@ -102,7 +102,7 @@ var DAQView;
         render() {
             let tcdsGlobalInfo = this.props.tcdsGlobalInfo;
             let globalTTSStates = tcdsGlobalInfo.globalTtsStates;
-            let deadTimes = tcdsGlobalInfo.deadTimes;
+            let deadTimes = tcdsGlobalInfo.deadTimesInstant;
             if (!deadTimes) {
                 console.warn("No dead times in snapshot.");
                 return;

@@ -5,7 +5,7 @@
 
 namespace DAQView {
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
-    import DeadTimes = DAQAggregator.Snapshot.DeadTimes;
+    import DeadTimes = DAQAggregator.Snapshot.DeadTimesInstant;
     import TCDSGlobalInfo = DAQAggregator.Snapshot.TCDSGlobalInfo;
     import TTSState = DAQAggregator.Snapshot.TTSState;
 
@@ -150,7 +150,7 @@ namespace DAQView {
             let tcdsGlobalInfo: TCDSGlobalInfo = this.props.tcdsGlobalInfo;
 
             let globalTTSStates: {[key:string]: TTSState} = tcdsGlobalInfo.globalTtsStates;
-            let deadTimes: DeadTimes = tcdsGlobalInfo.deadTimes;
+            let deadTimes: DeadTimes = tcdsGlobalInfo.deadTimesInstant;
 
             if (!deadTimes) {
                 console.warn("No dead times in snapshot.");

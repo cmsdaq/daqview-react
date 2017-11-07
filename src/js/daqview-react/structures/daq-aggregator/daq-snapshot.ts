@@ -72,7 +72,7 @@ namespace DAQAggregator {
             tcdsControllerContext? : string;
             tcdsControllerServiceName? : string;
             globalTtsStates?: {[key:string]: TTSState};
-            deadTimes?: DeadTimes;
+            deadTimesInstant?: DeadTimesInstant;
         }
 
         export interface TTSState extends SnapshotElement {
@@ -320,7 +320,7 @@ namespace DAQAggregator {
             isPseudoFed: boolean; //variable set locally, using context information, for displays reason
         }
 
-        export interface DeadTimes extends SnapshotElement {
+        export interface DeadTimesInstant extends SnapshotElement {
             apve?: number;
             beamactive_apve?: number;
 
