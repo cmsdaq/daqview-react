@@ -104,8 +104,11 @@ var DAQView;
             let globalTTSStates = tcdsGlobalInfo.globalTtsStates;
             let deadTimes = tcdsGlobalInfo.deadTimesInstant;
             if (!deadTimes) {
-                console.warn("No dead times in snapshot.");
-                return;
+                console.warn("No deadtimes in snapshot.");
+                return (React.createElement("table", { className: "dt-table" },
+                    React.createElement("tbody", { className: "dt-table-body" },
+                        React.createElement("tr", { className: "dt-table-row-paused" },
+                            React.createElement("td", null, "The snapshot does not contain deadtime information.")))));
             }
             let drawPausedComponent = this.props.drawPausedComponent;
             let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;

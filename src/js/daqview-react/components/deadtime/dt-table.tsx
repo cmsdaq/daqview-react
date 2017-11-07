@@ -153,8 +153,16 @@ namespace DAQView {
             let deadTimes: DeadTimes = tcdsGlobalInfo.deadTimesInstant;
 
             if (!deadTimes) {
-                console.warn("No dead times in snapshot.");
-                return;
+                console.warn("No deadtimes in snapshot.");
+                return (
+                    <table className="dt-table">
+                        <tbody className="dt-table-body">
+                        <tr className="dt-table-row-paused">
+                            <td>The snapshot does not contain deadtime information.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                );
             }
 
             let drawPausedComponent: boolean = this.props.drawPausedComponent;
