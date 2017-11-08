@@ -5,7 +5,7 @@
 
 namespace DAQView {
     import DAQAggregatorSnapshot = DAQAggregator.Snapshot;
-    import DeadTimes = DAQAggregator.Snapshot.DeadTimesInstant;
+    import DeadTimes = DAQAggregator.Snapshot.DeadTimes;
     import TCDSGlobalInfo = DAQAggregator.Snapshot.TCDSGlobalInfo;
     import TTSState = DAQAggregator.Snapshot.TTSState;
 
@@ -51,11 +51,6 @@ namespace DAQView {
         private updateSnapshot() {
             let tcdsGlobalInfo: TCDSGlobalInfo = this.snapshot.getDAQ().tcdsGlobalInfo;
 
-            if (!tcdsGlobalInfo) {
-                console.warn("No TCDS global info in snapshot.");
-                return;
-            }
-
             let drawPausedComponent: boolean = this.drawPausedComponent;
             let drawZeroDataFlowComponent: boolean = this.drawZeroDataFlowComponent;
             let drawStaleSnapshot: boolean = this.drawStaleSnapshot;
@@ -79,16 +74,6 @@ namespace DAQView {
             );
         }
     }
-
-    const DEADTIME_TABLE_HEADERS: string[] =
-        [
-            "Global TTS",
-            "State",
-            // "% Busy",
-            // "% Warning",
-            "Deadtime",
-            "Beamactive Deadtime"
-        ];
 
     interface DeadtimeTableGroup {
         title: string;
@@ -138,7 +123,7 @@ namespace DAQView {
         ];
 
     interface DeadtimeTableElementProperties {
-        tcdsGlobalInfo: TCDSGlobalInfo;
+        tcdsGlobalInfo?: TCDSGlobalInfo;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
         drawStaleSnapshot: boolean;
@@ -149,10 +134,31 @@ namespace DAQView {
         render() {
             let tcdsGlobalInfo: TCDSGlobalInfo = this.props.tcdsGlobalInfo;
 
+            if (tcdsGlobalInfo === null || tcdsGlobalInfo === undefined) {
+                console.warn("No TCDS global info in snapshot.");
+                return (
+                    <table className="dt-table">
+                        <tbody className="dt-table-body">
+                        <tr className="dt-table-row-paused">
+                            <td>The snapshot does not contain global TCDS information.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                );
+            }
+
             let globalTTSStates: { [key: string]: TTSState } = tcdsGlobalInfo.globalTtsStates;
+
+            let deadTimesType: string = "Instant";
             let deadTimes: DeadTimes = tcdsGlobalInfo.deadTimesInstant;
 
-            if (!deadTimes) {
+            // if instant deadtimes are not available, check for per-lumisection deadtimes
+            if (deadTimes === null || deadTimes === undefined || Object.keys(deadTimes).length === 0) {
+                deadTimesType = "last LS";
+                deadTimes = tcdsGlobalInfo.deadTimes;
+            }
+
+            if (deadTimes === null || deadTimes === undefined || Object.keys(deadTimes).length === 0) {
                 console.warn("No deadtimes in snapshot.");
                 return (
                     <table className="dt-table">
@@ -228,9 +234,19 @@ namespace DAQView {
             let tableValuesPerRow: string[][] =
                 [stateRowValues, /* busyRowValues, warningRowValues, */ deadtimeRowValues, beamactiveDeadtimeRowValues];
 
+            const deadTimeTableHeaders: string[] =
+                [
+                    "Global TTS",
+                    "State",
+                    // "% Busy",
+                    // "% Warning",
+                    "Deadtime (" + deadTimesType + ")",
+                    "Beamactive Deadtime (" + deadTimesType + ")"
+                ];
+
             let tableRows: any[] = [];
-            for (let i: number = 1; i < DEADTIME_TABLE_HEADERS.length; i++) {
-                tableRows.push(<DeadtimeTableRow rowHead={DEADTIME_TABLE_HEADERS[i]}
+            for (let i: number = 1; i < deadTimeTableHeaders.length; i++) {
+                tableRows.push(<DeadtimeTableRow rowHead={deadTimeTableHeaders[i]}
                                                  rowValues={tableValuesPerRow[i - 1]}
                                                  drawPausedComponent={drawPausedComponent}
                                                  drawZeroDataFlowComponent={drawZeroDataFlowComponent}
@@ -241,7 +257,7 @@ namespace DAQView {
                 <table className="dt-table">
                     <thead className="dt-table-head">
                     <DeadtimeTableGroupHeaderRow groupHeaders={groupHeaders}/>
-                    <DeadtimeTableHeaderRow rowHead={DEADTIME_TABLE_HEADERS[0]} rowValues={headerRowValues}/>
+                    <DeadtimeTableHeaderRow rowHead={deadTimeTableHeaders[0]} rowValues={headerRowValues}/>
                     </thead>
                     <tbody className="dt-table-body">
                     {tableRows}
