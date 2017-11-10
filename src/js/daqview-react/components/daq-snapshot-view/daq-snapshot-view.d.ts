@@ -30,6 +30,7 @@ declare namespace DAQView {
         snapshotSource: SnapshotSourceConfiguration;
         daqviewLinks: DAQViewLinkConfiguration;
         externalLinks: ExternalLinkConfiguration;
+        expertSetups: string[];
 
         setupName: string;
     }
