@@ -6,17 +6,19 @@
 var DAQView;
 (function (DAQView) {
     class MetadataTable {
-        constructor(htmlRootElementName) {
+        constructor(htmlRootElementName, configuration) {
             this.drawPausedComponent = false;
             this.drawStaleSnapshot = false;
             this.runInfoTimelineLink = null;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
+            this.configuration = configuration;
         }
-        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             this.drawStaleSnapshot = drawStaleSnapshot;
             if (!snapshot) {
+                let url = this.configuration.snapshotSource.url + "?setup=" + this.configuration.setupName;
                 let msg = "Monitoring data unavailable: " + url;
                 let errRootElement = React.createElement(ErrorElement, { message: msg, details: "" });
                 ReactDOM.render(errRootElement, this.htmlRootElement);

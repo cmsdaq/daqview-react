@@ -6,7 +6,7 @@
 var DAQView;
 (function (DAQView) {
     class FileBasedFilterFarmTable {
-        constructor(htmlRootElementName) {
+        constructor(htmlRootElementName, configuration) {
             this.DEFAULT_PRESORT_FUNCTION = FFFTableSortFunctions.BU_HOSTNAME_ASC;
             this.INITIAL_SORT_FUNCTION = FFFTableSortFunctions.BU_HOSTNAME_ASC;
             this.INITIAL_PRESORT_FUNCTION = FFFTableSortFunctions.NONE;
@@ -43,7 +43,7 @@ var DAQView;
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             if (!snapshot) {
                 let msg = "";
                 let errRootElement = React.createElement(ErrorElement, { message: msg });

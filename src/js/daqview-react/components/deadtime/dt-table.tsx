@@ -18,11 +18,11 @@ namespace DAQView {
         private drawZeroDataFlowComponent: boolean = false;
         private drawStaleSnapshot: boolean = false;
 
-        constructor(htmlRootElementName: string) {
+        constructor(htmlRootElementName: string, configuration: DAQViewConfiguration) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent: boolean, drawStaleSnapshot: boolean, url: string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent: boolean, drawStaleSnapshot: boolean) {
             if (!snapshot) {
                 let msg: string = "";
                 let errRootElement: any = <ErrorElement message={msg}/>;

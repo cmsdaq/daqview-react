@@ -13,30 +13,31 @@ namespace DAQView {
 
     export class SnapshotModal implements DAQView.DAQSnapshotView {
         public htmlRootElement: Element;
+        private configuration: DAQViewConfiguration;
 
         private snapshot: DAQAggregatorSnapshot;
         private drawPausedComponent: boolean = false;
         private url: string = "";
 
-        constructor(htmlRootElementName: string) {
+        constructor(htmlRootElementName: string, configuration: DAQViewConfiguration) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
+            this.configuration = configuration;
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
-            this.url = url;
 
-            if (!snapshot){
+            if (!snapshot) {
                 let msg: string = "";
                 let errRootElement: any = <ErrorElement message={msg}/>;
                 ReactDOM.render(errRootElement, this.htmlRootElement);
-            }else{
+            } else {
+                let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+                this.url = this.configuration.snapshotSource.url + "?setup=" + this.configuration.setupName + "&time=\"" + new Date(snapshot.getUpdateTimestamp()).toISOString() + "\"";
 
-            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
-
-            let snapshotModalRootElement: any = <SnapshotModalElement daq={daq} url={url}/>;
-            ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
+                let snapshotModalRootElement: any = <SnapshotModalElement daq={daq} url={this.url}/>;
+                ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
             }
         }
 

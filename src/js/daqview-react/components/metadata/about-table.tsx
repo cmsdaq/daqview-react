@@ -13,11 +13,11 @@ namespace DAQView {
         private snapshot: DAQAggregatorSnapshot;
         private drawPausedComponent: boolean = false;
 
-        constructor(htmlRootElementName: string) {
+        constructor(htmlRootElementName: string, configuration: DAQViewConfiguration) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
 

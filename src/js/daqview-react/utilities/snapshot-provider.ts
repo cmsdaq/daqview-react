@@ -50,10 +50,10 @@ namespace DAQAggregator {
             );
         }
 
-        public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url: string) {
+        public setSnapshot(snapshot: Snapshot, drawPausedPage: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean) {
 
             this.views.forEach(
-                view => view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url));
+                view => view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot));
         }
 
         public isRunning(): boolean {
@@ -135,8 +135,9 @@ namespace DAQAggregator {
                             }
                         }
 
-                        //url argument is not used in a state of error, so I use it to pass more info about the error
-                        this.setSnapshot(snapshot, this.drawPausedPage, false, false, errorMsg); //maybe also pass message to setSnapshot?
+                        console.error(errorMsg);
+
+                        this.setSnapshot(snapshot, this.drawPausedPage, false, false); //maybe also pass message to setSnapshot?
                         //reset value after use
                         this.drawPausedPage = false;
                     }
@@ -217,15 +218,15 @@ namespace DAQAggregator {
                             this.prePassElementSpecificData(args);
 
                             console.log("drawPaused@provider? " + this.drawPausedPage);
-                            this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero, drawStaleSnapshot, urlToSnapshot); //passes snapshot source url to be used for the "see raw snapshot" button
+                            this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero, drawStaleSnapshot);
 
                             //in case there is a parsed snapshot, update pointer to previous snapshot with the more precise timestamp retrieved by the snapshot itself
                             this.previousUrl = url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
 
                         }else{
-                            console.log("DAQView was unable to parse snapshot...");
+                            console.error("DAQView was unable to parse snapshot...");
                             console.log(snapshotJSON);
-                            this.setSnapshot(snapshot, this.drawPausedPage, false, false, "Could not parse DAQ snapshot");
+                            this.setSnapshot(snapshot, this.drawPausedPage, false, false);
                         }
 
                         //reset value after use
@@ -240,9 +241,9 @@ namespace DAQAggregator {
                 }).bind(this));
 
                 snapshotRequest.fail((function (){
-                    console.log("Error in remote snapshot request, retrying after "+this.snapshotSource.updateInterval+" millis");
+                    console.error("Error in remote snapshot request, retrying after "+this.snapshotSource.updateInterval+" millis");
                     let snapshot: Snapshot;
-                    this.setSnapshot(snapshot, this.drawPausedPage, false, false, "Could not reach server for snapshots");
+                    this.setSnapshot(snapshot, this.drawPausedPage, false, false);
                     //reset value after use
                     this.drawPausedPage = false;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);

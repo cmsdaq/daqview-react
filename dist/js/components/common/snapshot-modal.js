@@ -9,15 +9,15 @@
 var DAQView;
 (function (DAQView) {
     class SnapshotModal {
-        constructor(htmlRootElementName) {
+        constructor(htmlRootElementName, configuration) {
             this.drawPausedComponent = false;
             this.url = "";
             this.htmlRootElement = document.getElementById(htmlRootElementName);
+            this.configuration = configuration;
         }
-        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
-            this.url = url;
             if (!snapshot) {
                 let msg = "";
                 let errRootElement = React.createElement(ErrorElement, { message: msg });
@@ -25,7 +25,8 @@ var DAQView;
             }
             else {
                 let daq = snapshot.getDAQ();
-                let snapshotModalRootElement = React.createElement(SnapshotModalElement, { daq: daq, url: url });
+                this.url = this.configuration.snapshotSource.url + "?setup=" + this.configuration.setupName + "&time=" + new Date(snapshot.getUpdateTimestamp()).toISOString();
+                let snapshotModalRootElement = React.createElement(SnapshotModalElement, { daq: daq, url: this.url });
                 ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
             }
         }

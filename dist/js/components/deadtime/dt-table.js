@@ -5,14 +5,14 @@
 var DAQView;
 (function (DAQView) {
     class DeadTimeTable {
-        constructor(htmlRootElementName) {
+        constructor(htmlRootElementName, configuration) {
             this.snapshot = null;
             this.drawPausedComponent = false;
             this.drawZeroDataFlowComponent = false;
             this.drawStaleSnapshot = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             if (!snapshot) {
                 let msg = "";
                 let errRootElement = React.createElement(ErrorElement, { message: msg });

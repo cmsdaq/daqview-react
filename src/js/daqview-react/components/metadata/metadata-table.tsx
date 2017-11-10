@@ -10,6 +10,7 @@ namespace DAQView {
 
     export class MetadataTable implements DAQView.DAQSnapshotView {
         public htmlRootElement: Element;
+        private configuration: DAQViewConfiguration;
 
         private snapshot: DAQAggregatorSnapshot;
         private drawPausedComponent: boolean = false;
@@ -17,17 +18,19 @@ namespace DAQView {
 
         private runInfoTimelineLink: string = null;
 
-        constructor(htmlRootElementName: string) {
+        constructor(htmlRootElementName: string, configuration: DAQViewConfiguration) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
+            this.configuration = configuration;
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             this.drawStaleSnapshot = drawStaleSnapshot;
 
             if (!snapshot){
-                let msg: string = "Monitoring data unavailable: "+url;
+                let url = this.configuration.snapshotSource.url + "?setup=" + this.configuration.setupName;
+                let msg: string = "Monitoring data unavailable: " + url;
                 let errRootElement: any = <ErrorElement message={msg} details={""}/>;
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }else{
