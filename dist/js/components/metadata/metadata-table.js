@@ -9,7 +9,7 @@ var DAQView;
         constructor(htmlRootElementName) {
             this.drawPausedComponent = false;
             this.drawStaleSnapshot = false;
-            this.runInfoTimelineLink = '';
+            this.runInfoTimelineLink = null;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
         setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
@@ -54,6 +54,13 @@ var DAQView;
             if (snapshotDebug.length > 1) {
                 snapshotOnHoverMessage = snapshotOnHoverMessage + "\n\n" + snapshotDebug;
             }
+            let runNumber = (this.props.runNumber ? this.props.runNumber : '0');
+            let snapshotRun = runNumber;
+            let snapshotSession = this.props.sessionId;
+            if (this.props.runInfoTimelineLink !== null) {
+                snapshotRun = React.createElement("a", { href: this.props.runInfoTimelineLink + "?run=" + runNumber, target: "_blank" }, runNumber);
+                snapshotSession = React.createElement("a", { href: this.props.runInfoTimelineLink + "?sessionId=" + this.props.sessionId, target: "_blank" }, this.props.sessionId);
+            }
             return (React.createElement("table", { className: "metadata-table" },
                 React.createElement("thead", { className: "metadata-table-head" },
                     React.createElement("tr", { className: "metadata-table-header-row" },
@@ -69,8 +76,7 @@ var DAQView;
                         React.createElement("th", null, "Snapshot time (local)"))),
                 React.createElement("tbody", { className: "metadata-table-body" },
                     React.createElement("tr", { className: "metadata-table-content-row" },
-                        React.createElement("td", null,
-                            React.createElement("a", { href: this.props.runInfoTimelineLink + "?run=" + (this.props.runNumber ? this.props.runNumber : '0'), target: "_blank" }, (this.props.runNumber ? this.props.runNumber : '0'))),
+                        React.createElement("td", null, snapshotRun),
                         React.createElement("td", null,
                             React.createElement("div", null, this.props.runStartTime ? this.formatHumanReadableTimestamp(this.props.runStartTime) : 'Not started'),
                             React.createElement("div", { className: "metadata-table-run-duration" }, durationDescription)),
@@ -79,8 +85,7 @@ var DAQView;
                         React.createElement("td", null, this.props.daqState),
                         React.createElement("td", null, this.props.machineState),
                         React.createElement("td", null, this.props.beamState),
-                        React.createElement("td", null,
-                            React.createElement("a", { href: this.props.runInfoTimelineLink + "?sessionId=" + this.props.sessionId, target: "_blank" }, this.props.sessionId)),
+                        React.createElement("td", null, snapshotSession),
                         React.createElement("td", null, this.props.dpSetPath),
                         React.createElement("td", { className: timestampClass },
                             React.createElement("div", { title: snapshotOnHoverMessage }, this.formatHumanReadableTimestamp(this.props.snapshotTimestamp)))))));

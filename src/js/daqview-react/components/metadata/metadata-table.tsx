@@ -15,7 +15,7 @@ namespace DAQView {
         private drawPausedComponent: boolean = false;
         private drawStaleSnapshot: boolean = false;
 
-        private runInfoTimelineLink: string = '';
+        private runInfoTimelineLink: string = null;
 
         constructor(htmlRootElementName: string) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
@@ -75,7 +75,7 @@ namespace DAQView {
         beamState?: string;
         drawPausedComponent: boolean;
         drawStaleSnapshot: boolean;
-        runInfoTimelineLink: string;
+        runInfoTimelineLink?: string;
         daqAggregatorVersion: string;
     }
 
@@ -111,6 +111,16 @@ namespace DAQView {
                 snapshotOnHoverMessage = snapshotOnHoverMessage + "\n\n" + snapshotDebug;
             }
 
+            let runNumber = (this.props.runNumber ? this.props.runNumber : '0');
+            let snapshotRun: any = runNumber;
+            let snapshotSession: any = this.props.sessionId;
+
+            if (this.props.runInfoTimelineLink !== null) {
+                snapshotRun = <a href={this.props.runInfoTimelineLink + "?run=" + runNumber}
+                                 target="_blank">{runNumber}</a>;
+                snapshotSession = <a href={this.props.runInfoTimelineLink + "?sessionId=" + this.props.sessionId}
+                                     target="_blank">{this.props.sessionId}</a>;
+            }
 
             return (
                 <table className="metadata-table">
@@ -130,7 +140,7 @@ namespace DAQView {
                     </thead>
                     <tbody className="metadata-table-body">
                     <tr className="metadata-table-content-row">
-                        <td><a href={this.props.runInfoTimelineLink+"?run="+(this.props.runNumber? this.props.runNumber : '0')} target="_blank">{(this.props.runNumber? this.props.runNumber : '0')}</a></td>
+                        <td>{snapshotRun}</td>
                         <td>
                             <div>{this.props.runStartTime ? this.formatHumanReadableTimestamp(this.props.runStartTime) : 'Not started'}</div>
                             <div className="metadata-table-run-duration">{durationDescription}</div>
@@ -140,7 +150,7 @@ namespace DAQView {
                         <td>{this.props.daqState}</td>
                         <td>{this.props.machineState}</td>
                         <td>{this.props.beamState}</td>
-                        <td><a href={this.props.runInfoTimelineLink+"?sessionId="+this.props.sessionId} target="_blank">{this.props.sessionId}</a></td>
+                        <td>{snapshotSession}</td>
                         <td>{this.props.dpSetPath}</td>
                         <td className={timestampClass}>
                             <div title={snapshotOnHoverMessage}>{this.formatHumanReadableTimestamp(this.props.snapshotTimestamp)}</div>
