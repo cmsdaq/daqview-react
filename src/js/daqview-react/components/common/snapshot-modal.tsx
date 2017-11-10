@@ -13,30 +13,45 @@ namespace DAQView {
 
     export class SnapshotModal implements DAQView.DAQSnapshotView {
         public htmlRootElement: Element;
+        private configuration: DAQViewConfiguration;
 
         private snapshot: DAQAggregatorSnapshot;
         private drawPausedComponent: boolean = false;
-        private url: string = "";
+        private rawSnapshotUrl: string = "";
+        private expertUrl: string = null;
+        private isExpertSetup: boolean = false;
 
-        constructor(htmlRootElementName: string) {
+        constructor(htmlRootElementName: string, configuration: DAQViewConfiguration) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
+            this.configuration = configuration;
+            this.isExpertSetup = this.configuration.expertSetups.some(setup => setup === this.configuration.setupName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
-            this.url = url;
 
-            if (!snapshot){
+            if (!snapshot) {
                 let msg: string = "";
                 let errRootElement: any = <ErrorElement message={msg}/>;
                 ReactDOM.render(errRootElement, this.htmlRootElement);
-            }else{
+            } else {
+                let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+                let time: number = snapshot.getUpdateTimestamp();
 
-            let daq: DAQAggregatorSnapshot.DAQ = snapshot.getDAQ();
+                let timeString: string = new Date(time).toISOString();
+                this.rawSnapshotUrl = this.configuration.snapshotSource.url + "?setup=" + this.configuration.setupName + "&time=\"" + timeString + "\"";
 
-            let snapshotModalRootElement: any = <SnapshotModalElement daq={daq} url={url}/>;
-            ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
+                if (this.isExpertSetup && this.configuration.externalLinks.daqExpert !== null) {
+                    // set expert browser range to 5 minutes before and after snapshot
+                    let expertStartTimeString = new Date(time - 300000).toISOString();
+                    let expertEndTimeString = new Date(time + 300000).toISOString();
+
+                    this.expertUrl = this.configuration.externalLinks.daqExpert + "?start=" + expertStartTimeString + "&end=" + expertEndTimeString;
+                }
+
+                let snapshotModalRootElement: any = <SnapshotModalElement expertUrl={this.expertUrl} rawSnapshotUrl={this.rawSnapshotUrl}/>;
+                ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
             }
         }
 
@@ -47,16 +62,22 @@ namespace DAQView {
     }
 
     interface SnapshotModalElementProperties {
-        daq: DAQAggregatorSnapshot.DAQ;
-        url: string;
+        rawSnapshotUrl: string;
+        expertUrl: string;
     }
 
     class SnapshotModalElement extends React.Component<SnapshotModalElementProperties,{}> {
         render() {
+            let expertUrlButton: any = "";
+            if (this.props.expertUrl !== null) {
+                expertUrlButton = <a href={this.props.expertUrl} target="_blank"><button className="button-expert">DAQExpert</button></a>;
+            }
+
             return (
                 <div>
                     <button className="button-share">Share</button>
-                    <a href={this.props.url} target="_blank"><button className="button-snapshot">See raw DAQ snapshot</button></a>
+                    {expertUrlButton}
+                    <a href={this.props.rawSnapshotUrl} target="_blank"><button className="button-snapshot">See raw DAQ snapshot</button></a>
                 </div>);
         }
     }

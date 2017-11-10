@@ -46,11 +46,11 @@ namespace DAQView {
             '#requests': Sorting.None
         };
 
-        constructor(htmlRootElementName: string) {
+        constructor(htmlRootElementName: string, configuration: DAQViewConfiguration) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean, url:string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent:boolean, drawStaleSnapshot:boolean) {
 
             if (!snapshot){
                 let msg: string = "";

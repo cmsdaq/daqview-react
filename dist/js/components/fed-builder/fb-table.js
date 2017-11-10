@@ -6,7 +6,7 @@
 var DAQView;
 (function (DAQView) {
     class FEDBuilderTable {
-        constructor(htmlRootElementName) {
+        constructor(htmlRootElementName, configuration) {
             this.DEFAULT_PRESORT_FUNCTION = FBTableSortFunctions.TTCP_ASC;
             this.INITIAL_SORT_FUNCTION = FBTableSortFunctions.TTCP_ASC;
             this.INITIAL_PRESORT_FUNCTION = FBTableSortFunctions.NONE;
@@ -36,7 +36,7 @@ var DAQView;
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             if (!snapshot) {
                 let msg = "";
                 let errRootElement = React.createElement(ErrorElement, { message: msg });

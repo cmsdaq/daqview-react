@@ -9,15 +9,18 @@
 var DAQView;
 (function (DAQView) {
     class SnapshotModal {
-        constructor(htmlRootElementName) {
+        constructor(htmlRootElementName, configuration) {
             this.drawPausedComponent = false;
-            this.url = "";
+            this.rawSnapshotUrl = "";
+            this.expertUrl = null;
+            this.isExpertSetup = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
+            this.configuration = configuration;
+            this.isExpertSetup = this.configuration.expertSetups.some(setup => setup === this.configuration.setupName);
         }
-        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
-            this.url = url;
             if (!snapshot) {
                 let msg = "";
                 let errRootElement = React.createElement(ErrorElement, { message: msg });
@@ -25,7 +28,16 @@ var DAQView;
             }
             else {
                 let daq = snapshot.getDAQ();
-                let snapshotModalRootElement = React.createElement(SnapshotModalElement, { daq: daq, url: url });
+                let time = snapshot.getUpdateTimestamp();
+                let timeString = new Date(time).toISOString();
+                this.rawSnapshotUrl = this.configuration.snapshotSource.url + "?setup=" + this.configuration.setupName + "&time=\"" + timeString + "\"";
+                if (this.isExpertSetup && this.configuration.externalLinks.daqExpert !== null) {
+                    // set expert browser range to 5 minutes before and after snapshot
+                    let expertStartTimeString = new Date(time - 300000).toISOString();
+                    let expertEndTimeString = new Date(time + 300000).toISOString();
+                    this.expertUrl = this.configuration.externalLinks.daqExpert + "?start=" + expertStartTimeString + "&end=" + expertEndTimeString;
+                }
+                let snapshotModalRootElement = React.createElement(SnapshotModalElement, { expertUrl: this.expertUrl, rawSnapshotUrl: this.rawSnapshotUrl });
                 ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
             }
         }
@@ -36,9 +48,15 @@ var DAQView;
     DAQView.SnapshotModal = SnapshotModal;
     class SnapshotModalElement extends React.Component {
         render() {
+            let expertUrlButton = "";
+            if (this.props.expertUrl !== null) {
+                expertUrlButton = React.createElement("a", { href: this.props.expertUrl, target: "_blank" },
+                    React.createElement("button", { className: "button-expert" }, "DAQExpert"));
+            }
             return (React.createElement("div", null,
                 React.createElement("button", { className: "button-share" }, "Share"),
-                React.createElement("a", { href: this.props.url, target: "_blank" },
+                expertUrlButton,
+                React.createElement("a", { href: this.props.rawSnapshotUrl, target: "_blank" },
                     React.createElement("button", { className: "button-snapshot" }, "See raw DAQ snapshot"))));
         }
     }

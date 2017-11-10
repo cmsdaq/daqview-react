@@ -5,11 +5,11 @@
 var DAQView;
 (function (DAQView) {
     class LoaderReplacement {
-        constructor(htmlRootElementName) {
+        constructor(htmlRootElementName, configuration) {
             this.drawPausedComponent = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             let loaderReplacementRootElement = React.createElement(LoaderReplacementElement, { placeholder: "" });

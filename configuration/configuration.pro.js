@@ -11,5 +11,8 @@ var daqviewLinks = {
 };
 
 var externalLinks = {
-    "runInfoTimeline": "http://cmsrc-srv.cms:9500/RunInfoTimeline/"
+    "runInfoTimeline": "http://cmsrc-srv.cms:9500/RunInfoTimeline/",
+    "daqExpert": "http://daq-expert.cms:8080/DAQExpert/"
 };
+
+var expertSetups = ["cdaq"];

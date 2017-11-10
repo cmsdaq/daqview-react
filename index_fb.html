@@ -43,20 +43,12 @@
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
     <script type="text/javascript" src="dist/js/daqview.js"></script>
-    <script type="text/javascript" src="link-configuration.js"></script>
+    <script type="text/javascript" src="configuration.js"></script>
 
     <script type="text/javascript">
         var daqView; //daqView is an object containing an array of the created views (page components)
         $(document).ready(function () {
             try {
-                daqView = new DAQView.DAQViewReact();
-                daqView.createMetadataTable('daqview-react-metadata-table');
-                daqView.createFBTable('daqview-react-fb-table');
-                daqView.createAboutTable('daqview-react-about-table');
-                daqView.createSnapshotModal('daqview-react-snapshot-modal');
-
-                //daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
-
                 // HACK: to avoid browser errors when loading local JSON
                 $.ajaxSetup({
                     beforeSend: function (xhr) {
@@ -116,6 +108,22 @@
                     developmentPlayback = true;
                 }
 
+                var daqViewConfiguration = {
+                    snapshotSource: snapshotSources,
+                    daqviewLinks: daqviewLinks,
+                    externalLinks: externalLinks,
+                    expertSetups: expertSetups,
+
+                    setupName: daqSetup
+                };
+
+                daqView = new DAQView.DAQViewReact(daqViewConfiguration);
+                daqView.createMetadataTable('daqview-react-metadata-table');
+                daqView.createFBTable('daqview-react-fb-table');
+                daqView.createAboutTable('daqview-react-about-table');
+                daqView.createSnapshotModal('daqview-react-snapshot-modal');
+
+                //daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
 
                 var snapshotSource = {
                     updateInterval: 1500,

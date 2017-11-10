@@ -54,15 +54,15 @@ const libPaths = {
 const configurations = {
     "dev": {
         name: "dev",
-        linkConfiguration: "configuration/link-configuration.dev.js"
+        configuration: "configuration/configuration.dev.js"
     },
     "pro": {
         name: "pro",
-        linkConfiguration: "configuration/link-configuration.pro.js"
+        configuration: "configuration/configuration.pro.js"
     },
     "904": {
         name: "904",
-        linkConfiguration: "configuration/link-configuration.904.js"
+        configuration: "configuration/configuration.904.js"
     }
 };
 
@@ -123,8 +123,8 @@ gulp.task("release", ["build"], function (cb) {
         }
     });
 
-    gulp.src(configuration.linkConfiguration)
-        .pipe(rename("link-configuration.js"))
+    gulp.src(configuration.configuration)
+        .pipe(rename("configuration.js"))
         .pipe(gulp.dest(releasePath));
 
     cb();

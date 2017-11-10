@@ -5,11 +5,11 @@
 var DAQView;
 (function (DAQView) {
     class AboutTable {
-        constructor(htmlRootElementName) {
+        constructor(htmlRootElementName, configuration) {
             this.drawPausedComponent = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
             let aboutTableRootElement = React.createElement(AboutTableElement, { project: "DAQView", authors: "Michail Vougioukas, Philipp Brummer", organization: "CERN CMS DAQ Group", year: "2016-2017" });

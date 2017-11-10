@@ -5,14 +5,14 @@
 var DAQView;
 (function (DAQView) {
     class DeadTimeTable {
-        constructor(htmlRootElementName) {
+        constructor(htmlRootElementName, configuration) {
             this.snapshot = null;
             this.drawPausedComponent = false;
             this.drawZeroDataFlowComponent = false;
             this.drawStaleSnapshot = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             if (!snapshot) {
                 let msg = "";
                 let errRootElement = React.createElement(ErrorElement, { message: msg });
@@ -40,10 +40,6 @@ var DAQView;
         }
         updateSnapshot() {
             let tcdsGlobalInfo = this.snapshot.getDAQ().tcdsGlobalInfo;
-            if (!tcdsGlobalInfo) {
-                console.warn("No TCDS global info in snapshot.");
-                return;
-            }
             let drawPausedComponent = this.drawPausedComponent;
             let drawZeroDataFlowComponent = this.drawZeroDataFlowComponent;
             let drawStaleSnapshot = this.drawStaleSnapshot;
@@ -57,14 +53,6 @@ var DAQView;
             return (React.createElement("div", null, this.props.message));
         }
     }
-    const DEADTIME_TABLE_HEADERS = [
-        "Global TTS",
-        "State",
-        // "% Busy",
-        // "% Warning",
-        "Deadtime",
-        "Beamactive Deadtime"
-    ];
     const DEADTIME_BEAMACTIVE_PREFIX = "beamactive_";
     const DEADTIME_TABLE_STRUCTURE = [
         {
@@ -101,9 +89,22 @@ var DAQView;
     class DeadtimeTableElement extends React.Component {
         render() {
             let tcdsGlobalInfo = this.props.tcdsGlobalInfo;
+            if (tcdsGlobalInfo === null || tcdsGlobalInfo === undefined) {
+                console.warn("No TCDS global info in snapshot.");
+                return (React.createElement("table", { className: "dt-table" },
+                    React.createElement("tbody", { className: "dt-table-body" },
+                        React.createElement("tr", { className: "dt-table-row-paused" },
+                            React.createElement("td", null, "The snapshot does not contain global TCDS information.")))));
+            }
             let globalTTSStates = tcdsGlobalInfo.globalTtsStates;
+            let deadTimesType = "Instant";
             let deadTimes = tcdsGlobalInfo.deadTimesInstant;
-            if (!deadTimes) {
+            // if instant deadtimes are not available, check for per-lumisection deadtimes
+            if (deadTimes === null || deadTimes === undefined || Object.keys(deadTimes).length === 0) {
+                deadTimesType = "last LS";
+                deadTimes = tcdsGlobalInfo.deadTimes;
+            }
+            if (deadTimes === null || deadTimes === undefined || Object.keys(deadTimes).length === 0) {
                 console.warn("No deadtimes in snapshot.");
                 return (React.createElement("table", { className: "dt-table" },
                     React.createElement("tbody", { className: "dt-table-body" },
@@ -169,14 +170,22 @@ var DAQView;
                 });
             });
             let tableValuesPerRow = [stateRowValues, /* busyRowValues, warningRowValues, */ deadtimeRowValues, beamactiveDeadtimeRowValues];
+            const deadTimeTableHeaders = [
+                "Global TTS",
+                "State",
+                // "% Busy",
+                // "% Warning",
+                "Deadtime (" + deadTimesType + ")",
+                "Beamactive Deadtime (" + deadTimesType + ")"
+            ];
             let tableRows = [];
-            for (let i = 1; i < DEADTIME_TABLE_HEADERS.length; i++) {
-                tableRows.push(React.createElement(DeadtimeTableRow, { rowHead: DEADTIME_TABLE_HEADERS[i], rowValues: tableValuesPerRow[i - 1], drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, drawStaleSnapshot: drawStaleSnapshot }));
+            for (let i = 1; i < deadTimeTableHeaders.length; i++) {
+                tableRows.push(React.createElement(DeadtimeTableRow, { rowHead: deadTimeTableHeaders[i], rowValues: tableValuesPerRow[i - 1], drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, drawStaleSnapshot: drawStaleSnapshot }));
             }
             return (React.createElement("table", { className: "dt-table" },
                 React.createElement("thead", { className: "dt-table-head" },
                     React.createElement(DeadtimeTableGroupHeaderRow, { groupHeaders: groupHeaders }),
-                    React.createElement(DeadtimeTableHeaderRow, { rowHead: DEADTIME_TABLE_HEADERS[0], rowValues: headerRowValues })),
+                    React.createElement(DeadtimeTableHeaderRow, { rowHead: deadTimeTableHeaders[0], rowValues: headerRowValues })),
                 React.createElement("tbody", { className: "dt-table-body" }, tableRows)));
         }
     }
