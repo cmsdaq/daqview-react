@@ -764,20 +764,17 @@ namespace DAQView {
                 buJobCrashStateDisplayClass = "fff-table-jobcrash";
             }
 
-
             let hostname: string = bu.hostname.split(".")[0];
-
 
             let buUrlDisplay: any = hostname;
             let buUrlDisplayClass: string = "fff-table-stale-member-wrapbox"; //assume stale and overwrite if not
             let buDebug: string = "Check problems with BU flashlist!";
 
-            if (bu.port !=null){
+            if (bu.port > 0){
                 buUrlDisplay = <a href={buUrl} target="_blank">{hostname}</a>;
                 buUrlDisplayClass = "";
                 buDebug = "";
             }
-
 
             let rate: number = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
             let throughput: number = FormatUtility.toFixedNumber(bu.throughput / 1000 / 1000, 1);
@@ -801,9 +798,6 @@ namespace DAQView {
             let requestsSentClass: string = FormatUtility.getClassNameForNumber(requestsSent!=null?requestsSent:0, FFFTableNumberFormats.REQUESTS_SENT);
             let requestsUsedClass: string = FormatUtility.getClassNameForNumber(requestsUsed!=null?requestsUsed:0, FFFTableNumberFormats.REQUESTS_USED);
             let requestsBlockedClass: string = FormatUtility.getClassNameForNumber(requestsBlocked!=null?requestsBlocked:0, FFFTableNumberFormats.REQUESTS_BLOCKED);
-
-
-
 
             //invert color when DAQ is stuck, because red colors are missed
             if (drawZeroDataFlowComponent && oddRow) {
@@ -861,8 +855,6 @@ namespace DAQView {
                     <td className={classNames("fff-table-bu-row-counter",FormatUtility.getClassNameForNumber(bu.fuOutputBandwidthInMB!=null?bu.fuOutputBandwidthInMB:0, FFFTableNumberFormats.BANDWIDTH))}>{bu.fuOutputBandwidthInMB!=null?bu.fuOutputBandwidthInMB.toFixed(2):'*'}</td>
 
                 </tr>
-
-
             );
         }
     }
