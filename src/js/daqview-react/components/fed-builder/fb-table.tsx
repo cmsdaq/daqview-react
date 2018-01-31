@@ -1321,26 +1321,37 @@ namespace DAQView {
             let subFedBuilder: DAQAggregatorSnapshot.SubFEDBuilder = this.props.subFedBuilder;
             let frlPc: DAQAggregatorSnapshot.FRLPc = subFedBuilder.frlPc;
 
-            let frlPcHostname: string = frlPc.hostname;
-            let frlPcPort: number = frlPc.port;
-            let frlPcName: string = frlPcHostname.split(".")[0];
+            let frlPcHostname: string = "";
+            let frlPcPort: number = 0;
+            let frlPcName: string = "";
+            let frlPcUrl: string = "";
 
-            frlPcName = frlPcName.indexOf('frlpc')==0 && frlPcName.indexOf('frlpc40')==-1? frlPcName.substring(6) : frlPcName;
-            frlPcName = frlPcName.indexOf('frlpc40')==0 ? frlPcName.substring(8) : frlPcName;
+            let frlPcUrlDisplay: any = "";
+            let frlPcUrlDisplayClass: string = "";
+            let frlPcDebug: string = "";
 
-            let frlPcUrl: string = 'http://' + frlPcHostname + ':'+frlPcPort;
-            let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
-            let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
+            if (frlPc != null) {
+                frlPcHostname = frlPc.hostname;
+                frlPcPort = frlPc.port;
+                frlPcName = frlPcHostname.split(".")[0];
 
-            let frlPcUrlDisplay: any = frlPcName;
-            let frlPcUrlDisplayClass: string = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
-            let frlPcDebug: string = "Check problems with FEROL_CONFIGURATION flashlist!";
+                frlPcName = frlPcName.indexOf('frlpc') == 0 && frlPcName.indexOf('frlpc40') == -1 ? frlPcName.substring(6) : frlPcName;
+                frlPcName = frlPcName.indexOf('frlpc40') == 0 ? frlPcName.substring(8) : frlPcName;
+                frlPcUrl = 'http://' + frlPcHostname + ':' + frlPcPort;
+
+                frlPcUrlDisplay = frlPcName;
+                frlPcUrlDisplayClass = "fb-table-stale-member-wrapbox"; //assume stale and overwrite if not
+                frlPcDebug = "Check problems with FEROL_CONFIGURATION flashlist!";
+            }
 
             if (frlPcPort > 0){
                 frlPcUrlDisplay = <a href={frlPcUrl} target="_blank">{frlPcName}</a>;
                 frlPcUrlDisplayClass = "";
                 frlPcDebug = "";
             }
+
+            let frls: DAQAggregatorSnapshot.FRL[] = subFedBuilder.frls;
+            let pseudoFeds: DAQAggregatorSnapshot.FED[] = subFedBuilder.feds;
 
             let additionalClasses: string | string[] = this.props.additionalClasses;
             let className: string = classNames("fb-table-subfb-row", additionalClasses);
@@ -1352,12 +1363,12 @@ namespace DAQView {
             let ttsStateTcdsApvPm: string  = ttcPartition.tcds_apv_pm_ttsState ? ttcPartition.tcds_apv_pm_ttsState.substring(0, 1) : 'x';
 
 
-            if (ttcPartition.tcdsPartitionInfo && ttcPartition.tcdsPartitionInfo.nullCause) {
+            if (ttcPartition.tcdsPartitionInfo != null && ttcPartition.tcdsPartitionInfo.nullCause) {
                 ttsStateTcdsPm = ttcPartition.tcdsPartitionInfo.nullCause;
                 ttsStateTcdsApvPm = ttcPartition.tcdsPartitionInfo.nullCause;
             }
 
-            if (ttcPartition.topFMMInfo && ttcPartition.topFMMInfo.nullCause){
+            if (ttcPartition.topFMMInfo != null && ttcPartition.topFMMInfo.nullCause){
                 ttsState = ttcPartition.topFMMInfo.nullCause;
             }else{
                 if (ttcPartition.masked){
@@ -1431,7 +1442,7 @@ namespace DAQView {
                 ttcpPercWarn = ttsState;
                 ttcpPercBusy = ttsState;
             }
-            if (ttcPartition.topFMMInfo && ttcPartition.topFMMInfo.nullCause){
+            if (ttcPartition.topFMMInfo != null && ttcPartition.topFMMInfo.nullCause){
                 ttcpPercWarn = ttcPartition.topFMMInfo.nullCause;
                 ttcpPercBusy = ttcPartition.topFMMInfo.nullCause;
             }
@@ -1464,14 +1475,14 @@ namespace DAQView {
 
             let frlpcStateDisplay: string = "";
             let frlpcStateDisplayClass: string = "";
-            if (frlPc.crashed){
+            if (frlPc != null && frlPc.crashed){
                 frlpcStateDisplay = "JobCrash";
                 frlpcStateDisplayClass = "fb-table-jobcrash";
             }
 
             let fmmAppStateDisplay: string = "";
             let fmmAppStateDisplayClass: string = "";
-            if (ttcPartition.fmm && ttcPartition.fmm.fmmApplication && ttcPartition.fmm.fmmApplication.crashed){
+            if (ttcPartition.fmm != null && ttcPartition.fmm.fmmApplication && ttcPartition.fmm.fmmApplication.crashed){
                 fmmAppStateDisplay = "JobCrash";
                 fmmAppStateDisplayClass = "fb-table-jobcrash";
             }
