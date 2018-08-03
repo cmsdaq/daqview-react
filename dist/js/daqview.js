@@ -11,90 +11,88 @@
 ///<reference path="utilities/daqview-util.ts"/>
 var DAQView;
 (function (DAQView) {
-    var DAQViewReact = (function () {
-        function DAQViewReact() {
+    class DAQViewReact {
+        constructor(configuration) {
             this.snapshotViews = {};
+            this.configuration = configuration;
         }
         //calls specific setSnapshot() definition of each daqview component type
-        DAQViewReact.prototype.setSnapshot = function (snapshot, drawPausedPage, drawZeroDataFlowPage, drawStaleSnapshot, url) {
-            var _this = this;
-            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowPage, drawStaleSnapshot, url); });
-        };
-        DAQViewReact.prototype.prePassElementSpecificData = function (args) {
-            var _this = this;
-            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, function (snapshotView) { return _this.snapshotViews[snapshotView].prePassElementSpecificData(args); });
-        };
-        DAQViewReact.prototype.createSnapshotModal = function (elementName) {
+        setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowPage, drawStaleSnapshot) {
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowPage, drawStaleSnapshot));
+        }
+        prePassElementSpecificData(args) {
+            DAQViewUtility.forEachOwnObjectProperty(this.snapshotViews, snapshotView => this.snapshotViews[snapshotView].prePassElementSpecificData(args));
+        }
+        createSnapshotModal(elementName) {
             this.createSnapshotModalImpl(elementName);
-        };
-        DAQViewReact.prototype.createSnapshotModalImpl = function (elementName) {
-            var newTable = new DAQView.SnapshotModal(elementName);
+        }
+        createSnapshotModalImpl(elementName) {
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }
+            let newTable = new DAQView.SnapshotModal(elementName, this.configuration);
             this.snapshotViews[elementName] = newTable;
-        };
-        DAQViewReact.prototype.createMetadataTable = function (elementName) {
+        }
+        createMetadataTable(elementName) {
             this.createMetadataTableImpl(elementName);
-        };
-        DAQViewReact.prototype.createMetadataTableImpl = function (elementName) {
-            var newTable = new DAQView.MetadataTable(elementName);
+        }
+        createMetadataTableImpl(elementName) {
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }
+            let newTable = new DAQView.MetadataTable(elementName, this.configuration);
             this.snapshotViews[elementName] = newTable;
-        };
-        DAQViewReact.prototype.createDTTable = function (elementName) {
+        }
+        createDTTable(elementName) {
             this.createDeadTimeTable(elementName);
-        };
-        DAQViewReact.prototype.createDeadTimeTable = function (elementName) {
-            var newTable = new DAQView.DeadTimeTable(elementName);
+        }
+        createDeadTimeTable(elementName) {
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }
+            let newTable = new DAQView.DeadTimeTable(elementName, this.configuration);
             this.snapshotViews[elementName] = newTable;
-        };
-        DAQViewReact.prototype.createFBTable = function (elementName) {
+        }
+        createFBTable(elementName) {
             this.createFEDBuilderTable(elementName);
-        };
-        DAQViewReact.prototype.createFEDBuilderTable = function (elementName) {
-            var newTable = new DAQView.FEDBuilderTable(elementName);
+        }
+        createFEDBuilderTable(elementName) {
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }
+            let newTable = new DAQView.FEDBuilderTable(elementName, this.configuration);
             this.snapshotViews[elementName] = newTable;
-        };
-        DAQViewReact.prototype.createFFFTable = function (elementName) {
+        }
+        createFFFTable(elementName) {
             this.createFileBasedFilterFarmTable(elementName);
-        };
-        DAQViewReact.prototype.createFileBasedFilterFarmTable = function (elementName) {
-            var newTable = new DAQView.FileBasedFilterFarmTable(elementName);
+        }
+        createFileBasedFilterFarmTable(elementName) {
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }
+            let newTable = new DAQView.FileBasedFilterFarmTable(elementName, this.configuration);
             this.snapshotViews[elementName] = newTable;
-        };
-        DAQViewReact.prototype.createAboutTable = function (elementName) {
+        }
+        createAboutTable(elementName) {
             this.createAboutTableImpl(elementName);
-        };
-        DAQViewReact.prototype.createAboutTableImpl = function (elementName) {
-            var newTable = new DAQView.AboutTable(elementName);
+        }
+        createAboutTableImpl(elementName) {
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }
+            let newTable = new DAQView.AboutTable(elementName, this.configuration);
             this.snapshotViews[elementName] = newTable;
-        };
-        DAQViewReact.prototype.createReplacementForLoader = function (elementName) {
+        }
+        createReplacementForLoader(elementName) {
             this.createReplacementForLoaderImpl(elementName);
-        };
-        DAQViewReact.prototype.createReplacementForLoaderImpl = function (elementName) {
-            var newTable = new DAQView.LoaderReplacement(elementName);
+        }
+        createReplacementForLoaderImpl(elementName) {
             if (this.snapshotViews[elementName]) {
                 throw new Error('Element already has a view attached: ' + elementName);
             }
+            let newTable = new DAQView.LoaderReplacement(elementName, this.configuration);
             this.snapshotViews[elementName] = newTable;
-        };
-        return DAQViewReact;
-    }());
+        }
+    }
     DAQView.DAQViewReact = DAQViewReact;
 })(DAQView || (DAQView = {}));

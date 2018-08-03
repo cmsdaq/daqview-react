@@ -12,6 +12,7 @@
     <link rel="StyleSheet" href="dist/css/daqview.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/metadata-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/fed-builder/fb-table.css" type="text/css"/>
+    <link rel="StyleSheet" href="dist/css/components/deadtime/dt-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/filter-farm/fff-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/about-table.css" type="text/css"/>
     <link rel="StyleSheet" href="dist/css/components/metadata/loader.css" type="text/css"/>
@@ -40,6 +41,7 @@
     <script type="text/javascript" src="dist/js/components/metadata/about-table.js"></script>
     <script type="text/javascript" src="dist/js/components/metadata/loader-replacement.js"></script>
     <script type="text/javascript" src="dist/js/components/common/snapshot-modal.js"></script>
+    <script type="text/javascript" src="dist/js/components/deadtime/dt-table.js"></script>
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
     <script type="text/javascript" src="dist/js/daqview.js"></script>
@@ -119,6 +121,7 @@
 
                 daqView = new DAQView.DAQViewReact(daqViewConfiguration);
                 daqView.createMetadataTable('daqview-react-metadata-table');
+                daqView.createDTTable('daqview-react-dt-table');
                 daqView.createFBTable('daqview-react-fb-table');
                 daqView.createAboutTable('daqview-react-about-table');
                 daqView.createSnapshotModal('daqview-react-snapshot-modal');
@@ -332,12 +335,12 @@
                     $(this).attr("href", daqviewLinks.base_all + getCurrentLinkParameters());
                 });
 
-                $('#dvffflink').on('click', function () {
-                    $(this).attr("href", daqviewLinks.base_fff + getCurrentLinkParameters());
+                $('#dvfblink').on('click', function () {
+                    $(this).attr("href", daqviewLinks.base_fb + getCurrentLinkParameters());
                 });
 
-                $('#dvfbdtlink').on('click', function () {
-                    $(this).attr("href", daqviewLinks.base_fbdt + getCurrentLinkParameters());
+                $('#dvffflink').on('click', function () {
+                    $(this).attr("href", daqviewLinks.base_fff + getCurrentLinkParameters());
                 });
 
             }
@@ -383,8 +386,8 @@
             <td width="20%" align="left" valign="center">
                 <a href="" id="dvhomelink" target="_blank"><button class="daqview-external-link">DAQView Home</button></a>
                 <a href="" id="dvalllink" target="_blank"><button class="daqview-external-link">All Tables</button></a>
+                <a href="" id="dvfblink" target="_blank"><button class="daqview-external-link">FB Table</button></a>
                 <a href="" id="dvffflink" target="_blank"><button class="daqview-external-link">FFF Table</button></a>
-                <a href="" id="dvfbdtlink" target="_blank"><button class="daqview-external-link">FB+DT Table</button></a>
             </td>
             <td width="20%" align="right" valign="center">
                 <div id="daqview-control">
@@ -418,6 +421,8 @@
     </table>
     <div id="daqview-react-metadata-table"></div>
     <p></p>
+    <div id="daqview-react-dt-table"></div>
+    <br/>
     <div id="daqview-react-fb-table"></div>
     <br/><br/>
     <div id="daqview-react-about-table"><div class="loader"></div></div>

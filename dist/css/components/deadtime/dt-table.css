@@ -20,11 +20,35 @@
     background-color: #DDDDAA;
 }
 
-.dt-table-row:nth-of-type(even) {
+.dt-table-row-stale-page:nth-of-type(even) {
+    background-color: #ffbe11;
+}
+
+.dt-table-row-stale-page:nth-of-type(odd) {
+    background-color:  #F5F2F2;
+}
+
+.dt-table-row-ratezero:nth-of-type(even) {
+    background-color: #EF4A50;
+}
+
+.dt-table-row-ratezero:nth-of-type(odd) {
+    background-color:  #F5F2F2;
+}
+
+.dt-table-row-running:nth-of-type(even) {
     background-color: #DDDDAA;
 }
 
-.dt-table-row:nth-of-type(odd) {
+.dt-table-row-running:nth-of-type(odd) {
+    background-color:  #F5F2F2;
+}
+
+.dt-table-row-paused:nth-of-type(even) {
+    background-color: #FFFFFF;
+}
+
+.dt-table-row-paused:nth-of-type(odd) {
     background-color:  #F5F2F2;
 }
 

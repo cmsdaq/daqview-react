@@ -3,20 +3,10 @@
  * @author Michail Vougioukas
  * @author Philipp Brummer
  */
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var DAQView;
 (function (DAQView) {
-    var FileBasedFilterFarmTable = (function () {
-        function FileBasedFilterFarmTable(htmlRootElementName) {
+    class FileBasedFilterFarmTable {
+        constructor(htmlRootElementName, configuration) {
             this.DEFAULT_PRESORT_FUNCTION = FFFTableSortFunctions.BU_HOSTNAME_ASC;
             this.INITIAL_SORT_FUNCTION = FFFTableSortFunctions.BU_HOSTNAME_ASC;
             this.INITIAL_PRESORT_FUNCTION = FFFTableSortFunctions.NONE;
@@ -53,10 +43,10 @@ var DAQView;
             };
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
-        FileBasedFilterFarmTable.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             if (!snapshot) {
-                var msg = "";
-                var errRootElement = React.createElement(ErrorElement, { message: msg });
+                let msg = "";
+                let errRootElement = React.createElement(ErrorElement, { message: msg });
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }
             else {
@@ -75,22 +65,22 @@ var DAQView;
                 this.drawStaleSnapshot = drawStaleSnapshot;
                 this.updateSnapshot();
             }
-        };
+        }
         //to be called before setSnapshot
-        FileBasedFilterFarmTable.prototype.prePassElementSpecificData = function (args) {
-        };
-        FileBasedFilterFarmTable.prototype.updateSnapshot = function () {
-            var sortedSnapshot = this.sort(this.snapshot);
-            var daq = sortedSnapshot.getDAQ();
-            var drawPausedComponent = this.drawPausedComponent;
-            var drawZeroDataFlowComponent = this.drawZeroDataFlowComponent;
-            var drawStaleSnapshot = this.drawStaleSnapshot;
-            var fileBasedFilterFarmTableRootElement = React.createElement(FileBasedFilterFarmTableElement, { tableObject: this, bus: daq.bus, buSummary: daq.buSummary, drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, drawStaleSnapshot: drawStaleSnapshot });
+        prePassElementSpecificData(args) {
+        }
+        updateSnapshot() {
+            let sortedSnapshot = this.sort(this.snapshot);
+            let daq = sortedSnapshot.getDAQ();
+            let drawPausedComponent = this.drawPausedComponent;
+            let drawZeroDataFlowComponent = this.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.drawStaleSnapshot;
+            let fileBasedFilterFarmTableRootElement = React.createElement(FileBasedFilterFarmTableElement, { tableObject: this, bus: daq.bus, buSummary: daq.buSummary, drawPausedComponent: drawPausedComponent, drawZeroDataFlowComponent: drawZeroDataFlowComponent, drawStaleSnapshot: drawStaleSnapshot });
             ReactDOM.render(fileBasedFilterFarmTableRootElement, this.htmlRootElement);
-        };
-        FileBasedFilterFarmTable.prototype.setSortFunction = function (sortFunctions) {
-            var presortFunction;
-            var sortFunction;
+        }
+        setSortFunction(sortFunctions) {
+            let presortFunction;
+            let sortFunction;
             if (sortFunctions.hasOwnProperty('presort')) {
                 presortFunction = sortFunctions.presort;
             }
@@ -100,46 +90,39 @@ var DAQView;
             sortFunction = sortFunctions.sort;
             this.sortFunction = { presort: presortFunction, sort: sortFunction };
             this.updateSnapshot();
-        };
-        FileBasedFilterFarmTable.prototype.sort = function (snapshot) {
+        }
+        sort(snapshot) {
             return this.sortFunction.sort(this.sortFunction.presort(snapshot));
-        };
-        FileBasedFilterFarmTable.prototype.setCurrentSorting = function (headerName, sorting) {
-            var _this = this;
-            DAQViewUtility.forEachOwnObjectProperty(this.currentSorting, function (header) { return _this.currentSorting[header] = DAQView.Sorting.None; });
+        }
+        setCurrentSorting(headerName, sorting) {
+            DAQViewUtility.forEachOwnObjectProperty(this.currentSorting, (header) => this.currentSorting[header] = DAQView.Sorting.None);
             this.currentSorting[headerName] = sorting;
-        };
-        FileBasedFilterFarmTable.prototype.getCurrentSorting = function (headerName) {
+        }
+        getCurrentSorting(headerName) {
             if (!this.currentSorting.hasOwnProperty(headerName)) {
                 return null;
             }
             return this.currentSorting[headerName];
-        };
-        return FileBasedFilterFarmTable;
-    }());
-    DAQView.FileBasedFilterFarmTable = FileBasedFilterFarmTable;
-    var ErrorElement = (function (_super) {
-        __extends(ErrorElement, _super);
-        function ErrorElement() {
-            return _super !== null && _super.apply(this, arguments) || this;
         }
-        ErrorElement.prototype.render = function () {
+    }
+    DAQView.FileBasedFilterFarmTable = FileBasedFilterFarmTable;
+    class ErrorElement extends React.Component {
+        render() {
             return (React.createElement("div", null, this.props.message));
-        };
-        return ErrorElement;
-    }(React.Component));
-    var FFFTableSortFunctions;
+        }
+    }
+    let FFFTableSortFunctions;
     (function (FFFTableSortFunctions) {
         function NONE(snapshot) {
             return snapshot;
         }
         FFFTableSortFunctions.NONE = NONE;
         function BU_SORT(snapshot, attribute, descending) {
-            var daq = snapshot.getDAQ();
-            var bus = daq.bus;
+            let daq = snapshot.getDAQ();
+            let bus = daq.bus;
             bus.sort(function (firstBU, secondBU) {
-                var firstBUValue = firstBU[attribute];
-                var secondBUValue = secondBU[attribute];
+                let firstBUValue = firstBU[attribute];
+                let secondBUValue = secondBU[attribute];
                 if (firstBUValue > secondBUValue) {
                     return (descending ? -1 : 1);
                 }
@@ -322,7 +305,7 @@ var DAQView;
         }
         FFFTableSortFunctions.BU_NUMLUMISECTIONSOUTHLT_DESC = BU_NUMLUMISECTIONSOUTHLT_DESC;
     })(FFFTableSortFunctions = DAQView.FFFTableSortFunctions || (DAQView.FFFTableSortFunctions = {}));
-    var FFFTableNumberFormats;
+    let FFFTableNumberFormats;
     (function (FFFTableNumberFormats) {
         FFFTableNumberFormats.RATE = {
             baseStyle: 'fff-table-rate',
@@ -361,7 +344,7 @@ var DAQView;
             formats: [{ min: 100, max: 1000000, styleSuffix: '-over' }, { styleSuffix: '' }]
         };
     })(FFFTableNumberFormats = DAQView.FFFTableNumberFormats || (DAQView.FFFTableNumberFormats = {}));
-    var FFF_TABLE_BASE_HEADERS = [
+    const FFF_TABLE_BASE_HEADERS = [
         {
             content: ''
         },
@@ -506,7 +489,7 @@ var DAQView;
             }
         }
     ];
-    var FFF_TABLE_TOP_HEADERS = FFF_TABLE_BASE_HEADERS.slice();
+    const FFF_TABLE_TOP_HEADERS = FFF_TABLE_BASE_HEADERS.slice();
     FFF_TABLE_TOP_HEADERS.unshift({
         content: 'BU',
         sortFunctions: {
@@ -516,31 +499,27 @@ var DAQView;
     }, {
         content: ''
     });
-    var FFF_TABLE_SUMMARY_HEADERS = FFF_TABLE_BASE_HEADERS.slice();
+    const FFF_TABLE_SUMMARY_HEADERS = FFF_TABLE_BASE_HEADERS.slice();
     FFF_TABLE_SUMMARY_HEADERS.unshift({ content: 'Summary' });
-    var FileBasedFilterFarmTableElement = (function (_super) {
-        __extends(FileBasedFilterFarmTableElement, _super);
-        function FileBasedFilterFarmTableElement() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        FileBasedFilterFarmTableElement.prototype.render = function () {
-            var buSummary = this.props.buSummary;
-            var bus = this.props.bus;
-            var numBus = 0;
-            var drawPausedComponents = this.props.drawPausedComponent;
-            var drawZeroDataFlowComponents = this.props.drawZeroDataFlowComponent;
-            var drawStaleSnapshot = this.props.drawStaleSnapshot;
-            var buRows = [];
+    class FileBasedFilterFarmTableElement extends React.Component {
+        render() {
+            let buSummary = this.props.buSummary;
+            let bus = this.props.bus;
+            let numBus = 0;
+            let drawPausedComponents = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponents = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
+            let buRows = [];
             if (bus != null) {
                 numBus = bus.length;
                 bus.forEach(function (bu) {
-                    var index = buRows.length;
-                    var oddRow = (index % 2 == 1) ? true : false;
+                    let index = buRows.length;
+                    let oddRow = (index % 2 == 1) ? true : false;
                     buRows.push(React.createElement(FileBasedFilterFarmTableBURow, { key: bu['@id'], bu: bu, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, oddRow: oddRow, drawStaleSnapshot: drawStaleSnapshot }));
                 });
             }
-            var numBusNoRate = numBus - buSummary.busNoRate;
-            var tableObject = this.props.tableObject;
+            let numBusNoRate = numBus - buSummary.busNoRate;
+            let tableObject = this.props.tableObject;
             return (React.createElement("table", { className: "fff-table" },
                 React.createElement("thead", { className: "fff-table-head" },
                     React.createElement(FileBasedFilterFarmTableTopHeaderRow, { key: "fff-top-header-row", drawPausedComponent: drawPausedComponents }),
@@ -549,57 +528,42 @@ var DAQView;
                 React.createElement("tfoot", { className: "fff-table-foot" },
                     React.createElement(FileBasedFilterFarmTableHeaderRow, { key: "fff-summary-header-row", tableObject: tableObject, headers: FFF_TABLE_SUMMARY_HEADERS, drawPausedComponent: drawPausedComponents }),
                     React.createElement(FileBasedFilterFarmTableBUSummaryRow, { key: "fff-summary-row", buSummary: buSummary, numBus: numBus, numBusNoRate: numBusNoRate, drawPausedComponent: drawPausedComponents, drawZeroDataFlowComponent: drawZeroDataFlowComponents, drawStaleSnapshot: drawStaleSnapshot }))));
-        };
-        return FileBasedFilterFarmTableElement;
-    }(React.Component));
-    var FileBasedFilterFarmTableTopHeaderRow = (function (_super) {
-        __extends(FileBasedFilterFarmTableTopHeaderRow, _super);
-        function FileBasedFilterFarmTableTopHeaderRow() {
-            return _super !== null && _super.apply(this, arguments) || this;
         }
-        FileBasedFilterFarmTableTopHeaderRow.prototype.shouldComponentUpdate = function () {
+    }
+    class FileBasedFilterFarmTableTopHeaderRow extends React.Component {
+        shouldComponentUpdate() {
             return false;
-        };
-        FileBasedFilterFarmTableTopHeaderRow.prototype.render = function () {
-            var drawPausedComponent = this.props.drawPausedComponent;
+        }
+        render() {
+            let drawPausedComponent = this.props.drawPausedComponent;
             return (React.createElement("tr", { className: "fff-table-top-header-row" },
                 React.createElement(FileBasedFilterFarmTableHeader, { additionalClasses: "fff-table-help", content: React.createElement("a", { href: "ffftablehelp.html", target: "_blank" }, "Table Help"), colSpan: 2, drawPausedComponent: drawPausedComponent }),
                 React.createElement(FileBasedFilterFarmTableHeader, { content: "B U I L D E R   U N I T   ( B U )", colSpan: 20, drawPausedComponent: drawPausedComponent })));
-        };
-        return FileBasedFilterFarmTableTopHeaderRow;
-    }(React.Component));
-    var FileBasedFilterFarmTableHeaderRow = (function (_super) {
-        __extends(FileBasedFilterFarmTableHeaderRow, _super);
-        function FileBasedFilterFarmTableHeaderRow() {
-            return _super !== null && _super.apply(this, arguments) || this;
         }
-        FileBasedFilterFarmTableHeaderRow.prototype.render = function () {
-            var drawPausedComponent = this.props.drawPausedComponent;
-            var tableObject = this.props.tableObject;
-            var children = [];
-            this.props.headers.forEach(function (header) { return children.push(React.createElement(FileBasedFilterFarmTableHeader, { key: header.content, content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions })); });
+    }
+    class FileBasedFilterFarmTableHeaderRow extends React.Component {
+        render() {
+            let drawPausedComponent = this.props.drawPausedComponent;
+            let tableObject = this.props.tableObject;
+            let children = [];
+            this.props.headers.forEach(header => children.push(React.createElement(FileBasedFilterFarmTableHeader, { key: header.content, content: header.content, colSpan: header.colSpan, additionalClasses: header.additionalClasses, tableObject: tableObject, sorting: tableObject.getCurrentSorting(header.content), sortFunctions: header.sortFunctions })));
             return (React.createElement("tr", { className: "fff-table-header-row" }, children));
-        };
-        return FileBasedFilterFarmTableHeaderRow;
-    }(React.Component));
-    var FileBasedFilterFarmTableHeader = (function (_super) {
-        __extends(FileBasedFilterFarmTableHeader, _super);
-        function FileBasedFilterFarmTableHeader() {
-            return _super !== null && _super.apply(this, arguments) || this;
         }
-        FileBasedFilterFarmTableHeader.prototype.shouldComponentUpdate = function (nextProps) {
+    }
+    class FileBasedFilterFarmTableHeader extends React.Component {
+        shouldComponentUpdate(nextProps) {
             return this.props.sorting !== nextProps.sorting;
-        };
-        FileBasedFilterFarmTableHeader.prototype.render = function () {
-            var drawPausedComponent = this.props.drawPausedComponent;
-            var content = this.props.content;
-            var colSpan = this.props.colSpan;
-            var additionalClasses = this.props.additionalClasses;
-            var className = classNames("fff-table-header", additionalClasses);
-            var tableObject = this.props.tableObject;
-            var currentSorting = this.props.sorting ? this.props.sorting : null;
-            var sortFunctions = this.props.sortFunctions;
-            var clickFunction = null;
+        }
+        render() {
+            let drawPausedComponent = this.props.drawPausedComponent;
+            let content = this.props.content;
+            let colSpan = this.props.colSpan;
+            let additionalClasses = this.props.additionalClasses;
+            let className = classNames("fff-table-header", additionalClasses);
+            let tableObject = this.props.tableObject;
+            let currentSorting = this.props.sorting ? this.props.sorting : null;
+            let sortFunctions = this.props.sortFunctions;
+            let clickFunction = null;
             if (currentSorting != null && sortFunctions != null) {
                 if (currentSorting === DAQView.Sorting.None || currentSorting === DAQView.Sorting.Descending) {
                     clickFunction = function () {
@@ -614,39 +578,34 @@ var DAQView;
                     };
                 }
             }
-            var sortingImage = null;
+            let sortingImage = null;
             if (currentSorting != null) {
                 sortingImage = React.createElement("input", { type: "image", className: "fff-table-sort-image", src: 'dist/img/' + currentSorting.getImagePath(), alt: currentSorting.toString(), title: "Sort", onClick: clickFunction });
             }
             return (React.createElement("th", { className: className, colSpan: colSpan ? colSpan : 1 },
                 content,
                 sortingImage));
-        };
-        return FileBasedFilterFarmTableHeader;
-    }(React.Component));
-    var FileBasedFilterFarmTableBURow = (function (_super) {
-        __extends(FileBasedFilterFarmTableBURow, _super);
-        function FileBasedFilterFarmTableBURow() {
-            return _super !== null && _super.apply(this, arguments) || this;
         }
-        FileBasedFilterFarmTableBURow.prototype.shouldComponentUpdate = function (nextProps) {
-            var shouldUpdate = false;
+    }
+    class FileBasedFilterFarmTableBURow extends React.Component {
+        shouldComponentUpdate(nextProps) {
+            let shouldUpdate = false;
             shouldUpdate = shouldUpdate || this.props.oddRow !== nextProps.oddRow;
             shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
             shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
             shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
             shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.bu, nextProps.bu);
             return shouldUpdate;
-        };
-        FileBasedFilterFarmTableBURow.prototype.render = function () {
-            var drawPausedComponent = this.props.drawPausedComponent;
-            var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
-            var drawStaleSnapshot = this.props.drawStaleSnapshot;
-            var oddRow = this.props.oddRow;
-            var bu = this.props.bu;
-            var buUrl = 'http://' + bu.hostname + ':' + bu.port + '/urn:xdaq-application:service=bu';
-            var buState = '';
-            var buStateClass = 'fff-table-bu-state-normal';
+        }
+        render() {
+            let drawPausedComponent = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
+            let oddRow = this.props.oddRow;
+            let bu = this.props.bu;
+            let buUrl = 'http://' + bu.hostname + ':' + bu.port + '/urn:xdaq-application:service=bu';
+            let buState = '';
+            let buStateClass = 'fff-table-bu-state-normal';
             if (bu.stateName) {
                 buState = bu.stateName;
                 if (buState === 'Halted' || buState === 'Ready' || buState === 'Enabled' || buState === 'unknown' || buState === '') {
@@ -659,42 +618,42 @@ var DAQView;
                     buStateClass = 'fff-table-bu-state-error';
                 }
             }
-            var buJobCrashStateDisplay = "";
-            var buJobCrashStateDisplayClass = "";
+            let buJobCrashStateDisplay = "";
+            let buJobCrashStateDisplayClass = "";
             if (bu.crashed) {
                 buJobCrashStateDisplay = "JobCrash";
                 buJobCrashStateDisplayClass = "fff-table-jobcrash";
             }
-            var hostname = bu.hostname.split(".")[0];
-            var buUrlDisplay = hostname;
-            var buUrlDisplayClass = "fff-table-stale-member-wrapbox"; //assume stale and overwrite if not
-            var buDebug = "Check problems with BU flashlist!";
-            if (bu.port != null) {
+            let hostname = bu.hostname.split(".")[0];
+            let buUrlDisplay = hostname;
+            let buUrlDisplayClass = "fff-table-stale-member-wrapbox"; //assume stale and overwrite if not
+            let buDebug = "Check problems with BU flashlist!";
+            if (bu.port > 0) {
                 buUrlDisplay = React.createElement("a", { href: buUrl, target: "_blank" }, hostname);
                 buUrlDisplayClass = "";
                 buDebug = "";
             }
-            var rate = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
-            var throughput = FormatUtility.toFixedNumber(bu.throughput / 1000 / 1000, 1);
-            var sizeMean = FormatUtility.toFixedNumber(bu.eventSizeMean / 1000, 1);
-            var sizeStddev = FormatUtility.toFixedNumber(bu.eventSizeStddev / 1000, 1);
-            var events = bu.numEvents;
-            var eventsInBU = bu.numEventsInBU;
-            var requestsSent = bu.numRequestsSent;
-            var requestsUsed = bu.numRequestsUsed;
-            var requestsBlocked = bu.numRequestsBlocked;
-            var fffBuRowClass = drawPausedComponent ? "fff-table-bu-row-paused" : "fff-table-bu-row-running";
+            let rate = FormatUtility.toFixedNumber(bu.rate / 1000, 3);
+            let throughput = FormatUtility.toFixedNumber(bu.throughput / 1000 / 1000, 1);
+            let sizeMean = FormatUtility.toFixedNumber(bu.eventSizeMean / 1000, 1);
+            let sizeStddev = FormatUtility.toFixedNumber(bu.eventSizeStddev / 1000, 1);
+            let events = bu.numEvents;
+            let eventsInBU = bu.numEventsInBU;
+            let requestsSent = bu.numRequestsSent;
+            let requestsUsed = bu.numRequestsUsed;
+            let requestsBlocked = bu.numRequestsBlocked;
+            let fffBuRowClass = drawPausedComponent ? "fff-table-bu-row-paused" : "fff-table-bu-row-running";
             if (drawZeroDataFlowComponent) {
                 fffBuRowClass = "fff-table-bu-row-ratezero";
             }
-            var eventsInBuClass = FormatUtility.getClassNameForNumber(eventsInBU != null ? eventsInBU : 0, FFFTableNumberFormats.EVENTS_IN_BU);
-            var priorityClass = FormatUtility.getClassNameForNumber(bu.priority != null ? bu.priority : 0, FFFTableNumberFormats.PRIORITY);
-            var requestsSentClass = FormatUtility.getClassNameForNumber(requestsSent != null ? requestsSent : 0, FFFTableNumberFormats.REQUESTS_SENT);
-            var requestsUsedClass = FormatUtility.getClassNameForNumber(requestsUsed != null ? requestsUsed : 0, FFFTableNumberFormats.REQUESTS_USED);
-            var requestsBlockedClass = FormatUtility.getClassNameForNumber(requestsBlocked != null ? requestsBlocked : 0, FFFTableNumberFormats.REQUESTS_BLOCKED);
+            let eventsInBuClass = FormatUtility.getClassNameForNumber(eventsInBU != null ? eventsInBU : 0, FFFTableNumberFormats.EVENTS_IN_BU);
+            let priorityClass = FormatUtility.getClassNameForNumber(bu.priority != null ? bu.priority : 0, FFFTableNumberFormats.PRIORITY);
+            let requestsSentClass = FormatUtility.getClassNameForNumber(requestsSent != null ? requestsSent : 0, FFFTableNumberFormats.REQUESTS_SENT);
+            let requestsUsedClass = FormatUtility.getClassNameForNumber(requestsUsed != null ? requestsUsed : 0, FFFTableNumberFormats.REQUESTS_USED);
+            let requestsBlockedClass = FormatUtility.getClassNameForNumber(requestsBlocked != null ? requestsBlocked : 0, FFFTableNumberFormats.REQUESTS_BLOCKED);
             //invert color when DAQ is stuck, because red colors are missed
             if (drawZeroDataFlowComponent && oddRow) {
-                var escapeRedField = 'fff-table-bu-red-column-escape';
+                let escapeRedField = 'fff-table-bu-red-column-escape';
                 if (eventsInBuClass === 'fff-table-events-in-bu') {
                     eventsInBuClass = escapeRedField;
                 }
@@ -749,16 +708,11 @@ var DAQView;
                 React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numLumisectionsForHLT != null ? bu.numLumisectionsForHLT : '*'),
                 React.createElement("td", { className: "fff-table-bu-row-counter" }, bu.numLumisectionsOutHLT != null ? bu.numLumisectionsOutHLT : '*'),
                 React.createElement("td", { className: classNames("fff-table-bu-row-counter", FormatUtility.getClassNameForNumber(bu.fuOutputBandwidthInMB != null ? bu.fuOutputBandwidthInMB : 0, FFFTableNumberFormats.BANDWIDTH)) }, bu.fuOutputBandwidthInMB != null ? bu.fuOutputBandwidthInMB.toFixed(2) : '*')));
-        };
-        return FileBasedFilterFarmTableBURow;
-    }(React.Component));
-    var FileBasedFilterFarmTableBUSummaryRow = (function (_super) {
-        __extends(FileBasedFilterFarmTableBUSummaryRow, _super);
-        function FileBasedFilterFarmTableBUSummaryRow() {
-            return _super !== null && _super.apply(this, arguments) || this;
         }
-        FileBasedFilterFarmTableBUSummaryRow.prototype.shouldComponentUpdate = function (nextProps) {
-            var shouldUpdate = false;
+    }
+    class FileBasedFilterFarmTableBUSummaryRow extends React.Component {
+        shouldComponentUpdate(nextProps) {
+            let shouldUpdate = false;
             shouldUpdate = shouldUpdate || this.props.numBus !== nextProps.numBus;
             shouldUpdate = shouldUpdate || this.props.numBusNoRate !== nextProps.numBusNoRate;
             shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
@@ -766,21 +720,21 @@ var DAQView;
             shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
             shouldUpdate = shouldUpdate || !DAQViewUtility.snapshotElementsEqualShallow(this.props.buSummary, nextProps.buSummary);
             return shouldUpdate;
-        };
-        FileBasedFilterFarmTableBUSummaryRow.prototype.render = function () {
-            var buSummary = this.props.buSummary;
-            var drawPausedComponent = this.props.drawPausedComponent;
-            var drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
-            var drawStaleSnapshot = this.props.drawStaleSnapshot;
-            var fffBuSummaryRowClass = drawPausedComponent ? "fff-table-bu-summary-row-paused" : "fff-table-bu-summary-row-running";
-            var eventsInBuClass = FormatUtility.getClassNameForNumber(buSummary.numEventsInBU != null ? buSummary.numEventsInBU : 0, FFFTableNumberFormats.EVENTS_IN_BU);
-            var requestsSentClass = FormatUtility.getClassNameForNumber(buSummary.numRequestsSent != null ? buSummary.numRequestsSent : 0, FFFTableNumberFormats.REQUESTS_SENT);
-            var requestsUsedClass = FormatUtility.getClassNameForNumber(buSummary.numRequestsUsed != null ? buSummary.numRequestsUsed : 0, FFFTableNumberFormats.REQUESTS_USED);
-            var requestsBlockedClass = 'fff-table-requests-blocked';
+        }
+        render() {
+            let buSummary = this.props.buSummary;
+            let drawPausedComponent = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot = this.props.drawStaleSnapshot;
+            let fffBuSummaryRowClass = drawPausedComponent ? "fff-table-bu-summary-row-paused" : "fff-table-bu-summary-row-running";
+            let eventsInBuClass = FormatUtility.getClassNameForNumber(buSummary.numEventsInBU != null ? buSummary.numEventsInBU : 0, FFFTableNumberFormats.EVENTS_IN_BU);
+            let requestsSentClass = FormatUtility.getClassNameForNumber(buSummary.numRequestsSent != null ? buSummary.numRequestsSent : 0, FFFTableNumberFormats.REQUESTS_SENT);
+            let requestsUsedClass = FormatUtility.getClassNameForNumber(buSummary.numRequestsUsed != null ? buSummary.numRequestsUsed : 0, FFFTableNumberFormats.REQUESTS_USED);
+            let requestsBlockedClass = 'fff-table-requests-blocked';
             if (drawZeroDataFlowComponent) {
                 fffBuSummaryRowClass = "fff-table-bu-summary-row-ratezero";
                 if (!drawStaleSnapshot) {
-                    var escapeRedField = 'fff-table-bu-red-column-escape';
+                    let escapeRedField = 'fff-table-bu-red-column-escape';
                     if (eventsInBuClass === 'fff-table-events-in-bu') {
                         eventsInBuClass = escapeRedField;
                     }
@@ -857,7 +811,6 @@ var DAQView;
                 React.createElement("td", null, buSummary.numLumisectionsForHLT != null ? buSummary.numLumisectionsForHLT : '*'),
                 React.createElement("td", null, buSummary.numLumisectionsOutHLT != null ? buSummary.numLumisectionsOutHLT : '*'),
                 React.createElement("td", null, buSummary.fuOutputBandwidthInMB != null ? buSummary.fuOutputBandwidthInMB.toFixed(2) : '*')));
-        };
-        return FileBasedFilterFarmTableBUSummaryRow;
-    }(React.Component));
+        }
+    }
 })(DAQView || (DAQView = {}));

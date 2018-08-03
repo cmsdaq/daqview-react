@@ -2,70 +2,67 @@
 /**
  * Created by mvougiou on 1/11/17.
  */
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 /**
  * @author Michail Vougioukas
  * @author Philipp Brummer
  */
 var DAQView;
 (function (DAQView) {
-    var SnapshotModal = (function () {
-        function SnapshotModal(htmlRootElementName) {
+    class SnapshotModal {
+        constructor(htmlRootElementName, configuration) {
             this.drawPausedComponent = false;
-            this.url = "";
+            this.rawSnapshotUrl = "";
+            this.expertUrl = null;
+            this.isExpertSetup = false;
             this.htmlRootElement = document.getElementById(htmlRootElementName);
+            this.configuration = configuration;
+            this.isExpertSetup = this.configuration.expertSetups.some(setup => setup === this.configuration.setupName);
         }
-        SnapshotModal.prototype.setSnapshot = function (snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
+        setSnapshot(snapshot, drawPausedComponent, drawZeroDataFlowComponent, drawStaleSnapshot) {
             this.snapshot = snapshot;
             this.drawPausedComponent = drawPausedComponent;
-            this.url = url;
             if (!snapshot) {
-                var msg = "";
-                var errRootElement = React.createElement(ErrorElement, { message: msg });
+                let msg = "";
+                let errRootElement = React.createElement(ErrorElement, { message: msg });
                 ReactDOM.render(errRootElement, this.htmlRootElement);
             }
             else {
-                var daq = snapshot.getDAQ();
-                var snapshotModalRootElement = React.createElement(SnapshotModalElement, { daq: daq, url: url });
+                let daq = snapshot.getDAQ();
+                let time = snapshot.getUpdateTimestamp();
+                let timeString = new Date(time).toISOString();
+                this.rawSnapshotUrl = this.configuration.snapshotSource.url + "?setup=" + this.configuration.setupName + "&time=\"" + timeString + "\"";
+                if (this.isExpertSetup && this.configuration.externalLinks.daqExpert !== null) {
+                    // set expert browser range to 5 minutes before and after snapshot
+                    let expertStartTimeString = new Date(time - 300000).toISOString();
+                    let expertEndTimeString = new Date(time + 300000).toISOString();
+                    this.expertUrl = this.configuration.externalLinks.daqExpert + "?start=" + expertStartTimeString + "&end=" + expertEndTimeString;
+                }
+                let snapshotModalRootElement = React.createElement(SnapshotModalElement, { expertUrl: this.expertUrl, rawSnapshotUrl: this.rawSnapshotUrl });
                 ReactDOM.render(snapshotModalRootElement, this.htmlRootElement);
             }
-        };
-        //to be called before setSnapshot
-        SnapshotModal.prototype.prePassElementSpecificData = function (args) {
-        };
-        return SnapshotModal;
-    }());
-    DAQView.SnapshotModal = SnapshotModal;
-    var SnapshotModalElement = (function (_super) {
-        __extends(SnapshotModalElement, _super);
-        function SnapshotModalElement() {
-            return _super !== null && _super.apply(this, arguments) || this;
         }
-        SnapshotModalElement.prototype.render = function () {
+        //to be called before setSnapshot
+        prePassElementSpecificData(args) {
+        }
+    }
+    DAQView.SnapshotModal = SnapshotModal;
+    class SnapshotModalElement extends React.Component {
+        render() {
+            let expertUrlButton = "";
+            if (this.props.expertUrl !== null) {
+                expertUrlButton = React.createElement("a", { href: this.props.expertUrl, target: "_blank" },
+                    React.createElement("button", { className: "button-expert" }, "DAQExpert"));
+            }
             return (React.createElement("div", null,
                 React.createElement("button", { className: "button-share" }, "Share"),
-                React.createElement("a", { href: this.props.url, target: "_blank" },
+                expertUrlButton,
+                React.createElement("a", { href: this.props.rawSnapshotUrl, target: "_blank" },
                     React.createElement("button", { className: "button-snapshot" }, "See raw DAQ snapshot"))));
-        };
-        return SnapshotModalElement;
-    }(React.Component));
-    var ErrorElement = (function (_super) {
-        __extends(ErrorElement, _super);
-        function ErrorElement() {
-            return _super !== null && _super.apply(this, arguments) || this;
         }
-        ErrorElement.prototype.render = function () {
+    }
+    class ErrorElement extends React.Component {
+        render() {
             return (React.createElement("div", null, this.props.message));
-        };
-        return ErrorElement;
-    }(React.Component));
+        }
+    }
 })(DAQView || (DAQView = {}));

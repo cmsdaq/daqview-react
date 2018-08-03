@@ -73,6 +73,7 @@ namespace DAQAggregator {
             tcdsControllerServiceName? : string;
             globalTtsStates?: {[key:string]: TTSState};
             deadTimes?: DeadTimes;
+            deadTimesInstant?: DeadTimes;
         }
 
         export interface TTSState extends SnapshotElement {
@@ -321,35 +322,35 @@ namespace DAQAggregator {
         }
 
         export interface DeadTimes extends SnapshotElement {
-            apve: number;
-            beamactive_apve: number;
+            apve?: number;
+            beamactive_apve?: number;
 
-            bx_mask: number;
-            beamactive_bx_mask: number;
+            bx_mask?: number;
+            beamactive_bx_mask?: number;
 
-            calib: number;
-            beamactive_calib: number;
+            calib?: number;
+            beamactive_calib?: number;
 
-            daq_bp: number;
-            beamactive_daq_bp: number;
+            daq_bp?: number;
+            beamactive_daq_bp?: number;
 
-            fw_pause: number;
-            beamactive_fw_pause: number;
+            fw_pause?: number;
+            beamactive_fw_pause?: number;
 
-            retri: number;
-            beamactive_retri: number;
+            retri?: number;
+            beamactive_retri?: number;
 
-            sw_pause: number;
-            beamactive_sw_pause: number;
+            sw_pause?: number;
+            beamactive_sw_pause?: number;
 
-            total: number;
-            beamactive_total: number;
+            total?: number;
+            beamactive_total?: number;
 
-            trg_rules: number;
-            beamactive_trg_rules: number;
+            trg_rules?: number;
+            beamactive_trg_rules?: number;
 
-            tts: number;
-            beamactive_tts: number;
+            tts?: number;
+            beamactive_tts?: number;
         }
 
 

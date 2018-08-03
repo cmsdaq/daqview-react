@@ -1,5 +1,6 @@
 const gulp = require("gulp");
 const rename = require("gulp-rename");
+const replace = require('gulp-replace');
 const ts = require("gulp-typescript");
 const tsProject = ts.createProject("tsconfig.json");
 
@@ -53,15 +54,15 @@ const libPaths = {
 const configurations = {
     "dev": {
         name: "dev",
-        linkConfiguration: "configuration/link-configuration.dev.js"
+        configuration: "configuration/configuration.dev.js"
     },
     "pro": {
         name: "pro",
-        linkConfiguration: "configuration/link-configuration.pro.js"
+        configuration: "configuration/configuration.pro.js"
     },
     "904": {
         name: "904",
-        linkConfiguration: "configuration/link-configuration.904.js"
+        configuration: "configuration/configuration.904.js"
     }
 };
 
@@ -70,6 +71,7 @@ const defaultConfiguration = configurations.pro;
 const releaseContent = [
     "index.html",
     "index_fb.html",
+    "index_fb_dt.html",
     "index_fff.html",
     "fbtablehelp.html",
     "ffftablehelp.html",
@@ -80,7 +82,8 @@ gulp.task("deploy-libs", function (cb) {
     for (let libName in libPaths) {
         if (libPaths.hasOwnProperty(libName)) {
             let lib = libPaths[libName];
-            gulp.src(lib.source).pipe(gulp.dest(lib.target));
+            gulp.src(lib.source)
+                .pipe(gulp.dest(lib.target));
         }
     }
     cb();
@@ -89,7 +92,8 @@ gulp.task("deploy-libs", function (cb) {
 gulp.task("build", ["deploy-libs"], function () {
     return tsProject.src()
         .pipe(tsProject())
-        .js.pipe(gulp.dest("dist/js"));
+        .js
+        .pipe(gulp.dest("dist/js"));
 });
 
 gulp.task("release", ["build"], function (cb) {
@@ -110,14 +114,17 @@ gulp.task("release", ["build"], function (cb) {
     let releasePath = paths.release + "/" + packageInfo.version + "-" + configuration.name + "/";
     releaseContent.forEach(function (content) {
         if (Array.isArray(content)) {
-            gulp.src(content[0]).pipe(gulp.dest(releasePath + content[1]))
+            gulp.src(content[0])
+                .pipe(gulp.dest(releasePath + content[1]));
         } else {
-            gulp.src(content).pipe(gulp.dest(releasePath))
+            gulp.src(content)
+                .pipe(replace('{[DAQVIEW_VERSION]}', packageInfo.version))
+                .pipe(gulp.dest(releasePath));
         }
     });
 
-    gulp.src(configuration.linkConfiguration)
-        .pipe(rename("link-configuration.js"))
+    gulp.src(configuration.configuration)
+        .pipe(rename("configuration.js"))
         .pipe(gulp.dest(releasePath));
 
     cb();

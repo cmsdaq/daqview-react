@@ -18,11 +18,11 @@ namespace DAQView {
         private drawZeroDataFlowComponent: boolean = false;
         private drawStaleSnapshot: boolean = false;
 
-        constructor(htmlRootElementName: string) {
+        constructor(htmlRootElementName: string, configuration: DAQViewConfiguration) {
             this.htmlRootElement = document.getElementById(htmlRootElementName);
         }
 
-        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent: boolean, drawStaleSnapshot: boolean, url: string) {
+        public setSnapshot(snapshot: DAQAggregatorSnapshot, drawPausedComponent: boolean, drawZeroDataFlowComponent: boolean, drawStaleSnapshot: boolean) {
             if (!snapshot) {
                 let msg: string = "";
                 let errRootElement: any = <ErrorElement message={msg}/>;
@@ -51,11 +51,6 @@ namespace DAQView {
         private updateSnapshot() {
             let tcdsGlobalInfo: TCDSGlobalInfo = this.snapshot.getDAQ().tcdsGlobalInfo;
 
-            if (!tcdsGlobalInfo) {
-                console.error("No TCDS global info in snapshot.");
-                return;
-            }
-
             let drawPausedComponent: boolean = this.drawPausedComponent;
             let drawZeroDataFlowComponent: boolean = this.drawZeroDataFlowComponent;
             let drawStaleSnapshot: boolean = this.drawStaleSnapshot;
@@ -72,7 +67,7 @@ namespace DAQView {
         message: string;
     }
 
-    class ErrorElement extends React.PureComponent<ErrorElementProperties,{}> {
+    class ErrorElement extends React.PureComponent<ErrorElementProperties, {}> {
         render() {
             return (
                 <div>{this.props.message}</div>
@@ -80,22 +75,12 @@ namespace DAQView {
         }
     }
 
-    const DEADTIME_TABLE_HEADERS: string[] =
-        [
-            "Global TTS",
-            "State",
-            "% Busy",
-            "% Warning",
-            "Deadtime",
-            "Beamactive Deadtime"
-        ];
-
     interface DeadtimeTableGroup {
         title: string;
         entries: DeadtimeTableEntry[];
     }
 
-    interface DeadtimeTableEntry{
+    interface DeadtimeTableEntry {
         title: string;
         stateIndex?: string;
         deadtimeIndex?: string;
@@ -138,7 +123,7 @@ namespace DAQView {
         ];
 
     interface DeadtimeTableElementProperties {
-        tcdsGlobalInfo: TCDSGlobalInfo;
+        tcdsGlobalInfo?: TCDSGlobalInfo;
         drawPausedComponent: boolean;
         drawZeroDataFlowComponent: boolean;
         drawStaleSnapshot: boolean;
@@ -149,12 +134,45 @@ namespace DAQView {
         render() {
             let tcdsGlobalInfo: TCDSGlobalInfo = this.props.tcdsGlobalInfo;
 
-            let globalTTSStates: {[key:string]: TTSState} = tcdsGlobalInfo.globalTtsStates;
-            let deadTimes: DeadTimes = tcdsGlobalInfo.deadTimes;
+            if (tcdsGlobalInfo === null || tcdsGlobalInfo === undefined) {
+                console.warn("No TCDS global info in snapshot.");
+                return (
+                    <table className="dt-table">
+                        <tbody className="dt-table-body">
+                        <tr className="dt-table-row-paused">
+                            <td>The snapshot does not contain global TCDS information.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                );
+            }
 
-            // XXX: What does this do?
-            let drawPausedComponents: boolean = this.props.drawPausedComponent;
-            let drawZeroDataFlowComponents: boolean = this.props.drawZeroDataFlowComponent;
+            let globalTTSStates: { [key: string]: TTSState } = tcdsGlobalInfo.globalTtsStates;
+
+            let deadTimesType: string = "Instant";
+            let deadTimes: DeadTimes = tcdsGlobalInfo.deadTimesInstant;
+
+            // if instant deadtimes are not available, check for per-lumisection deadtimes
+            if (deadTimes === null || deadTimes === undefined || Object.keys(deadTimes).length === 0) {
+                deadTimesType = "last LS";
+                deadTimes = tcdsGlobalInfo.deadTimes;
+            }
+
+            if (deadTimes === null || deadTimes === undefined || Object.keys(deadTimes).length === 0) {
+                console.warn("No deadtimes in snapshot.");
+                return (
+                    <table className="dt-table">
+                        <tbody className="dt-table-body">
+                        <tr className="dt-table-row-paused">
+                            <td>The snapshot does not contain deadtime information.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                );
+            }
+
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent: boolean = this.props.drawZeroDataFlowComponent;
             let drawStaleSnapshot = this.props.drawStaleSnapshot;
 
             let groupHeaders: DeadtimeTableGroupHeader[] = [];
@@ -170,11 +188,11 @@ namespace DAQView {
             let deadtimeRowValues: string[] = [];
             let beamactiveDeadtimeRowValues: string[] = [];
 
-            DEADTIME_TABLE_STRUCTURE.forEach(function(group: DeadtimeTableGroup) {
+            DEADTIME_TABLE_STRUCTURE.forEach(function (group: DeadtimeTableGroup) {
                 // add group header
                 groupHeaders.push({name: group.title, colSpan: group.entries.length});
 
-                group.entries.forEach(function(entry: DeadtimeTableEntry){
+                group.entries.forEach(function (entry: DeadtimeTableEntry) {
                     // add row header
                     headerRowValues.push(entry.title);
 
@@ -183,41 +201,63 @@ namespace DAQView {
                     let deadTime: number = entry.deadtimeIndex ? deadTimes[entry.deadtimeIndex] : null;
                     let beamactiveDeadTime: number = entry.deadtimeIndex ? deadTimes[DEADTIME_BEAMACTIVE_PREFIX + entry.deadtimeIndex] : null;
 
-                    if (ttsState !== null) {
-                        stateRowValues.push(ttsState.state.substring(0, 1));
-                        busyRowValues.push(ttsState.percentBusy.toFixed(1));
-                        warningRowValues.push(ttsState.percentWarning.toFixed(1));
-                    } else {
+                    if (ttsState === null) {
                         stateRowValues.push("");
                         busyRowValues.push("");
                         warningRowValues.push("");
-                    }
-                    if (deadTime !== null) {
-                        deadtimeRowValues.push(deadTime.toFixed(2));
+                    } else if (ttsState === undefined) {
+                        stateRowValues.push("N/A");
+                        busyRowValues.push("N/A");
+                        warningRowValues.push("N/A");
                     } else {
+                        stateRowValues.push(ttsState.state.substring(0, 1));
+                        busyRowValues.push(ttsState.percentBusy.toFixed(1));
+                        warningRowValues.push(ttsState.percentWarning.toFixed(1));
+                    }
+                    if (deadTime === null) {
                         deadtimeRowValues.push("");
-                    }
-                    if (beamactiveDeadTime !== null) {
-                        beamactiveDeadtimeRowValues.push(beamactiveDeadTime.toFixed(2));
+                    } else if (deadTime === undefined) {
+                        deadtimeRowValues.push("N/A");
                     } else {
+                        deadtimeRowValues.push(deadTime.toFixed(2));
+                    }
+                    if (beamactiveDeadTime === null) {
                         beamactiveDeadtimeRowValues.push("");
+                    } else if (beamactiveDeadTime === undefined) {
+                        beamactiveDeadtimeRowValues.push("N/A");
+                    } else {
+                        beamactiveDeadtimeRowValues.push(beamactiveDeadTime.toFixed(2));
                     }
                 });
             });
 
             let tableValuesPerRow: string[][] =
-                [stateRowValues, busyRowValues, warningRowValues, deadtimeRowValues, beamactiveDeadtimeRowValues];
+                [stateRowValues, /* busyRowValues, warningRowValues, */ deadtimeRowValues, beamactiveDeadtimeRowValues];
+
+            const deadTimeTableHeaders: string[] =
+                [
+                    "Global TTS",
+                    "State",
+                    // "% Busy",
+                    // "% Warning",
+                    "Deadtime (" + deadTimesType + ")",
+                    "Beamactive Deadtime (" + deadTimesType + ")"
+                ];
 
             let tableRows: any[] = [];
-            for (let i: number = 1; i < DEADTIME_TABLE_HEADERS.length; i++) {
-                tableRows.push(<DeadtimeTableRow rowHead={DEADTIME_TABLE_HEADERS[i]} rowValues={tableValuesPerRow[i-1]} />);
+            for (let i: number = 1; i < deadTimeTableHeaders.length; i++) {
+                tableRows.push(<DeadtimeTableRow rowHead={deadTimeTableHeaders[i]}
+                                                 rowValues={tableValuesPerRow[i - 1]}
+                                                 drawPausedComponent={drawPausedComponent}
+                                                 drawZeroDataFlowComponent={drawZeroDataFlowComponent}
+                                                 drawStaleSnapshot={drawStaleSnapshot}/>);
             }
 
             return (
                 <table className="dt-table">
                     <thead className="dt-table-head">
-                        <DeadtimeTableGroupHeaderRow groupHeaders={groupHeaders} />
-                        <DeadtimeTableHeaderRow rowHead={DEADTIME_TABLE_HEADERS[0]} rowValues={headerRowValues} />
+                    <DeadtimeTableGroupHeaderRow groupHeaders={groupHeaders}/>
+                    <DeadtimeTableHeaderRow rowHead={deadTimeTableHeaders[0]} rowValues={headerRowValues}/>
                     </thead>
                     <tbody className="dt-table-body">
                     {tableRows}
@@ -246,7 +286,7 @@ namespace DAQView {
 
             let groupHeaderColumns: any[] = [<th></th>];
 
-            groupHeaders.forEach(function(groupHeader: DeadtimeTableGroupHeader) {
+            groupHeaders.forEach(function (groupHeader: DeadtimeTableGroupHeader) {
                 groupHeaderColumns.push(<th colSpan={groupHeader.colSpan}>{groupHeader.name}</th>);
             });
 
@@ -270,7 +310,7 @@ namespace DAQView {
 
             let row: any[] = [<th>{rowHead}</th>];
 
-            rowValues.forEach(function(rowValue: string) {
+            rowValues.forEach(function (rowValue: string) {
                 row.push(<th>{rowValue}</th>);
             });
 
@@ -281,15 +321,21 @@ namespace DAQView {
     interface DeadtimeTableRowProperties {
         rowHead: string;
         rowValues: string[];
+        drawPausedComponent: boolean;
+        drawZeroDataFlowComponent: boolean;
+        drawStaleSnapshot: boolean;
     }
 
     class DeadtimeTableRow extends React.Component<DeadtimeTableRowProperties, {}> {
         shouldComponentUpdate(nextProps: DeadtimeTableRowProperties) {
             let shouldUpdate: boolean = false;
 
-            if (this.props.rowValues.length == nextProps.rowValues.length) {
-                for (let i = 0; !shouldUpdate && i < this.props.rowValues.length; i++)
-                {
+            shouldUpdate = shouldUpdate || this.props.drawPausedComponent !== nextProps.drawPausedComponent;
+            shouldUpdate = shouldUpdate || this.props.drawZeroDataFlowComponent !== nextProps.drawZeroDataFlowComponent;
+            shouldUpdate = shouldUpdate || this.props.drawStaleSnapshot !== nextProps.drawStaleSnapshot;
+
+            if (!shouldUpdate && this.props.rowValues.length == nextProps.rowValues.length) {
+                for (let i = 0; !shouldUpdate && i < this.props.rowValues.length; i++) {
                     shouldUpdate = this.props.rowValues[i] !== nextProps.rowValues[i];
                 }
             }
@@ -300,14 +346,28 @@ namespace DAQView {
         render() {
             let rowHead: string = this.props.rowHead;
             let rowValues: string[] = this.props.rowValues;
+            let drawPausedComponent: boolean = this.props.drawPausedComponent;
+            let drawZeroDataFlowComponent: boolean = this.props.drawZeroDataFlowComponent;
+            let drawStaleSnapshot: boolean = this.props.drawStaleSnapshot;
+
+            let dtRowClass: string = "dt-table-row-running";
+            if (drawPausedComponent) {
+                dtRowClass = "dt-table-row-paused";
+            }
+            if (drawZeroDataFlowComponent) {
+                dtRowClass = "dt-table-row-ratezero";
+            }
+            if (drawStaleSnapshot && (!drawPausedComponent)) {
+                dtRowClass = 'dt-table-row-stale-page';
+            }
 
             let row: any[] = [<th className="dt-table-header">{rowHead}</th>];
 
-            rowValues.forEach(function(rowValue: string) {
+            rowValues.forEach(function (rowValue: string) {
                 row.push(<td>{rowValue}</td>);
             });
 
-            return (<tr className="dt-table-row">{row}</tr>);
+            return (<tr className={dtRowClass}>{row}</tr>);
         }
     }
 

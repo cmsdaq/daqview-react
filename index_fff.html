@@ -43,20 +43,12 @@
     <script type="text/javascript" src="dist/js/components/fed-builder/fb-table.js"></script>
     <script type="text/javascript" src="dist/js/components/filter-farm/fff-table.js"></script>
     <script type="text/javascript" src="dist/js/daqview.js"></script>
-    <script type="text/javascript" src="link-configuration.js"></script>
+    <script type="text/javascript" src="configuration.js"></script>
 
     <script type="text/javascript">
         var daqView; //daqView is an object containing an array of the created views (page components)
         $(document).ready(function () {
             try {
-                daqView = new DAQView.DAQViewReact();
-                daqView.createMetadataTable('daqview-react-metadata-table');
-                daqView.createFFFTable('daqview-react-fff-table');
-                daqView.createAboutTable('daqview-react-about-table');
-                daqView.createSnapshotModal('daqview-react-snapshot-modal');
-
-                //daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
-
                 // HACK: to avoid browser errors when loading local JSON
                 $.ajaxSetup({
                     beforeSend: function (xhr) {
@@ -116,6 +108,22 @@
                     developmentPlayback = true;
                 }
 
+                var daqViewConfiguration = {
+                    snapshotSource: snapshotSources,
+                    daqviewLinks: daqviewLinks,
+                    externalLinks: externalLinks,
+                    expertSetups: expertSetups,
+
+                    setupName: daqSetup
+                };
+
+                daqView = new DAQView.DAQViewReact(daqViewConfiguration);
+                daqView.createMetadataTable('daqview-react-metadata-table');
+                daqView.createFFFTable('daqview-react-fff-table');
+                daqView.createAboutTable('daqview-react-about-table');
+                daqView.createSnapshotModal('daqview-react-snapshot-modal');
+
+                //daqView.createReplacementForLoader('loaderWrapper');   //implement a blank div to replace the loader when react has finished
 
                 var snapshotSource = {
                     updateInterval: 1500,
@@ -144,11 +152,11 @@
 
                         var currentLocalTime = goToTimeInput.val();
 
-                        var timestamp=Date.parse(currentLocalTime);
+                        var timestamp = moment(currentLocalTime);
 
                         var currentTime = '';
-                        if (isNaN(timestamp)==false){
-                            currentTime=new Date(timestamp).toISOString();
+                        if (timestamp.isValid()){
+                            currentTime = timestamp.toISOString();
                         }
 
                         var ret = baseURL + timestampDelim + currentTime + timestampDelim;
@@ -308,10 +316,29 @@
                     goToTime();
                 });
 
-                //setting values in links of the upper left corner
-                $('#dvhomelink').attr("href",daqviewLinks.controller);
-                $('#dvalllink').attr("href",daqviewLinks.base_all+"?setup="+daqSetup);
-                $('#dvfblink').attr("href",daqviewLinks.base_fb+"?setup="+daqSetup);
+                // setting values in links of the upper left corner
+
+                var getCurrentLinkParameters = function() {
+                    var parameters = "?setup=" + daqSetup;
+                    if (!snapshotProvider.isInRealTimePolling() || !snapshotProvider.isRunning()) {
+                        parameters += "&time=" + formatLocalDate(snapshotSource.currentSnapshotTimestamp);
+                    }
+                    return parameters;
+                };
+
+                $('#dvhomelink').attr("href", daqviewLinks.controller);
+
+                $('#dvalllink').on('click', function () {
+                    $(this).attr("href", daqviewLinks.base_all + getCurrentLinkParameters());
+                });
+
+                $('#dvfblink').on('click', function () {
+                    $(this).attr("href", daqviewLinks.base_fb + getCurrentLinkParameters());
+                });
+
+                $('#dvfbdtlink').on('click', function () {
+                    $(this).attr("href", daqviewLinks.base_fbdt + getCurrentLinkParameters());
+                });
 
             }
             catch (exception) {
@@ -358,6 +385,7 @@
                 <a href="" id="dvhomelink" target="_blank"><button class="daqview-external-link">DAQView Home</button></a>
                 <a href="" id="dvalllink" target="_blank"><button class="daqview-external-link">All Tables</button></a>
                 <a href="" id="dvfblink" target="_blank"><button class="daqview-external-link">FB Table</button></a>
+                <a href="" id="dvfbdtlink" target="_blank"><button class="daqview-external-link">FB+DT Table</button></a>
             </td>
             <td width="20%" align="right" valign="center">
                 <div id="daqview-control">
@@ -395,7 +423,7 @@
     <br/><br/>
     <div id="daqview-react-about-table"><div class="loader"></div></div>
     <br/><br/>
-    <div class="daqview-version-id">Version 1.2.2</div>
+    <div class="daqview-version-id">Version {[DAQVIEW_VERSION]}</div>
 </div>
 </body>
 </html>

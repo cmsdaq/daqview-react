@@ -5,8 +5,8 @@
  */
 var DAQAggregator;
 (function (DAQAggregator) {
-    var SnapshotProvider = (function () {
-        function SnapshotProvider(snapshotSource) {
+    class SnapshotProvider {
+        constructor(snapshotSource) {
             this.running = false;
             this.inRealTimePolling = true;
             this.instructionToStop = false;
@@ -30,34 +30,34 @@ var DAQAggregator;
             };
             this.snapshotSource = snapshotSource;
         }
-        SnapshotProvider.prototype.addView = function (view) {
+        addView(view) {
             this.views.push(view);
-        };
-        SnapshotProvider.prototype.prePassElementSpecificData = function (args) {
-            this.views.forEach(function (view) { return view.prePassElementSpecificData(args); });
-        };
-        SnapshotProvider.prototype.setSnapshot = function (snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url) {
-            this.views.forEach(function (view) { return view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot, url); });
-        };
-        SnapshotProvider.prototype.isRunning = function () {
+        }
+        prePassElementSpecificData(args) {
+            this.views.forEach(view => view.prePassElementSpecificData(args));
+        }
+        setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot) {
+            this.views.forEach(view => view.setSnapshot(snapshot, drawPausedPage, drawZeroDataFlowComponent, drawStaleSnapshot));
+        }
+        isRunning() {
             return this.running;
-        };
-        SnapshotProvider.prototype.isInRealTimePolling = function () {
+        }
+        isInRealTimePolling() {
             return this.inRealTimePolling;
-        };
-        SnapshotProvider.prototype.start = function () {
+        }
+        start() {
             console.log(("Snapshot provided start() at: " + new Date().toISOString()));
             if (this.running) {
                 return;
             }
             this.running = true;
-            var updateFunction = (function () {
+            let updateFunction = (function () {
                 if (!this.running) {
                     return;
                 }
                 //retrieves previous url for local use, before updating its value is updated
-                var previousUrlTemp = this.previousUrl;
-                var url = this.snapshotSource.getSourceURL(); //url to snapshot source, not to daqview (must be compatible with server's expected format)
+                let previousUrlTemp = this.previousUrl;
+                let url = this.snapshotSource.getSourceURL(); //url to snapshot source, not to daqview (must be compatible with server's expected format)
                 if (!this.inRealTimePolling) {
                     url = this.snapshotSource.getSourceURLForGotoRequests();
                     console.log('In go-to-time snapshot provider mode');
@@ -83,30 +83,30 @@ var DAQAggregator;
                         console.log('Paused after point time query');
                     }
                 }
-                var startTime = new Date().getTime();
-                var snapshotRequest = jQuery.getJSON(url);
+                let startTime = new Date().getTime();
+                let snapshotRequest = jQuery.getJSON(url);
                 snapshotRequest.done((function (snapshotJSON) {
-                    var time = new Date().getTime() - startTime;
+                    let time = new Date().getTime() - startTime;
                     console.log('Time to get snapshot: ' + time + 'ms');
-                    var malformedSnapshot = false;
+                    let malformedSnapshot = false;
                     if ((snapshotJSON == null) || (!snapshotJSON.hasOwnProperty("@id"))) {
                         console.log("Malformed snapshot received, parsing and updating won't be launched until next valid snapshot");
                         console.log(snapshotJSON);
                         malformedSnapshot = true;
-                        var snapshot = void 0;
-                        var errorMsg = "Could not find DAQ snapshot with requested params";
+                        let snapshot;
+                        let errorMsg = "Could not find DAQ snapshot with requested params";
                         if (snapshotJSON != null) {
                             if (snapshotJSON.hasOwnProperty("message")) {
                                 errorMsg = snapshotJSON.message;
                             }
                         }
-                        //url argument is not used in a state of error, so I use it to pass more info about the error
-                        this.setSnapshot(snapshot, this.drawPausedPage, false, false, errorMsg); //maybe also pass message to setSnapshot?
+                        console.error(errorMsg);
+                        this.setSnapshot(snapshot, this.drawPausedPage, false, false); //maybe also pass message to setSnapshot?
                         //reset value after use
                         this.drawPausedPage = false;
                     }
                     if (!malformedSnapshot) {
-                        var snapshot = void 0;
+                        let snapshot;
                         startTime = new Date().getTime();
                         if (this.snapshotSource.parseSnapshot) {
                             snapshot = this.snapshotSource.parseSnapshot(snapshotJSON);
@@ -120,24 +120,24 @@ var DAQAggregator;
                         //null snapshot can be caused by indefinite chain of elements in the received json
                         if (snapshot != null) {
                             //discover if data flow rate is zero
-                            var drawDataFlowIsZero_1 = false;
-                            var daq = snapshot.getDAQ();
+                            let drawDataFlowIsZero = false;
+                            let daq = snapshot.getDAQ();
                             if (daq.fedBuilderSummary.rate == 0) {
                                 daq.fedBuilders.forEach(function (fedBuilder) {
                                     if (fedBuilder.ru != null && fedBuilder.ru.isEVM) {
                                         if (fedBuilder.ru.stateName === "Enabled") {
-                                            drawDataFlowIsZero_1 = true;
+                                            drawDataFlowIsZero = true;
                                         }
                                     }
                                 });
                             }
                             //discover if snapshot is stale
-                            var drawStaleSnapshot = false;
-                            var dataTime = new Date(daq.lastUpdate).getTime();
+                            let drawStaleSnapshot = false;
+                            let dataTime = new Date(daq.lastUpdate).getTime();
                             this.snapshotSource.currentSnapshotTimestamp = dataTime;
-                            var serverResponseTime = new Date(snapshotRequest.getResponseHeader("Date")).getTime();
-                            var diff = serverResponseTime - dataTime;
-                            var thres = 15000; //in ms
+                            let serverResponseTime = new Date(snapshotRequest.getResponseHeader("Date")).getTime();
+                            let diff = serverResponseTime - dataTime;
+                            let thres = 15000; //in ms
                             console.log("Time diff between snapshot timestamp and response (in ms): " + diff);
                             if ((diff > thres)) {
                                 drawStaleSnapshot = true;
@@ -146,12 +146,12 @@ var DAQAggregator;
                                 drawStaleSnapshot = false;
                             }
                             //updates daqview url
-                            var localTimestampElements = (new Date(snapshot.getUpdateTimestamp()).toString()).split(" ");
+                            let localTimestampElements = (new Date(snapshot.getUpdateTimestamp()).toString()).split(" ");
                             //keep Month, Day, Year, Time (discard Weekday and timezone info)
-                            var formattedLocalTimestamp = localTimestampElements[3] + "-" + this.mapOfMonths[localTimestampElements[1]] + "-" + localTimestampElements[2] + "-" + localTimestampElements[4];
-                            var currentUrl = document.location.href;
-                            var urlToUpdate = currentUrl.indexOf("?") > -1 ? currentUrl.substr(0, currentUrl.indexOf("?")) : currentUrl;
-                            var query = "setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp;
+                            let formattedLocalTimestamp = localTimestampElements[3] + "-" + this.mapOfMonths[localTimestampElements[1]] + "-" + localTimestampElements[2] + "-" + localTimestampElements[4];
+                            let currentUrl = document.location.href;
+                            let urlToUpdate = currentUrl.indexOf("?") > -1 ? currentUrl.substr(0, currentUrl.indexOf("?")) : currentUrl;
+                            let query = "setup=" + this.snapshotSource.getRequestSetup() + "&time=" + formattedLocalTimestamp;
                             urlToUpdate = urlToUpdate + "?" + query;
                             console.log("new URL : " + urlToUpdate);
                             DAQViewGUIUtility.setSharableLink(urlToUpdate);
@@ -159,20 +159,20 @@ var DAQAggregator;
                             document.title = "DAQView [" + formattedLocalTimestamp + "]";
                             //updates url to retrieve snapshot
                             //in case of point time queries (eg. after pause or goto-time command, the time is already appended in the URL)
-                            var urlToSnapshot = url.indexOf("time") > -1 ? url : url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
+                            let urlToSnapshot = url.indexOf("time") > -1 ? url : url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
                             //pass info before setting snapshot and rendering (this passes the same set of info to all elements)
-                            var args = [];
+                            let args = [];
                             args.push(this.snapshotSource.runInfoTimelineLink());
                             this.prePassElementSpecificData(args);
                             console.log("drawPaused@provider? " + this.drawPausedPage);
-                            this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero_1, drawStaleSnapshot, urlToSnapshot); //passes snapshot source url to be used for the "see raw snapshot" button
+                            this.setSnapshot(snapshot, this.drawPausedPage, drawDataFlowIsZero, drawStaleSnapshot);
                             //in case there is a parsed snapshot, update pointer to previous snapshot with the more precise timestamp retrieved by the snapshot itself
                             this.previousUrl = url + "&time=\"" + (new Date(snapshot.getUpdateTimestamp()).toISOString()) + "\"";
                         }
                         else {
-                            console.log("DAQView was unable to parse snapshot...");
+                            console.error("DAQView was unable to parse snapshot...");
                             console.log(snapshotJSON);
-                            this.setSnapshot(snapshot, this.drawPausedPage, false, false, "Could not parse DAQ snapshot");
+                            this.setSnapshot(snapshot, this.drawPausedPage, false, false);
                         }
                         //reset value after use
                         this.drawPausedPage = false;
@@ -182,32 +182,31 @@ var DAQAggregator;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
                 snapshotRequest.fail((function () {
-                    console.log("Error in remote snapshot request, retrying after " + this.snapshotSource.updateInterval + " millis");
-                    var snapshot;
-                    this.setSnapshot(snapshot, this.drawPausedPage, false, false, "Could not reach server for snapshots");
+                    console.error("Error in remote snapshot request, retrying after " + this.snapshotSource.updateInterval + " millis");
+                    let snapshot;
+                    this.setSnapshot(snapshot, this.drawPausedPage, false, false);
                     //reset value after use
                     this.drawPausedPage = false;
                     setTimeout(updateFunction, this.snapshotSource.updateInterval);
                 }).bind(this));
             }).bind(this);
             setTimeout(updateFunction, this.snapshotSource.updateInterval);
-        };
+        }
         //this method will immediately stop page updating (including both values and graphics)
-        SnapshotProvider.prototype.stop = function () {
+        stop() {
             this.running = false;
-        };
-        SnapshotProvider.prototype.switchToRealTime = function () {
+        }
+        switchToRealTime() {
             this.inRealTimePolling = true;
-        };
-        SnapshotProvider.prototype.switchToGotoTimeRequests = function () {
+        }
+        switchToGotoTimeRequests() {
             this.inRealTimePolling = false;
-        };
+        }
         /*arg 0 if called from a real time updating context, arg 1 if called from a go-to-time-and-pause context*/
-        SnapshotProvider.prototype.provideOneMoreSnapshotAndStop = function (callerType) {
+        provideOneMoreSnapshotAndStop(callerType) {
             this.pauseCallerType = callerType;
             this.instructionToStop = true;
-        };
-        return SnapshotProvider;
-    }());
+        }
+    }
     DAQAggregator.SnapshotProvider = SnapshotProvider;
 })(DAQAggregator || (DAQAggregator = {}));
