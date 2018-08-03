@@ -628,7 +628,7 @@ var DAQView;
             let buUrlDisplay = hostname;
             let buUrlDisplayClass = "fff-table-stale-member-wrapbox"; //assume stale and overwrite if not
             let buDebug = "Check problems with BU flashlist!";
-            if (bu.port != null) {
+            if (bu.port > 0) {
                 buUrlDisplay = React.createElement("a", { href: buUrl, target: "_blank" }, hostname);
                 buUrlDisplayClass = "";
                 buDebug = "";
